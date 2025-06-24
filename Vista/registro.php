@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Registro-Shakti</title>
+    <title>Registro - Shakti</title>
     <?php
     include '../components/usuaria/estilos.php';
     ?>
