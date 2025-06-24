@@ -1,0 +1,167 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ff69b4;
+  color: white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: #c33b80;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo {
+  height: 40px;
+}
+
+.navbar .nav a {
+  color: white;
+  margin: 0 0.75rem;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.navbar .nav a:hover {
+  color: #000000;
+}
+
+.navbar .login-icon {
+  font-size: 1.25rem;
+}
+
+.hero {
+  text-align: center;
+  padding: 6rem 1rem;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.primary-btn, .secondary-btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.primary-btn {
+  background-color: #89004f;
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #89004f;
+}
+
+.secondary-btn {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+}
+
+.secondary-btn:hover {
+  border-color: #89004f;
+}
+
+.auth-body {
+  background-color: #ff69b4;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.auth-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-header img {
+  margin-bottom: 1rem;
+  width: 80px;
+}
+
+.auth-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-form input {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  outline: none;
+}
+
+.auth-form input[type="file"] {
+  padding: 0.25rem;
+  background: none;
+  color: white;
+}
+
+.auth-form button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #89004f;
+  font-weight: 600;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.auth-form button:hover {
+  background-color: #89004f;
+}
+
+.auth-footer {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.auth-footer a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  margin: 0.25rem 0;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
