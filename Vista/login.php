@@ -68,16 +68,15 @@
   <main class="flex-grow-1 d-flex align-items-center justify-content-center">
     <div class="auth-container">
       <div class="auth-header text-center mb-4">
-        <img src="https://source.unsplash.com/random/80x80?logo" alt="Logo" class="mb-3 rounded-circle" />
         <h1 class="h3 fw-bold text-secondary">Bienvenido</h1>
       </div>
 
-      <form class="needs-validation" novalidate>
+      <form class="needs-validation" method="post" action="../Controlador/loginCtrl.php" novalidate>
         <div class="mb-3 position-relative">
           <label for="email" class="form-label">Correo electrónico</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-            <input type="email" class="form-control" id="email" placeholder="correo@dominio.com" required />
+            <input type="email" class="form-control" id="email" name="correo" placeholder="Ingrese su correo eléctronico" required />
             <div class="invalid-feedback">Por favor, ingresa un correo válido.</div>
           </div>
         </div>
@@ -86,11 +85,11 @@
           <label for="password" class="form-label">Contraseña</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-            <input type="password" class="form-control" id="password" placeholder="••••••••" required />
+            <input type="password" class="form-control" id="password" name="contrasena" placeholder="Ingrese su contraseña" required />
             <div class="invalid-feedback">La contraseña es obligatoria.</div>
           </div>
         </div>
-
+        <input type="hidden" name="opcion" value="1">
         <button type="submit" class="btn btn-purple w-100 shadow-sm fw-semibold">Ingresar</button>
       </form>
 
