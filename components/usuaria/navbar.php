@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Navbar Shakti</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -43,7 +42,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light shadow-sm custom-navbar fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="/ShaktiN/index.php">Shakti</a>
+      <a class="navbar-brand" href="/Shakti/index.php">SHAKTI</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -52,7 +51,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
           <li class="nav-item">
-            <a class="nav-link" href="/ShaktiN/index.php">Inicio</a>
+            <a class="nav-link" href="/Shakti/index.php">Inicio</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Nosotros</a>
@@ -64,7 +63,7 @@
             <a class="nav-link" href="#">Contacto</a>
           </li>
           <li class="nav-item ms-3">
-            <a class="nav-link fs-4" href="/ShaktiN/Vista/login.php" title="Iniciar sesión" aria-label="Iniciar sesión">
+            <a class="nav-link fs-4" href="/Shakti/Vista/login.php" title="Iniciar sesión" aria-label="Iniciar sesión">
               <i class="bi bi-person-circle"></i>
             </a>
           </li>
