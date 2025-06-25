@@ -1,115 +1,185 @@
+/* Importar fuentes */
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap');
 
 * {
   font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.custom-navbar {
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
+.custom-navbar .container {
+  max-width: 1140px; /* o el max-width de Bootstrap para desktop */
+  width: 100%;
+}
 
+/* Fuentes para títulos */
 h1,
 h2,
 h3 {
   font-family: 'Merriweather', serif;
 }
 
+/* Variables de colores lila/morado */
+:root {
+  --lila-claro: #e7d4f2;          /* Lila pastel muy claro y brillante para navbar */
+  --morado-claro: #8056a6;        /* Morado vibrante para texto */
+  --morado-medio: #6b3d91;        /* Morado un poco más oscuro para hover */
+  --morado-base: #5a2a83;         /* Morado fuerte para botones y acentos */
+  --lila-muy-claro: #f8f3fc;      /* Fondo muy suave para otros elementos */
+}
 
+/* Body y fondo */
 body {
-  margin: 0;
-  background-color: #ff69b4;
-  color: white;
+  background-color: white;
+  color: var(--morado-claro);
+  line-height: 1.5;
 }
 
+/* Navbar */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  background-color: #c33b80;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--lila-claro) !important;
+  box-shadow: 0 2px 6px rgba(90, 42, 131, 0.3);
+  border-radius: 0.5rem;
 }
 
-.navbar .logo {
-  height: 40px;
-}
-
-.navbar .nav a {
-  color: white;
+/* Navegación */
+.navbar .nav-link {
+  color: var(--morado-claro);
   margin: 0 0.75rem;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+  transition: background-color 0.3s, transform 0.2s ease, color 0.3s;
+  display: inline-block;
 }
 
-.navbar .nav a:hover {
-  color: #000000;
+/* Hover y focus para links nav */
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  background-color: white;
+  color: var(--morado-medio);
+  transform: scale(1.15);
+  outline: none;
+  text-decoration: none;
 }
 
-.navbar .login-icon {
-  font-size: 1.25rem;
+/* Icono login */
+.navbar .nav-link.fs-4 {
+  font-size: 1.7rem;
+  color: var(--morado-claro);
+  text-decoration: none;
+  transition: color 0.3s, transform 0.2s ease;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
 }
 
+/* Hover y foco icono login */
+.navbar .nav-link.fs-4:hover,
+.navbar .nav-link.fs-4:focus {
+  color: var(--morado-medio);
+  background-color: white;
+  transform: scale(1.15);
+  outline: none;
+  text-decoration: none;
+}
+
+/* Hero Section */
 .hero {
   text-align: center;
   padding: 6rem 1rem;
+  background-color: white;
+  color: var(--morado-claro);
 }
 
 .hero h1 {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .hero p {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--morado-claro);
+  opacity: 0.8;
   margin-bottom: 2rem;
+  font-size: 1.25rem;
 }
 
+/* Botones hero */
 .hero-buttons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .primary-btn,
 .secondary-btn {
-  padding: 0.5rem 1.5rem;
+  padding: 0.6rem 2rem;
   border-radius: 9999px;
-  font-weight: 500;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s ease;
+  font-size: 1rem;
+  user-select: none;
+}
+
+/* Botón principal - morado fuerte fondo y texto blanco */
+.primary-btn {
+  background-color: var(--morado-base);
+  color: white;
+  border: none;
+}
+
+.primary-btn:hover,
+.primary-btn:focus {
+  background-color: #4e2372;
+  transform: scale(1.1);
+  outline: none;
+  color: white;
   text-decoration: none;
 }
 
-.primary-btn {
-  background-color: #89004f;
-  color: white;
-}
-
-.primary-btn:hover {
-  background-color: #89004f;
-}
-
+/* Botón secundario - borde lila y texto morado, fondo transparente */
 .secondary-btn {
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 2px solid var(--morado-base);
+  color: var(--morado-base);
+  background: none;
+}
+
+.secondary-btn:hover,
+.secondary-btn:focus {
+  background-color: var(--morado-base);
   color: white;
+  transform: scale(1.1);
+  outline: none;
+  text-decoration: none;
 }
 
-.secondary-btn:hover {
-  border-color: #89004f;
-}
-
+/* Formularios y Auth (si usas) */
 .auth-body {
-  background-color: #ff69b4;
+  background-color: var(--lila-muy-claro);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 .auth-container {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(231, 212, 242, 0.85);
   backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 16px rgba(90, 42, 131, 0.25);
   width: 100%;
   max-width: 500px;
   margin: 2rem auto;
+  color: var(--morado-claro);
 }
 
 .auth-header {
@@ -125,6 +195,7 @@ body {
 .auth-header h1 {
   font-size: 1.5rem;
   font-weight: 600;
+  color: var(--morado-claro);
 }
 
 .auth-form {
@@ -136,46 +207,83 @@ body {
 .auth-form input {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: none;
+  background-color: rgba(255 255 255 / 0.8);
+  color: var(--morado-claro);
+  border: 1px solid var(--morado-base);
   outline: none;
+  font-size: 1rem;
 }
 
 .auth-form input[type="file"] {
   padding: 0.25rem;
   background: none;
-  color: white;
+  color: var(--morado-claro);
+  border: none;
 }
 
 .auth-form button {
   padding: 0.5rem;
   border-radius: 0.5rem;
-  background-color: #89004f;
+  background-color: var(--morado-base);
   font-weight: 600;
   border: none;
   color: white;
   cursor: pointer;
   margin-top: 1rem;
+  transition: background-color 0.3s;
+  font-size: 1rem;
 }
 
-.auth-form button:hover {
-  background-color: #89004f;
+.auth-form button:hover,
+.auth-form button:focus {
+  background-color: #4e2372;
+  outline: none;
 }
 
-.auth-footer {
-  margin-top: 1rem;
-  text-align: center;
-  font-size: 0.875rem;
+
+/* foot*/
+.custom-footer {
+  background-color: #e7d4f2; /* mismo lila pastel de la navbar */
+  color: #5a2a83; /* morado fuerte */
+  border-top: 2px solid #5a2a83;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
 }
 
-.auth-footer a {
-  display: block;
-  color: white;
+.custom-footer .footer-link,
+.custom-footer .footer-icon,
+.custom-footer .footer-brand {
+  color: #5a2a83;
+  transition: color 0.3s ease;
   text-decoration: none;
-  margin: 0.25rem 0;
 }
 
-.auth-footer a:hover {
+.custom-footer .footer-link:hover,
+.custom-footer .footer-icon:hover,
+.custom-footer .footer-brand:hover {
+  color: #8056a6; /* morado más claro para hover */
   text-decoration: underline;
+}
+
+/* Para íconos */
+.footer-icon i {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.footer-icon:hover i {
+  transform: scale(1.2);
+  color: #8056a6;
+}
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
 }

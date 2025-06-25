@@ -1,31 +1,42 @@
+
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shakti</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shakti</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Tu CSS personalizado -->
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
-<body class="bg-gray-900 text-white">
-    <header class="navbar">
-        <img src="img/LOGO SHAKTI.png" alt="Logo" class="logo">
-        <nav class="nav">
-            <a href="index">Inicio</a>
-            <a href="#">Nosotros</a>
-            <a href="#">Servicios</a>
-            <a href="#">Contacto</a>
-        </nav>
-        <a href="vista/login.php" class="login-icon">👤</a>
-    </header>
-    <main class="hero">
-        <h1>Bienvenido a Nuestro Sitio Shakti</h1>
-        <p>Tu bienestar es primero</p>
-        <div class="hero-buttons">
-            <a href="#" class="primary-btn">Conocer más</a>
-            <a href="#" class="secondary-btn">Contáctanos</a>
-        </div>
-    </main>
+<body class="bg-white text-black">
+ <?php
+require 'components/usuaria/navbar.php';
+?>
+
+
+  <main class="hero">
+    <h1>Bienvenido a Nuestro Sitio Shakti</h1>
+    <p>Tu bienestar es primero</p>
+    <div class="hero-buttons">
+      <a href="#" class="primary-btn">Conocer más</a>
+      <a href="#" class="secondary-btn">Contáctanos</a>
+    </div>
+  </main>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+ 
 </body>
 
+<?php include 'components/usuaria/footer.php'; ?>
 </html>

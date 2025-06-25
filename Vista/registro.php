@@ -236,6 +236,7 @@
             }
         });
     </script>
+<?php include '../components/usuaria/footer.php'; ?>
 
 </body>
 
