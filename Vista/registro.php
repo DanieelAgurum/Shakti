@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .invalid {
-            border-color: red;
+            border-color: white;
         }
 
         .error {
