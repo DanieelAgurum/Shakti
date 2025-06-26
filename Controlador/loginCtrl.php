@@ -6,7 +6,7 @@ $u -> conectarBD();
 
 switch($_REQUEST['opcion']){
     case 1:
-        $u->inicializar($_REQUEST['correo'], $_REQUEST['contrasena']);
+        $u->inicializar($_REQUEST['correo'], $_REQUEST['contraseña']);
         $u->iniciarsesion();
         break;
     case 2:

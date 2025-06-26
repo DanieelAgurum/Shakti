@@ -85,7 +85,7 @@
           <label for="password" class="form-label">Contraseña</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-            <input type="password" class="form-control" id="password" name="contrasena" placeholder="Ingrese su contraseña" required />
+            <input type="password" class="form-control" id="password" name="contraseña" placeholder="Ingrese su contraseña" required />
             <div class="invalid-feedback">La contraseña es obligatoria.</div>
           </div>
         </div>

@@ -25,38 +25,46 @@ class loginMdln
         $con = $this->conectarBD();
 
         $correo = mysqli_real_escape_string($con, $this->correo);
-        $contraseña = mysqli_real_escape_string($con, $this->contraseña);
-        $contraHash = password_hash($contraseña, PASSWORD_DEFAULT);
 
-        $query = "SELECT * FROM usuarias 
-              JOIN roles ON usuarias.id_rol = roles.id_rol 
-              WHERE correo = '$correo' and contraseña = '$contraHash'";
+        $query = "SELECT u.*, r.id_rol FROM usuarias u JOIN roles r ON u.id_rol = r.id_rol WHERE u.correo = '$correo'";
 
-        // echo $query;
         $result = mysqli_query($con, $query);
 
         if ($result) {
             $reg = mysqli_fetch_array($result);
             if ($reg) {
+                $hash = $reg["contraseña"];
 
-                session_start();
-                $_SESSION['id_usuaria'] = $reg['id_usuaria'];
-                $_SESSION['rol'] = $reg['id_rol'];
-                $_SESSION['nombre'] = $reg['nombre'];
-                $_SESSION['apellido'] = $reg['apellidos'];
-                $_SESSION['nickname'] = $reg['nickname'];
-                $_SESSION['correo'] = $reg['correo'];
-                $_SESSION['fecha_nac'] = $reg['fecha_nac'];
+                if (password_verify($this->contraseña, $hash)) {
+                    session_start();
+                    $_SESSION['id'] = $reg['id_usuaria'];
+                    $_SESSION['id_rol'] = $reg['id_rol'];
+                    $_SESSION['nombre_rol'] = $reg['nombre_rol'];
+                    $_SESSION['nombre'] = $reg['nombre'];
+                    $_SESSION['apellidos'] = $reg['apellidos'];
+                    $_SESSION['nickname'] = $reg['nickname'];
+                    $_SESSION['correo'] = $reg['correo'];
+                    $_SESSION['fecha_nacimiento'] = $reg['fecha_nacimiento'];
 
-                // Redirección según rol (ajusta si usas letras o números)
-                if ($reg['id_rol'] == "1") {
-                    header("Location: ../vista/admin/panel.php");
-                    exit;
-                } elseif ($reg['id_rol'] == "2") {
-                    header("Location: ../index.php?page=profile");
+                    // Redirección por rol
+                    switch ($reg['id_rol']) {
+                        case 1:
+                            header("Location: ../index.php?message=exito");
+                            break;
+                        case 2:
+                            header("Location: ../vista/tutor/panel.php");
+                            break;
+                        case 3:
+                            header("Location: ../vista/admin/panel.php");
+                            break;
+                        default:
+                            $message = "Rol no reconocido.";
+                            header("Location: ../index.php?pagina=login&message=" . $message);
+                            break;
+                    }
                     exit;
                 } else {
-                    $message = "Rol no válido";
+                    $message = "Correo y/o contraseña incorrecta";
                     header("Location: ../index.php?pagina=login&message=" . $message);
                     exit;
                 }
@@ -68,8 +76,6 @@ class loginMdln
         } else {
             die("Problemas en la consulta: " . mysqli_error($con));
         }
-
-        mysqli_close($con);
     }
 
 
@@ -79,9 +85,8 @@ class loginMdln
             session_start();
         }
 
-        // Verificar si el usuario tiene el rol de cliente
+        // Verificar si el usuario tiene el rol adecuado
         if (isset($_SESSION["rol"]) && $_SESSION["rol"] === "C") {
-            // Si no tiene el rol adecuado, redirigir al formulario de inicio de sesión
             header("Location: index.php?page=profile&" . $_SESSION['nombre']);
             exit;
         } elseif (isset($_SESSION["rol"]) && $_SESSION["rol"] == "A") {
@@ -92,15 +97,12 @@ class loginMdln
 
     public function cerrarSesion()
     {
-        // Inicia la sesión si no está iniciada
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // Destruye la sesión
         session_destroy();
 
-        // Redirige al formulario de inicio de sesión
         header("Location: ../index.php?pagina=login");
         exit;
     }
