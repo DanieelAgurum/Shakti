@@ -10,19 +10,18 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <style>
-    /* Colores */
     :root {
       --morado-base: #5a2a83;
-      --fondo-suave: #fefcf7; /* Fondo claro, tipo crema */
+      --fondo-suave: #fefcf7;
     }
 
     body {
       background-color: #f8f0ff;
     }
 
-    /* Estilo general para el body con flex para footer sticky */
     body.d-flex {
       min-height: 100vh;
       flex-direction: column;
@@ -32,14 +31,13 @@
       flex-grow: 1;
     }
 
-    /* Contenedor del formulario centrado */
     .auth-container {
       max-width: 400px;
       width: 100%;
       padding: 2rem;
-      border: 2px solid var(--morado-base); /* Borde morado */
+      border: 2px solid var(--morado-base);
       border-radius: 1rem;
-      background-color: var(--fondo-suave); /* Interior claro */
+      background-color: var(--fondo-suave);
       box-shadow: 0 8px 16px rgba(90, 42, 131, 0.25);
       backdrop-filter: blur(4px);
     }
@@ -58,11 +56,17 @@
       box-shadow: 0 0 10px rgba(138, 83, 214, 0.7);
       outline: none;
     }
+
+    .error {
+      font-size: 0.85em;
+      height: 1em;
+      margin-bottom: 0.5em;
+      display: block;
+    }
   </style>
 </head>
 
 <body class="d-flex flex-column">
-
   <?php require '../components/usuaria/navbar.php'; ?>
 
   <main class="flex-grow-1 d-flex align-items-center justify-content-center">
@@ -71,12 +75,14 @@
         <h1 class="h3 fw-bold text-secondary">Bienvenido</h1>
       </div>
 
-      <form class="needs-validation" method="post" action="../Controlador/loginCtrl.php" novalidate>
+      <form class="needs-validation" id="iniciarSesion" method="post" novalidate>
+        <small class="error text-center text-danger" id="mensaje-error" style="display: none;"></small>
+
         <div class="mb-3 position-relative">
           <label for="email" class="form-label">Correo electrónico</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-            <input type="email" class="form-control" id="email" name="correo" placeholder="Ingrese su correo eléctronico" required />
+            <input type="email" class="form-control" id="email" name="correo" placeholder="Ingrese su correo electrónico" required />
             <div class="invalid-feedback">Por favor, ingresa un correo válido.</div>
           </div>
         </div>
@@ -89,8 +95,10 @@
             <div class="invalid-feedback">La contraseña es obligatoria.</div>
           </div>
         </div>
+
         <input type="hidden" name="opcion" value="1">
-        <button type="submit" class="btn btn-purple w-100 shadow-sm fw-semibold">Ingresar</button>
+        <!-- Cambié el tipo a button para controlar el envío -->
+        <button type="button" onclick="iniciarSesion()" class="btn btn-purple w-100 shadow-sm fw-semibold">Ingresar</button>
       </form>
 
       <div class="auth-footer mt-4 text-center">
@@ -105,22 +113,7 @@
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
-    // Bootstrap validation script
-    (() => {
-      'use strict';
-      const forms = document.querySelectorAll('.needs-validation');
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add('was-validated');
-        }, false);
-      });
-    })();
-  </script>
+  <script src="../peticiones(js)/iniciarSesion.js"></script>
 
 </body>
 
