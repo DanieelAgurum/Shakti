@@ -13,5 +13,4 @@ switch($_REQUEST['opcion']){
         $u->cerrarSesion();
         break;
     }
-
 ?>
