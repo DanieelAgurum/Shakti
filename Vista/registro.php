@@ -5,9 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registro - Shakti</title>
-    <?php
-    include '../components/usuaria/estilos.php';
-    ?>
+    <?php include '../components/usuaria/estilos.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .invalid {
@@ -25,9 +23,7 @@
 </head>
 
 <body class="auth-body">
-    <?php
-    require '../components/usuaria/navbar.php';
-    ?>
+    <?php require '../components/usuaria/navbar.php'; ?>
 
     <div class="auth-container">
         <div class="auth-header">
@@ -35,7 +31,7 @@
             <h1>Crear cuenta</h1>
         </div>
 
-        <form class="auth-form" id="registroForm" novalidate action="../Controlador/UsuariasControlador.php" method="post" enctype="multipart/form-data">
+        <form class="auth-form" id="registroForm" novalidate action="../Controlador/UsuariasControlador.php" method="post">
             <label>Nombre</label>
             <input type="text" name="nombre" id="nombre" placeholder="Ingrese su(s) nombre(s)" />
             <small class="error" id="errorNombre"></small>
@@ -71,12 +67,6 @@
                 </label>
             </div>
 
-            <div id="campo-documento" style="display: none;">
-                <label>Documento que respalde tu experiencia</label>
-                <input type="file" name="documento" id="documento" accept=".pdf,.doc,.docx" />
-                <small class="error" id="errorDocumento"></small>
-            </div>
-
             <input type="hidden" name="rol" id="rol" value="1" />
             <input type="hidden" name="opcion" value="1" />
             <button type="submit">Enviar</button>
@@ -101,18 +91,11 @@
     <script>
         function actualizarRol() {
             const checkbox = document.getElementById('especialistaCheck');
-            const campoDocumento = document.getElementById('campo-documento');
             const inputRol = document.getElementById('rol');
-
-            if (checkbox.checked) {
-                campoDocumento.style.display = "block";
-                inputRol.value = "2"; // especialista
-            } else {
-                campoDocumento.style.display = "none";
-                inputRol.value = "1"; // usuaria
-            }
+            inputRol.value = checkbox.checked ? "2" : "1";
+            console.log("Rol actualizado a:", inputRol.value);
         }
-
+        
         const form = document.getElementById('registroForm');
 
         const validators = {
@@ -155,32 +138,18 @@
                 const edad = hoy.getFullYear() - fecha.getFullYear();
                 if (edad < 18) return 'Debes ser mayor de 18 años para registrarte';
                 return true;
-            },
-            documento: (value, form) => {
-                if (form.especialistaCheck.checked) {
-                    if (!form.documento.files.length) return 'Debes subir un documento';
-                    const file = form.documento.files[0];
-                    const allowedTypes = ['application/pdf'];
-                    if (!allowedTypes.includes(file.type)) return 'Formato no permitido. Solo se permiten archivos PDF';
-                    if (file.size > 5 * 1024 * 1024) return 'El archivo no debe superar los 5MB';
-                }
-                return true;
             }
         };
 
         function showError(input, message) {
             const errorElem = document.getElementById('error' + input.id.charAt(0).toUpperCase() + input.id.slice(1));
-            if (errorElem) {
-                errorElem.textContent = message;
-            }
+            if (errorElem) errorElem.textContent = message;
             input.classList.add('invalid');
         }
 
         function clearError(input) {
             const errorElem = document.getElementById('error' + input.id.charAt(0).toUpperCase() + input.id.slice(1));
-            if (errorElem) {
-                errorElem.textContent = '';
-            }
+            if (errorElem) errorElem.textContent = '';
             input.classList.remove('invalid');
         }
 
@@ -189,7 +158,7 @@
             const field = input.id;
             let result;
 
-            if (field === 'conContraseña' || field === 'documento') {
+            if (field === 'conContraseña') {
                 result = validators[field](val, form);
             } else {
                 result = validators[field](val);
@@ -208,9 +177,7 @@
             let valid = true;
             Object.keys(validators).forEach(field => {
                 const input = form[field];
-                if (input) {
-                    if (!validateField(input)) valid = false;
-                }
+                if (input && !validateField(input)) valid = false;
             });
             return valid;
         }
@@ -223,21 +190,14 @@
             }
         });
 
-        const docInput = document.getElementById('documento');
-        if (docInput) {
-            docInput.addEventListener('change', function() {
-                validateField(this);
-            });
-        }
-
         form.addEventListener('submit', e => {
             if (!validateAll()) {
                 e.preventDefault();
             }
         });
     </script>
-<?php include '../components/usuaria/footer.php'; ?>
 
+    <?php include '../components/usuaria/footer.php'; ?>
 </body>
 
 </html>

@@ -9,7 +9,6 @@ class Usuarias
     private $conContraseña;
     private $fecha_nac;
     private $rol;
-    private $documento;
 
     public function conectarBD()
     {
@@ -17,7 +16,7 @@ class Usuarias
         return $con;
     }
 
-    public function inicializar($nom, $ape, $nick, $cor, $cont, $contC, $fec, $rol, $documento = null)
+    public function inicializar($nom, $ape, $nick, $cor, $cont, $contC, $fec, $rol)
     {
         $this->nombre = $nom;
         $this->apellidos = $ape;
@@ -27,7 +26,6 @@ class Usuarias
         $this->conContraseña = $contC;
         $this->fecha_nac = $fec;
         $this->rol = $rol;
-        $this->documento = $documento;
     }
 
     public function agregarUsuaria()
@@ -44,11 +42,6 @@ class Usuarias
             empty(trim($this->fecha_nac))
         ) {
             header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Todos los campos obligatorios deben estar llenos"));
-            exit;
-        }
-
-        if ($this->rol == 2 && ($this->documento === null || !is_uploaded_file($this->documento['tmp_name']))) {
-            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Debes subir un documento que respalde tu experiencia"));
             exit;
         }
 
@@ -82,18 +75,32 @@ class Usuarias
         $fecha = mysqli_real_escape_string($con, $this->fecha_nac);
         $rol = (int) $this->rol;
 
-        if ($rol === 2 && $this->documento !== null && is_uploaded_file($this->documento['tmp_name'])) {
-            $archivoBinario = mysqli_real_escape_string($con, file_get_contents($this->documento['tmp_name']));
-            mysqli_query($con, "INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, documento) 
-        VALUES ('$nombre', '$apellidos', '$nickname', '$correo', '$hash', '$fecha', '$rol', '$archivoBinario')")
-                or die("Error al insertar especialista: " . mysqli_error($con));
-        } else {
-            mysqli_query($con, "INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol) 
-        VALUES ('$nombre', '$apellidos', '$nickname', '$correo', '$hash', '$fecha', '$rol')")
-                or die("Error al insertar usuaria: " . mysqli_error($con));
-        }
+        // Insertar usuaria en la base de datos
+        mysqli_query($con, "INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol) 
+    VALUES ('$nombre', '$apellidos', '$nickname', '$correo', '$hash', '$fecha', '$rol')")
+            or die("Error al insertar usuaria: " . mysqli_error($con));
 
-        header("Location: ../Vista/registro.php?status=success&message=" . urlencode("Cuenta creada exitosamente"));
+        // Iniciar sesión automáticamente
+        session_start();
+        $_SESSION['id_usuaria'] = mysqli_insert_id($con); // aquí ya usas 'id'
+        $_SESSION['nombre'] = $this->nombre;
+        $_SESSION['rol'] = $rol;
+
+        // Redirigir según el rol
+        switch ($rol) {
+            case 1:
+                header("Location: ../Vista/vista_usuaria.php");
+                break;
+            case 2:
+                header("Location: ../Vista/profileEspecialista.php");
+                break;
+            case 3:
+                header("Location: ../Vista/vista_tutor.php");
+                break;
+            default:
+                header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Rol no válido"));
+                break;
+        }
         exit;
     }
 }
