@@ -1,8 +1,8 @@
 /* Importar fuentes */
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap");
 
 * {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -21,16 +21,16 @@
 h1,
 h2,
 h3 {
-  font-family: 'Merriweather', serif;
+  font-family: "Merriweather", serif;
 }
 
 /* Variables de colores lila/morado */
 :root {
-  --lila-claro: #e7d4f2;          /* Lila pastel muy claro y brillante para navbar */
-  --morado-claro: #8056a6;        /* Morado vibrante para texto */
-  --morado-medio: #6b3d91;        /* Morado un poco más oscuro para hover */
-  --morado-base: #5a2a83;         /* Morado fuerte para botones y acentos */
-  --lila-muy-claro: #f8f3fc;      /* Fondo muy suave para otros elementos */
+  --lila-claro: #e7d4f2; /* Lila pastel muy claro y brillante para navbar */
+  --morado-claro: #8056a6; /* Morado vibrante para texto */
+  --morado-medio: #6b3d91; /* Morado un poco más oscuro para hover */
+  --morado-base: #5a2a83; /* Morado fuerte para botones y acentos */
+  --lila-muy-claro: #f8f3fc; /* Fondo muy suave para otros elementos */
 }
 
 /* Body y fondo */
@@ -240,13 +240,12 @@ body {
   outline: none;
 }
 
-
 /* foot*/
 .custom-footer {
   background-color: #e7d4f2; /* mismo lila pastel de la navbar */
   color: #5a2a83; /* morado fuerte */
   border-top: 2px solid #5a2a83;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 0.9rem;
 }
 
@@ -274,7 +273,8 @@ body {
   transform: scale(1.2);
   color: #8056a6;
 }
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -286,4 +286,13 @@ body {
 
 main {
   flex: 1;
+}
+
+/* Mensaje de error para el login */
+.error {
+  color: red;
+  font-size: 0.85em;
+  height: 1em;
+  margin-bottom: 0.5em;
+  display: block;
 }
