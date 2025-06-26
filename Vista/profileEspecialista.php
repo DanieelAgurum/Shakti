@@ -122,7 +122,9 @@
                             <hr>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <a href="#addNew" class="btn btn-primary" data-toggle="modal" style="margin-bottom: 8px;"><i class="fa-solid fa-circle-plus"></i> Editar perfil</a>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNew" style="margin-bottom: 8px;">
+                                        <i class="fa-solid fa-circle-plus"></i> Editar perfil
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -188,14 +190,13 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
         <div class="modal-dialog w-125" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title text-center"> <strong> Agregar producto </strong></h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa-solid fa-circle-xmark"></i>
-                    </button>
+                    <h4 class="modal-title text-center" id="addNewLabel"><strong>Editar perfil</strong></h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -221,7 +222,8 @@
                                     <label class="control-label">Categoría:</label>
                                 </div>
                                 <div class="col-sm-10">
-                                    <select name="categoriaProduc" class="form-select" aria-label=".form-select-sm example" required>
+                                    <select name="categoriaProduc" class="form-select" required>
+                                        <!-- Opciones aquí -->
                                     </select>
                                 </div>
                             </div>
@@ -241,18 +243,14 @@
                                     <input type="number" class="form-control" name="stockProduc" required>
                                 </div>
                             </div>
-                            <div class="row form-group">
-                                <div class="col-sm-2">
-                                    <label class="control-label">Descripción: </label>
-                                </div>
-                                <div class="col-sm-13">
-                                    <textarea name="descripcionProduc" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
-                                </div>
-                            </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa-solid fa-ban"></i> Cancelar
+                                </button>
                                 <input type="hidden" value="1" name="opcion">
-                                <button type="submit" name="add" value="addNew" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Guardar</button>
+                                <button type="submit" name="add" value="addNew" class="btn btn-primary">
+                                    <i class="fa-solid fa-circle-check"></i> Guardar
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -260,6 +258,8 @@
             </div>
         </div>
     </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
     <?php include '../components/usuaria/footer.php'; ?>
