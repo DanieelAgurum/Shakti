@@ -89,10 +89,10 @@ class Usuarias
         // Redirigir según el rol
         switch ($rol) {
             case 1:
-                header("Location: ../Vista/vista_usuaria.php");
+                header("Location: ../Vista/usuarias/perfil.php");
                 break;
             case 2:
-                header("Location: ../Vista/profileEspecialista.php");
+                header("Location: ../Vista/especialistas/perfil.php");
                 break;
             case 3:
                 header("Location: ../Vista/vista_tutor.php");

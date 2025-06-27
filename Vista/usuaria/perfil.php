@@ -1,5 +1,5 @@
 <?php
-
+include '../../obtenerLink/obtenerLink.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -7,6 +7,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
     header("Location: ../../index.php");
     exit;
 }
+
 
 ?>
 
@@ -37,9 +38,11 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
                             <div class="d-flex flex-column align-items-center text-center">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
                                 <div class="mt-3">
-                                    <h4><?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : " " ?></h4>
-                                    <!-- <p class="text-secondary mb-1">Full Stack Developer</p> -->
-                                    <p class="text-muted font-size-sm"><?php echo isset($_SESSION['direccion']) ? $_SESSION['direccion'] : " "; ?></p>
+                                    <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
+                                    <p class="text-secondary mb-1"><?php echo isset($_SESSION['nombre_rol']) ? ucwords(strtolower($_SESSION['nombre_rol'])) : " " ?></p>
+                                    <p class="text-muted font-size-sm"><?php echo isset($_SESSION['direccion']) ? ucwords(strtolower($_SESSION['direccion'])) : " " ?></p>
+                                    <button class="btn btn-outline-primary">Mensaje</button>
+                                    <button class="btn btn-secondary">Diario</button>
                                 </div>
                             </div>
                         </div>
@@ -60,10 +63,11 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
                                 <div class="col-sm-9 text-secondary">
                                     <?php
                                     echo (isset($_SESSION['nombre']) && isset($_SESSION['apellidos']))
-                                        ? $_SESSION['nombre'] . ' ' . $_SESSION['apellidos']
+                                        ? ucwords(strtolower($_SESSION['nombre'])) . ' ' . ucwords(strtolower($_SESSION['apellidos']))
                                         : " ";
                                     ?>
                                 </div>
+
                             </div>
                             <hr>
                             <div class="row">
@@ -133,81 +137,9 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
             </div>
         </div>
     </div>
-    <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog w-125" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title text-center"> <strong> Agregar producto </strong></h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa-solid fa-circle-xmark"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <form method="post" action="../../control/productoCtrl.php" enctype="multipart/form-data">
-                            <div class="row form-group">
-                                <div class="col-sm-2">
-                                    <label class="control-label">Foto:</label>
-                                </div>
-                                <div class="col-sm-10">
-                                    <input type="file" class="form-control" name="imagenProduc" required>
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-2">
-                                    <label class="control-label">Nombre:</label>
-                                </div>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="nombreProduc" required>
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-2">
-                                    <label class="control-label">Categoría:</label>
-                                </div>
-                                <div class="col-sm-10">
-                                    <select name="categoriaProduc" class="form-select" aria-label=".form-select-sm example" required>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-2">
-                                    <label class="control-label">Precio:</label>
-                                </div>
-                                <div class="col-sm-10">
-                                    <input type="number" class="form-control" name="precioProduc" required>
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-2">
-                                    <label class="control-label">Stock:</label>
-                                </div>
-                                <div class="col-sm-10">
-                                    <input type="number" class="form-control" name="stockProduc" required>
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-2">
-                                    <label class="control-label">Descripción: </label>
-                                </div>
-                                <div class="col-sm-13">
-                                    <textarea name="descripcionProduc" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
-                                <input type="hidden" value="1" name="opcion">
-                                <button type="submit" name="add" value="addNew" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Guardar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
-    <?php include '../components/usuaria/footer.php'; ?>
+    <?php include '../../components/usuaria/footer.php'; ?>
 </body>
 
 </html>
