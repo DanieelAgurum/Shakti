@@ -59,6 +59,7 @@ class loginMdln
 
                 echo json_encode([
                     'success' => true,
+                    'message' => 'exito',
                     'id_rol' => $reg['id_rol']
                 ]);
                 exit;
