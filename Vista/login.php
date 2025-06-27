@@ -1,3 +1,19 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+
+  if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1) {
+    header("Location: ../vista/usuaria/perfil.php");
+    exit;
+  } else if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 2) {
+    header("Location: profileEspecialista.php");
+    exit;
+  } else if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
+    header("Location: admin/");
+    exit;
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -100,7 +116,6 @@
         <!-- Cambié el tipo a button para controlar el envío -->
         <button type="button" onclick="iniciarSesion()" class="btn btn-purple w-100 shadow-sm fw-semibold">Ingresar</button>
       </form>
-
       <div class="auth-footer mt-4 text-center">
         <a href="#" class="d-block mb-2 text-decoration-none">¿Olvidaste tu contraseña?</a>
         <a href="registro.php" class="text-decoration-none">¿No tienes una cuenta? Regístrate</a>

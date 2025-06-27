@@ -16,7 +16,7 @@ function iniciarSesion() {
             window.location.href = "../vista/tutor/panel.php";
             break;
           case "3":
-            window.location.href = "../vista/admin/panel.php";
+            window.location.href = "../vista/admin/";
             break;
           default:
             break;
