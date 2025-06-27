@@ -18,13 +18,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Perfil <?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : " " ?> - Shakti</title>
-    <link rel="stylesheet" href="../css/estilos.css" />
-    <link rel="stylesheet" href="../css/registro.css" />
-    <link rel="stylesheet" href="../css/perfil.css" />
-    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../../css/styles.php" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    <?php include '../../components/usuaria/navbar.php'; ?>
+    <?php include '../../components/navbar.php'; ?>
 </head>
 
 <body>
@@ -109,26 +106,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
                             <div class="row">
                                 <div class="col-sm-12">
                                     <a href="#addNew" class="btn btn-primary" data-toggle="modal" style="margin-bottom: 8px;"><i class="fa-solid fa-circle-plus"></i> Editar perfil</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row gutters-sm">
-                        <div class="col-sm-12 mb-6">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">Documentos</i>Subidos</h6>
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <small>Website Markup</small>
-                                        <div>
-                                            <i class="bi bi-pencil-square mx-1"></i>
-                                            <i class="bi bi-trash3 mx-1"></i>
-                                        </div>
-                                    </div>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
