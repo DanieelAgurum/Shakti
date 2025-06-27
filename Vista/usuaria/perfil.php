@@ -40,7 +40,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
                                     <h4><?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : " " ?></h4>
                                     <!-- <p class="text-secondary mb-1">Full Stack Developer</p> -->
                                     <p class="text-muted font-size-sm"><?php echo isset($_SESSION['direccion']) ? $_SESSION['direccion'] : " "; ?></p>
-                                    <button class="btn btn-outline-primary">Message</button>
                                 </div>
                             </div>
                         </div>
