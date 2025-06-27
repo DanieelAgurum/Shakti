@@ -89,13 +89,10 @@ class Usuarias
         // Redirigir según el rol
         switch ($rol) {
             case 1:
-                header("Location: ../Vista/usuarias/perfil.php");
+                header("Location: ../Vista/usuarias/perfil.php?status=succes&message=" . urlencode("Cuenta creada exitosamente"));
                 break;
             case 2:
-                header("Location: ../Vista/especialista/perfil.php");
-                break;
-            case 3:
-                header("Location: ../Vista/vista_tutor.php");
+                header("Location: ../Vista/especialista/perfil.php?status=succes&message=" . urlencode("Cuenta creada exitosamente, completa tu perfil"));
                 break;
             default:
                 header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Rol no válido"));
