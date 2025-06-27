@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-// Validar que el usuario esté logueado y sea especialista (id_rol = 2)
 if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
   header("Location: ../../index.php");
   exit;
@@ -16,7 +15,7 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Perfil Especialista - Shakti</title>
+  <title>Perfil - Shakti</title>
   <link rel="stylesheet" href="../../css/estilos.css" />
   <link rel="stylesheet" href="../../css/registro.css" />
   <link rel="stylesheet" href="../../css/perfil.css" />
@@ -61,10 +60,10 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
               foreach ($fields as $label => $value): ?>
                 <div class="row">
                   <div class="col-sm-3">
-                    <h6 class="mb-0"><?php echo htmlspecialchars($label); ?></h6>
+                    <h6 class="mb-0"><?php echo ucwords(strtolower($label)); ?></h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                    <?php echo htmlspecialchars($value); ?>
+                    <?php echo ucwords(strtolower($value)); ?>
                   </div>
                 </div>
                 <hr>

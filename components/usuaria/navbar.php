@@ -7,10 +7,10 @@ $urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
-if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
-  header("Location:" . $urlBase);
-  exit;
-}
+// if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
+//   header("Location:" . $urlBase);
+//   exit;
+// }
 
 ?>
 
@@ -55,7 +55,7 @@ if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
         <li class="nav-item dropdown ms-3">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-person-circle me-1"></i>
-            <?php echo isset($_SESSION['nickname']) ? htmlspecialchars($_SESSION['nickname']) : $_SESSION['nickname']; ?>
+            <?php echo isset($_SESSION['nickname']) ? htmlspecialchars($_SESSION['nickname']) : " "; ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="<?php echo $urlBase ?>/Vista/usuaria/perfil.php">Mi perfil <i class="bi bi-person-circle me-1"></i></a></li>
@@ -66,8 +66,13 @@ if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
             <li>
               <hr class="dropdown-divider">
             </li>
+            <li><a class="dropdown-item" href="#">Configuración <i class="bi bi-gear-fill"></i></a></li>
             <li>
-              <form action="/Shakti/Controlador/loginCtrl.php" method="post" class="m-0 p-0">
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <form action="<?php echo $urlBase ?>/Controlador/loginCtrl.php" method="post" class="m-0 p-0">
                 <input type="hidden" name="opcion" value="2" />
                 <button type="submit" class="dropdown-item text-danger">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
               </form>
