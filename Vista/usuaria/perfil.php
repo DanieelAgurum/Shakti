@@ -1,5 +1,4 @@
 <?php
-include '../../obtenerLink/obtenerLink.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -17,11 +16,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Perfil <?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : " " ?> - Shakti</title>
-    <link rel="stylesheet" href="../../css/styles.php" />
+    <title>Perfil - Shakti</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    <?php include '../../components/navbar.php'; ?>
+    <?php include '../../components/usuaria/navbar.php'; ?>
 </head>
 
 <body>
@@ -44,10 +42,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
                             </div>
                         </div>
                     </div>
-                    <form action="../../Controlador/loginCtrl.php" method="post" class="mt-4">
-                        <input type="hidden" name="opcion" value="2">
-                        <input type="submit" value="Cerrar Sesion">
-                    </form>
                 </div>
 
                 <div class="col-md-8">
@@ -114,8 +108,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>
 
