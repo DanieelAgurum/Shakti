@@ -25,11 +25,5 @@ function iniciarSesion() {
         $("#mensaje-error").text(respuesta.message).show();
       }
     },
-    error: function (xhr, status, error) {
-      console.error("Error en la petición AJAX:", error);
-      $("#mensaje-error")
-        .text("Error en el servidor, intenta más tarde.")
-        .show();
-    },
   });
 }
