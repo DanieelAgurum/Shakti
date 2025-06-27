@@ -3,10 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 
   if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1) {
-    header("Location: ../vista/usuaria/perfil.php");
+    header("Location: usuaria/perfil.php");
     exit;
   } else if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 2) {
-    header("Location: profileEspecialista.php");
+    header("Location: especialista/perfil.php");
     exit;
   } else if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
     header("Location: admin/");

@@ -17,13 +17,12 @@ if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
     <link rel="stylesheet" href="../css/footer.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    <?php include '../components/usuaria/navbar.php'; ?>
-    <?php include 'modales/perfil.php'; ?>
+    <?php include '../../components/especialista/navbar.php'; ?>
 </head>
 
 <body>
 
-    <div class="container mt-3">
+    <div class="container mt-5">
         <div class="main-body">
             <div class="row gutters-sm">
                 <div class="col-md-4 mb-3">
@@ -40,6 +39,10 @@ if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
                             </div>
                         </div>
                     </div>
+                    <form action="../../Controlador/loginCtrl.php" method="post" class="mt-4">
+                        <input type="hidden" name="opcion" value="2">
+                        <input type="submit" value="Cerrar Sesion">
+                    </form>
                 </div>
                 <div class="col-md-8">
                     <div class="card mb-3">
