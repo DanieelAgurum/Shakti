@@ -1,5 +1,5 @@
 <?php
-
+include '../obtenerLink/obtenerLink.php';
 class loginMdln
 {
     private $correo;
@@ -89,12 +89,7 @@ class loginMdln
         session_start();
         session_unset();
         session_destroy();
-        header("Location: ../index.php");
-        exit;
-        // echo json_encode([
-        //     'success' => true,
-        //     'message' => 'Sesión cerrada correctamente.'
-        // ]);
+        header("Location: " . getBaseUrl());
         exit;
     }
 }
