@@ -4,22 +4,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 
   <style>
     /* Estilo personalizado para navbar */
     .custom-navbar {
-      background-color: #d7c1f5; /* lila claro */
+      background-color: #d7c1f5;
+      /* lila claro */
     }
 
     .custom-navbar .nav-link,
     .custom-navbar .navbar-brand {
-      color: #4b0082; /* morado oscuro */
+      color: #4b0082;
+      /* morado oscuro */
       transition: color 0.3s ease;
     }
 
@@ -33,7 +31,8 @@
 
     /* Para que el contenido no quede debajo de la navbar fixed */
     body {
-      padding-top: 56px; /* altura típica navbar bootstrap */
+      padding-top: 56px;
+      /* altura típica navbar bootstrap */
     }
   </style>
 </head>
@@ -60,7 +59,7 @@
             <a class="nav-link" href="#">Servicios</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Contacto</a>
+            <a class="nav-link" href="Vista/Contacto.php">Contacto</a>
           </li>
           <li class="nav-item ms-3">
             <a class="nav-link fs-4" href="/Shakti/Vista/login.php" title="Iniciar sesión" aria-label="Iniciar sesión">
@@ -71,10 +70,6 @@
       </div>
     </div>
   </nav>
-
-  <!-- Aquí tu contenido principal -->
-
-  <!-- Bootstrap JS Bundle (Popper + Bootstrap JS) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
