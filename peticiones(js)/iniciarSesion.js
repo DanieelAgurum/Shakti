@@ -13,7 +13,7 @@ function iniciarSesion() {
             window.location.href = "../vista/usuaria/perfil.php";
             break;
           case "2":
-            window.location.href = "../vista/tutor/panel.php";
+            window.location.href = "../vista/especialista/perfil.php";
             break;
           case "3":
             window.location.href = "../vista/admin/";
