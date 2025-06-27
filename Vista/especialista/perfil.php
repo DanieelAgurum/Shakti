@@ -3,183 +3,130 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
+// Validar que el usuario esté logueado y sea especialista (id_rol = 2)
+if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
     header("Location: ../../index.php");
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Perfil especialista - Shakti</title>
-    <link rel="stylesheet" href="../css/estilos.css" />
-    <link rel="stylesheet" href="../css/registro.css" />
-    <link rel="stylesheet" href="../css/perfil.css" />
-    <link rel="stylesheet" href="../css/footer.css" />
+    <title>Perfil Especialista - Shakti</title>
+    <link rel="stylesheet" href="../../css/estilos.css" />
+    <link rel="stylesheet" href="../../css/registro.css" />
+    <link rel="stylesheet" href="../../css/perfil.css" />
+    <link rel="stylesheet" href="../../css/footer.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
     <?php include '../../components/especialista/navbar.php'; ?>
 </head>
 
 <body>
-
-    <div class="container mt-5">
-        <div class="main-body">
-            <div class="row gutters-sm">
-                <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex flex-column align-items-center text-center">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
-                                <div class="mt-3">
-                                    <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
-                                    <p class="text-secondary mb-1"><?php echo isset($_SESSION['nombre_rol']) ? ucwords(strtolower($_SESSION['nombre_rol'])) : " " ?></p>
-                                    <p class="text-muted font-size-sm"><?php echo isset($_SESSION['direccion']) ? ucwords(strtolower($_SESSION['direccion'])) : " " ?></p>
-                                    <button class="btn btn-outline-primary">Mensaje</button>
-                                </div>
+<div class="container mt-5">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <!-- Panel izquierdo -->
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Especialista" class="rounded-circle" width="150">
+                            <div class="mt-3">
+                                <h4><?php echo ucwords(strtolower($_SESSION['nombre'] ?? '')); ?></h4>
+                                <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['nombre_rol'] ?? '')); ?></p>
+                                <p class="text-muted font-size-sm"><?php echo ucwords(strtolower($_SESSION['direccion'] ?? '')); ?></p>
+                                <button class="btn btn-outline-primary">Mensaje</button>
                             </div>
                         </div>
                     </div>
-                    <form action="../../Controlador/loginCtrl.php" method="post" class="mt-4">
-                        <input type="hidden" name="opcion" value="2">
-                        <input type="submit" value="Cerrar Sesion">
-                    </form>
                 </div>
-                <div class="col-md-8">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Nombre completo</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <?php
-                                    echo (isset($_SESSION['nombre']) && isset($_SESSION['apellidos']))
-                                        ? ucwords(strtolower($_SESSION['nombre'])) . ' ' . ucwords(strtolower($_SESSION['apellidos']))
-                                        : " ";
-                                    ?>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Correo eléctronico</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <?php echo isset($_SESSION['correo']) ? $_SESSION['correo'] : " "; ?>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Teléfono</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <?php echo isset($_SESSION['telefono']) ? $_SESSION['telefono'] : " "; ?>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Dirección</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <?php echo isset($_SESSION['direccion']) ? $_SESSION['direccion'] : " "; ?>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Estado de cuenta</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <?php echo (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] === 1) ? "Activo" : "Desactivado"; ?>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-end gap-2 mb-3">
-                                <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Completar perfil
-                                    <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"></span>
-                                </button>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNew">
-                                    <i class="fa-solid fa-circle-plus"></i> Editar perfil
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+            </div>
 
-                    <div class="row gutters-sm">
-                        <div class="col-sm-6 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>Project Status</h6>
-                                    <small>Web Design</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small>Website Markup</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small>One Page</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small>Mobile Template</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small>Backend API</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
+            <!-- Panel derecho -->
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <?php
+                        $fields = [
+                            'Nombre completo' => trim(($_SESSION['nombre'] ?? '') . ' ' . ($_SESSION['apellidos'] ?? '')),
+                            'Correo electrónico' => $_SESSION['correo'] ?? '',
+                            'Teléfono' => $_SESSION['telefono'] ?? '',
+                            'Dirección' => $_SESSION['direccion'] ?? '',
+                            'Estado de cuenta' => 'Activa'
+                        ];
+                        foreach ($fields as $label => $value): ?>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0"><?php echo htmlspecialchars($label); ?></h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <?php echo htmlspecialchars($value); ?>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>Project Status</h6>
-                                    <small>Web Design</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small>Website Markup</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small>One Page</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small>Mobile Template</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small>Backend API</small>
-                                    <div class="progress mb-3" style="height: 5px">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
+                            <hr>
+                        <?php endforeach; ?>
+
+                        <div class="d-flex justify-content-end gap-2 mb-3">
+                            <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#completarPerfilModal">
+                                Completar perfil
+                                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"></span>
+                            </button>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                                <i class="fa-solid fa-circle-plus"></i> Editar perfil
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
+<!-- Modal completar perfil -->
+<div class="modal fade" id="completarPerfilModal" tabindex="-1" aria-labelledby="completarPerfilModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="completarPerfilModalLabel">Completar Perfil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>Formulario para completar perfil del especialista...</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- Modal editar perfil -->
+<div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editarPerfilModalLabel">Editar Perfil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>Formulario para editar perfil del especialista...</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<?php include '../../components/usuaria/footer.php'; ?>
 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
-    <?php include '../../components/usuaria/footer.php'; ?>
 </body>
-
 </html>

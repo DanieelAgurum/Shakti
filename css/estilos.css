@@ -1,0 +1,42 @@
+/* estilos.css */
+
+/* NAVBAR Personalizado */
+.custom-navbar {
+  background-color: #d7c1f5; /* Lila claro */
+}
+
+/* Enlaces y marca del navbar */
+.custom-navbar .nav-link,
+.custom-navbar .navbar-brand,
+.dropdown-toggle {
+  color: #4b0082; /* Morado oscuro */
+  transition: color 0.3s ease;
+}
+
+/* Hover/focus para enlaces y dropdown */
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link:focus,
+.custom-navbar .navbar-brand:hover,
+.custom-navbar .navbar-brand:focus,
+.dropdown-menu a:hover {
+  color: white;
+  background-color: #4b0082;
+  text-decoration: none;
+}
+
+/* Para evitar que el contenido quede oculto debajo de la navbar */
+body {
+  padding-top: 56px;
+}
+
+/* Estilo para el menú desplegable del usuario */
+.dropdown-menu {
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para item de cerrar sesión */
+.dropdown-item.text-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
