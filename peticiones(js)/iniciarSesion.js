@@ -19,11 +19,16 @@ function iniciarSesion() {
             window.location.href = "../vista/admin/";
             break;
           default:
+            location.reload();
             break;
         }
       } else {
         $("#mensaje-error").text(respuesta.message).show();
       }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error en la petición AJAX:", error);
+      $("#mensaje-error").text("Ocurrió un error. Intenta nuevamente.").show();
     },
   });
 }
