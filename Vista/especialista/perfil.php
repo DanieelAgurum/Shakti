@@ -1,4 +1,8 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
     header("Location: ../../index.php");
     exit;
@@ -52,7 +56,11 @@ if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
                                     <h6 class="mb-0">Nombre completo</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    Kenneth Valdez
+                                    <?php
+                                    echo (isset($_SESSION['nombre']) && isset($_SESSION['apellidos']))
+                                        ? ucwords(strtolower($_SESSION['nombre'])) . ' ' . ucwords(strtolower($_SESSION['apellidos']))
+                                        : " ";
+                                    ?>
                                 </div>
                             </div>
                             <hr>
@@ -61,7 +69,7 @@ if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
                                     <h6 class="mb-0">Correo eléctronico</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    fip@jukmuh.al
+                                    <?php echo isset($_SESSION['correo']) ? $_SESSION['correo'] : " "; ?>
                                 </div>
                             </div>
                             <hr>
@@ -70,7 +78,7 @@ if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
                                     <h6 class="mb-0">Teléfono</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    (239) 816-9029
+                                    <?php echo isset($_SESSION['telefono']) ? $_SESSION['telefono'] : " "; ?>
                                 </div>
                             </div>
                             <hr>
@@ -79,7 +87,7 @@ if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
                                     <h6 class="mb-0">Dirección</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    Bay Area, San Francisco, CA
+                                    <?php echo isset($_SESSION['direccion']) ? $_SESSION['direccion'] : " "; ?>
                                 </div>
                             </div>
                             <hr>
@@ -88,7 +96,7 @@ if (empty($_SESSION['correo']) and empty($_SESSION['id_rol']) === 2) {
                                     <h6 class="mb-0">Estado de cuenta</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    Desactivada
+                                    <?php echo (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] === 1) ? "Activo" : "Desactivado"; ?>
                                 </div>
                             </div>
                             <hr>
