@@ -52,7 +52,8 @@ class loginMdln
                     $_SESSION['nickname'] = $reg['nickname'];
                     $_SESSION['correo'] = $reg['correo'];
                     $_SESSION['fecha_nacimiento'] = $reg['fecha_nacimiento'];
-
+                    $_SESSION['telefono'] = $reg['telefono'];
+                    $_SESSION['direccion'] = $reg['direccion'];
                     // Respondemos con éxito y el rol para que JS decida a dónde ir
                     echo json_encode([
                         'success' => true,
