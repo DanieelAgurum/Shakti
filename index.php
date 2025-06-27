@@ -19,7 +19,8 @@
 
 <body class="bg-white text-black">
  <?php
-require 'components/usuaria/navbar.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/navbar.php';
+
 ?>
 
 

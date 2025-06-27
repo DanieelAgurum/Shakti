@@ -23,7 +23,7 @@
 </head>
 
 <body class="auth-body">
-    <?php require '../components/usuaria/navbar.php'; ?>
+    <?php require '../components/navbar.php'; ?>
 
     <div class="auth-container">
         <div class="auth-header">

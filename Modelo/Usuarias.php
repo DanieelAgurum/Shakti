@@ -92,7 +92,7 @@ class Usuarias
                 header("Location: ../Vista/usuarias/perfil.php");
                 break;
             case 2:
-                header("Location: ../Vista/especialistas/perfil.php");
+                header("Location: ../Vista/especialista/perfil.php");
                 break;
             case 3:
                 header("Location: ../Vista/vista_tutor.php");

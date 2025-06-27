@@ -85,7 +85,7 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 
 <body class="d-flex flex-column">
-  <?php require '../components/usuaria/navbar.php'; ?>
+  <?php require '../components/navbar.php'; ?>
 
   <main class="flex-grow-1 d-flex align-items-center justify-content-center">
     <div class="auth-container">

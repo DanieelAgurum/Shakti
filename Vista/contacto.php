@@ -339,7 +339,7 @@
     </style>
 
 
-    <?php include '../components/usuaria/navbar.php'; ?>
+    <?php include '../components/navbar.php'; ?>
 </head>
 
 
