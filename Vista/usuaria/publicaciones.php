@@ -7,7 +7,8 @@ if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
     exit;
 }
 
-function conectarBD() {
+function conectarBD()
+{
     $con = mysqli_connect("localhost", "root", "", "shakti");
     if (!$con) {
         die("<p class='text-danger'>Error en la conexión a la base de datos.</p>");
@@ -64,9 +65,6 @@ while ($fila = mysqli_fetch_assoc($res)) {
 mysqli_close($con);
 ?>
 
-<!-- Estilos Bootstrap 5 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
 <div class="container my-4">
     <h2 class="mb-4">Gestión de Publicaciones</h2>
 
@@ -110,6 +108,3 @@ mysqli_close($con);
         </div>
     <?php endif; ?>
 </div>
-
-<!-- JS de Bootstrap (opcional) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,5 +1,4 @@
 <?php
-require_once '../obtenerLink/obtenerLink.php';
 
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
@@ -27,8 +26,6 @@ if (isset($_SESSION['id_rol'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Iniciar Sesión - Shakti</title>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -86,11 +83,10 @@ if (isset($_SESSION['id_rol'])) {
       display: block;
     }
   </style>
+  <?php require_once '../components/usuaria/navbar.php'; ?>
 </head>
 
 <body class="d-flex flex-column">
-  <?php require_once '../components/navbar.php'; ?>
-
   <main class="flex-grow-1 d-flex align-items-center justify-content-center">
     <div class="auth-container">
       <div class="auth-header text-center mb-4">
@@ -149,9 +145,6 @@ if (isset($_SESSION['id_rol'])) {
   </div>
 
   <?php include_once '../components/usuaria/footer.php'; ?>
-
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
