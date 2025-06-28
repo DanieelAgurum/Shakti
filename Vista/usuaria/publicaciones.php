@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = intval($_POST['id_publicacion'] ?? 0);
     $titulo = mysqli_real_escape_string($con, trim($_POST['titulo'] ?? ''));
     $contenido = mysqli_real_escape_string($con, trim($_POST['contenido'] ?? ''));
-    $id_usuaria = intval($_SESSION['id'] ?? 0); // CORREGIDO
+    $id_usuaria = intval($_SESSION['id_usuaria'] ?? 0);
 
     if ($titulo === '' || $contenido === '') {
         echo "<div class='alert alert-danger'>Los campos título y contenido son obligatorios.</div>";
