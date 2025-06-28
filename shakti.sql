@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-06-2025 a las 22:19:37
+-- Tiempo de generación: 28-06-2025 a las 18:11:43
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -39,6 +39,27 @@ CREATE TABLE `migrations` (
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2025_06_23_195509_s_h_a_k_t_i', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `publicacion`
+--
+
+CREATE TABLE `publicacion` (
+  `id_publicacion` int(11) NOT NULL,
+  `titulo` varchar(255) DEFAULT NULL,
+  `contenido` text DEFAULT NULL,
+  `fecha_publicacion` datetime DEFAULT current_timestamp(),
+  `id_usuarias` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `publicacion`
+--
+
+INSERT INTO `publicacion` (`id_publicacion`, `titulo`, `contenido`, `fecha_publicacion`, `id_usuarias`) VALUES
+(1, 'hola', 'putos todos', '2025-06-28 03:29:43', 15);
 
 -- --------------------------------------------------------
 
@@ -83,6 +104,17 @@ CREATE TABLE `usuarias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Volcado de datos para la tabla `usuarias`
+--
+
+INSERT INTO `usuarias` (`id`, `nombre`, `apellidos`, `fecha_nac`, `contraseña`, `nickname`, `correo`, `id_rol`, `documentos`, `direccion`, `telefono`, `foto`, `estatus`) VALUES
+(15, 'brian ', 'escalante gonzalez', '2003-11-06', '$2y$10$kNIg1hLXwd3756pQ1I3ipeZhmcOmklaHnUhFvF8jGMq8M5uY5mzme', 'brain', 'brianesca28@gmail.com', 1, NULL, NULL, NULL, NULL, 0),
+(16, 'Admin', 'General', '1990-01-01', '$2y$10$xvOgIReJXxKJLniCTi32GOU7MSdInWyBeZxSDoiLRoRmg5oufBn..', 'adminuser', 'admin@example.com', 3, NULL, NULL, NULL, NULL, 1),
+(17, 'diego', 'perez prado', '2004-01-26', '$2y$10$pyLT99TQ3DG06ap6q.FlL.W35EUZxFG.yXwK8aFisZyk75sV5r/pe', 'bored', 'testin1@example.com', 2, NULL, NULL, NULL, NULL, 0),
+(18, 'dan', 'escalante gonzalez', '2004-01-13', '$2y$10$NYZPfwEyPPnGdpJ1cGog8u/2NTSLAz7VWX3Ryfb3F7nBkHRvPB7oK', 'skinny', 'prueba@example.com', 2, NULL, NULL, NULL, NULL, 0),
+(19, 'noinfoibefoi', 'niofhfeihfei', '1977-05-28', '$2y$10$hXAofkretV4pgnEP8LtVjOWtagCEXgdnT/OKUvjFq/71GIWUy6wiK', 'flka', 'dddd@ddddd.com', 1, NULL, NULL, NULL, NULL, 0);
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -91,6 +123,13 @@ CREATE TABLE `usuarias` (
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `publicacion`
+--
+ALTER TABLE `publicacion`
+  ADD PRIMARY KEY (`id_publicacion`),
+  ADD KEY `fk_id_usuarias` (`id_usuarias`);
 
 --
 -- Indices de la tabla `roles`
@@ -117,6 +156,12 @@ ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT de la tabla `publicacion`
+--
+ALTER TABLE `publicacion`
+  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
@@ -126,11 +171,18 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `usuarias`
 --
 ALTER TABLE `usuarias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `publicacion`
+--
+ALTER TABLE `publicacion`
+  ADD CONSTRAINT `fk_id_usuarias` FOREIGN KEY (`id_usuarias`) REFERENCES `usuarias` (`id`),
+  ADD CONSTRAINT `fk_publicacion_usuaria` FOREIGN KEY (`id_usuarias`) REFERENCES `usuarias` (`id`);
 
 --
 -- Filtros para la tabla `usuarias`

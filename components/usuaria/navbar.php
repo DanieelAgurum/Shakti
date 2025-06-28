@@ -1,17 +1,19 @@
 <?php
-include '../../obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+
+
 ob_start();
 $urlBase = getBaseUrl();
-
 
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
+
+// Descomenta si quieres restringir el acceso solo a usuarias (id_rol = 1)
 // if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
 //   header("Location:" . $urlBase);
 //   exit;
 // }
-
 ?>
 
 <!DOCTYPE html>
