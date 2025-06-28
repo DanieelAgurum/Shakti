@@ -81,22 +81,30 @@ class Usuarias
             or die("Error al insertar usuaria: " . mysqli_error($con));
 
         // Iniciar sesión automáticamente
+        $id_nueva = mysqli_insert_id($con);
+
+        // Obtener datos completos de la usuaria para la sesión
+        $query = "SELECT u.*, r.nombre_rol FROM usuarias u JOIN roles r ON u.id_rol = r.id_rol WHERE u.id_usuaria = $id_nueva";
+        $resultado = mysqli_query($con, $query);
+        $usuaria = mysqli_fetch_assoc($resultado);
+
+        // Iniciar sesión automáticamente
         session_start();
-        $_SESSION['id'] = mysqli_insert_id($con);
-        $_SESSION['id_rol'] = $this->nombre;
-        $_SESSION['nombre_rol'] = $this->nombre;
-        $_SESSION['nombre'] = $this->nombre;
-        $_SESSION['apellidos'] = $this->nombre;
-        $_SESSION['nickname'] = $this->nombre;
-        $_SESSION['correo'] = $this->nombre;
-        $_SESSION['fecha_nacimiento'] = $this->nombre;
-        $_SESSION['telefono'] = $this->nombre;
-        $_SESSION['direccion'] = $this->nombre;
+        $_SESSION['id'] = $usuaria['id'];
+        $_SESSION['id_rol'] = $usuaria['id_rol'];
+        $_SESSION['nombre_rol'] = $usuaria['nombre_rol'];
+        $_SESSION['nombre'] = $usuaria['nombre'];
+        $_SESSION['apellidos'] = $usuaria['apellidos'];
+        $_SESSION['nickname'] = $usuaria['nickname'];
+        $_SESSION['correo'] = $usuaria['correo'];
+        $_SESSION['fecha_nacimiento'] = $usuaria['fecha_nacimiento'];
+        $_SESSION['telefono'] = $usuaria['telefono'];
+        $_SESSION['direccion'] = $usuaria['direccion'];
 
         // Redirigir según el rol
         switch ($rol) {
             case 1:
-                header("Location: ../Vista/usuarias/perfil.php?status=success&message=" . urlencode("Cuenta creada exitosamente"));
+                header("Location: ../Vista/usuaria/perfil.php?status=success&message=" . urlencode("Cuenta creada exitosamente"));
                 break;
             case 2:
                 header("Location: ../Vista/especialista/perfil.php?status=success&message=" . urlencode("Cuenta creada exitosamente, completa tu perfil"));
