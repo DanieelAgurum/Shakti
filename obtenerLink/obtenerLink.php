@@ -1,22 +1,23 @@
 <?php
-function getBaseUrl($folder = 'Shakti')
+function getBaseUrl($folder = 'shakti')
 {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
     $uri = $_SERVER['REQUEST_URI'];
 
-    // Busca la posición donde aparece la carpeta base
-    $pos = strpos($uri, '/' . $folder);
+    // Buscar insensible a mayúsculas
+    $pos = stripos($uri, '/' . $folder);
     if ($pos !== false) {
-        // Obtiene el path completo hasta la carpeta base
+        // Extraer la ruta hasta la carpeta, sin importar mayúsculas
         $basePath = substr($uri, 0, $pos + strlen($folder) + 1);
-        // Asegura que termine en '/'
+
+        // Asegurar que termine con '/'
         if (substr($basePath, -1) !== '/') {
             $basePath .= '/';
         }
+
         return $protocol . '://' . $host . $basePath;
     } else {
-        // Carpeta no encontrada, devuelve dominio base con '/'
         return $protocol . '://' . $host . '/';
     }
 }
