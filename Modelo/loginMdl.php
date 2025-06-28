@@ -29,49 +29,55 @@ class loginMdln
     {
         header('Content-Type: application/json');
 
+        $response = [
+            'success' => false,
+            'message' => 'Correo y/o contraseña incorrectos.'
+        ];
+
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
 
         $con = $this->conectarBD();
-        $correo = mysqli_real_escape_string($con, $this->correo);
-        $query = "SELECT u.*, r.id_rol, r.nombre_rol 
-              FROM usuarias u 
-              JOIN roles r ON u.id_rol = r.id_rol 
-              WHERE u.correo = '$correo'";
 
-        $result = mysqli_query($con, $query);
+        if (!$con) {
+            $response['message'] = 'Error en la conexión a la base de datos.';
+        } else {
+            $correo = mysqli_real_escape_string($con, $this->correo);
+            $query = "SELECT u.*, r.id_rol, r.nombre_rol 
+                  FROM usuarias u 
+                  JOIN roles r ON u.id_rol = r.id_rol 
+                  WHERE u.correo = '$correo'";
 
-        if ($result) {
-            $reg = mysqli_fetch_array($result);
+            $result = mysqli_query($con, $query);
 
-            if ($reg && password_verify($this->contraseña, $reg["contraseña"])) {
-                $_SESSION['id'] = $reg['id_usuaria'];
-                $_SESSION['id_rol'] = $reg['id_rol'];
-                $_SESSION['nombre_rol'] = $reg['nombre_rol'];
-                $_SESSION['nombre'] = $reg['nombre'];
-                $_SESSION['apellidos'] = $reg['apellidos'];
-                $_SESSION['nickname'] = $reg['nickname'];
-                $_SESSION['correo'] = $reg['correo'];
-                $_SESSION['fecha_nacimiento'] = $reg['fecha_nacimiento'];
-                $_SESSION['telefono'] = $reg['telefono'];
-                $_SESSION['direccion'] = $reg['direccion'];
+            if ($result) {
+                $reg = mysqli_fetch_array($result);
 
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'exito',
-                    'id_rol' => $reg['id_rol']
-                ]);
-                exit;
+                if ($reg && password_verify($this->contraseña, $reg["contraseña"])) {
+                    $_SESSION['id'] = $reg['id_usuaria'];
+                    $_SESSION['id_rol'] = $reg['id_rol'];
+                    $_SESSION['nombre_rol'] = $reg['nombre_rol'];
+                    $_SESSION['nombre'] = $reg['nombre'];
+                    $_SESSION['apellidos'] = $reg['apellidos'];
+                    $_SESSION['nickname'] = $reg['nickname'];
+                    $_SESSION['correo'] = $reg['correo'];
+                    $_SESSION['fecha_nacimiento'] = $reg['fecha_nacimiento'];
+                    $_SESSION['telefono'] = $reg['telefono'];
+                    $_SESSION['direccion'] = $reg['direccion'];
+
+                    $response['success'] = true;
+                    $response['message'] = 'exito';
+                    $response['id_rol'] = $reg['id_rol'];
+                }
             }
         }
 
-        echo json_encode([
-            'success' => false,
-            'message' => 'Correo y/o contraseña incorrectos.'
-        ]);
+        session_write_close();
+        echo json_encode($response);
         exit;
     }
+
 
     public function cerrarSesion()
     {
