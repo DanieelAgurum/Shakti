@@ -104,6 +104,16 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
       </div>
     </div>
   </div>
+  <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
+    <script>
+      Swal.fire({
+        icon: '<?= $_GET['status'] === 'success' ? 'success' : 'error' ?>',
+        title: '<?= $_GET['status'] === 'success' ? '¡Todo listo!' : 'Ups...' ?>',
+        text: '<?= htmlspecialchars(urldecode($_GET["message"]), ENT_QUOTES, "UTF-8") ?>',
+        confirmButtonText: 'Aceptar'
+      });
+    </script>
+  <?php endif; ?>
 
   <?php include '../modales/perfil.php'; ?>
   <?php include '../../components/usuaria/footer.php'; ?>
