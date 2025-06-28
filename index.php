@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 ?>
 
@@ -39,7 +39,7 @@ $urlBase = getBaseUrl();
   <main class="hero p-5 text-center">
     <?php
     if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1) {
-      include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/vista/usuaria/inicioUser.php';
+      include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/usuaria/inicioUser.php';
     } else {
       // Vista pública
       ?>
