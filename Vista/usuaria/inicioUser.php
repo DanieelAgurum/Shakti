@@ -14,4 +14,11 @@
       <a href="#" class="btn btn-outline-secondary">Ver recursos</a>
     </div>
   </div>
+
+  <hr class="my-5">
+
+  <div class="text-start">
+    <h3>Mis publicaciones</h3>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/usuaria/publicaciones.php'; ?>
+  </div>
 </div>
