@@ -73,23 +73,19 @@ class Usuarias
             exit;
         }
 
-        // Preparar datos para insertar
         $hash = password_hash($this->contraseña, PASSWORD_DEFAULT);
         $nombre = mysqli_real_escape_string($con, $this->nombre);
         $apellidos = mysqli_real_escape_string($con, $this->apellidos);
         $fecha = mysqli_real_escape_string($con, $this->fecha_nac);
         $rol = (int)$this->rol;
 
-        // Insertar en base de datos
         $insertar = mysqli_query($con, "
             INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol)
             VALUES ('$nombre', '$apellidos', '$nickname', '$correo', '$hash', '$fecha', $rol)
         ") or die("Error al insertar usuaria: " . mysqli_error($con));
 
-        // Obtener el ID de la usuaria recién insertada
         $id_nueva = mysqli_insert_id($con);
 
-        // Obtener datos completos con el rol
         $query = "
             SELECT u.*, r.nombre_rol
             FROM usuarias u
@@ -109,8 +105,8 @@ class Usuarias
         $_SESSION['nickname'] = $usuaria['nickname'];
         $_SESSION['correo'] = $usuaria['correo'];
         $_SESSION['fecha_nacimiento'] = $usuaria['fecha_nac'];
-        // $_SESSION['telefono'] = $usuaria['telefono']; // Solo si existe
-        // $_SESSION['direccion'] = $usuaria['direccion']; // Solo si existe
+        $_SESSION['telefono'] = $usuaria['telefono']; 
+        $_SESSION['direccion'] = $usuaria['direccion'];
 
         // Redirigir según rol
         switch ($usuaria['id_rol']) {
