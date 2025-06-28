@@ -82,17 +82,24 @@ class Usuarias
 
         // Iniciar sesión automáticamente
         session_start();
-        $_SESSION['id_usuaria'] = mysqli_insert_id($con); // aquí ya usas 'id'
+        $_SESSION['id'] = mysqli_insert_id($con);
+        $_SESSION['id_rol'] = $this->nombre;
+        $_SESSION['nombre_rol'] = $this->nombre;
         $_SESSION['nombre'] = $this->nombre;
-        $_SESSION['rol'] = $rol;
+        $_SESSION['apellidos'] = $this->nombre;
+        $_SESSION['nickname'] = $this->nombre;
+        $_SESSION['correo'] = $this->nombre;
+        $_SESSION['fecha_nacimiento'] = $this->nombre;
+        $_SESSION['telefono'] = $this->nombre;
+        $_SESSION['direccion'] = $this->nombre;
 
         // Redirigir según el rol
         switch ($rol) {
             case 1:
-                header("Location: ../Vista/usuarias/perfil.php?status=succes&message=" . urlencode("Cuenta creada exitosamente"));
+                header("Location: ../Vista/usuarias/perfil.php?status=success&message=" . urlencode("Cuenta creada exitosamente"));
                 break;
             case 2:
-                header("Location: ../Vista/especialista/perfil.php?status=succes&message=" . urlencode("Cuenta creada exitosamente, completa tu perfil"));
+                header("Location: ../Vista/especialista/perfil.php?status=success&message=" . urlencode("Cuenta creada exitosamente, completa tu perfil"));
                 break;
             default:
                 header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Rol no válido"));
