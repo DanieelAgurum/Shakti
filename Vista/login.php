@@ -5,20 +5,19 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-// Redireccionar según el rol si ya hay sesión iniciada
-// if (isset($_SESSION['id_rol'])) {
-//   switch ($_SESSION['id_rol']) {
-//     case 1:
-//       header("Location: usuaria/perfil.php");
-//       exit;
-//     case 2:
-//       header("Location: especialista/perfil.php");
-//       exit;
-//     case 3:
-//       header("Location: admin/");
-//       exit;
-//   }
-// }
+if (isset($_SESSION['id_rol'])) {
+  switch ($_SESSION['id_rol']) {
+    case 1:
+      header("Location: usuaria/perfil.php");
+      exit;
+    case 2:
+      header("Location: especialista/perfil.php");
+      exit;
+    case 3:
+      header("Location: admin/");
+      exit;
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -141,7 +140,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
         <div class="modal-body">
           <form class="d-grid gap-3">
-            <input type="email" class="form-control" id="recuperarEmail" placeholder="Ingresar correo electrónico *" required>
+            <input type="email" class="form-control" id="recuperarEmail" placeholder="Ingresar correo electrónico" required>
             <button type="submit" class="btn btn-purple w-100" data-bs-dismiss="modal">Enviar</button>
           </form>
         </div>
