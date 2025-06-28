@@ -6,19 +6,19 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Redireccionar según el rol si ya hay sesión iniciada
-if (isset($_SESSION['id_rol'])) {
-  switch ($_SESSION['id_rol']) {
-    case 1:
-      header("Location: usuaria/perfil.php");
-      exit;
-    case 2:
-      header("Location: especialista/perfil.php");
-      exit;
-    case 3:
-      header("Location: admin/");
-      exit;
-  }
-}
+// if (isset($_SESSION['id_rol'])) {
+//   switch ($_SESSION['id_rol']) {
+//     case 1:
+//       header("Location: usuaria/perfil.php");
+//       exit;
+//     case 2:
+//       header("Location: especialista/perfil.php");
+//       exit;
+//     case 3:
+//       header("Location: admin/");
+//       exit;
+//   }
+// }
 ?>
 <!DOCTYPE html>
 <html lang="es">
