@@ -1,110 +1,125 @@
 <?php
 session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
 
-// Validar rol de usuaria (1)
-if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
-    echo "<p class='text-danger'>No tienes permiso para acceder a esta sección.</p>";
-    exit;
-}
+$mensaje = $_SESSION['mensaje'] ?? '';
+unset($_SESSION['mensaje']);
 
-function conectarBD()
-{
-    $con = mysqli_connect("localhost", "root", "", "shakti");
-    if (!$con) {
-        die("<p class='text-danger'>Error en la conexión a la base de datos.</p>");
-    }
-    return $con;
-}
+$urlBase = '/Shakti/';
 
-$con = conectarBD();
-
-// Procesar formulario POST (crear o actualizar publicación)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = intval($_POST['id_publicacion'] ?? 0);
-    $titulo = mysqli_real_escape_string($con, trim($_POST['titulo'] ?? ''));
-    $contenido = mysqli_real_escape_string($con, trim($_POST['contenido'] ?? ''));
-    $id_usuaria = intval($_SESSION['id_usuaria'] ?? 0);
-
-    if ($titulo === '' || $contenido === '') {
-        echo "<div class='alert alert-danger'>Los campos título y contenido son obligatorios.</div>";
-    } else if ($id_usuaria === 0) {
-        echo "<div class='alert alert-danger'>Error: No se pudo identificar al usuario.</div>";
-    } else {
-        if ($id > 0) {
-            // Actualizar
-            $query = "UPDATE publicacion SET titulo='$titulo', contenido='$contenido' WHERE id_publicacion = $id";
-        } else {
-            // Insertar
-            $query = "INSERT INTO publicacion (titulo, contenido, fecha_publicacion, id_usuarias) 
-                      VALUES ('$titulo', '$contenido', NOW(), $id_usuaria)";
-        }
-
-        if (mysqli_query($con, $query)) {
-            echo "<div class='alert alert-success'>Publicación guardada correctamente.</div>";
-        } else {
-            echo "<div class='alert alert-danger'>Error al guardar publicación: " . mysqli_error($con) . "</div>";
-        }
-    }
-}
-
-// Cargar publicación para editar si existe $_GET['editar_id']
-$editarPublicacion = null;
-if (isset($_GET['editar_id'])) {
-    $editar_id = intval($_GET['editar_id']);
-    $res = mysqli_query($con, "SELECT * FROM publicacion WHERE id_publicacion = $editar_id");
-    $editarPublicacion = mysqli_fetch_assoc($res);
-}
-
-// Obtener todas las publicaciones ordenadas por fecha descendente
-$publicaciones = [];
-$res = mysqli_query($con, "SELECT * FROM publicacion ORDER BY fecha_publicacion DESC");
-while ($fila = mysqli_fetch_assoc($res)) {
-    $publicaciones[] = $fila;
-}
-
-mysqli_close($con);
+// Instanciar el modelo y traer publicaciones
+$publicacionModelo = new PublicacionModelo();
+$publicaciones = $publicacionModelo->obtenerTodas(); // O solo por usuaria si deseas
 ?>
 
-<div class="container my-4">
-    <h2 class="mb-4">Gestión de Publicaciones</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Publicaciones - Shakti</title>
+  <link rel="stylesheet" href="<?= $urlBase ?>css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+</head>
+<body>
 
-    <!-- Formulario para crear o editar -->
-    <form method="post" class="mb-5">
-        <input type="hidden" name="id_publicacion" value="<?= htmlspecialchars($editarPublicacion['id_publicacion'] ?? '') ?>" />
+<div class="container mt-5">
+  <?php if ($mensaje): ?>
+    <div class="alert alert-info"><?= htmlspecialchars($mensaje) ?></div>
+  <?php endif; ?>
+
+  <!-- Formulario de publicación -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Crear publicación</h5>
+      <form method="POST" action="<?= $urlBase ?>Controlador/PublicacionControlador.php">
         <div class="mb-3">
-            <label for="titulo" class="form-label">Título</label>
-            <input type="text" id="titulo" name="titulo" class="form-control" required
-                value="<?= htmlspecialchars($editarPublicacion['titulo'] ?? '') ?>" />
+          <input type="text" class="form-control mb-2" name="titulo" placeholder="Título de tu publicación" required>
+          <textarea class="form-control" name="contenido" rows="3" placeholder="¿Qué estás pensando?" required></textarea>
         </div>
+        <input type="hidden" name="guardar_publicacion" value="1" />
+        <button type="submit" class="btn btn-primary">Publicar</button>
+      </form>
+    </div>
+  </div>
 
-        <div class="mb-3">
-            <label for="contenido" class="form-label">Contenido</label>
-            <textarea id="contenido" name="contenido" rows="5" class="form-control" required><?= htmlspecialchars($editarPublicacion['contenido'] ?? '') ?></textarea>
+  <!-- Lista de publicaciones -->
+  <?php if (count($publicaciones) > 0): ?>
+    <?php foreach ($publicaciones as $pub): ?>
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong><?= htmlspecialchars($pub['titulo']) ?></strong>
+          <small class="text-muted"><?= date('d M Y H:i', strtotime($pub['fecha_publicacion'])) ?></small>
         </div>
-
-        <button type="submit" class="btn btn-primary">
-            <?= isset($editarPublicacion) ? 'Actualizar publicación' : 'Crear publicación' ?>
-        </button>
-        <?php if (isset($editarPublicacion)): ?>
-            <a href="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" class="btn btn-secondary ms-2">Cancelar</a>
-        <?php endif; ?>
-    </form>
-
-    <!-- Lista de publicaciones -->
-    <?php if (empty($publicaciones)): ?>
-        <p>No hay publicaciones disponibles.</p>
-    <?php else: ?>
-        <div class="list-group">
-            <?php foreach ($publicaciones as $pub): ?>
-                <div class="list-group-item mb-3">
-                    <h5><?= htmlspecialchars($pub['titulo']) ?></h5>
-                    <p><?= nl2br(htmlspecialchars($pub['contenido'])) ?></p>
-                    <small class="text-muted">Publicado el <?= date("d/m/Y H:i", strtotime($pub['fecha_publicacion'])) ?></small>
-                    <div class="mt-2">
-                        <a href="?editar_id=<?= $pub['id_publicacion'] ?>" class="btn btn-sm btn-outline-primary">Editar</a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+        <div class="card-body">
+          <p class="card-text"><?= nl2br(htmlspecialchars($pub['contenido'])) ?></p>
         </div>
-    <?php endif; ?>
+        <div class="card-footer">
+          <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-sm btn-outline-primary btn-like" data-id="<?= $pub['id_publicacion'] ?>">
+              <i class="bi bi-hand-thumbs-up"></i> Me gusta <span class="badge bg-primary likes-count">0</span>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="<?= $pub['id_publicacion'] ?>">
+              <i class="bi bi-chat"></i> Comentarios
+            </button>
+          </div>
+          <div class="comments-section mt-3 d-none" id="comments-<?= $pub['id_publicacion'] ?>">
+            <div class="existing-comments mb-3">
+              <p class="text-muted">Aún no hay comentarios.</p>
+            </div>
+            <form class="comment-form" data-id="<?= $pub['id_publicacion'] ?>">
+              <div class="input-group">
+                <input type="text" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
+                <button class="btn btn-sm btn-primary" type="submit">Enviar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  <?php else: ?>
+    <p class="text-center text-muted">No hay publicaciones aún.</p>
+  <?php endif; ?>
 </div>
+
+<script>
+document.querySelectorAll('.btn-toggle-comments').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const pubId = btn.getAttribute('data-id');
+    const commentsSection = document.getElementById('comments-' + pubId);
+    commentsSection.classList.toggle('d-none');
+  });
+});
+
+document.querySelectorAll('.btn-like').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const badge = btn.querySelector('.likes-count');
+    let count = parseInt(badge.textContent) || 0;
+    count++;
+    badge.textContent = count;
+    btn.classList.add('btn-primary');
+    btn.classList.remove('btn-outline-primary');
+    btn.disabled = true;
+  });
+});
+
+document.querySelectorAll('.comment-form').forEach(form => {
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const input = form.querySelector('input[type="text"]');
+    const commentText = input.value.trim();
+    if (!commentText) return;
+
+    const commentsDiv = form.previousElementSibling;
+    const p = document.createElement('p');
+    p.textContent = commentText;
+    p.classList.add('mb-1');
+    commentsDiv.appendChild(p);
+    input.value = '';
+  });
+});
+</script>
+</body>
+</html>
