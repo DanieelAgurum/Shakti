@@ -1,12 +1,32 @@
 <?php
+include '../../Modelo/completarPerfil.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
+
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
+if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 1) {
+  header("Location: {$urlBase}Vista/usuaria/perfil.php");
+  exit;
+} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 3) {
+  header("Location: {$urlBase}Vista/admin");
+  exit;
+} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 2) {
+  header("Location: {$urlBase}index.php");
+  exit;
+}
+
+$idUsuaria = $_SESSION['id'] ?? null;
+
+if (!$idUsuaria) {
   header("Location: ../../index.php");
   exit;
 }
+
+$cp = new Completar();
+$documentos = $cp->mostrarDocumentos($idUsuaria);
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +41,7 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
   <link rel="stylesheet" href="../../css/perfil.css" />
   <link rel="stylesheet" href="../../css/footer.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <?php include '../../components/especialista/navbar.php'; ?>
+  <?php include '../../components/usuaria/navbar.php'; ?>
 </head>
 
 <body>
@@ -33,7 +53,7 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
           <div class="card">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
-                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Especialista" class="rounded-circle" width="150">
+                <img src="https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png" alt="Especialista" class="rounded-circle" width="150">
                 <div class="mt-3">
                   <h4><?php echo ucwords(strtolower($_SESSION['nombre'] ?? '')); ?></h4>
                   <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['nombre_rol'] ?? '')); ?></p>
@@ -72,7 +92,6 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
               <div class="d-flex justify-content-end gap-2 mb-3">
                 <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#completarPerfilModal">
                   Completar perfil
-                  <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"></span>
                 </button>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
                   <i class="fa-solid fa-circle-plus"></i> Editar perfil
@@ -85,17 +104,28 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
             <div class="col-sm-12 mb-6">
               <div class="card h-100">
                 <div class="card-body">
-                  <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">Documentos</i>Subidos</h6>
-                  <div class="d-flex justify-content-between align-items-center mb-1">
-                    <small>Website Markup</small>
-                    <div>
-                      <i class="bi bi-pencil-square mx-1"></i>
-                      <i class="bi bi-trash3 mx-1"></i>
-                    </div>
-                  </div>
-                  <div class="progress mb-3" style="height: 5px">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
+                  <h6 class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-info mr-2">Documentos</i>
+                  </h6>
+                  <small>
+                    <ul class="mb-0">
+                      <?php if (!empty($documentos['id_oficial'])): ?>
+                        <li>Identificación oficial</li>
+                      <?php endif; ?>
+                      <?php if (!empty($documentos['documento1'])): ?>
+                        <li>Título profesional</li>
+                      <?php endif; ?>
+                      <?php if (!empty($documentos['documento2'])): ?>
+                        <li>Cédula profesional o matrícula</li>
+                      <?php endif; ?>
+                      <?php if (!empty($documentos['documento3'])): ?>
+                        <li>Certificados de diplomados o posgrados</li>
+                      <?php endif; ?>
+                      <?php if (!empty($documentos['documento4'])): ?>
+                        <li>Constancias de práctica o experiencia laboral</li>
+                      <?php endif; ?>
+                    </ul>
+                  </small>
                 </div>
               </div>
             </div>
@@ -118,8 +148,6 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
   <?php include '../modales/perfil.php'; ?>
   <?php include '../../components/usuaria/footer.php'; ?>
 
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
 
 </body>
 

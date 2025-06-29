@@ -8,74 +8,100 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form method="post" action="../../control/productoCtrl.php" enctype="multipart/form-data">
+                    <form method="post" action="../../Controlador/UsuariasControlador.php" enctype="multipart/form-data">
+                        <!-- Foto -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Foto:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="file" class="form-control" name="foto" required>
+                                <input type="file" class="form-control" name="foto">
                             </div>
                         </div>
+
+                        <!-- Nombre -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Nombre:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nombre" required>
+                                <input type="text" class="form-control" name="nombreN" 
+                                    value="<?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Apellidos -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Apellidos:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="apellidos" required>
+                                <input type="text" class="form-control" name="apellidosN" 
+                                    value="<?= htmlspecialchars($_SESSION['apellidos'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Nickname -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Nombre de usuaria:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nickname" required>
+                                <input type="text" class="form-control" name="nicknameN" 
+                                    value="<?= htmlspecialchars($_SESSION['nickname'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Contraseña -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Nueva contraseña:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="password" class="form-control" name="contraseña" required>
+                                <input type="password" class="form-control" name="contraseñaN">
                             </div>
                         </div>
+
+                        <!-- Teléfono -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Teléfono:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="telefono" required>
+                                <input type="text" class="form-control" name="telefono" 
+                                    value="<?= htmlspecialchars($_SESSION['telefono'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Dirección -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Dirección:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="direccion" required>
+                                <input type="text" class="form-control" name="direccion" 
+                                    value="<?= htmlspecialchars($_SESSION['direccion'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Fecha de nacimiento -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label for="fecha_nac" class="form-label me-2">Fecha de nacimiento</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="date" class="form-control" id="fecha_nac" name="fecha_nac" />
+                                <input type="date" class="form-control" id="fecha_nacN" name="fecha_nac"
+                                    value="<?= htmlspecialchars($_SESSION['fecha_nacimiento'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Botones -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Send message</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <input type="hidden" value="2" name="opcion">
+                            <button type="submit" name="completar" value="actualizarDatos" class="btn btn-primary">
+                                <i class="fa-solid fa-circle-check"></i> Guardar
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -94,48 +120,50 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form method="post" action="../../Controlador/CompletarPerfilCtrl.php" enctype="multipart/form-data">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
                         <label class="form-check-label" for="exampleRadios1">
                             Declaro que la información y documentación proporcionada es verdadera y autorizo su validación.
                         </label>
-                    </div><hr>
+                    </div>
+                    <hr>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Identificación oficial con fotografía</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="id_oficial" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Título profesional:</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="documento1" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label">Cédula profesional o matrícula:</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="documento2" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label">Certificados de diplomados o posgrados:</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="documento3" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label">Constancias de práctica o experiencia laboral:</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="documento4" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <input type="hidden" value="1" name="opcion">
+                        <button type="submit" name="completar" value="completarPerfilModal" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Guardar</button>
+                    </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
             </div>
         </div>
     </div>

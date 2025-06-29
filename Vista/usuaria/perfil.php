@@ -1,12 +1,20 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
-    header("Location: ../../index.php");
+
+if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
+    header("Location: {$urlBase}Vista/especialista/perfil.php");
+    exit;
+} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 3) {
+    header("Location: {$urlBase}Vista/admin");
+    exit;
+} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
+    header("Location: {$urlBase}index.php");
     exit;
 }
-
 
 ?>
 
@@ -30,7 +38,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-column align-items-center text-center">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+                                <img src="https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png" alt="Admin" class="rounded-circle" width="150">
                                 <div class="mt-3">
                                     <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
                                     <p class="text-secondary mb-1"><?php echo isset($_SESSION['nombre_rol']) ? ucwords(strtolower($_SESSION['nombre_rol'])) : " " ?></p>
@@ -96,10 +104,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
                                 </div>
                             </div>
                             <hr>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <a href="#addNew" class="btn btn-primary" data-toggle="modal" style="margin-bottom: 8px;"><i class="fa-solid fa-circle-plus"></i> Editar perfil</a>
-                                </div>
+                            <div class="d-flex justify-content-end gap-2 mb-3">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                                    <i class="fa-solid fa-circle-plus"></i> Editar perfil
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -117,6 +125,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
             });
         </script>
     <?php endif; ?>
+    <?php include '../modales/perfil.php'; ?>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>
 
