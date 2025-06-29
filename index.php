@@ -21,6 +21,8 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
   <title>Shakti</title>
   <!-- Tu CSS personalizado -->
   <link rel="stylesheet" href="<?= $urlBase ?>css/styles.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
+
   <?php
   include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
   ?>
