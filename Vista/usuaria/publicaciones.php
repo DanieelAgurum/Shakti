@@ -6,7 +6,7 @@ $urlBase = '/Shakti/';
 
 // Verificar sesión
 if (!isset($_SESSION['id_usuaria'])) {
-    header("Location: $urlBase/login.php");
+    header("Location: $urlBase/Vista/login.php");
     exit;
 }
 
