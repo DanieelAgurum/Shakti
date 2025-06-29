@@ -7,13 +7,15 @@
   margin: 0;
   padding: 0;
 }
+
 .custom-navbar {
   width: 100% !important;
   max-width: 100% !important;
 }
 
 .custom-navbar .container {
-  max-width: 1140px; /* o el max-width de Bootstrap para desktop */
+  max-width: 1140px;
+  /* o el max-width de Bootstrap para desktop */
   width: 100%;
 }
 
@@ -26,266 +28,41 @@ h3 {
 
 /* Variables de colores lila/morado */
 :root {
-  --lila-claro: #e7d4f2; /* Lila pastel muy claro y brillante para navbar */
-  --morado-claro: #8056a6; /* Morado vibrante para texto */
-  --morado-medio: #6b3d91; /* Morado un poco más oscuro para hover */
-  --morado-base: #5a2a83; /* Morado fuerte para botones y acentos */
-  --lila-muy-claro: #f8f3fc; /* Fondo muy suave para otros elementos */
+  --morado-base: #5a2a83;
+  --fondo-suave: #fefcf7;
 }
 
-/* Body y fondo */
 body {
-  background-color: white;
-  color: var(--morado-claro);
-  line-height: 1.5;
-}
-
-/* Navbar */
-.navbar {
-  background-color: var(--lila-claro) !important;
-  box-shadow: 0 2px 6px rgba(90, 42, 131, 0.3);
-  border-radius: 0.5rem;
-}
-
-/* Navegación */
-.navbar .nav-link {
-  color: var(--morado-claro);
-  margin: 0 0.75rem;
-  text-decoration: none;
-  font-size: 1rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.4rem;
-  transition: background-color 0.3s, transform 0.2s ease, color 0.3s;
-  display: inline-block;
-}
-
-/* Hover y focus para links nav */
-.navbar .nav-link:hover,
-.navbar .nav-link:focus {
-  background-color: white;
-  color: var(--morado-medio);
-  transform: scale(1.15);
-  outline: none;
-  text-decoration: none;
-}
-
-/* Icono login */
-.navbar .nav-link.fs-4 {
-  font-size: 1.7rem;
-  color: var(--morado-claro);
-  text-decoration: none;
-  transition: color 0.3s, transform 0.2s ease;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.4rem;
-}
-
-/* Hover y foco icono login */
-.navbar .nav-link.fs-4:hover,
-.navbar .nav-link.fs-4:focus {
-  color: var(--morado-medio);
-  background-color: white;
-  transform: scale(1.15);
-  outline: none;
-  text-decoration: none;
-}
-
-/* Hero Section */
-.hero {
-  text-align: center;
-  padding: 6rem 1rem;
-  background-color: white;
-  color: var(--morado-claro);
-}
-
-.hero h1 {
-  font-size: 2.8rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.hero p {
-  color: var(--morado-claro);
-  opacity: 0.8;
-  margin-bottom: 2rem;
-  font-size: 1.25rem;
-}
-
-/* Botones hero */
-.hero-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1.2rem;
-}
-
-.primary-btn,
-.secondary-btn {
-  padding: 0.6rem 2rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  display: inline-block;
-  transition: background-color 0.3s, color 0.3s, transform 0.2s ease;
-  font-size: 1rem;
-  user-select: none;
+  background-color: #f8f0ff;
 }
 
 /* Botón principal - morado fuerte fondo y texto blanco */
-.primary-btn {
-  background-color: var(--morado-base);
+.btn-purple {
+  background-color: #b288eb;
   color: white;
   border: none;
+  transition: background-color 0.3s ease;
 }
 
-.primary-btn:hover,
-.primary-btn:focus {
-  background-color: #4e2372;
-  transform: scale(1.1);
-  outline: none;
+.btn-purple:hover,
+.btn-purple:focus {
+  background-color: #8a53d6;
   color: white;
-  text-decoration: none;
-}
-
-/* Botón secundario - borde lila y texto morado, fondo transparente */
-.secondary-btn {
-  border: 2px solid var(--morado-base);
-  color: var(--morado-base);
-  background: none;
-}
-
-.secondary-btn:hover,
-.secondary-btn:focus {
-  background-color: var(--morado-base);
-  color: white;
-  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(138, 83, 214, 0.7);
   outline: none;
-  text-decoration: none;
 }
 
-/* Formularios y Auth (si usas) */
-.auth-body {
-  background-color: var(--lila-muy-claro);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
+/* Formulario registro */
 .auth-container {
-  background: rgba(231, 212, 242, 0.85);
   backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 8px 16px rgba(90, 42, 131, 0.25);
   width: 100%;
+  border: 2px solid var(--morado-base);
   max-width: 500px;
   margin: 2rem auto;
   color: var(--morado-claro);
-}
-
-.auth-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.auth-header img {
-  margin-bottom: 1rem;
-  width: 80px;
-}
-
-.auth-header h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--morado-claro);
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.auth-form input {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  background-color: rgba(255 255 255 / 0.8);
-  color: var(--morado-claro);
-  border: 1px solid var(--morado-base);
-  outline: none;
-  font-size: 1rem;
-}
-
-.auth-form input[type="file"] {
-  padding: 0.25rem;
-  background: none;
-  color: var(--morado-claro);
-  border: none;
-}
-
-.auth-form button {
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  background-color: var(--morado-base);
-  font-weight: 600;
-  border: none;
-  color: white;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: background-color 0.3s;
-  font-size: 1rem;
-}
-
-.auth-form button:hover,
-.auth-form button:focus {
-  background-color: #4e2372;
-  outline: none;
-}
-
-/* foot*/
-.custom-footer {
-  background-color: #e7d4f2; /* mismo lila pastel de la navbar */
-  color: #5a2a83; /* morado fuerte */
-  border-top: 2px solid #5a2a83;
-  font-family: "Open Sans", sans-serif;
-  font-size: 0.9rem;
-}
-
-.custom-footer .footer-link,
-.custom-footer .footer-icon,
-.custom-footer .footer-brand {
-  color: #5a2a83;
-  transition: color 0.3s ease;
-  text-decoration: none;
-}
-
-.custom-footer .footer-link:hover,
-.custom-footer .footer-icon:hover,
-.custom-footer .footer-brand:hover {
-  color: #8056a6; /* morado más claro para hover */
-  text-decoration: underline;
-}
-
-/* Para íconos */
-.footer-icon i {
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.footer-icon:hover i {
-  transform: scale(1.2);
-  color: #8056a6;
-}
-html,
-body {
-  height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-main {
-  flex: 1;
 }
 
 /* Mensaje de error para el login */
@@ -295,4 +72,8 @@ main {
   height: 1em;
   margin-bottom: 0.5em;
   display: block;
+}
+
+.invalid {
+  border-color: white;
 }
