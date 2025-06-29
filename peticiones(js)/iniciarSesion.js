@@ -7,23 +7,29 @@ function iniciarSesion() {
     data: datos,
     dataType: "json",
     success: function (respuesta) {
+      // console.log("Respuesta del servidor:", respuesta);
+
       if (respuesta.success) {
-        switch (respuesta.id_rol) {
-          case "1":
-            window.location.href = "../vista/usuaria/perfil.php";
+        switch (parseInt(respuesta.id_rol)) {
+          case 1:
+            window.location.href = "../Vista/usuaria/perfil.php";
             break;
-          case "2":
-            window.location.href = "../vista/especialista/perfil.php";
+          case 2:
+            window.location.href = "../Vista/especialista/perfil.php";
             break;
-          case "3":
-            window.location.href = "../vista/admin/";
+          case 3:
+            window.location.href = "../Vista/admin/";
             break;
           default:
-            break;
+            location.reload();
         }
       } else {
         $("#mensaje-error").text(respuesta.message).show();
       }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error en la petición AJAX:", status, error);
+      $("#mensaje-error").text("Error de servidor. Intenta más tarde.").show();
     },
   });
 }

@@ -1,3 +1,26 @@
+<?php
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_SESSION['id_rol'])) {
+    switch ($_SESSION['id_rol']) {
+        case 1:
+            header("Location: " . $urlBase . "Vista/usuaria/perfil.php");
+            exit;
+        case 2:
+            header("Location: " . $urlBase . "Vista/uespecialista/perfil.php");
+            exit;
+        case 3:
+            header("Location: " . $urlBase . "Vista/admin/");
+            exit;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,7 +28,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registro - Shakti</title>
-    <?php include '../components/usuaria/estilos.php'; ?>
+    <link rel="stylesheet" href="<?php echo $urlBase ?>css/styles.css" />
+    <?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
+    ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .invalid {
@@ -20,10 +46,11 @@
             display: block;
         }
     </style>
+
+
 </head>
 
 <body class="auth-body">
-    <?php require '../components/navbar.php'; ?>
 
     <div class="auth-container">
         <div class="auth-header">
@@ -73,7 +100,7 @@
         </form>
 
         <div class="auth-footer">
-            <a href="login.html">¿Ya tienes una cuenta? Inicia sesión</a>
+            <a href="<?php echo $urlBase ?>Vista/login.php">¿Ya tienes una cuenta? Inicia sesión</a>
         </div>
     </div>
 
@@ -95,7 +122,7 @@
             inputRol.value = checkbox.checked ? "2" : "1";
             console.log("Rol actualizado a:", inputRol.value);
         }
-        
+
         const form = document.getElementById('registroForm');
 
         const validators = {

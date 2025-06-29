@@ -1,5 +1,6 @@
 <?php
 include '../obtenerLink/obtenerLink.php';
+
 class loginMdln
 {
     private $correo;
@@ -7,9 +8,8 @@ class loginMdln
 
     public function conectarBD()
     {
-        $con = mysqli_connect("localhost", "root", "", "SHAKTI");
+        $con = mysqli_connect("localhost", "root", "", "shakti");
         if (!$con) {
-            // Respondemos JSON con error de conexión
             echo json_encode([
                 'success' => false,
                 'message' => 'Error en la conexión a la base de datos.'
@@ -29,52 +29,71 @@ class loginMdln
     {
         header('Content-Type: application/json');
 
-        if (session_status() == PHP_SESSION_NONE) {
+        $response = [
+            'success' => false,
+            'message' => 'Correo y/o contraseña incorrectos.'
+        ];
+
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
         $con = $this->conectarBD();
         $correo = mysqli_real_escape_string($con, $this->correo);
-        $query = "SELECT u.*, r.id_rol, r.nombre_rol 
-              FROM usuarias u 
-              JOIN roles r ON u.id_rol = r.id_rol 
-              WHERE u.correo = '$correo'";
+
+        // Consulta con campos explícitos para evitar confusiones
+        $query = "
+            SELECT 
+                u.id, u.nombre, u.apellidos, u.fecha_nac, u.contraseña, u.nickname, u.correo, u.id_rol,
+                u.documentos, u.direccion, u.telefono, u.foto, u.estatus,
+                r.id_rol AS rol_id, r.nombre_rol
+            FROM usuarias u
+            JOIN roles r ON u.id_rol = r.id_rol
+            WHERE u.correo = '$correo'
+        ";
 
         $result = mysqli_query($con, $query);
 
         if ($result) {
-            $reg = mysqli_fetch_array($result);
+            $reg = mysqli_fetch_assoc($result);
 
             if ($reg && password_verify($this->contraseña, $reg["contraseña"])) {
-                $_SESSION['id'] = $reg['id_usuaria'];
+                // Guardar datos en sesión
+                $_SESSION['id'] = $reg['id'];
+                $_SESSION['id_usuaria'] = $reg['id']; // para publicaciones
                 $_SESSION['id_rol'] = $reg['id_rol'];
                 $_SESSION['nombre_rol'] = $reg['nombre_rol'];
                 $_SESSION['nombre'] = $reg['nombre'];
                 $_SESSION['apellidos'] = $reg['apellidos'];
                 $_SESSION['nickname'] = $reg['nickname'];
                 $_SESSION['correo'] = $reg['correo'];
-                $_SESSION['fecha_nacimiento'] = $reg['fecha_nacimiento'];
+                $_SESSION['fecha_nacimiento'] = $reg['fecha_nac']; // corregido: 'fecha_nac'
                 $_SESSION['telefono'] = $reg['telefono'];
                 $_SESSION['direccion'] = $reg['direccion'];
+                $_SESSION['documentos'] = $reg['documentos'];
+                $_SESSION['foto'] = $reg['foto'];
+                $_SESSION['estatus'] = $reg['estatus'];
 
                 echo json_encode([
                     'success' => true,
+                    'message' => 'éxito',
                     'id_rol' => $reg['id_rol']
                 ]);
                 exit;
             }
         }
 
-        echo json_encode([
-            'success' => false,
-            'message' => 'Correo y/o contraseña incorrectos.'
-        ]);
+        session_write_close();
+        echo json_encode($response);
         exit;
     }
 
+
     public function cerrarSesion()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         session_unset();
         session_destroy();
         header("Location: " . getBaseUrl());
