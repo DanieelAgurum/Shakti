@@ -9,6 +9,15 @@ class Usuarias
     private $conContraseña;
     private $fecha_nac;
     private $rol;
+    private $foto;
+    private $nombreN;
+    private $apellidosN;
+    private $nicknameN;
+    private $correoN;
+    private $contraseñaN;
+    private $fecha_nacN;
+    private $telefono;
+    private $direccion;
 
     public function conectarBD()
     {
@@ -105,7 +114,7 @@ class Usuarias
         $_SESSION['nickname'] = $usuaria['nickname'];
         $_SESSION['correo'] = $usuaria['correo'];
         $_SESSION['fecha_nacimiento'] = $usuaria['fecha_nac'];
-        $_SESSION['telefono'] = $usuaria['telefono']; 
+        $_SESSION['telefono'] = $usuaria['telefono'];
         $_SESSION['direccion'] = $usuaria['direccion'];
 
         // Redirigir según rol
@@ -121,5 +130,46 @@ class Usuarias
                 break;
         }
         exit;
+    }
+
+    public function actualizarDatos($foto, $nomN, $apeN, $nickN, $corN, $contN, $fec, $tel, $dir, $idUsuaria)
+    {
+        $con = $this->conectarBD();
+
+        // Obtener datos actuales
+        $result = mysqli_query($con, "SELECT * FROM usuarias WHERE id = $idUsuaria");
+        if (!$result || mysqli_num_rows($result) == 0) {
+            die("Error: no se encontró la usuaria.");
+        }
+        $actual = mysqli_fetch_assoc($result);
+
+        $campos = [];
+
+        if ($nomN !== $actual['nombre']) $campos[] = "nombre = '" . mysqli_real_escape_string($con, $nomN) . "'";
+        if ($apeN !== $actual['apellidos']) $campos[] = "apellidos = '" . mysqli_real_escape_string($con, $apeN) . "'";
+        if ($nickN !== $actual['nickname']) $campos[] = "nickname = '" . mysqli_real_escape_string($con, $nickN) . "'";
+        if ($corN !== $actual['correo']) $campos[] = "correo = '" . mysqli_real_escape_string($con, $corN) . "'";
+        if ($fec !== $actual['fecha_nac']) $campos[] = "fecha_nac = '" . mysqli_real_escape_string($con, $fec) . "'";
+        if ($tel !== $actual['telefono']) $campos[] = "telefono = '" . mysqli_real_escape_string($con, $tel) . "'";
+        if ($dir !== $actual['direccion']) $campos[] = "direccion = '" . mysqli_real_escape_string($con, $dir) . "'";
+
+        if (!empty($contN)) {
+            $hash = password_hash($contN, PASSWORD_DEFAULT);
+            $campos[] = "contraseña = '" . mysqli_real_escape_string($con, $hash) . "'";
+        }
+
+        if ($foto && $foto['error'] === 0) {
+            $fotoBin = mysqli_real_escape_string($con, file_get_contents($foto['tmp_name']));
+            $campos[] = "foto = '$fotoBin'";
+        }
+
+        if (empty($campos)) {
+            return;
+        }
+
+        $setClause = implode(', ', $campos);
+        $query = "UPDATE usuarias SET $setClause WHERE id = $idUsuaria";
+
+        mysqli_query($con, $query) or die("Error al actualizar: " . mysqli_error($con));
     }
 }

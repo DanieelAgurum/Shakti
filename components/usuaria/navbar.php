@@ -5,6 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
+
 ob_start();
 $urlBase = getBaseUrl();
 ?>
@@ -33,7 +34,8 @@ $urlBase = getBaseUrl();
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm bg-white">
   <div class="container">
-    <a class="navbar-brand" href="<?php echo $urlBase ?>index.php">SHAKTI</a>
+    <a class="navbar-brand" href="<?= $urlBase ?>index.php">SHAKTI</a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
       aria-controls="navbarEspecialista" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -41,18 +43,48 @@ $urlBase = getBaseUrl();
 
     <div class="collapse navbar-collapse" id="navbarEspecialista">
       <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item"><a class="nav-link" href="<?php echo $urlBase ?>index.php">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?php echo $urlBase ?>Vista/contacto.php">Contáctanos</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?php echo $urlBase ?>Vista/usuaria/perfil.php">Mi perfil</a></li>
-         <li class="nav-item"><a class="nav-link" href="<?php echo $urlBase ?>Vista/usuaria/publicaciones.php">publicaciones</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?= $urlBase ?>index.php">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/perfil.php">Contendio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/publicaciones.php">Publicaciones</a>
+        </li>
+
+        <!-- Menú desplegable de usuario -->
         <li class="nav-item dropdown ms-3">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-person-circle me-1"></i>
-            <?php echo isset($_SESSION['nickname']) ? htmlspecialchars($_SESSION['nickname']) : " "; ?>
+            <?= isset($_SESSION['nickname']) ? ucwords(strtolower($_SESSION['nickname'])) : '' ?>
           </a>
+
           <ul class="dropdown-menu dropdown-menu-end">
-            <?php if (isset($_SESSION['correo'])) { ?>
-              <li><a class="dropdown-item" href="<?php echo $urlBase ?>Vista/usuaria/perfil.php">Mi perfil <i class="bi bi-person-circle me-1"></i></a></li>
+            <?php if (isset($_SESSION['correo'])): ?>
+              <li>
+                <a class="dropdown-item" href="<?= $urlBase ?>Vista/<?php
+                                                                    switch ($_SESSION['id_rol'] ?? 0) {
+                                                                      case 1:
+                                                                        echo 'usuaria/perfil.php';
+                                                                        break;
+                                                                      case 2:
+                                                                        echo 'especialista/perfil.php';
+                                                                        break;
+                                                                      case 3:
+                                                                        echo 'admin/';
+                                                                        break;
+                                                                      default:
+                                                                        echo '#';
+                                                                        break;
+                                                                    }
+                                                                    ?>">
+                  Mi perfil <i class="bi bi-person-circle me-1"></i>
+                </a>
+              </li>
               <li>
                 <hr class="dropdown-divider">
               </li>
@@ -65,14 +97,20 @@ $urlBase = getBaseUrl();
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <form action="<?php echo $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
-                  <input type="hidden" name="opcion" value="2" />
-                  <button type="submit" class="dropdown-item text-danger">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
+                <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
+                  <input type="hidden" name="opcion" value="2">
+                  <button type="submit" class="dropdown-item text-danger">
+                    Cerrar sesión <i class="bi bi-door-open-fill"></i>
+                  </button>
                 </form>
               </li>
-            <?php } else { ?>
-              <li><a class="dropdown-item" href="<?php echo $urlBase ?>Vista/login.php">Iniciar sesión <i class="bi bi-box-arrow-in-right"></i></a></li>
-            <?php } ?>
+            <?php else: ?>
+              <li>
+                <a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">
+                  Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
+                </a>
+              </li>
+            <?php endif; ?>
           </ul>
         </li>
       </ul>

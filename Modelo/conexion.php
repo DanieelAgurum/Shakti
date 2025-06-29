@@ -14,7 +14,7 @@ class ConectarDB
     {
         try {
             $this->conn = new PDO($this->server, $this->user, $this->pass, $this->options);
-            echo "✅ Conexión exitosa a la base de datos.<br>";
+           
             return $this->conn;
         } catch (PDOException $e) {
             echo "❌ Error de conexión: " . $e->getMessage();
