@@ -50,16 +50,16 @@ $urlBase = getBaseUrl();
           <a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
+          <a class="nav-link" href="<?= $urlBase ?><?php
                                                           switch ($_SESSION['id_rol'] ?? 0) {
                                                             case 1:
-                                                              echo 'usuaria/perfil.php';
+                                                              echo '';
                                                               break;
                                                             case 2:
-                                                              echo 'especialista/perfil.php';
+                                                              echo '';
                                                               break;
                                                             case 3:
-                                                              echo 'admin/';
+                                                              echo '';
                                                               break;
                                                             default:
                                                               echo 'login.php';
