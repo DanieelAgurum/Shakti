@@ -8,74 +8,100 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form method="post" action="../../control/productoCtrl.php" enctype="multipart/form-data">
+                    <form method="post" action="../../Controlador/UsuariasControlador.php" enctype="multipart/form-data">
+                        <!-- Foto -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Foto:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="file" class="form-control" name="foto" required>
+                                <input type="file" class="form-control" name="foto">
                             </div>
                         </div>
+
+                        <!-- Nombre -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Nombre:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nombre" required>
+                                <input type="text" class="form-control" name="nombreN" 
+                                    value="<?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Apellidos -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Apellidos:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="apellidos" required>
+                                <input type="text" class="form-control" name="apellidosN" 
+                                    value="<?= htmlspecialchars($_SESSION['apellidos'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Nickname -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Nombre de usuaria:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nickname" required>
+                                <input type="text" class="form-control" name="nicknameN" 
+                                    value="<?= htmlspecialchars($_SESSION['nickname'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Contraseña -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Nueva contraseña:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="password" class="form-control" name="contraseña" required>
+                                <input type="password" class="form-control" name="contraseñaN">
                             </div>
                         </div>
+
+                        <!-- Teléfono -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Teléfono:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="telefono" required>
+                                <input type="text" class="form-control" name="telefono" 
+                                    value="<?= htmlspecialchars($_SESSION['telefono'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Dirección -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label class="control-label">Dirección:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="direccion" required>
+                                <input type="text" class="form-control" name="direccion" 
+                                    value="<?= htmlspecialchars($_SESSION['direccion'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Fecha de nacimiento -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
                                 <label for="fecha_nac" class="form-label me-2">Fecha de nacimiento</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="date" class="form-control" id="fecha_nac" name="fecha_nac" />
+                                <input type="date" class="form-control" id="fecha_nacN" name="fecha_nac"
+                                    value="<?= htmlspecialchars($_SESSION['fecha_nacimiento'] ?? '') ?>">
                             </div>
                         </div>
+
+                        <!-- Botones -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Send message</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <input type="hidden" value="2" name="opcion">
+                            <button type="submit" name="completar" value="actualizarDatos" class="btn btn-primary">
+                                <i class="fa-solid fa-circle-check"></i> Guardar
+                            </button>
                         </div>
                     </form>
                 </div>

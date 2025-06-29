@@ -96,10 +96,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
                                 </div>
                             </div>
                             <hr>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <a href="#addNew" class="btn btn-primary" data-toggle="modal" style="margin-bottom: 8px;"><i class="fa-solid fa-circle-plus"></i> Editar perfil</a>
-                                </div>
+                            <div class="d-flex justify-content-end gap-2 mb-3">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                                    <i class="fa-solid fa-circle-plus"></i> Editar perfil
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -117,6 +117,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
             });
         </script>
     <?php endif; ?>
+    <?php include '../modales/perfil.php'; ?>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>
 
