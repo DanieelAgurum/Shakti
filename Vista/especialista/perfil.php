@@ -104,45 +104,18 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
       </div>
     </div>
   </div>
+  <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
+    <script>
+      Swal.fire({
+        icon: '<?= $_GET['status'] === 'success' ? 'success' : 'error' ?>',
+        title: '<?= $_GET['status'] === 'success' ? '¡Todo listo!' : 'Ups...' ?>',
+        text: '<?= htmlspecialchars(urldecode($_GET["message"]), ENT_QUOTES, "UTF-8") ?>',
+        confirmButtonText: 'Aceptar'
+      });
+    </script>
+  <?php endif; ?>
 
-  <!-- Modal completar perfil -->
-  <div class="modal fade" id="completarPerfilModal" tabindex="-1" aria-labelledby="completarPerfilModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="completarPerfilModalLabel">Completar Perfil</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <p>Formulario para completar perfil del especialista...</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Guardar cambios</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal editar perfil -->
-  <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editarPerfilModalLabel">Editar Perfil</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <p>Formulario para editar perfil del especialista...</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Guardar cambios</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <?php include '../modales/perfil.php'; ?>
   <?php include '../../components/usuaria/footer.php'; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
