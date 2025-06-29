@@ -9,10 +9,6 @@ if (!$idUsuaria) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['opcion'] == 1) {
-    if (!isset($_FILES['id_oficial']) || $_FILES['id_oficial']['error'] !== 0) {
-        header("Location: ../Vista/especialista/perfil.php?status=error&message=Debe+subir+una+identificaci%C3%B3n+oficial");
-        exit;
-    }
 
     $otrosDocs = ['documento1', 'documento2', 'documento3', 'documento4'];
     $alMenosUno = false;

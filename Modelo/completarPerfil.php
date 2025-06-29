@@ -43,7 +43,17 @@ class Completar
 
         // Verifica si ya existen documentos para esta usuaria
         $check = mysqli_query($con, "SELECT * FROM documentos WHERE id_usuaria = $idUsuaria");
-        $exists = mysqli_num_rows($check) > 0;
+        $fila = mysqli_fetch_assoc($check);
+        $exists = $fila !== null;
+
+        // Verifica si ya tiene guardada la identificación oficial
+        $yaTieneIdOficial = $exists && !empty($fila['id_oficial']);
+
+        // Si no tiene en la base y no subió una nueva, se redirige con error
+        if (!$yaTieneIdOficial && (!isset($_FILES['id_oficial']) || $_FILES['id_oficial']['error'] !== 0)) {
+            header("Location: ../Vista/especialista/perfil.php?status=error&message=Debe+subir+una+identificaci%C3%B3n+oficial");
+            exit;
+        }
 
         // Prepara los campos no vacíos
         $fields = [];
@@ -78,6 +88,7 @@ class Completar
 
         mysqli_query($con, $query) or die("Error en la consulta: " . mysqli_error($con));
     }
+
 
     public function mostrarDocumentos($idUsuaria)
     {
