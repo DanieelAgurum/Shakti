@@ -12,10 +12,10 @@ function iniciarSesion() {
       if (respuesta.success) {
         switch (parseInt(respuesta.id_rol)) {
           case 1:
-            window.location.href = "../Vista/usuaria/perfil.php?probando";
+            window.location.href = "../Vista/usuaria/perfil.php";
             break;
           case 2:
-            window.location.href = "../Vista/especialista/perfil.php?2";
+            window.location.href = "../Vista/especialista/perfil.php";
             break;
           case 3:
             window.location.href = "../Vista/admin/";
