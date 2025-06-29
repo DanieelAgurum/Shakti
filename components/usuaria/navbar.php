@@ -51,21 +51,21 @@ $urlBase = getBaseUrl();
         </li>
         <li class="nav-item">
           <a class="nav-link" href="<?= $urlBase ?><?php
-                                                          switch ($_SESSION['id_rol'] ?? 0) {
-                                                            case 1:
-                                                              echo '';
-                                                              break;
-                                                            case 2:
-                                                              echo '';
-                                                              break;
-                                                            case 3:
-                                                              echo '';
-                                                              break;
-                                                            default:
-                                                              echo 'login.php';
-                                                              break;
-                                                          }
-                                                          ?>">Contendio</a>
+                                                    switch ($_SESSION['id_rol'] ?? 0) {
+                                                      case 1:
+                                                        echo '';
+                                                        break;
+                                                      case 2:
+                                                        echo '';
+                                                        break;
+                                                      case 3:
+                                                        echo '';
+                                                        break;
+                                                      default:
+                                                        echo 'Vista/login.php';
+                                                        break;
+                                                    }
+                                                    ?>">Contendio</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
