@@ -50,10 +50,40 @@ $urlBase = getBaseUrl();
           <a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/perfil.php">Contendio</a>
+          <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
+                                                          switch ($_SESSION['id_rol'] ?? 0) {
+                                                            case 1:
+                                                              echo 'usuaria/perfil.php';
+                                                              break;
+                                                            case 2:
+                                                              echo 'especialista/perfil.php';
+                                                              break;
+                                                            case 3:
+                                                              echo 'admin/';
+                                                              break;
+                                                            default:
+                                                              echo 'login.php';
+                                                              break;
+                                                          }
+                                                          ?>">Contendio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/publicaciones.php">Publicaciones</a>
+          <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
+                                                          switch ($_SESSION['id_rol'] ?? 0) {
+                                                            case 1:
+                                                              echo 'usuaria/publicaciones.php';
+                                                              break;
+                                                            case 2:
+                                                              echo 'usuaria/publicaciones.php';
+                                                              break;
+                                                            case 3:
+                                                              echo 'admin/';
+                                                              break;
+                                                            default:
+                                                              echo 'login.php';
+                                                              break;
+                                                          }
+                                                          ?>">Publicaciones</a>
         </li>
 
         <!-- Menú desplegable de usuario -->
@@ -78,7 +108,7 @@ $urlBase = getBaseUrl();
                                                                         echo 'admin/';
                                                                         break;
                                                                       default:
-                                                                        echo '#';
+                                                                        echo 'login.php';
                                                                         break;
                                                                     }
                                                                     ?>">
