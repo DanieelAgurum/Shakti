@@ -107,6 +107,15 @@ if (isset($_SESSION['id_rol'])) {
                     <small class="error" id="errorFecha_nac"></small>
                 </div>
 
+                <!-- Checkbox de términos y condiciones -->
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terminosCheck" />
+                        <label class="form-check-label" for="terminosCheck"> Acepto términos y condiciones</label>
+                    </div>
+                    <small class="error" id="errorTerminos"></small>
+                </div>
+
                 <!-- Checkbox para especialista -->
                 <div class="mb-3">
                     <div class="form-check">
@@ -130,7 +139,6 @@ if (isset($_SESSION['id_rol'])) {
             </div>
         </div>
 
-
         <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
             <script>
                 Swal.fire({
@@ -141,116 +149,8 @@ if (isset($_SESSION['id_rol'])) {
                 });
             </script>
         <?php endif; ?>
-
-        <script>
-            function actualizarRol() {
-                const checkbox = document.getElementById('especialistaCheck');
-                const inputRol = document.getElementById('rol');
-                inputRol.value = checkbox.checked ? "2" : "1";
-                console.log("Rol actualizado a:", inputRol.value);
-            }
-
-            const form = document.getElementById('registroForm');
-
-            const validators = {
-                nombre: value => {
-                    if (value.trim() === '') return 'El nombre es obligatorio';
-                    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(value.trim())) return 'El nombre solo puede contener letras y espacios';
-                    return true;
-                },
-                apellidos: value => {
-                    if (value.trim() === '') return 'Los apellidos son obligatorios';
-                    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(value.trim())) return 'Los apellidos solo pueden contener letras y espacios';
-                    return true;
-                },
-                nickname: value => {
-                    if (value.trim() === '') return 'El nombre de usuario es obligatorio';
-                    if (!/^[a-zA-Z0-9_]{4,20}$/.test(value)) return 'El nombre de usuario debe tener entre 4 y 20 caracteres (letras, números, guion bajo)';
-                    return true;
-                },
-                correo: value => {
-                    if (value.trim() === '') return 'El correo es obligatorio';
-                    if (!/\S+@\S+\.\S+/.test(value)) return 'Correo electrónico inválido';
-                    return true;
-                },
-                contraseña: value => {
-                    if (value.trim() === '') return 'La contraseña es obligatoria';
-                    if (!/^[a-zA-Z0-9._]{8,}$/.test(value))
-                        return 'La contraseña debe tener al menos 8 caracteres y solo puede contener letras, números, puntos y guiones bajos';
-                    return true;
-                },
-                conContraseña: (value, form) => {
-                    if (value.trim() === '') return 'La confirmación de contraseña es obligatoria';
-                    if (value !== form.contraseña.value) return 'Las contraseñas no coinciden';
-                    return true;
-                },
-                fecha_nac: value => {
-                    if (!value) return 'La fecha de nacimiento es obligatoria';
-                    const fecha = new Date(value);
-                    const hoy = new Date();
-                    if (fecha > hoy) return 'La fecha de nacimiento no puede ser futura';
-                    const edad = hoy.getFullYear() - fecha.getFullYear();
-                    if (edad < 18) return 'Debes ser mayor de 18 años para registrarte';
-                    return true;
-                }
-            };
-
-            function showError(input, message) {
-                const errorElem = document.getElementById('error' + input.id.charAt(0).toUpperCase() + input.id.slice(1));
-                if (errorElem) errorElem.textContent = message;
-                input.classList.add('invalid');
-            }
-
-            function clearError(input) {
-                const errorElem = document.getElementById('error' + input.id.charAt(0).toUpperCase() + input.id.slice(1));
-                if (errorElem) errorElem.textContent = '';
-                input.classList.remove('invalid');
-            }
-
-            function validateField(input) {
-                const val = input.value;
-                const field = input.id;
-                let result;
-
-                if (field === 'conContraseña') {
-                    result = validators[field](val, form);
-                } else {
-                    result = validators[field](val);
-                }
-
-                if (result !== true) {
-                    showError(input, result);
-                    return false;
-                } else {
-                    clearError(input);
-                    return true;
-                }
-            }
-
-            function validateAll() {
-                let valid = true;
-                Object.keys(validators).forEach(field => {
-                    const input = form[field];
-                    if (input && !validateField(input)) valid = false;
-                });
-                return valid;
-            }
-
-            Object.keys(validators).forEach(field => {
-                const input = form[field];
-                if (input) {
-                    input.addEventListener('input', () => validateField(input));
-                    input.addEventListener('blur', () => validateField(input));
-                }
-            });
-
-            form.addEventListener('submit', e => {
-                if (!validateAll()) {
-                    e.preventDefault();
-                }
-            });
-        </script>
-
+        
+        <script src="../validacionRegistro/validacion.js"></script>
     </main>
     <?php include '../components/usuaria/footer.php'; ?>
 
