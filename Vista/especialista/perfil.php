@@ -1,4 +1,5 @@
 <?php
+include '../../Modelo/completarPerfil.php';
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
@@ -7,6 +8,16 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
   header("Location: ../../index.php");
   exit;
 }
+
+$idUsuaria = $_SESSION['id'] ?? null;
+
+if (!$idUsuaria) {
+  header("Location: ../../index.php");
+  exit;
+}
+
+$cp = new Completar();
+$documentos = $cp->mostrarDocumentos($idUsuaria);
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +83,6 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
               <div class="d-flex justify-content-end gap-2 mb-3">
                 <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#completarPerfilModal">
                   Completar perfil
-                  <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"></span>
                 </button>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
                   <i class="fa-solid fa-circle-plus"></i> Editar perfil
@@ -85,17 +95,28 @@ if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
             <div class="col-sm-12 mb-6">
               <div class="card h-100">
                 <div class="card-body">
-                  <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">Documentos</i>Subidos</h6>
-                  <div class="d-flex justify-content-between align-items-center mb-1">
-                    <small>Website Markup</small>
-                    <div>
-                      <i class="bi bi-pencil-square mx-1"></i>
-                      <i class="bi bi-trash3 mx-1"></i>
-                    </div>
-                  </div>
-                  <div class="progress mb-3" style="height: 5px">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
+                  <h6 class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-info mr-2">Documentos</i>
+                  </h6>
+                  <small>
+                    <ul class="mb-0">
+                      <?php if (!empty($documentos['id_oficial'])): ?>
+                        <li>Identificación oficial</li>
+                      <?php endif; ?>
+                      <?php if (!empty($documentos['documento1'])): ?>
+                        <li>Título profesional</li>
+                      <?php endif; ?>
+                      <?php if (!empty($documentos['documento2'])): ?>
+                        <li>Cédula profesional o matrícula</li>
+                      <?php endif; ?>
+                      <?php if (!empty($documentos['documento3'])): ?>
+                        <li>Certificados de diplomados o posgrados</li>
+                      <?php endif; ?>
+                      <?php if (!empty($documentos['documento4'])): ?>
+                        <li>Constancias de práctica o experiencia laboral</li>
+                      <?php endif; ?>
+                    </ul>
+                  </small>
                 </div>
               </div>
             </div>
