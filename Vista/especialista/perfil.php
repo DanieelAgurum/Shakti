@@ -1,11 +1,20 @@
 <?php
 include '../../Modelo/completarPerfil.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
+
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-if (empty($_SESSION['correo']) || ($_SESSION['id_rol'] ?? null) != 2) {
-  header("Location: ../../index.php");
+if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 1) {
+  header("Location: {$urlBase}Vista/usuaria/perfil.php");
+  exit;
+} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 3) {
+  header("Location: {$urlBase}Vista/admin");
+  exit;
+} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 2) {
+  header("Location: {$urlBase}index.php");
   exit;
 }
 
@@ -32,7 +41,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
   <link rel="stylesheet" href="../../css/perfil.css" />
   <link rel="stylesheet" href="../../css/footer.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <?php include '../../components/especialista/navbar.php'; ?>
+  <?php include '../../components/usuaria/navbar.php'; ?>
 </head>
 
 <body>
@@ -139,8 +148,6 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
   <?php include '../modales/perfil.php'; ?>
   <?php include '../../components/usuaria/footer.php'; ?>
 
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
 
 </body>
 
