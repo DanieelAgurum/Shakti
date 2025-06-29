@@ -44,7 +44,7 @@ $urlBase = getBaseUrl();
         <li class="nav-item"><a class="nav-link" href="<?php echo $urlBase ?>index.php">Inicio</a></li>
         <li class="nav-item"><a class="nav-link" href="<?php echo $urlBase ?>Vista/contacto.php">Contáctanos</a></li>
         <li class="nav-item"><a class="nav-link" href="<?php echo $urlBase ?>Vista/usuaria/perfil.php">Mi perfil</a></li>
-
+         <li class="nav-item"><a class="nav-link" href="<?php echo $urlBase ?>Vista/usuaria/publicaciones.php">publicaciones</a></li>
         <li class="nav-item dropdown ms-3">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-person-circle me-1"></i>

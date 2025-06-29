@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-06-2025 a las 18:11:43
+-- Tiempo de generación: 29-06-2025 a las 07:45:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -59,7 +59,9 @@ CREATE TABLE `publicacion` (
 --
 
 INSERT INTO `publicacion` (`id_publicacion`, `titulo`, `contenido`, `fecha_publicacion`, `id_usuarias`) VALUES
-(1, 'hola', 'putos todos', '2025-06-28 03:29:43', 15);
+(1, 'hola', 'putos todos', '2025-06-28 03:29:43', 15),
+(2, 'hola', 'hi', '2025-06-29 00:31:39', 15),
+(3, 'hola', 'hihi', '2025-06-29 00:32:58', 15);
 
 -- --------------------------------------------------------
 
@@ -159,7 +161,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
-  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
