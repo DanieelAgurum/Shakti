@@ -15,7 +15,8 @@
                                 <label class="control-label">Foto:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="file" class="form-control" name="foto">
+                                <input type="file" class="form-control" name="foto" accept="image/*"
+                                    value="<?= htmlspecialchars($_SESSION['foto'] ?? '') ?>">
                             </div>
                         </div>
 
@@ -25,7 +26,7 @@
                                 <label class="control-label">Nombre:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nombreN" 
+                                <input type="text" class="form-control" name="nombreN"
                                     value="<?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>">
                             </div>
                         </div>
@@ -36,7 +37,7 @@
                                 <label class="control-label">Apellidos:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="apellidosN" 
+                                <input type="text" class="form-control" name="apellidosN"
                                     value="<?= htmlspecialchars($_SESSION['apellidos'] ?? '') ?>">
                             </div>
                         </div>
@@ -47,7 +48,7 @@
                                 <label class="control-label">Nombre de usuaria:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nicknameN" 
+                                <input type="text" class="form-control" name="nicknameN"
                                     value="<?= htmlspecialchars($_SESSION['nickname'] ?? '') ?>">
                             </div>
                         </div>
@@ -68,7 +69,7 @@
                                 <label class="control-label">Teléfono:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="telefono" 
+                                <input type="text" class="form-control" name="telefono"
                                     value="<?= htmlspecialchars($_SESSION['telefono'] ?? '') ?>">
                             </div>
                         </div>
@@ -79,7 +80,7 @@
                                 <label class="control-label">Dirección:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="direccion" 
+                                <input type="text" class="form-control" name="direccion"
                                     value="<?= htmlspecialchars($_SESSION['direccion'] ?? '') ?>">
                             </div>
                         </div>
