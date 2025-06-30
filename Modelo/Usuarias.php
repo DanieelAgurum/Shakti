@@ -1,6 +1,9 @@
 <?php
+require_once '../obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
 class Usuarias
 {
+
     private $nombre;
     private $apellidos;
     private $nickname;
@@ -226,5 +229,29 @@ class Usuarias
             header("Location: ../Vista/login.php?status=error&message=" . urlencode("Sesión no iniciada"));
         }
         exit;
+    }
+
+    public function eliminarUsuaria($id)
+    {
+        $con = $this->conectarBD();
+
+        $sql = "DELETE FROM usuarias WHERE id = ?";
+
+        $stmt = mysqli_prepare($con, $sql);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "i", $id);
+            if (mysqli_stmt_execute($stmt)) {
+            
+            } else {
+               header("Location: ../Vista/admin/usuarios.php?status=error&message=" . urlencode("Error al eliminar la usuaria"));
+                exit;
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            
+            die("Error en prepare: " . mysqli_error($con));
+        }
+
+        mysqli_close($con);
     }
 }

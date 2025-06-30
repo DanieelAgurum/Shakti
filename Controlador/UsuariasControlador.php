@@ -50,4 +50,8 @@ switch ($_REQUEST['opcion']) {
             $_SESSION['direccion'] = $usuaria['direccion'];
             $_SESSION['id_rol'] = $usuaria['id_rol'];
         }
+        break;
+    case 3:
+        $u->eliminarUsuaria($_REQUEST['id']);
+        break;
 }
