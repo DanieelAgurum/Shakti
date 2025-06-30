@@ -164,9 +164,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                         </div>
                     </div>
                 </div>
+            </main>
         </div>
     </div>
-    </main>
+
     <footer class="mt-auto text-dark">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center justify-content-between small">
