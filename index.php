@@ -1,6 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
@@ -34,6 +34,7 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
       width: 100%;
       height: 400px;
     }
+
     .swiper-slide img {
       object-fit: cover;
       height: 100%;
@@ -47,12 +48,25 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
   <!-- Carrusel de imágenes -->
   <div class="swiper mySwiper hero-carousel mb-5">
     <div class="swiper-wrapper">
-      <div class="swiper-slide"><img src="https://elcomercio.pe/resizer/v2/VCID6SJK6BCZ5FKGBYLNA7BJII.jpg" alt="Yoga"></div>
-      <div class="swiper-slide"><img src="https://media.glamour.mx/photos/63effc578b641025c85eb38a/16:9/w_2560.jpg" alt="Marcha"></div>
-      <div class="swiper-slide"><img src="http://www.fundipax.org/wp-content/uploads/2023/03/dia-de-la-mujer-8-de-marzo-fundipax.jpg" alt="Meditación"></div>
-      <div class="swiper-slide"><img src="https://museodelacuerdo.cultura.gob.ar/media/uploads/site-22/destacados/.thumbnails/mujeres-de-espaldas-unidas.jpg" alt="Unidas"></div>
-      <div class="swiper-slide"><img src="https://img.freepik.com/vector-premium/mujeres-multiculturales-bandera-horizontal_255494-1226.jpg" alt="Multiculturales"></div>
-      <div class="swiper-slide"><img src="https://bonisimo.es/img/cms/BLOG/dia_internacional_de_la_mujer-cabecera.png" alt="Comunidad"></div>
+      <div class="swiper-slide">
+        <img src="<?= $urlBase ?>img/1carr.jpg" alt="Yoga" class="img-fluid w-100 h-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+      </div>
+      <div class="swiper-slide">
+        <img src="<?= $urlBase ?>img/2carr.jpg" alt="Marcha" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+      </div>
+      <div class="swiper-slide">
+        <img src="<?= $urlBase ?>img/3carr.png" alt="Meditación" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+      </div>
+      <div class="swiper-slide">
+        <img src="<?= $urlBase ?>img/4carr.jpeg" alt="Unidas" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+      </div>
+      <div class="swiper-slide">
+        <img src="<?= $urlBase ?>img/5carr.png" alt="Multiculturales" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+      </div>
+      <div class="swiper-slide">
+        <img src="<?= $urlBase ?>img/6carr.png" alt="Comunidad" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+      </div>
+
     </div>
     <div class="swiper-pagination"></div>
     <div class="swiper-button-next"></div>
@@ -130,7 +144,7 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
   <!-- Scripts -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       const swiper = new Swiper('.mySwiper', {
         effect: 'fade',
         loop: true,
