@@ -5,14 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 1) {
-    header("Location: {$urlBase}Vista/usuaria/perfil.php");
-    exit;
-} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
-    header("Location: {$urlBase}Vista/especialista/perfil.php");
-    exit;
-} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
-    header("Location: {$urlBase}index.php");
+if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
+    header("Location: {$urlBase}");
     exit;
 }
 
@@ -26,20 +20,19 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 1) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Especialistas - Shakti</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="icon" href="<?php echo $ruta . "/" ?>img/logo.png">
-    <link rel="stylesheet" href="<?php echo $ruta . "/" ?>css/bootstrap/styles.css">
+    <link rel="stylesheet" href="../../components/admin/styles.css">
     <script src="https://kit.fontawesome.com/3c934cb418.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fuggles&family=Lato&family=Mooli&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo $ruta . "/" ?>css/bootstrap/custom.css">
-    <link href="<?php echo $ruta . "/" ?>css/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<?php echo $ruta . "/" ?>css/bootstrap/datatables.min.css">
+    <link rel="stylesheet" href="../../components/admin/custom.css">
+    <link rel="stylesheet" href="../../components/admin/datatables.min.css">
+    <link rel="stylesheet" href="../../components/admin/bootstrap.min.css">
 </head>
 
 <body class="sb-nav-fixed">
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <nav class="sb-topnav navbar navbar-expand">
         <a class="navbar-brand ps-3" href="index.php"></a>
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <div class="input-group"></div>
