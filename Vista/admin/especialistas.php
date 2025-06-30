@@ -49,103 +49,109 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <nav class="sb-sidenav accordion" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <a class="nav-link text-dark" href="panel.php">
+                        <a class="nav-link text-dark" href="index.php">
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-house text-dark"></i></div>
-                            <strong> Inicio </strong>
+                            Inicio
                         </a>
                         <a class="nav-link collapsed text-dark" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-bars text-dark"></i></div>
-                            <strong> Opciones </strong>
+                            Opciones
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down text-dark"></i></div>
                         </a>
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                 <a class="nav-link collapsed text-dark" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
                                     <div class="sb-nav-link-icon"><i class="fa-solid fa-table text-dark"></i></div>
-                                    <strong> Tablas</strong>
+                                    Tablas
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down text-dark"></i></div>
                                 </a>
                                 <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link text-dark" href="#">Usuarios</a>
-                                        <a class="nav-link text-dark" href="#">Productos</a>
-                                        <a class="nav-link text-dark" href="#">Categorías</a>
-                                        <a class="nav-link text-dark" href="#">Carrito</a>
-                                        <a class="nav-link text-dark" href="#">Citas</a>
+                                        <a class="nav-link text-dark" href="#">Usuarias</a>
+                                        <a class="nav-link text-dark" href="#">Especialistas</a>
+                                        <a class="nav-link text-dark" href="#">Publicaciones</a>
+                                        <a class="nav-link text-dark" href="#">Contenido</a>
+                                        <a class="nav-link text-dark" href="#">Documentos</a>
+                                        <a class="nav-link text-dark" href="#">Organizaciones</a>
+                                        <a class="nav-link text-dark" href="#">Reportes</a>
                                         <a class="nav-link text-dark" href="#">Comentarios</a>
-                                        <a class="nav-link text-dark" href="#">Direcciones</a>
-                                        <a class="nav-link text-dark" href="#">Compra</a>
                                     </nav>
                                 </div>
                             </nav>
                         </div>
                     </div>
+                </div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
             <main>
                 <div style="margin-top: -100px">
                     <h1 class="mt-4"></h1>
-
                     <div class="container">
-                        <h1 class="page-header text-center"> <strong> Productos </strong></h1>
+                        <h1 class="page-header text-center"> <strong> Especialistas </strong></h1>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <a href="#addNew" class="btn btn-primary" data-toggle="modal" style="margin-bottom: 8px;"><i class="fa-solid fa-circle-plus"></i> Nuevo</a>
-                                <?php
-                                if (isset($_GET["addPro"])) {
-                                    $addPro = $_GET["addPro"];
-                                    echo '<div class="alert alert-dismissible alert-success" style="margin-top: 20px;">
-                                    <button type="button" class="close" data-dismiss="alert">&times;
-                                    </button>' . $addPro . '</div>';
-                                }
-                                ?>
-                            </div>
                             <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top:20px center;">
                                 <thead>
-                                    <th>ID</th>
-                                    <th>Imagen</th>
-                                    <th>Nombre</th>
-                                    <th>Categoría</th>
-                                    <th>Descripción</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                    <th>Opciones</th>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Foto</th>
+                                        <th>Nombre completo</th>
+                                        <!-- <th>Nombre de usuaria</th> -->
+                                        <th>Correo</th>
+                                        <th>Teléfono</th>
+                                        <th>Dirección</th>
+                                        <th>Estatus</th>
+                                        <th>Documentos</th>
+                                        <th>Opciones</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    include_once('../../modelo/conexionBD.php');
+                                    include_once '../../Modelo/conexion.php';
                                     $database = new ConectarDB();
                                     $db = $database->open();
+
                                     try {
-                                        $sql = 'SELECT* FROM productos p INNER JOIN categorias c ON p.categorias_id_categoria = c.id_categoria';
+                                        $sql = "SELECT u.id, u.foto, u.nombre, u.apellidos, u.nickname, u.correo, u.telefono, u.direccion, u.estatus,
+                                        d.id_documento, d.id_oficial, d.documento1, d.documento2, d.documento3, d.documento4 
+                                        FROM usuarias u INNER JOIN documentos d ON u.id = d.id_usuaria WHERE u.id_rol = 2";
                                         foreach ($db->query($sql) as $row) {
                                     ?>
                                             <tr>
-                                                <td><?php echo $row['id_producto']; ?></td>
+                                                <td><?php echo $row['id']; ?></td>
                                                 <td>
-                                                    <img src="data:image/*;base64,<?php echo base64_encode($row['imagen']); ?>" width="60px" height="60px" alt="">
+                                                    <?php if (!empty($row['foto'])): ?>
+                                                        <img src="data:image/*;base64,<?php echo base64_encode($row['foto']); ?>" width="60px" height="60px" alt="">
+                                                    <?php else: ?>
+                                                        <img src="https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png" width="60px" height="60px" alt="">
+                                                    <?php endif; ?>
                                                 </td>
-                                                <td><?php echo $row['nombre_producto']; ?></td>
-                                                <td><?php echo $row['nombre_categoria']; ?></td>
-                                                <td><?php echo $row['descripcion']; ?></td>
-                                                <td><?php echo $row['precio']; ?></td>
-                                                <td><?php echo $row['stock']; ?></td>
-                                                <td class="">
-                                                    <a href="#editP_<?php echo $row['id_producto']; ?>" class="btn btn-success  m-auto btn-sm d-block" data-toggle="modal"><i class="fa-sharp fa-solid fa-pen-to-square"></i> Editar</a><br>
-                                                    <a href="#deleteP_<?php echo $row['id_producto']; ?>" class="btn btn-danger m-auto btn-sm d-block" data-toggle="modal"><i class="fa-solid fa-eraser"></i> Eliminar</a>
+                                                <td><?php echo $row['nombre'] . ' ' . $row['apellidos']; ?></td>
+                                                <td><?php echo $row['correo']; ?></td>
+                                                <td><?php echo $row['telefono']; ?></td>
+                                                <td><?php echo $row['direccion']; ?></td>
+                                                <td>
+                                                    <?php echo ucfirst($row['estatus']); ?>
                                                 </td>
-                                                <?php
-                                                include '../modulos/modales.php';
-                                                ?>
+                                                <td>
+                                                    <a class="btn btn-sm btn-outline-primary" target="_blank" href="data:application/pdf;base64,<?php echo base64_encode($row['id_oficial']); ?>">ID Oficial</a><br>
+                                                    <?php for ($i = 1; $i <= 4; $i++): ?>
+                                                        <?php if (!empty($row["documento$i"])): ?>
+                                                            <a class="btn btn-sm btn-outline-secondary mt-1" target="_blank" href="data:application/pdf;base64,<?php echo base64_encode($row["documento$i"]); ?>">Documento <?php echo $i; ?></a><br>
+                                                        <?php endif; ?>
+                                                    <?php endfor; ?>
+                                                </td>
+                                                <td>
+                                                    <a href="editarEspecialista.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-primary">Editar</a>
+                                                </td>
                                             </tr>
                                     <?php
                                         }
                                     } catch (PDOException $e) {
-                                        echo 'Hay problemas con la conexión : ' . $e->getMessage();
+                                        echo 'Hay problemas con la conexión: ' . $e->getMessage();
                                     }
                                     ?>
                                 </tbody>
@@ -157,9 +163,9 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="<?php echo $ruta . "/" ?>js/bootstrap.min.js"></script>
-    <script src="<?php echo $ruta . "/" ?>js/datatables.min.js"></script>
-    <script type="text/javascript" src="<?php echo $ruta . "/" ?>js/datatables.min.js"></script>
+    <script src="../../components/admin/js/bootstrap.min.js"></script>
+    <script src="../../components/admin/js/datatables.min.js"></script>
+    <script type="text/javascript" src="../../components/admin/js/datatables.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#MiAgenda').DataTable();
