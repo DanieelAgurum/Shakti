@@ -17,8 +17,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
 }
 
 if (!empty($_SESSION['foto'])) {
-    $fotoBase64 = base64_encode($_SESSION['foto']);
-    $fotoSrc = 'data:image/png;base64,' . $fotoBase64;
+    $fotoSrc = 'data:image/*;base64,' . base64_encode($_SESSION['foto']);
 } else {
     $fotoSrc = 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
 }
@@ -47,7 +46,7 @@ if (!empty($_SESSION['foto'])) {
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-column align-items-center text-center">
-                                <img src="<?php echo $fotoSrc; ?>" alt="Especialista" class="rounded-circle" width="150">
+                                <img src="<?php echo $fotoSrc; ?>" alt="<?php echo isset($_SESSION['nombre_rol']) ? ucwords(strtolower($_SESSION['nombre_rol'])) : " " ?>" class="rounded-circle" width="150">
                                 <div class="mt-3">
                                     <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
                                     <p class="text-secondary mb-1"><?php echo isset($_SESSION['nombre_rol']) ? ucwords(strtolower($_SESSION['nombre_rol'])) : " " ?></p>
