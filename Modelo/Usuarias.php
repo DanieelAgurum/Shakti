@@ -151,6 +151,7 @@ class Usuarias
         }
         $actual = mysqli_fetch_assoc($result);
 
+        session_start();
         $campos = [];
 
         if ($nomN !== $actual['nombre']) $campos[] = "nombre = '" . mysqli_real_escape_string($con, $nomN) . "'";
@@ -216,12 +217,24 @@ class Usuarias
         $setClause = implode(', ', $campos);
         $query = "UPDATE usuarias SET $setClause WHERE id = $idUsuaria";
 
-        mysqli_query($con, $query) or die("Error al actualizar: " . mysqli_error($con));
+        $consulta = mysqli_query($con, $query) or die("Error al actualizar: " . mysqli_error($con));
+
+
+        // Actualizar variables de sesión
+        if ($consulta) {
+            $result = mysqli_query($con, "SELECT * FROM usuarias WHERE id = $idUsuaria");
+            $actual = mysqli_fetch_assoc($result);
+
+            $_SESSION['nombre'] = $actual['nombre'];
+            $_SESSION['apellidos'] = $actual['apellidos'];
+            $_SESSION['nickname'] = $actual['nickname'];
+            $_SESSION['correo'] = $actual['correo'];
+            $_SESSION['fecha_nacimiento'] = $actual['fecha_nac'];
+            $_SESSION['telefono'] = $actual['telefono'];
+            $_SESSION['direccion'] = $actual['direccion'];
+        }
 
         // Redirección según rol
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
         if (isset($_SESSION['id_rol'])) {
             if ($_SESSION['id_rol'] == 1) {
                 header("Location: ../Vista/usuaria/perfil.php?status=success&message=" . urlencode("Datos actualizados correctamente"));
