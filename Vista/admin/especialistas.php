@@ -31,7 +31,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 </head>
 
 <body class="sb-nav-fixed">
-
     <nav class="sb-topnav navbar navbar-expand">
         <a class="navbar-brand ps-3" href="index.php"></a>
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -40,10 +39,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-dark" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user fa-fw text-dark"></i> Administrador
+                    <i class="fas fa-user fa-fw text-dark"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="../../control/loginCtrl.php?opcion=2">Cerrar Sesión</a></li>
+                    <li><a class="dropdown-item" href="<?php echo $urlBase ?>/Controlador/loginCtrl.php?opcion=2">Cerrar Sesión</a></li>
                 </ul>
             </li>
         </ul>
@@ -154,9 +153,9 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                         </div>
                     </div>
                 </div>
+            </main>
         </div>
     </div>
-    </main>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="<?php echo $ruta . "/" ?>js/bootstrap.min.js"></script>
     <script src="<?php echo $ruta . "/" ?>js/datatables.min.js"></script>
@@ -197,13 +196,15 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             </div>
         </div>
     </footer>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="<?php echo $ruta . "/" ?>js/scripts.js"></script>
+    <script src="../../components/admin/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="<?php echo $ruta . "/" ?>js/chart-area-demo.js"></script>
-    <script src="<?php echo $ruta . "/" ?>js/chart-bar-demo.js"></script>
+    <script src="../../components/admin/js/chart-area-demo.js"></script>
+    <script src="../../components/admin/js/chart-bar-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-    <script src="<?php echo $ruta . "/" ?>js/datatables-simple-demo.js"></script>
+    <script src="../../components/admin/js/datatables-simple-demo.js"></script>
 </body>
 
 </html>
