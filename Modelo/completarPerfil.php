@@ -105,4 +105,30 @@ class Completar
         }
         return null;
     }
+
+    public function eliminarCuenta($idUsuaria)
+    {
+        if (!$this->con) {
+            $this->conectarBD();
+        }
+
+        $sql = "DELETE FROM usuarias WHERE id = ?";
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('i', $idUsuaria);
+
+        return $stmt->execute();
+    }
+
+    public function cambiarEstatusCuenta($idUsuaria, $nuevoEstado)
+    {
+        if (!$this->con) {
+            $this->conectarBD();
+        }
+
+        $sql = "UPDATE usuarias SET estatus = ? WHERE id = ?";
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ii', $nuevoEstado, $idUsuaria);
+
+        return $stmt->execute();
+    }
 }
