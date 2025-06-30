@@ -61,7 +61,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
           <div class="card">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
-                <img src="<?php echo $fotoSrc; ?>" alt="Especialista" class="rounded-circle" width="150">
+                <img src="<?php echo $fotoSrc; ?>" alt="Especialista" class="rounded-circle" width="150" height="150">
                 <div class="mt-3">
                   <h4><?php echo ucwords(strtolower($_SESSION['nombre'] ?? '')); ?></h4>
                   <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['nombre_rol'] ?? '')); ?></p>
@@ -83,7 +83,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
                 'Correo electrónico' => $_SESSION['correo'] ?? '',
                 'Teléfono' => $_SESSION['telefono'] ?? '',
                 'Dirección' => $_SESSION['direccion'] ?? '',
-                'Estado de cuenta' => 'Activa'
+                'Estado de cuenta' => (isset($_SESSION['status']) && $_SESSION['status'] == 1) ? 'Activa' : 'Desactivada'
               ];
               foreach ($fields as $label => $value): ?>
                 <div class="row">
