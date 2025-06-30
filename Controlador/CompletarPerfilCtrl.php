@@ -2,7 +2,7 @@
 include("../Modelo/completarPerfil.php");
 
 session_start();
-$idUsuaria = $_SESSION['id_usuaria'] ?? null;
+$idUsuaria = $_SESSION['id'] ?? null;
 if (!$idUsuaria) {
     header("Location: ../Vista/login.php");
     exit;
