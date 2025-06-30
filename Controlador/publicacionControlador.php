@@ -3,7 +3,7 @@ session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
 
 $publicacionModelo = new PublicacionModelo();
-$id_usuaria = $_SESSION['id_usuaria'] ?? null;
+$id_usuaria = $_SESSION['id_usuaria'] ?? null; // Asegúrate de que 'id_usuaria' esté bien guardado al iniciar sesión
 
 if (!$id_usuaria) {
     $_SESSION['mensaje'] = "Debes iniciar sesión para realizar esta acción.";
@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion']
 if (isset($_GET['borrar_id'])) {
     $id = intval($_GET['borrar_id']);
 
-    // Verificamos que la publicación sea de la usuaria actual
     $publicacion = $publicacionModelo->obtenerPorId($id);
     if ($publicacion && $publicacion['id_usuarias'] == $id_usuaria) {
         $borrado = $publicacionModelo->borrar($id, $id_usuaria);
@@ -68,6 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_publicacion'])
     exit;
 }
 
-// SI SE ACCEDE DIRECTAMENTE, REDIRIGIR
+// Opcional: Redirigir si se accede sin acción específica
 header("Location: ../Vista/usuaria/publicaciones.php");
 exit;
