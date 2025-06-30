@@ -37,19 +37,7 @@ switch ($_REQUEST['opcion']) {
             $_REQUEST['direccion'],
             $_SESSION['id']
         );
-        $con = $u->conectarBD();
-        $id = $_SESSION['id'];
-        $query = mysqli_query($con, "SELECT * FROM usuarias WHERE id = $id");
-        if ($usuaria = mysqli_fetch_assoc($query)) {
-            $_SESSION['nombre'] = $usuaria['nombre'];
-            $_SESSION['apellidos'] = $usuaria['apellidos'];
-            $_SESSION['nickname'] = $usuaria['nickname'];
-            $_SESSION['correo'] = $usuaria['correo'];
-            $_SESSION['fecha_nacimiento'] = $usuaria['fecha_nac'];
-            $_SESSION['telefono'] = $usuaria['telefono'];
-            $_SESSION['direccion'] = $usuaria['direccion'];
-            $_SESSION['id_rol'] = $usuaria['id_rol'];
-        }
+
         break;
     case 3:
         $u->eliminarUsuaria($_REQUEST['id']);
