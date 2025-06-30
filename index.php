@@ -80,7 +80,7 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
     <?php else: ?>
       <h1>Bienvenido a Nuestro Sitio Shakti</h1>
       <p class="lead">Tu bienestar es primero</p>
-      <div class="hero-buttons mt-4">
+      <div class="hero-buttons ">
         <a href="#" class="btn btn-primary me-2">Conocer más</a>
         <a href="#" class="btn btn-outline-secondary">Contáctanos</a>
       </div>
@@ -88,7 +88,7 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
   </main>
 
   <!-- Publicaciones recientes -->
-  <section class="container mt-5 mb-5 d-flex flex-wrap justify-content-center gap-4">
+  <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4">
     <h2 class="text-center w-100 mb-4">Publicaciones recientes</h2>
 
     <?php if (!empty($publicaciones)): ?>
