@@ -108,14 +108,18 @@ include 'modales/usuarias.php';
                                 }
                                 ?>
                             </div>
-                            <div class="alert alert-danger w-75 text-center m-auto mb-5 mt-5" role="alert">
-                                A simple danger alert—check it out!
-                            </div>
+                            <?php if (isset($_GET['eliminado'])) { ?>
+                                <div class="alert alert-danger alert-dismissible" style="margin-top: 20px;" role="alert">
+                                    <?php if (isset($_GET['eliminado'])) echo htmlspecialchars($_GET['eliminado']); ?>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+                                </div>
+
+                            <?php } ?>
+
                             <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top:20px center;">
                                 <thead>
                                     <th>Id</th>
                                     <th>Nombre</th>
-                                    <th>Apellidos</th>
                                     <th>Dirección</th>
                                     <th>Teléfono</th>
                                     <th>Opciones</th>
@@ -131,8 +135,7 @@ include 'modales/usuarias.php';
                                     ?>
                                             <tr>
                                                 <td><?php echo $row['id']; ?></td>
-                                                <td><?php echo $row['nombre']; ?></td>
-                                                <td><?php echo $row['apellidos']; ?></td>
+                                                <td><?php echo $row['nombre'] . " " . $row['apellidos']; ?></td>
                                                 <td><?php echo $row['direccion']; ?></td>
                                                 <td><?php echo $row['telefono']; ?></td>
                                                 <td>
