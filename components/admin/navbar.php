@@ -1,13 +1,11 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
+
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-// Validar que el usuario esté autenticado y sea administrador
-if (!isset($_SESSION['id_rol']) || $_SESSION['nombre_rol'] !== 'administrador') {
-  header("Location: /Shakti/index.php");
-  exit;
-}
 ?>
 
 <!DOCTYPE html>
@@ -62,9 +60,11 @@ if (!isset($_SESSION['id_rol']) || $_SESSION['nombre_rol'] !== 'administrador') 
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href="/Shakti/vista/admin/perfilad.php">Mi perfil</a></li>
-              <li><hr class="dropdown-divider"></li>
               <li>
-                <form action="/Shakti/Controlador/loginCtrl.php" method="post" class="m-0 p-0">
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <form action="<?php echo $urlBase ?>" method="post" class="m-0 p-0">
                   <input type="hidden" name="opcion" value="2" />
                   <button type="submit" class="dropdown-item text-danger">Cerrar sesión</button>
                 </form>
