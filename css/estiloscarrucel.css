@@ -1,8 +1,33 @@
+/*
+-------------------------------------------------------------------------------
+  ESTILOS GLOBALES Y RESETS
+-------------------------------------------------------------------------------
+*/
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column; /* Para apilar el contenido verticalmente */
+    justify-content: flex-start;
+    align-items: center; /* Centra el contenido horizontalmente */
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*
+-------------------------------------------------------------------------------
+  ESTILOS DEL CARRUSEL (SWIPER)
+-------------------------------------------------------------------------------
+*/
+
 /* Contenedor principal del carrusel */
 .hero-carousel {
     width: 100%;
     height: 330px; /* Altura del carrusel, puedes ajustarla */
     position: relative;
+    margin-bottom: 30px; /* Espacio entre el carrusel y el contenido siguiente */
 }
 
 .swiper-slide {
@@ -22,4 +47,193 @@
     object-fit: cover; /* Hace que la imagen cubra todo el espacio sin deformarse */
 }
 
-/* Aqui termina el carrusel*/
+/* Estilos para el overlay si lo usas */
+.slide-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* Overlay oscuro semi-transparente */
+    z-index: 1; /* Asegura que el overlay esté sobre la imagen */
+}
+
+/* Ajustes para los controles de navegación de Swiper */
+.swiper-button-next,
+.swiper-button-prev {
+    color: #fff !important; /* Color de las flechas */
+}
+
+.swiper-pagination-bullet-active {
+    background: #fff !important; /* Color de la paginación activa */
+}
+
+/*
+-------------------------------------------------------------------------------
+  ESTILOS DE LA SECCIÓN HERO / BIENVENIDA
+-------------------------------------------------------------------------------
+*/
+
+.hero {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+}
+
+.hero-buttons .btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+
+/*
+-------------------------------------------------------------------------------
+  ESTILOS DE LA PUBLICACIÓN (SIMILAR A INSTAGRAM)
+-------------------------------------------------------------------------------
+*/
+.shakti-post {
+    background-color: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    width: 100%;
+    max-width: 470px; /* Ancho típico de las publicaciones de Instagram */
+    box-sizing: border-box;
+    margin-bottom: 20px; /* Espacio entre publicaciones si hubiera varias */
+    margin-top: 20px; /* Margen superior para separarlo del contenido anterior */
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid #efefef;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+}
+
+.username {
+    font-weight: 600;
+    color: #262626;
+    font-size: 14px;
+}
+
+.follow-text {
+    color: #0095f6; /* Color azul de "Seguir" */
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.dots-icon {
+    color: #262626;
+    font-size: 18px;
+}
+
+.post-content {
+    width: 100%;
+    /* La imagen del violentómetro debe ocupar todo el ancho */
+}
+
+.violentometro-image {
+    width: 100%;
+    height: auto;
+    display: block; /* Elimina espacio extra debajo de la imagen */
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px;
+}
+
+.icons-left .icon,
+.icons-right .icon {
+    font-size: 24px;
+    margin-right: 16px;
+    color: #262626;
+    cursor: pointer;
+}
+
+.icons-left .icon:last-child {
+    margin-right: 0;
+}
+
+.post-likes {
+    padding: 0 16px 8px;
+    font-size: 14px;
+    color: #262626;
+}
+
+.post-likes p {
+    margin: 0;
+}
+
+.post-date {
+    padding: 0 16px 14px;
+    font-size: 12px;
+    color: #8e8e8e;
+    text-transform: uppercase;
+}
+
+.post-date p {
+    margin: 0;
+}
+
+.add-comment {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-top: 1px solid #efefef;
+}
+
+.comment-profile-pic {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+    object-fit: cover;
+}
+
+.add-comment input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #262626;
+    padding: 8px 0;
+}
+
+.add-comment input::placeholder {
+    color: #8e8e8e;
+}
+
+.comment-emoji {
+    background: none;
+    border: none;
+    color: #c7c7c7;
+    font-size: 20px;
+    margin-left: 8px;
+    cursor: pointer;
+    padding: 0;
+}
