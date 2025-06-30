@@ -160,6 +160,8 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
         p.classList.add('comment');
         container.appendChild(p);
         input.value = '';
+        
+        
       });
     });
   </script>
