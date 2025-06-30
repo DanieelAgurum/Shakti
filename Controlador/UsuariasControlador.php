@@ -30,7 +30,7 @@ switch ($_REQUEST['opcion']) {
             $_REQUEST['nombreN'],
             $_REQUEST['apellidosN'],
             $_REQUEST['nicknameN'],
-            $_SESSION['correo'], 
+            $_SESSION['correo'],
             $_REQUEST['contraseñaN'],
             $_REQUEST['fecha_nac'],
             $_REQUEST['telefono'],
@@ -49,15 +49,5 @@ switch ($_REQUEST['opcion']) {
             $_SESSION['telefono'] = $usuaria['telefono'];
             $_SESSION['direccion'] = $usuaria['direccion'];
             $_SESSION['id_rol'] = $usuaria['id_rol'];
-
-            // Redirección según rol
-            if ($usuaria['id_rol'] == 1) {
-                header("Location: ../Vista/usuaria/perfil.php?status=success&message=Datos+actualizados+correctamente");
-            } else if ($usuaria['id_rol'] == 2) {
-                header("Location: ../Vista/especialista/perfil.php?status=success&message=Datos+actualizados+correctamente");
-            } else {
-                header("Location: ../Vista/login.php?status=error&message=Rol+no+reconocido");
-            }
-            exit;
         }
 }
