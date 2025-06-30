@@ -3,7 +3,7 @@ require_once '../obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 class Usuarias
 {
-
+    private $urlBase;
     private $nombre;
     private $apellidos;
     private $nickname;
@@ -26,6 +26,11 @@ class Usuarias
     {
         $con = mysqli_connect("localhost", "root", "", "shakti") or die("Problemas con la conexión a la base de datos");
         return $con;
+    }
+
+    public function __construct()
+    {
+        $this->urlBase = getBaseUrl();
     }
 
     public function inicializar($nom, $ape, $nick, $cor, $cont, $contC, $fec, $rol)
@@ -241,14 +246,15 @@ class Usuarias
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, "i", $id);
             if (mysqli_stmt_execute($stmt)) {
-            
+                header("Location: " . $this->urlBase . "/Vista/admin/usuarias.php?eliminado=" . urlencode("Se eliminó la usuaria correctamente"));
+                exit;
             } else {
-               header("Location: ../Vista/admin/usuarios.php?status=error&message=" . urlencode("Error al eliminar la usuaria"));
+                header("Location: " . $this->urlBase . "/Vista/admin/usuarias.php?eliminado=" . urlencode("No se pudo eliminar o ya fue eliminada"));
                 exit;
             }
             mysqli_stmt_close($stmt);
         } else {
-            
+
             die("Error en prepare: " . mysqli_error($con));
         }
 
