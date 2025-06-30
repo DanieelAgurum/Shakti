@@ -1,11 +1,14 @@
 <?php
+// Inicia la sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Incluye el archivo para obtener la URL base
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
+// Incluye el modelo para obtener publicaciones
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
 $publicacionModelo = new PublicacionModelo();
 $publicaciones = $publicacionModelo->obtenerTodasConNickname();
@@ -14,73 +17,85 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shakti</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shakti</title>
 
-  <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
-  <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
-  <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+    <?php
+    // Incluye la barra de navegación del usuario
+    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
+    ?>
 </head>
 
 <body class="bg-white text-black">
 
-  <!-- Carrusel de imágenes -->
-  <div class="swiper-container hero-carousel">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide"><img src="https://elcomercio.pe/resizer/v2/VCID6SJK6BCZ5FKGBYLNA7BJII.jpg" alt="Yoga"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="https://media.glamour.mx/photos/63effc578b641025c85eb38a/16:9/w_2560.jpg" alt="Marcha"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="http://www.fundipax.org/wp-content/uploads/2023/03/dia-de-la-mujer-8-de-marzo-fundipax.jpg" alt="Meditación"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="https://museodelacuerdo.cultura.gob.ar/media/uploads/site-22/destacados/.thumbnails/mujeres-de-espaldas-unidas.jpg" alt="Unidas"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="https://img.freepik.com/vector-premium/mujeres-multiculturales-bandera-horizontal_255494-1226.jpg" alt="Multiculturales"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="https://bonisimo.es/img/cms/BLOG/dia_internacional_de_la_mujer-cabecera.png" alt="Comunidad"><div class="slide-overlay"></div></div>
+    <div class="swiper-container hero-carousel">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="https://elcomercio.pe/resizer/v2/VCID6SJK6BCZ5FKGBYLNA7BJII.jpg?auth=13c827afa0bfc6b3130bfa35ae48a8c0f2de46f2a15612e0cd5179383a331d9f&width=1200&quality=90&smart=true" alt="Mujer practicando yoga">
+                <div class="slide-overlay"></div>
+            </div>
+            <div class="swiper-slide">
+                <img src="https://media.glamour.mx/photos/63effc578b641025c85eb38a/16:9/w_2560%2Cc_limit/marcha-8-de-marzo-cdmx-mexico-en-vivo.jpg" alt="Marcha de mujeres">
+                <div class="slide-overlay"></div>
+            </div>
+            <div class="swiper-slide">
+                <img src="http://www.fundipax.org/wp-content/uploads/2023/03/dia-de-la-mujer-8-de-marzo-fundipax.jpg" alt="Meditación y bienestar">
+                <div class="slide-overlay"></div>
+            </div>
+            <div class="swiper-slide">
+                <img src="https://museodelacuerdo.cultura.gob.ar/media/uploads/site-22/destacados/.thumbnails/mujeres-de-espaldas-unidas.jpg/mujeres-de-espaldas-unidas-600x0-no-upscale.jpg" alt="Mujeres unidas">
+                <div class="slide-overlay"></div>
+            </div>
+            <div class="swiper-slide">
+                <img src="https://img.freepik.com/vector-premium/mujeres-multiculturales-bandera-horizontal_255494-1226.jpg?w=1380" alt="Mujeres multiculturales">
+                <div class="slide-overlay"></div>
+            </div>
+            <div class="swiper-slide">
+                <img src="https://bonisimo.es/img/cms/BLOG/dia_internacional_de_la_mujer-cabecera.png" alt="Comunidad de mujeres">
+                <div class="slide-overlay"></div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
     </div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-  </div>
 
-  <!-- Bienvenida -->
-  <main class="hero p-5 text-center">
-    <?php if (!empty($_SESSION['correo'])): ?>
-      <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/usuaria/inicioUser.php'; ?>
-    <?php else: ?>
-      <h1>Bienvenido a Nuestro Sitio Shakti</h1>
-      <p class="lead">Tu bienestar es primero</p>
-      <div class="hero-buttons mt-4">
-        <a href="#" class="btn btn-primary me-2">Conocer más</a>
-        <a href="#" class="btn btn-outline-secondary">Contáctanos</a>
-      </div>
-    <?php endif; ?>
-  </main>
+    <main class="hero p-5 text-center">
+        <?php
+        // Muestra contenido diferente si el usuario está logueado o no
+        if (isset($_SESSION['correo'])) {
+            require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/usuaria/inicioUser.php';
+        } else { ?>
+            <h1>Bienvenido a Nuestro Sitio Shakti</h1>
+            <p class="lead">Tu bienestar es primero</p>
+            <div class="hero-buttons mt-4">
+                <a href="#" class="btn btn-primary me-2">Conocer más</a>
+                <a href="#" class="btn btn-outline-secondary">Contáctanos</a>
+            </div>
+        <?php } ?>
+    </main>
 
-  <!-- Publicaciones recientes -->
-  <section class="container mt-5 mb-5 d-flex flex-wrap justify-content-center gap-4">
-    <h2 class="text-center w-100 mb-4">Publicaciones recientes</h2>
-
-    <?php if (!empty($publicaciones)): ?>
-      <?php foreach ($publicaciones as $publicacion): ?>
-        <article class="instagram-post">
-          <header class="post-header">
+    <div class="shakti-post">
+        <div class="post-header">
             <div class="profile-info">
-              <img src="<?= $urlBase ?>img/usuario.jpg" alt="Foto de perfil" class="profile-pic" />
-              <div class="profile-details">
-                <span class="username"><?= htmlspecialchars($publicacion['nickname']) ?></span>
-                <span class="follow-text"> • Seguir</span>
-              </div>
+                <img src="/img/usuario.jpg" alt="Foto de perfil" class="profile-pic">
+                <div class="profile-details">
+                    <span class="username">Roxana21</span>
+                    <span class="follow-text"> • Seguir</span>
+                </div>
             </div>
             <i class="fas fa-ellipsis-h dots-icon"></i>
           </header>
 
-          <div class="post-content">
-            <p><?= nl2br(htmlspecialchars($publicacion['contenido'])) ?></p>
-          </div>
+        <div class="post-content">
+            <img src="/img/violentometro.png" alt="Violentómetro" class="violentometro-image">
+        </div>
 
           <div class="post-actions">
             <div class="d-flex gap-2">
@@ -92,78 +107,51 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
                 <i class="bi bi-chat"></i> Comentarios
               </button>
             </div>
+
           </div>
+        </div>
 
-          <div class="comments-section mt-3 d-none" id="comments-<?= $publicacion['id_publicacion'] ?>">
-            <div class="existing-comments mb-3">
-              <p class="text-muted">Aún no hay comentarios.</p>
-            </div>
-            <form class="comment-form" data-id="<?= $publicacion['id_publicacion'] ?>">
-              <div class="input-group">
-                <input type="text" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
-                <button class="btn btn-sm btn-primary" type="submit">Enviar</button>
-              </div>
-            </form>
-          </div>
+        <div class="post-likes">
+            <p><strong>2 Me gusta</strong></p>
+        </div>
 
-        </article>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p class="text-center w-100">No hay publicaciones todavía.</p>
-    <?php endif; ?>
-  </section>
+        <div class="post-date">
+            <p>30 de Junio</p>
+        </div>
 
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
+        <div class="add-comment">
+            <img src="https://via.placeholder.com/24" alt="Tu foto de perfil" class="comment-profile-pic">
+            <input type="text" placeholder="Añade un comentario...">
+            <button class="comment-emoji"><i class="far fa-grin"></i></button>
+        </div>
+    </div>
 
-  <!-- Scripts -->
-  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const swiper = new Swiper('.hero-carousel', {
-      effect: 'fade',
-      fadeEffect: { crossFade: true },
-      loop: true,
-      autoplay: { delay: 4000, disableOnInteraction: false },
-      pagination: { el: '.swiper-pagination', clickable: true },
-      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
-    });
+    <?php
+    // Incluye el pie de página
+    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php';
+    ?>
 
-    document.querySelectorAll('.btn-like').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const badge = btn.querySelector('.likes-count');
-        let count = parseInt(badge.textContent) || 0;
-        badge.textContent = ++count;
-        btn.classList.add('btn-primary');
-        btn.classList.remove('btn-outline-primary');
-        btn.disabled = true;
-      });
-    });
-
-    document.querySelectorAll('.btn-toggle-comments').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const pubId = btn.dataset.id;
-        const comments = document.getElementById('comments-' + pubId);
-        comments.classList.toggle('d-none');
-      });
-    });
-
-    document.querySelectorAll('.comment-form').forEach(form => {
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        const input = form.querySelector('input[type="text"]');
-        const comment = input.value.trim();
-        if (!comment) return;
-
-        const container = form.previousElementSibling;
-        const p = document.createElement('p');
-        p.textContent = comment;
-        p.classList.add('comment');
-        container.appendChild(p);
-        input.value = '';
-        
-        
-      });
-    });
-  </script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.hero-carousel', {
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
 </body>
 </html>
