@@ -5,14 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 1) {
-    header("Location: {$urlBase}Vista/usuaria/perfil.php");
-    exit;
-} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
-    header("Location: {$urlBase}Vista/especialista/perfil.php");
-    exit;
-} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
-    header("Location: {$urlBase}index.php");
+if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
+    header("Location: {$urlBase}");
     exit;
 }
 
@@ -46,7 +40,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 1) {
                     <i class="fas fa-user fa-fw text-dark"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="../../control/loginCtrl.php?opcion=2">Cerrar Sesión</a></li>
+                    <li><a class="dropdown-item" href="<?php echo $urlBase ?>/Controlador/loginCtrl.php?opcion=2">Cerrar Sesión</a></li>
                 </ul>
             </li>
         </ul>
@@ -87,6 +81,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 1) {
                             </nav>
                         </div>
                     </div>
+                </div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
@@ -170,9 +165,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 1) {
                         </div>
                     </div>
                 </div>
+            </main>
         </div>
     </div>
-    </main>
+
     <footer class="mt-auto text-dark">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center justify-content-between small">

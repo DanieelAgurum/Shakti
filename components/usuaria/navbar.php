@@ -5,6 +5,10 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
+if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
+  header("Location: {$urlBase}");
+  exit;
+}
 
 ob_start();
 $urlBase = getBaseUrl();
