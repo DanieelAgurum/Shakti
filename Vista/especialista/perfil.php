@@ -25,6 +25,14 @@ if (!$idUsuaria) {
   exit;
 }
 
+if (!empty($_SESSION['foto'])) {
+  $fotoBase64 = base64_encode($_SESSION['foto']);
+  $fotoSrc = 'data:image/png;base64,' . $fotoBase64;
+} else {
+  $fotoSrc = 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+}
+
+
 $cp = new Completar();
 $documentos = $cp->mostrarDocumentos($idUsuaria);
 ?>
@@ -53,7 +61,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
           <div class="card">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
-                <img src="https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png" alt="Especialista" class="rounded-circle" width="150">
+                <img src="<?php echo $fotoSrc; ?>" alt="Especialista" class="rounded-circle" width="150">
                 <div class="mt-3">
                   <h4><?php echo ucwords(strtolower($_SESSION['nombre'] ?? '')); ?></h4>
                   <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['nombre_rol'] ?? '')); ?></p>
