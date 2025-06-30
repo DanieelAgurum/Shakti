@@ -60,18 +60,24 @@ class loginMdln
             if ($reg && password_verify($this->contraseña, $reg["contraseña"])) {
                 // Guardar datos en sesión
                 $_SESSION['id'] = $reg['id'];
-                $_SESSION['id_usuaria'] = $reg['id']; // para publicaciones
+
+                $sql = "SELECT foto FROM usuarias WHERE id = {$_SESSION['id']}";
+                $result = mysqli_query($con, $sql);
+                if ($row = mysqli_fetch_assoc($result)) {
+                    $_SESSION['foto'] = $row['foto'];
+                }
+
+                $_SESSION['id_usuaria'] = $reg['id'];
                 $_SESSION['id_rol'] = $reg['id_rol'];
                 $_SESSION['nombre_rol'] = $reg['nombre_rol'];
                 $_SESSION['nombre'] = $reg['nombre'];
                 $_SESSION['apellidos'] = $reg['apellidos'];
                 $_SESSION['nickname'] = $reg['nickname'];
                 $_SESSION['correo'] = $reg['correo'];
-                $_SESSION['fecha_nacimiento'] = $reg['fecha_nac']; // corregido: 'fecha_nac'
+                $_SESSION['fecha_nacimiento'] = $reg['fecha_nac'];
                 $_SESSION['telefono'] = $reg['telefono'];
                 $_SESSION['direccion'] = $reg['direccion'];
                 $_SESSION['documentos'] = $reg['documentos'];
-                $_SESSION['foto'] = $reg['foto'];
                 $_SESSION['estatus'] = $reg['estatus'];
 
                 echo json_encode([
