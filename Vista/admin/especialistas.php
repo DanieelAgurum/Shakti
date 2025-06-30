@@ -94,14 +94,23 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                         <h1 class="page-header text-center"> <strong> Especialistas </strong></h1>
                         <div class="row">
                             <div class="col-sm-12">
-                                <?php
-                                if (isset($_GET["addPro"])) {
-                                    $addPro = $_GET["addPro"];
-                                    echo '<div class="alert alert-dismissible alert-success" style="margin-top: 20px;">
-                                    <button type="button" class="close" data-dismiss="alert">&times;
-                                    </button>' . $addPro . '</div>';
-                                }
-                                ?>
+                                <?php if (isset($_GET['status'])): ?>
+                                    <?php
+                                    $mensajes = [
+                                        'eliminada' => 'La cuenta fue eliminada correctamente.',
+                                        'estatus_actualizado' => 'El estado de la cuenta fue actualizado correctamente.',
+                                        'error_activar' => 'Error al activar la cuenta.',
+                                        'error_eliminar' => 'Error al eliminar la cuenta.',
+                                        'error_estatus' => 'Error al cambiar el estado de la cuenta.',
+                                    ];
+                                    $clase = in_array($_GET['status'], ['activada', 'eliminada']) ? 'success' : 'danger';
+                                    ?>
+                                    <div class="alert alert-<?php echo $clase; ?> alert-dismissible fade show" role="alert">
+                                        <?php echo $mensajes[$_GET['status']]; ?>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                                    </div>
+                                <?php endif; ?>
+
                             </div>
                             <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top:20px center;">
                                 <thead>
@@ -158,8 +167,11 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                     <?php endfor; ?>
                                                 </td>
                                                 <td>
-                                                    <a href="#activarC_<?php echo $row['id']; ?>" class="btn btn-success  m-auto btn-sm d-block" data-toggle="modal"><i class="fa-sharp fa-solid fa-pen-to-square"></i> Activar</a><br>
-                                                    <a href="editarEspecialista.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger"><i class="fa-solid fa-eraser"></i> Eliminar</a>
+                                                    <a href="#cambiarEstado_<?php echo $row['id']; ?>" class="btn btn-sm <?php echo $row['estatus'] == 1 ? 'btn-danger' : 'btn-success'; ?> d-block" data-toggle="modal">
+                                                        <i class="fa-sharp fa-solid fa-pen-to-square"></i>
+                                                        <?php echo $row['estatus'] == 1 ? 'Desactivar' : 'Activar'; ?>
+                                                    </a><br>
+                                                    <a href="#eliminarE_<?php echo $row['id']; ?>" class="btn btn-danger m-auto btn-sm d-block" data-toggle="modal"><i class="fa-solid fa-eraser"></i> Eliminar</a>
                                                 </td>
                                             </tr>
                                     <?php

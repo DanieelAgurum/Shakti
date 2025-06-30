@@ -171,14 +171,46 @@
 </div>
 
 
-<!--Activar cuenta-->
-<div class="modal fade" id="activarC_<?php echo $row['id']; ?>" tabindex=" -1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- Modal para activar/desactivar cuenta -->
+<div class="modal fade" id="cambiarEstado_<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title"> Activar cuenta de especialista</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <h5 class="modal-title"><?php echo $row['estatus'] == 1 ? 'Desactivar' : 'Activar'; ?> cuenta de especialista</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+                <h5 class="text-center"><strong><?php echo $row['nombre'] . ' ' . $row['apellidos']; ?></strong>
+                </h5>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
+                <form action="../../Controlador/especialistaCtrl.php" method="post">
+                    <input type="hidden" name="opcion" value="1">
+                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                    <input type="hidden" name="nuevo_estado" value="<?php echo $row['estatus'] == 1 ? 0 : 1; ?>">
+                    <button type="submit" class="btn <?php echo $row['estatus'] == 1 ? 'btn-danger' : 'btn-success'; ?>">
+                        <i class="fa-solid fa-check"></i> Confirmar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Eliminar cuenta-->
+<div class="modal fade" id="eliminarE_<?php echo $row['id']; ?>" tabindex=" -1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Eliminar cuenta de especialista</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
             <div class="modal-body">
@@ -188,9 +220,9 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
                 <form action="../../Controlador/especialistaCtrl.php" method="post">
-                    <input type="hidden" name="opcion" value="1">
+                    <input type="hidden" name="opcion" value="2">
                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                    <button type="submit" class="btn btn-primary"><i class="fa-sharp fa-solid fa-pen-to-square"></i> Confirmar</button>
+                    <button type="submit" class="btn btn-warning"><i class="fa-sharp fa-solid fa-eraser"></i> Confirmar</button>
                 </form>
             </div>
 
