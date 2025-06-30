@@ -13,6 +13,7 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,25 +22,37 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+
+  <style>
+    .swiper {
+      width: 100%;
+      height: 400px;
+    }
+    .swiper-slide img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body class="bg-white text-black">
 
   <!-- Carrusel de imágenes -->
-  <div class="swiper-container hero-carousel">
+  <div class="swiper mySwiper hero-carousel mb-5">
     <div class="swiper-wrapper">
-      <div class="swiper-slide"><img src="https://elcomercio.pe/resizer/v2/VCID6SJK6BCZ5FKGBYLNA7BJII.jpg" alt="Yoga"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="https://media.glamour.mx/photos/63effc578b641025c85eb38a/16:9/w_2560.jpg" alt="Marcha"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="http://www.fundipax.org/wp-content/uploads/2023/03/dia-de-la-mujer-8-de-marzo-fundipax.jpg" alt="Meditación"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="https://museodelacuerdo.cultura.gob.ar/media/uploads/site-22/destacados/.thumbnails/mujeres-de-espaldas-unidas.jpg" alt="Unidas"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="https://img.freepik.com/vector-premium/mujeres-multiculturales-bandera-horizontal_255494-1226.jpg" alt="Multiculturales"><div class="slide-overlay"></div></div>
-      <div class="swiper-slide"><img src="https://bonisimo.es/img/cms/BLOG/dia_internacional_de_la_mujer-cabecera.png" alt="Comunidad"><div class="slide-overlay"></div></div>
+      <div class="swiper-slide"><img src="https://elcomercio.pe/resizer/v2/VCID6SJK6BCZ5FKGBYLNA7BJII.jpg" alt="Yoga"></div>
+      <div class="swiper-slide"><img src="https://media.glamour.mx/photos/63effc578b641025c85eb38a/16:9/w_2560.jpg" alt="Marcha"></div>
+      <div class="swiper-slide"><img src="http://www.fundipax.org/wp-content/uploads/2023/03/dia-de-la-mujer-8-de-marzo-fundipax.jpg" alt="Meditación"></div>
+      <div class="swiper-slide"><img src="https://museodelacuerdo.cultura.gob.ar/media/uploads/site-22/destacados/.thumbnails/mujeres-de-espaldas-unidas.jpg" alt="Unidas"></div>
+      <div class="swiper-slide"><img src="https://img.freepik.com/vector-premium/mujeres-multiculturales-bandera-horizontal_255494-1226.jpg" alt="Multiculturales"></div>
+      <div class="swiper-slide"><img src="https://bonisimo.es/img/cms/BLOG/dia_internacional_de_la_mujer-cabecera.png" alt="Comunidad"></div>
     </div>
     <div class="swiper-pagination"></div>
     <div class="swiper-button-next"></div>
@@ -105,7 +118,6 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
               </div>
             </form>
           </div>
-
         </article>
       <?php endforeach; ?>
     <?php else: ?>
@@ -117,51 +129,61 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
 
   <!-- Scripts -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const swiper = new Swiper('.hero-carousel', {
-      effect: 'fade',
-      fadeEffect: { crossFade: true },
-      loop: true,
-      autoplay: { delay: 4000, disableOnInteraction: false },
-      pagination: { el: '.swiper-pagination', clickable: true },
-      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
-    });
-
-    document.querySelectorAll('.btn-like').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const badge = btn.querySelector('.likes-count');
-        let count = parseInt(badge.textContent) || 0;
-        badge.textContent = ++count;
-        btn.classList.add('btn-primary');
-        btn.classList.remove('btn-outline-primary');
-        btn.disabled = true;
+    document.addEventListener('DOMContentLoaded', function () {
+      const swiper = new Swiper('.mySwiper', {
+        effect: 'fade',
+        loop: true,
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
       });
-    });
 
-    document.querySelectorAll('.btn-toggle-comments').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const pubId = btn.dataset.id;
-        const comments = document.getElementById('comments-' + pubId);
-        comments.classList.toggle('d-none');
+      document.querySelectorAll('.btn-like').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const badge = btn.querySelector('.likes-count');
+          let count = parseInt(badge.textContent) || 0;
+          badge.textContent = ++count;
+          btn.classList.add('btn-primary');
+          btn.classList.remove('btn-outline-primary');
+          btn.disabled = true;
+        });
       });
-    });
 
-    document.querySelectorAll('.comment-form').forEach(form => {
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        const input = form.querySelector('input[type="text"]');
-        const comment = input.value.trim();
-        if (!comment) return;
+      document.querySelectorAll('.btn-toggle-comments').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pubId = btn.dataset.id;
+          const comments = document.getElementById('comments-' + pubId);
+          comments.classList.toggle('d-none');
+        });
+      });
 
-        const container = form.previousElementSibling;
-        const p = document.createElement('p');
-        p.textContent = comment;
-        p.classList.add('comment');
-        container.appendChild(p);
-        input.value = '';
+      document.querySelectorAll('.comment-form').forEach(form => {
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          const input = form.querySelector('input[type="text"]');
+          const comment = input.value.trim();
+          if (!comment) return;
+
+          const container = form.previousElementSibling;
+          const p = document.createElement('p');
+          p.textContent = comment;
+          p.classList.add('comment');
+          container.appendChild(p);
+          input.value = '';
+        });
       });
     });
   </script>
 </body>
+
 </html>
