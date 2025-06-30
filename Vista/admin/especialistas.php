@@ -93,13 +93,22 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                     <div class="container">
                         <h1 class="page-header text-center"> <strong> Especialistas </strong></h1>
                         <div class="row">
+                            <div class="col-sm-12">
+                                <?php
+                                if (isset($_GET["addPro"])) {
+                                    $addPro = $_GET["addPro"];
+                                    echo '<div class="alert alert-dismissible alert-success" style="margin-top: 20px;">
+                                    <button type="button" class="close" data-dismiss="alert">&times;
+                                    </button>' . $addPro . '</div>';
+                                }
+                                ?>
+                            </div>
                             <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top:20px center;">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Foto</th>
                                         <th>Nombre completo</th>
-                                        <!-- <th>Nombre de usuaria</th> -->
                                         <th>Correo</th>
                                         <th>Teléfono</th>
                                         <th>Dirección</th>
@@ -134,7 +143,11 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                 <td><?php echo $row['telefono']; ?></td>
                                                 <td><?php echo $row['direccion']; ?></td>
                                                 <td>
-                                                    <?php echo ucfirst($row['estatus']); ?>
+                                                    <?php if ($row['estatus'] == 1): ?>
+                                                        <span class="badge bg-success">Activa</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-danger">Desactivada</span>
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-sm btn-outline-primary" target="_blank" href="data:application/pdf;base64,<?php echo base64_encode($row['id_oficial']); ?>">ID Oficial</a><br>
@@ -145,7 +158,8 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                     <?php endfor; ?>
                                                 </td>
                                                 <td>
-                                                    <a href="editarEspecialista.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-primary">Editar</a>
+                                                    <a href="#activarC_<?php echo $row['id']; ?>" class="btn btn-success  m-auto btn-sm d-block" data-toggle="modal"><i class="fa-sharp fa-solid fa-pen-to-square"></i> Activar</a><br>
+                                                    <a href="editarEspecialista.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger"><i class="fa-solid fa-eraser"></i> Eliminar</a>
                                                 </td>
                                             </tr>
                                     <?php
@@ -195,6 +209,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             },
         });
     </script>
+    <?php include_once '../modales/perfil.php'; ?>
     <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center justify-content-between small">
@@ -202,8 +217,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             </div>
         </div>
     </footer>
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="../../components/admin/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>

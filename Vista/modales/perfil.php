@@ -169,3 +169,30 @@
         </div>
     </div>
 </div>
+
+
+<!-- Activar cuenta -->
+<div class="modal fade" id="activarC_<?php echo $row['id']; ?>" tabindex=" -1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> <strong> Activar cuenta de especialista </strong></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">¿Desea activar esta cuenta? :</p>
+                <h2 class="text-center"> <?php echo $row['nombre']; ?> <?php echo $row['apellidos']; ?></h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
+                <form action="../../control/productoCtrl.php" method="post">
+                    <input type="hidden" name="opcion" value="2">
+                    <input type="hidden" name="id_producto" value="<?php echo $row['id']; ?>">
+                    <button type="submit" class="btn btn-primary"><i class="fa-sharp fa-solid fa-pen-to-square"></i> Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
