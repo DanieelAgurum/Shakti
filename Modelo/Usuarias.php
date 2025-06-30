@@ -159,8 +159,13 @@ class Usuarias
         }
 
         if ($foto && $foto['error'] === 0) {
-            $fotoBin = mysqli_real_escape_string($con, file_get_contents($foto['tmp_name']));
-            $campos[] = "foto = '$fotoBin'";
+            $fotoBin = file_get_contents($foto['tmp_name']);
+            $fotoTipo = mime_content_type($foto['tmp_name']);
+            $fotoBinEscaped = mysqli_real_escape_string($con, $fotoBin);
+
+            $campos[] = "foto = '$fotoBinEscaped'";
+
+            $_SESSION['foto'] = $fotoBin;
         }
 
         if (empty($campos)) {
