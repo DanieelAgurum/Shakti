@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -9,6 +10,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     header("Location: {$urlBase}");
     exit;
 }
+include 'modales/usuarias.php';
 
 ?>
 
@@ -22,6 +24,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="../../components/admin/styles.css">
     <script src="https://kit.fontawesome.com/3c934cb418.js" crossorigin="anonymous"></script>
+    <script src="js/eliminarUsuario.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fuggles&family=Lato&family=Mooli&display=swap" rel="stylesheet">
@@ -31,6 +34,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 </head>
 
 <body class="sb-nav-fixed">
+
     <nav class="sb-topnav navbar navbar-expand">
         <a class="navbar-brand ps-3" href="index.php"></a>
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -104,6 +108,9 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                 }
                                 ?>
                             </div>
+                            <div class="alert alert-danger w-75 text-center m-auto mb-5 mt-5" role="alert">
+                                A simple danger alert—check it out!
+                            </div>
                             <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top:20px center;">
                                 <thead>
                                     <th>Id</th>
@@ -119,7 +126,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                     $database = new ConectarDB();
                                     $db = $database->open();
                                     try {
-                                        $sql = 'SELECT* FROM usuarias WHERE id_rol = 3 ORDER BY id DESC';
+                                        $sql = 'SELECT* FROM usuarias WHERE id_rol = 1 ORDER BY id DESC';
                                         foreach ($db->query($sql) as $row) {
                                     ?>
                                             <tr>
@@ -128,9 +135,16 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                 <td><?php echo $row['apellidos']; ?></td>
                                                 <td><?php echo $row['direccion']; ?></td>
                                                 <td><?php echo $row['telefono']; ?></td>
-                                                <td class="">
-                                                    <a href="#editP_<?php echo $row['id_producto']; ?>" class="btn btn-success  m-auto btn-sm d-block" data-toggle="modal"><i class="fa-sharp fa-solid fa-pen-to-square"></i> Editar</a><br>
-                                                    <a href="#deleteP_<?php echo $row['id_producto']; ?>" class="btn btn-danger m-auto btn-sm d-block" data-toggle="modal"><i class="fa-solid fa-eraser"></i> Eliminar</a>
+                                                <td>
+                                                    <a href="#"
+                                                        class="btn btn-danger btn-sm btnEliminar"
+                                                        data-id="<?php echo $row['id']; ?>"
+                                                        data-nombre="<?php echo $row['nombre'] . ' ' . $row['apellidos']; ?>"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#miModal">
+                                                        <i class="fa-solid fa-eraser"></i> Eliminar
+                                                    </a>
+
                                                 </td>
                                                 <?php
                                                 include '../modulos/modales.php';
