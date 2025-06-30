@@ -25,12 +25,12 @@ class PublicacionModelo {
         }
     }
 
-    // Obtiene todas las publicaciones con el nickname del autor
+    // ✅ Corrigido: Obtiene todas las publicaciones con el nickname del autor
     public function obtenerTodasConNickname() {
         try {
             $sql = "SELECT p.*, u.nickname 
                     FROM publicacion p
-                    JOIN usuarias u ON p.id_usuarias = u.id_usuaria
+                    JOIN usuarias u ON p.id_usuarias = u.id
                     ORDER BY p.fecha_publicacion DESC";
             $stmt = $this->conn->query($sql);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -39,7 +39,7 @@ class PublicacionModelo {
         }
     }
 
-    // Obtiene todas las publicaciones
+    // Obtiene todas las publicaciones sin nickname
     public function obtenerTodas() {
         try {
             $sql = "SELECT * FROM publicacion ORDER BY fecha_publicacion DESC";
@@ -50,7 +50,7 @@ class PublicacionModelo {
         }
     }
 
-    // Obtiene publicaciones solo de una usuaria específica
+    // Obtiene publicaciones de una usuaria específica
     public function obtenerPorUsuaria($id_usuaria) {
         try {
             $sql = "SELECT * FROM publicacion WHERE id_usuarias = :id_usuaria ORDER BY fecha_publicacion DESC";
@@ -76,7 +76,7 @@ class PublicacionModelo {
         }
     }
 
-    // Actualiza una publicación existente (solo si ya validaste que es del usuario correcto)
+    // Actualiza una publicación existente
     public function actualizar($id, $titulo, $contenido) {
         try {
             $sql = "UPDATE publicacion SET titulo = :titulo, contenido = :contenido WHERE id_publicacion = :id";
