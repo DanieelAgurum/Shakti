@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
 $urlBase = '/Shakti/';
 
 // Verificar sesión
-if (!isset($_SESSION['id_usuaria'])) {
+if (!isset($_SESSION['correo'])) {
     header("Location: $urlBase/Vista/login.php");
     exit;
 }

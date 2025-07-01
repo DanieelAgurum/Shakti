@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-if (isset($_SESSION['correo']) || $_SESSION['id_rol'] === 3) {
+if (isset($_SESSION['correo']) && $_SESSION['id_rol'] === 3) {
   header("Location: {$urlBase}Vista/admin/index.php");
   exit;
 }
