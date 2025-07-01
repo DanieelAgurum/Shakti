@@ -252,13 +252,16 @@ class Usuarias
     public function eliminarUsuaria($id)
     {
         $con = $this->conectarBD();
-
         $sql = "DELETE FROM usuarias WHERE id = ?";
+        $sqlDocumentos  = "DELETE FROM documentos WHERE id_usuaria = ?";
 
         $stmt = mysqli_prepare($con, $sql);
-        if ($stmt) {
+        $stmtDoc = mysqli_prepare($con, $sqlDocumentos);
+
+        if ($stmt && $stmtDoc) {
             mysqli_stmt_bind_param($stmt, "i", $id);
-            if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_bind_param($stmtDoc, 'i', $id);
+            if (mysqli_stmt_execute($stmt) && mysqli_stmt_execute($stmtDoc)) {
                 header("Location: " . $this->urlBase . "/Vista/admin/usuarias.php?eliminado=" . urlencode("Se eliminó la usuaria correctamente"));
                 exit;
             } else {
