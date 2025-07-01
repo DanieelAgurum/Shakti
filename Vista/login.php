@@ -131,18 +131,19 @@ if (isset($_SESSION['id_rol'])) {
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="border-radius: 1rem; background-color: #fefcf7; box-shadow: 0 8px 16px rgba(90, 42, 131, 0.25);">
         <div class="modal-header border-0">
-          <h5 class="modal-title text-secondary">Recuperar contraseña</h5>
+          <h5 class="modal-title text-secondary">¿Quieres recuperar tu contraseña?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <form class="d-grid gap-3">
-            <input type="email" class="form-control" id="recuperarEmail" placeholder="Ingresar correo electrónico" required>
-            <button type="submit" class="btn btn-purple w-100" data-bs-dismiss="modal">Enviar</button>
+          <form action="../Controlador/cambiarContraCorreo.php?opcion=1" method="post" class="d-grid gap-3">
+            <input type="email" name="correo" class="form-control" id="recuperarEmail" placeholder="Ingresar correo electrónico" required>
+            <button type="submit" class="btn btn-purple w-100">Enviar</button>
           </form>
         </div>
       </div>
     </div>
   </div>
+
 
   <?php include_once '../components/usuaria/footer.php'; ?>
 </body>
