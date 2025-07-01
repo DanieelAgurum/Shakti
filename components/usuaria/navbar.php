@@ -5,10 +5,17 @@ $urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
+
+if (isset($_SESSION['correo']) || $_SESSION['id_rol'] === 3) {
+  header("Location: {$urlBase}Vista/admin/index.php");
+  exit;
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -50,36 +57,36 @@ if (session_status() === PHP_SESSION_NONE) {
 
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-              switch ($_SESSION['id_rol'] ?? 0) {
-                case 1:
-                case 2:
-                  echo 'usuaria/alzalaVoz.php';
-                  break;
-                case 3:
-                  echo 'admin/';
-                  break;
-                default:
-                  echo 'login.php';
-                  break;
-              }
-            ?>">Alza la voz</a>
+                                                            switch ($_SESSION['id_rol'] ?? 0) {
+                                                              case 1:
+                                                              case 2:
+                                                                echo 'usuaria/alzalaVoz.php';
+                                                                break;
+                                                              case 3:
+                                                                echo 'admin/';
+                                                                break;
+                                                              default:
+                                                                echo 'login.php';
+                                                                break;
+                                                            }
+                                                            ?>">Alza la voz</a>
           </li>
 
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-              switch ($_SESSION['id_rol'] ?? 0) {
-                case 1:
-                case 2:
-                  echo 'usuaria/publicaciones.php';
-                  break;
-                case 3:
-                  echo 'admin/';
-                  break;
-                default:
-                  echo 'login.php';
-                  break;
-              }
-            ?>">Publicaciones</a>
+                                                            switch ($_SESSION['id_rol'] ?? 0) {
+                                                              case 1:
+                                                              case 2:
+                                                                echo 'usuaria/publicaciones.php';
+                                                                break;
+                                                              case 3:
+                                                                echo 'admin/';
+                                                                break;
+                                                              default:
+                                                                echo 'login.php';
+                                                                break;
+                                                            }
+                                                            ?>">Publicaciones</a>
           </li>
 
           <!-- Menú desplegable de usuario -->
@@ -93,29 +100,32 @@ if (session_status() === PHP_SESSION_NONE) {
               <?php if (isset($_SESSION['correo'])): ?>
                 <li>
                   <a class="dropdown-item" href="<?= $urlBase ?>Vista/<?php
-                    switch ($_SESSION['id_rol'] ?? 0) {
-                      case 1:
-                        echo 'usuaria/perfil.php';
-                        break;
-                      case 2:
-                        echo 'especialista/perfil.php';
-                        break;
-                      case 3:
-                        echo 'admin/';
-                        break;
-                      default:
-                        echo 'login.php';
-                        break;
-                    }
-                  ?>">
+                                                                      switch ($_SESSION['id_rol'] ?? 0) {
+                                                                        case 1:
+                                                                          echo 'usuaria/perfil.php';
+                                                                          break;
+                                                                        case 2:
+                                                                          echo 'especialista/perfil.php';
+                                                                          break;
+                                                                        default:
+                                                                          echo 'login.php';
+                                                                          break;
+                                                                      }
+                                                                      ?>">
                     Mi perfil <i class="bi bi-person-circle me-1"></i>
                   </a>
                 </li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li><a class="dropdown-item" href="#">Notificaciones <i class="bi bi-bell-fill"></i></a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li><a class="dropdown-item" href="#">Configuración <i class="bi bi-gear-fill"></i></a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li>
                   <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
                     <input type="hidden" name="opcion" value="2">
@@ -138,4 +148,5 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
   </nav>
 </body>
+
 </html>

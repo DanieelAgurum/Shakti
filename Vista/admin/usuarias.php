@@ -150,9 +150,6 @@ include 'modales/usuarias.php';
                                                     </a>
 
                                                 </td>
-                                                <?php
-                                                include 'modales/usuarias.php';
-                                                ?>
                                             </tr>
                                     <?php
                                         }
