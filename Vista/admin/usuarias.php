@@ -151,7 +151,7 @@ include 'modales/usuarias.php';
 
                                                 </td>
                                                 <?php
-                                                include '../modulos/modales.php';
+                                                include 'modales/usuarias.php';
                                                 ?>
                                             </tr>
                                     <?php
