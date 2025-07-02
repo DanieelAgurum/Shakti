@@ -45,7 +45,7 @@ if (session_status() === PHP_SESSION_NONE) {
             </div>
         </div>
         <div class="contact-info-form"> <span class="circle one"></span> <span class="circle two"></span>
-            <form action="control/comentarioCtrl.php" method="post" class="colortext" autocomplete="off">
+            <form action="#" method="post" class="colortext" autocomplete="off">
                 <!--  
                     // if (isset($_GET['message'])) {
                     //     $message = $_GET["message"];
@@ -53,7 +53,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     // }
                     -->
                 <div class="social-input-containers">
-                    <input type="email" name="correo" id="inputblanco" class="input text-light" placeholder="Correo eléctronico">
+                    <input type="email" name="correo" id="inputblanco" class="input text-black" placeholder="Correo eléctronico" value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : " " ; ?>">
                 </div>
                 <!-- <div class="social-input-containers">
                     <select name="asunto" class="input">

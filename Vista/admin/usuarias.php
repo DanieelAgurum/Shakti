@@ -99,7 +99,6 @@ include 'modales/usuarias.php';
                         <h1 class="page-header text-center"> <strong> Usuarias </strong></h1>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="#addNew" class="btn btn-primary" data-toggle="modal" style="margin-bottom: 8px;"><i class="fa-solid fa-circle-plus"></i> Nuevo</a>
                                 <?php
                                 if (isset($_GET["addPro"])) {
                                     $addPro = $_GET["addPro"];
