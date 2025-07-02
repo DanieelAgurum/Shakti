@@ -135,7 +135,8 @@ if (isset($_SESSION['id_rol'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <form action="../Controlador/cambiarContraCorreo.php?opcion=1" method="post" class="d-grid gap-3">
+          <form id="formRecuperar" action="../Controlador/cambiarContraCorreo.php?opcion=1" method="post" class="d-grid gap-3">
+            <h5 class="mb-3" id="mostrarMensaje"></h5>
             <input type="email" name="correo" class="form-control" id="recuperarEmail" placeholder="Ingresar correo electrónico" required>
             <button type="submit" class="btn btn-purple w-100">Enviar</button>
           </form>
@@ -143,6 +144,9 @@ if (isset($_SESSION['id_rol'])) {
       </div>
     </div>
   </div>
+
+<script src="../peticiones(js)/deshabilitarModalCambiarContra.js"></script>
+
 
 
   <?php include_once '../components/usuaria/footer.php'; ?>
