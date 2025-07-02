@@ -1,7 +1,4 @@
 <?php
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
 
 include_once '../obtenerLink/obtenerLink.php';
 include_once '../Modelo/conexion.php';
@@ -102,7 +99,7 @@ class cambiarContraCorreo
             // Si existe usuario, generamos token y link con token
             if ($existeUsuario) {
                 $mail->addAddress($correo, $nickname);
-                $token = bin2hex(random_bytes(16));
+                $token = bin2hex(random_bytes(50));
 
                 $this->guardarTokenEnBD($id, $token);
 
