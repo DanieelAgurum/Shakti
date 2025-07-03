@@ -146,6 +146,7 @@ if (isset($_SESSION['id_rol'])) {
   </div>
 
   <script src="../peticiones(js)/deshabilitarModalCambiarContra.js"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
     <script>
       Swal.fire({

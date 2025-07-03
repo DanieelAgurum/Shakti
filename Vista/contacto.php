@@ -53,7 +53,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     // }
                     -->
                 <div class="social-input-containers">
-                    <input type="email" name="correo" id="inputblanco" class="input text-black" placeholder="Correo eléctronico" value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : " " ; ?>">
+                    <input type="email" name="correo" id="inputblanco" class="input text-black" placeholder="Correo eléctronico" value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : " "; ?>">
                 </div>
                 <!-- <div class="social-input-containers">
                     <select name="asunto" class="input">
@@ -78,6 +78,7 @@ if (session_status() === PHP_SESSION_NONE) {
 </div>
 
 <?php include '../components/usuaria/footer.php'; ?>
+<script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
 </body>
 
 </html>

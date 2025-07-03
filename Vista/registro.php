@@ -149,8 +149,9 @@ if (isset($_SESSION['id_rol'])) {
                 });
             </script>
         <?php endif; ?>
-        
+
         <script src="../validacionRegistro/validacion.js"></script>
+        <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     </main>
     <?php include '../components/usuaria/footer.php'; ?>
 

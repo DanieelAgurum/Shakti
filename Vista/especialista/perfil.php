@@ -49,6 +49,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
   <link rel="stylesheet" href="../../css/perfil.css" />
   <link rel="stylesheet" href="../../css/footer.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <?php include '../../components/usuaria/navbar.php'; ?>
 </head>
 
@@ -155,7 +156,6 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
 
   <?php include '../modales/perfil.php'; ?>
   <?php include '../../components/usuaria/footer.php'; ?>
-
 
 </body>
 
