@@ -133,6 +133,7 @@ if (!empty($_SESSION['foto'])) {
             });
         </script>
     <?php endif; ?>
+    <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <?php include '../modales/perfil.php'; ?>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>

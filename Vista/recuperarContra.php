@@ -18,7 +18,7 @@ try {
     }
 } catch (\Throwable $th) {
     header("Location: {$urlBase}/Vista/registro.php");
-        exit;
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -61,6 +61,7 @@ try {
 
         </div>
         <script src="../validacionRegistro/validarContra.js"></script>
+        <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     </main>
     <?php include '../components/usuaria/footer.php'; ?>
 

@@ -139,10 +139,13 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
     <?php endif; ?>
   </section>
 
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
+  <?php
+  include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php';
+  ?>
 
   <!-- Scripts -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const swiper = new Swiper('.mySwiper', {
