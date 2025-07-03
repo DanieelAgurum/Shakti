@@ -30,7 +30,7 @@ if (isset($_SESSION['id_rol'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="../peticiones(js)/iniciarSesion.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     :root {
       --morado-base: #5a2a83;
@@ -145,10 +145,17 @@ if (isset($_SESSION['id_rol'])) {
     </div>
   </div>
 
-<script src="../peticiones(js)/deshabilitarModalCambiarContra.js"></script>
-
-
-
+  <script src="../peticiones(js)/deshabilitarModalCambiarContra.js"></script>
+  <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
+    <script>
+      Swal.fire({
+        icon: '<?= $_GET['status'] === 'success' ? 'success' : 'error' ?>',
+        title: '<?= $_GET['status'] === 'success' ? '¡Todo listo!' : 'Ups...' ?>',
+        text: '<?= htmlspecialchars(urldecode($_GET["message"]), ENT_QUOTES, "UTF-8") ?>',
+        confirmButtonText: 'Aceptar'
+      });
+    </script>
+  <?php endif; ?>
   <?php include_once '../components/usuaria/footer.php'; ?>
 </body>
 

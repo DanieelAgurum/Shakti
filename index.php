@@ -106,7 +106,7 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
           </header>
 
           <div class="post-content">
-            <p><?= nl2br(htmlspecialchars($publicacion['contenido'])) ?></p>
+            <p class="ps-3 pt-2"><?= nl2br(htmlspecialchars($publicacion['contenido'])) ?></p>
           </div>
 
           <div class="post-actions">

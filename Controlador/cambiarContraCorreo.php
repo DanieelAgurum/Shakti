@@ -18,7 +18,10 @@ if (isset($_GET['opcion'])) {
                 exit;
             }
             break;
-
+        case 2:
+            $token->obtenerRuta($urlBase);
+            $token->cambiarContra($_REQUEST['token'], $_REQUESt['contraseña']);
+            break;
         default:
             header("Location: {$urlBase}/index.php");
             exit;
