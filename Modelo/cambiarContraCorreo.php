@@ -222,12 +222,12 @@ class cambiarContraCorreo
             $update = "UPDATE usuarias SET contraseña = '$hash' WHERE id = $idUsuaria";
             $resultadoUpdate = mysqli_query($con, $update);
 
-            // mysqli_close($con);
 
             if ($resultadoUpdate) {
-                $sql = "DELETE * FROM tokens_usuaria WHERE id_usuaria = $idUsuaria";
+                $sql = "DELETE FROM tokens_contrasena WHERE id_usuaria = $idUsuaria";
                 $result = mysqli_query($con, $sql);
                 if ($result) {
+                     mysqli_close($con);
                     header("Location: " . $this->urlBase . "/Vista/login.php?status=success&message=" . urlencode("Se actualizó correctamente la contraseña"));
                     exit;
                 } else {
