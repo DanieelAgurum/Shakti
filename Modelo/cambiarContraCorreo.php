@@ -31,6 +31,8 @@ class cambiarContraCorreo
     private function guardarTokenEnBD($userId, $token)
     {
         $con = $this->conectarBD();
+        date_default_timezone_set('America/Mexico_City');
+        $fecha = date('Y-m-d H:i:s'); 
 
         // Primero verificamos si ya existe token para ese usuario
         $sqlCheck = "SELECT COUNT(*) FROM tokens_contrasena WHERE id_usuaria = ?";
@@ -42,24 +44,23 @@ class cambiarContraCorreo
         mysqli_stmt_close($stmtCheck);
 
         if ($count > 0) {
-            // Hacer UPDATE
-            $sqlUpdate = "UPDATE tokens_contrasena SET token = ?, fecha = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE id_usuaria = ?";
+            // Hacer UPDATE con fecha desde PHP
+            $sqlUpdate = "UPDATE tokens_contrasena SET token = ?, fecha = ? WHERE id_usuaria = ?";
             $stmt = mysqli_prepare($con, $sqlUpdate);
-            mysqli_stmt_bind_param($stmt, "si", $token, $userId);
+            mysqli_stmt_bind_param($stmt, "ssi", $token, $fecha, $userId);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
         } else {
-            // Hacer INSERT
-            $sqlInsert = "INSERT INTO tokens_contrasena (id_usuaria, token, fecha) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))";
+            // Hacer INSERT con fecha desde PHP
+            $sqlInsert = "INSERT INTO tokens_contrasena (id_usuaria, token, fecha) VALUES (?, ?, ?)";
             $stmt = mysqli_prepare($con, $sqlInsert);
-            mysqli_stmt_bind_param($stmt, "is", $userId, $token);
+            mysqli_stmt_bind_param($stmt, "iss", $userId, $token, $fecha);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
         }
 
         mysqli_close($con);
     }
-
 
     public function enviarToken()
     {
@@ -99,7 +100,7 @@ class cambiarContraCorreo
             // Si existe usuario, generamos token y link con token
             if ($existeUsuario) {
                 $mail->addAddress($correo, $nickname);
-                $token = bin2hex(random_bytes(50));
+                $token = bin2hex(random_bytes(8));
 
                 $this->guardarTokenEnBD($id, $token);
 
@@ -192,6 +193,55 @@ class cambiarContraCorreo
             }
         } catch (Exception $e) {
             echo 'Error al enviar el correo: ' . $mail->ErrorInfo;
+        }
+    }
+
+
+    public function obtenerRuta($ruta)
+    {
+        $this->urlBase = $ruta;
+    }
+
+    public function cambiarContra($token, $contraseña)
+    {
+        $con = $this->conectarBD();
+
+        $tokenEscaped = mysqli_real_escape_string($con, $token);
+        $sql = "SELECT u.id 
+            FROM usuarias u 
+            JOIN tokens_contrasena t ON u.id = t.id_usuaria 
+            WHERE t.token = '$tokenEscaped'";
+        $result = mysqli_query($con, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $fila = mysqli_fetch_assoc($result);
+            $idUsuaria = $fila['id'];
+
+            $hash = password_hash($contraseña, PASSWORD_DEFAULT);
+
+            $update = "UPDATE usuarias SET contraseña = '$hash' WHERE id = $idUsuaria";
+            $resultadoUpdate = mysqli_query($con, $update);
+
+            // mysqli_close($con);
+
+            if ($resultadoUpdate) {
+                $sql = "DELETE * FROM tokens_usuaria WHERE id_usuaria = $idUsuaria";
+                $result = mysqli_query($con, $sql);
+                if ($result) {
+                    header("Location: " . $this->urlBase . "/Vista/login.php?status=success&message=" . urlencode("Se actualizó correctamente la contraseña"));
+                    exit;
+                } else {
+                    header("Location: " . $this->urlBase . "/Vista/login.php?status=error&message=" . urlencode("Ocurrió un error intentar más tarde"));
+                    exit;
+                }
+            } else {
+                header("Location: " . $this->urlBase . "/Vista/login.php?status=error&message=" . urlencode("Ocurrió un problema al actualizar la contraseña"));
+                exit;
+            }
+        } else {
+            mysqli_close($con);
+            header("Location: " . $this->urlBase . "/Vista/login.php?status=error&message=" . urlencode("Token inválido o expirado"));
+            exit;
         }
     }
 }

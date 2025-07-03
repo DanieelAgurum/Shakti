@@ -1,9 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/conexion.php';
 $conexion = new ConectarDB();
@@ -13,7 +8,7 @@ $token = $_GET['token'];
 $urlBase = getBaseUrl();
 
 try {
-    $sql = "SELECT * FROM tokens_contrasena t JOIN usuarias u ON u.id = t.id_usuaria WHERE t.token = :token";
+    $sql = "SELECT u.id, t.fecha, t.token FROM tokens_contrasena t JOIN usuarias u ON u.id = t.id_usuaria WHERE t.token = :token AND t.fecha >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)  LIMIT 1";
     $stmt = $con->prepare($sql);
     $stmt->bindParam(':token', $token, PDO::PARAM_STR);
     $stmt->execute();
@@ -22,6 +17,8 @@ try {
         exit;
     }
 } catch (\Throwable $th) {
+    header("Location: {$urlBase}/Vista/registro.php");
+        exit;
 }
 ?>
 <!DOCTYPE html>
@@ -45,12 +42,13 @@ try {
                 <h1 class="h3 fw-bold text-secondary">Cambiar Contraseña</h1>
             </div>
 
-            <form class="auth-form" id="registroForm" novalidate action="../Controlador/cambiarContraCorreo.php" method="post">
+            <form class="auth-form" id="registroForm" novalidate action="../Controlador/cambiarContraCorreo.php?opcion=2" method="post">
                 <!-- Contraseña -->
                 <div class="mb-3 position-relative">
                     <label for="contraseña" class="form-label">Contraseña</label>
                     <div class="input-group">
-                        <input type="password" class="form-control" name="contraseña" id="contraseña" placeholder="Ingrese su contraseña" />
+                        <input type="password" class="form-control" name="contraseña" id="contraseña" placeholder="Ingrese su nueva contraseña" />
+                        <input type="hidden" name="token" value="<?php echo isset($token) ? htmlspecialchars($token) : "" ?>">
                     </div>
                     <small class="error" id="errorContraseña"></small>
                 </div>
@@ -62,18 +60,6 @@ try {
             </form>
 
         </div>
-
-        <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
-            <script>
-                Swal.fire({
-                    icon: '<?= $_GET['status'] === 'success' ? 'success' : 'error' ?>',
-                    title: '<?= $_GET['status'] === 'success' ? '¡Todo listo!' : 'Ups...' ?>',
-                    text: '<?= htmlspecialchars(urldecode($_GET["message"]), ENT_QUOTES, "UTF-8") ?>',
-                    confirmButtonText: 'Aceptar'
-                });
-            </script>
-        <?php endif; ?>
-
         <script src="../validacionRegistro/validarContra.js"></script>
     </main>
     <?php include '../components/usuaria/footer.php'; ?>
