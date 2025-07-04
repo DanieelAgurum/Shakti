@@ -173,6 +173,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                     </a><br>
                                                     <a href="#eliminarE_<?php echo $row['id']; ?>" class="btn btn-danger m-auto btn-sm d-block" data-toggle="modal"><i class="fa-solid fa-eraser"></i> Eliminar</a>
                                                 </td>
+                                                <?php include '../modales/perfil.php'; ?>
                                             </tr>
                                     <?php
                                         }
@@ -221,7 +222,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             },
         });
     </script>
-    <?php include_once '../modales/perfil.php'; ?>
     <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center justify-content-between small">
