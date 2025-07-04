@@ -81,8 +81,8 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
       <h1>Bienvenido a Nuestro Sitio Shakti</h1>
       <p class="lead">Tu bienestar es primero</p>
       <div class="hero-buttons ">
-        <a href="#" class="btn btn-primary me-2">Conocer más</a>
-        <a href="#" class="btn btn-outline-secondary">Contáctanos</a>
+        <a href="#" class="btn btn-primary me-2">Más contenido....</a>
+        <a href="#" class="btn btn-outline-secondary">Organizaciones</a>
       </div>
     <?php endif; ?>
   </main>
