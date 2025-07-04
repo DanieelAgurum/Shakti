@@ -28,120 +28,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     <title>Especialistas - Shakti</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
     <?php include '../../components/usuaria/navbar.php'; ?>
-    <style>
-        .testimonial-card .card-up {
-            height: 120px;
-            overflow: hidden;
-            border-top-left-radius: .25rem;
-            border-top-right-radius: .25rem;
-        }
-
-        .aqua-gradient {
-            background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%) !important;
-        }
-
-        .testimonial-card .avatar {
-            width: 150px;
-            height: 150px;
-            margin-top: -60px;
-            overflow: hidden;
-            border: 5px solid #fff;
-            border-radius: 50%;
-        }
-
-        .search-wrapper {
-            max-width: 600px;
-            margin: 20px auto;
-            border: 1px solid #e0e0e0;
-            border-radius: 50px;
-        }
-
-        .search-box {
-            position: relative;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-            border-radius: 50px;
-            transition: all 0.3s ease;
-        }
-
-        .search-box:focus-within {
-            box-shadow: 0 3px 20px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .search-input {
-            border-radius: 50px;
-            padding-left: 45px;
-            padding-right: 20px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            height: 50px;
-        }
-
-        .search-input:focus {
-            border-color: #4b0082;
-            box-shadow: none;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-            z-index: 10;
-        }
-
-        /* .card-animate {
-            animation: fadeInUp 0.5s ease-in-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        } */
-
-
-        /* .testimonial-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .testimonial-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        } */
-
-
-        .card-up::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -75%;
-            width: 50%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: skewX(-25deg);
-            animation: shine 2s infinite;
-        }
-
-        @keyframes shine {
-            0% {
-                left: -75%;
-            }
-
-            100% {
-                left: 125%;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -210,7 +97,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
         });
     </script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-    <?php include '../modales/perfil.php'; ?>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>
 
