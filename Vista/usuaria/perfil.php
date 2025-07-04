@@ -5,13 +5,22 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
-    header("Location: {$urlBase}Vista/especialista/perfil.php");
-    exit;
-} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 3) {
-    header("Location: {$urlBase}Vista/admin");
-    exit;
-} else if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 1) {
+if (isset($_SESSION['correo']) || isset($_SESSION['id_rol'])) {
+    switch ($_SESSION['id_rol']) {
+        case 2:
+            header("Location: {$urlBase}Vista/especialista/perfil.php");
+            exit;
+            break;
+        case 3:
+            header("Location: {$urlBase}Vista/admin");
+            exit;
+            break;
+        default:
+            header("Location: {$urlBase}index.php");
+            exit;
+            break;
+    }
+} else {
     header("Location: {$urlBase}index.php");
     exit;
 }
