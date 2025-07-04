@@ -62,8 +62,8 @@ $tiemposFormateados = array_map(function ($item) {
         }
 
         .chart-box {
-            width: 600px;
-            height: 450px;
+            width: 70%;
+            height: 100%;
         }
 
         #pieChart,
@@ -190,18 +190,30 @@ $tiemposFormateados = array_map(function ($item) {
                     const percent = (currentValue / total) * 100;
                     return this.x + ': ' + currentValue + ' (' + percent.toFixed(1) + '%)';
                 });
-                pieChart.title("Vistas por página: ");
+                pieChart.title()
+                    .enabled(true)
+                    .text("Vistas por página")
+                    .fontSize(26)
+                    .fontWeight("bold")
+                    .fontColor("#333")
+                    .useHtml(false);
                 pieChart.container("pieChart");
                 pieChart.draw();
 
                 // Bar chart
                 const barChart = anychart.bar();
-                barChart.data(tiempoData, 'x', 'value'); // <- Cambiado aquí
+                barChart.data(tiempoData, 'x', 'value');
                 barChart.labels().enabled(true);
                 barChart.labels().format('{%value}'); // <- Minúsculas
-                barChart.title("Tiempo total por página (segundos)");
+                barChart.title()
+                    .enabled(true)
+                    .text("Tiempo total por página (segundos)")
+                    .fontSize(26)
+                    .fontWeight("bold")
+                    .fontColor("#333")
+                    .useHtml(false); // asegurarse que no intente interpretar HTML
                 barChart.yAxis().title("Segundos");
-                barChart.xAxis().title("Vista");
+                barChart.xAxis().title("Vistas")
                 barChart.container("barChart");
                 barChart.draw();
 
