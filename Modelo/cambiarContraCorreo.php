@@ -32,7 +32,7 @@ class cambiarContraCorreo
     {
         $con = $this->conectarBD();
         date_default_timezone_set('America/Mexico_City');
-        $fecha = date('Y-m-d H:i:s'); 
+        $fecha = date('Y-m-d H:i:s');
 
         // Primero verificamos si ya existe token para ese usuario
         $sqlCheck = "SELECT COUNT(*) FROM tokens_contrasena WHERE id_usuaria = ?";
@@ -100,8 +100,7 @@ class cambiarContraCorreo
             // Si existe usuario, generamos token y link con token
             if ($existeUsuario) {
                 $mail->addAddress($correo, $nickname);
-                $token = bin2hex(random_bytes(8));
-
+                $token = bin2hex(random_bytes(60) . hash("sha512", $correo));
                 $this->guardarTokenEnBD($id, $token);
 
                 $link = $this->urlBase . "/Vista/recuperarContra.php?token=" . $token;
@@ -227,7 +226,7 @@ class cambiarContraCorreo
                 $sql = "DELETE FROM tokens_contrasena WHERE id_usuaria = $idUsuaria";
                 $result = mysqli_query($con, $sql);
                 if ($result) {
-                     mysqli_close($con);
+                    mysqli_close($con);
                     header("Location: " . $this->urlBase . "/Vista/login.php?status=success&message=" . urlencode("Se actualizó correctamente la contraseña"));
                     exit;
                 } else {
