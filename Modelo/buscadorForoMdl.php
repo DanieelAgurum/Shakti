@@ -27,7 +27,7 @@ class buscadorForoMdl
         if (!empty($this->buscar)) {
             $busquedaSegura = mysqli_real_escape_string($this->con, $this->buscar);
 
-            $sql = "SELECT p.contenido AS contenido, p.id_publicacion, u.id, u.nickname, u.foto as foto, u.id_rol as id_rol FROM publicacion p JOIN usuarias u ON p.id_usuarias = u.id WHERE id_rol = 1 AND p.contenido LIKE '%$busquedaSegura%'";
+            $sql = "SELECT p.contenido AS contenido, p.id_publicacion, p.titulo, u.id, u.nickname, u.foto as foto, u.id_rol as id_rol FROM publicacion p JOIN usuarias u ON p.id_usuarias = u.id WHERE id_rol = 1 AND p.contenido LIKE '%$busquedaSegura%' OR p.titulo = '%$busquedaSegura%'";
             $consulta = mysqli_query($this->con, $sql);
 
             if ($consulta && mysqli_num_rows($consulta) > 0) {
@@ -38,7 +38,6 @@ class buscadorForoMdl
                             <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />
                                 <div class="profile-details">
                                     <span class="username">' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '</span>
-                                    <span class="follow-text"> • Seguir</span>
                                 </div>
                             </div>
 
@@ -106,7 +105,6 @@ class buscadorForoMdl
                             <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />
                                 <div class="profile-details">
                                     <span class="username">' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '</span>
-                                    <span class="follow-text"> • Seguir</span>
                                 </div>
                             </div>
 
