@@ -73,7 +73,7 @@ $urlBase = getBaseUrl();
                 <div class="profile-info d-flex align-items-center gap-2">
                     <img src="<?= $urlBase ?>img/usuario.jpg" alt="Foto de perfil" class="profile-pic" />
                     <div class="profile-details">
-                        <span class="username"><?= htmlspecialchars($publicacion['nickname']) ?></span>
+                        <span class="username"></span>
                         <span class="follow-text"> • Seguir</span>
                     </div>
                 </div>
@@ -90,7 +90,7 @@ $urlBase = getBaseUrl();
             </header>
 
             <div class="post-content">
-                <p class="ps-3 pt-2"><?= nl2br(htmlspecialchars($publicacion['contenido'])) ?></p>
+                <p class="ps-3 pt-2"></p>
             </div>
             <div class="post-actions"> </div>
             <div class="comments-section mt-3 d-none"> </div>
