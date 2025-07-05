@@ -27,31 +27,33 @@ $urlBase = getBaseUrl();
 
     <style>
         .dropdown {
-    position: relative;
-}
+            position: relative;
+        }
 
-.dropdown-menu {
-    position: absolute;
-    top: 0;
-    left: 100%; /* Esto lo mueve a la izquierda del botón */
-    margin-top: 0; /* Opcional: elimina margen superior */
-    display: none; /* Bootstrap lo maneja */
-    min-width: 10rem;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1055;
-    background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 0.375rem;
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
-}
+        .dropdown-menu {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            /* Esto lo mueve a la izquierda del botón */
+            margin-top: 0;
+            /* Opcional: elimina margen superior */
+            display: none;
+            /* Bootstrap lo maneja */
+            min-width: 10rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1055;
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 0.375rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .175);
+        }
 
-.dropdown-menu.show {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
+        .dropdown-menu.show {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
     </style>
 </head>
 
@@ -82,14 +84,7 @@ $urlBase = getBaseUrl();
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Editar</a></li>
-                        <li><a class="dropdown-item" href="#">Eliminar</a></li>
-                        <li><a class="dropdown-item" href="#">Compartir</a></li>
-                        <li><a class="dropdown-item" href="#">Opción extra 1</a></li>
-                        <li><a class="dropdown-item" href="#">Opción extra 2</a></li>
-                        <li><a class="dropdown-item" href="#">Opción extra 3</a></li>
-                        <li><a class="dropdown-item" href="#">Opción extra 4</a></li>
-                        <li><a class="dropdown-item" href="#">Opción extra 5</a></li>
+                        <li><a class="dropdown-item" href="#">Reportar</a></li>
                     </ul>
                 </div>
             </header>
