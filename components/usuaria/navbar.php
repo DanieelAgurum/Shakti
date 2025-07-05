@@ -48,7 +48,7 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
       <div class="collapse navbar-collapse" id="navbarEspecialista">
         <ul class="navbar-nav ms-auto align-items-center">
           <li class="nav-item">
-            <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/asesoramiento.php">Asesoramiento</a>
+            <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a>
           </li>
 
           <li class="nav-item">
