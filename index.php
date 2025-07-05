@@ -6,9 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
-$publicacionModelo = new PublicacionModelo();
-$publicaciones = $publicacionModelo->obtenerTodasConNickname();
 ?>
 
 <!DOCTYPE html>
@@ -86,58 +83,6 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
       </div>
     <?php endif; ?>
   </main>
-
-  <!-- Publicaciones recientes -->
-  <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4">
-    <h2 class="text-center w-100 mb-4">Publicaciones recientes</h2>
-
-    <?php if (!empty($publicaciones)): ?>
-      <?php foreach ($publicaciones as $publicacion): ?>
-        <article class="instagram-post">
-          <header class="post-header">
-            <div class="profile-info">
-              <img src="<?= $urlBase ?>img/usuario.jpg" alt="Foto de perfil" class="profile-pic" />
-              <div class="profile-details">
-                <span class="username"><?= htmlspecialchars($publicacion['nickname']) ?></span>
-                <span class="follow-text"> • Seguir</span>
-              </div>
-            </div>
-            <i class="fas fa-ellipsis-h dots-icon"></i>
-          </header>
-
-          <div class="post-content">
-            <p class="ps-3 pt-2"><?= nl2br(htmlspecialchars($publicacion['contenido'])) ?></p>
-          </div>
-
-          <div class="post-actions">
-            <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-outline-primary btn-like" data-id="<?= $publicacion['id_publicacion'] ?>">
-                <i class="bi bi-hand-thumbs-up"></i> Me gusta
-                <span class="badge bg-primary likes-count">0</span>
-              </button>
-              <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="<?= $publicacion['id_publicacion'] ?>">
-                <i class="bi bi-chat"></i> Comentarios
-              </button>
-            </div>
-          </div>
-
-          <div class="comments-section mt-3 d-none" id="comments-<?= $publicacion['id_publicacion'] ?>">
-            <div class="existing-comments mb-3">
-              <p class="text-muted">Aún no hay comentarios.</p>
-            </div>
-            <form class="comment-form" data-id="<?= $publicacion['id_publicacion'] ?>">
-              <div class="input-group">
-                <input type="text" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
-                <button class="btn btn-sm btn-primary" type="submit">Enviar</button>
-              </div>
-            </form>
-          </div>
-        </article>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p class="text-center w-100">No hay publicaciones todavía.</p>
-    <?php endif; ?>
-  </section>
 
   <?php
   include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php';
