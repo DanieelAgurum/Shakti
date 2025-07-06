@@ -12,7 +12,7 @@ try {
     $stmt = $con->prepare($sql);
     $stmt->bindParam(':token', $token, PDO::PARAM_STR);
     $stmt->execute();
-    if ($stmt->rowCount() == 0) {
+    if ($stmt->rowCount()) {
         header("Location: {$urlBase}/Vista/registro.php");
         exit;
     }
