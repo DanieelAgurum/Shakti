@@ -64,6 +64,7 @@ public function iniciarSesion(): void
             'fecha_nac'     => $reg['fecha_nac'],
             'telefono'      => $reg['telefono'],
             'direccion'     => $reg['direccion'],
+            'descripcion'     => $reg['descripcion'],
             'documentos'    => $reg['documentos'],
             'estatus'       => $reg['estatus'],
             'foto'          => $reg['foto'],
