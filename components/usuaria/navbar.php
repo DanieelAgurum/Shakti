@@ -45,8 +45,32 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
         <span class="navbar-toggler-icon"></span>
       </button>
 
+      
+
       <div class="collapse navbar-collapse" id="navbarEspecialista">
         <ul class="navbar-nav ms-auto align-items-center">
+
+
+          <li class="nav-item">
+            <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
+                                                            switch ($_SESSION['id_rol'] ?? 0) {
+                                                              case 1:
+                                                              case 2:
+                                                                echo 'usuaria/libreYSegura.php';
+                                                                break;
+                                                              case 3:
+                                                                echo 'admin/';
+                                                                break;
+                                                              default:
+                                                                echo 'login.php';
+                                                                break;
+                                                            }
+                                                            ?>">Libre y Segura</a>
+          </li>
+
+
+
+
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a>
           </li>
