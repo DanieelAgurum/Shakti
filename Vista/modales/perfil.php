@@ -96,6 +96,12 @@
                             </div>
                         </div>
 
+                        <!-- Descripción -->
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" name="descripcion" id="descripcion" rows="3"><?= htmlspecialchars($_SESSION['descripcion'] ?? '') ?></textarea>
+                        </div>
+
                         <!-- Botones -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -200,7 +206,6 @@
         </div>
     </div>
 </div>
-
 
 
 <!--Eliminar cuenta-->

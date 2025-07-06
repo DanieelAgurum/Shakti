@@ -45,7 +45,7 @@ class loginMdln
         $query = "
             SELECT 
                 u.id, u.nombre, u.apellidos, u.fecha_nac, u.contraseña, u.nickname, u.correo, u.id_rol,
-                u.documentos, u.direccion, u.telefono, u.foto, u.estatus,
+                u.documentos, u.direccion, u.telefono, u.descripcion, u.foto, u.estatus,
                 r.id_rol AS rol_id, r.nombre_rol
             FROM usuarias u
             JOIN roles r ON u.id_rol = r.id_rol
@@ -77,6 +77,7 @@ class loginMdln
                 $_SESSION['fecha_nacimiento'] = $reg['fecha_nac'];
                 $_SESSION['telefono'] = $reg['telefono'];
                 $_SESSION['direccion'] = $reg['direccion'];
+                $_SESSION['descripcion'] = $reg['descripcion'];
                 $_SESSION['documentos'] = $reg['documentos'];
                 $_SESSION['estatus'] = $reg['estatus'];
 

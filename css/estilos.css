@@ -442,14 +442,14 @@ body {
   justify-content: flex-end;
 }
 
-.card-title {
+.title-content {
   margin-bottom: 0.5rem;
   letter-spacing: 0.03em;
   color: #fff;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 }
 
-.card-text {
+.text-content {
   color: #ddd;
   margin-bottom: 1rem;
   line-height: 1.3;

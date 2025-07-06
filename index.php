@@ -83,8 +83,8 @@ $urlBase = getBaseUrl();
         <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 1" />
           <div class="card-img-overlay">
-            <h5 class="card-title">Moda Urbana 2025</h5>
-            <p class="card-text">Descubre las últimas tendencias en ropa casual con un toque fresco y moderno para esta temporada.</p>
+            <h5 class="card-title title-content">Moda Urbana 2025</h5>
+            <p class="card-text text-content">Descubre las últimas tendencias en ropa casual con un toque fresco y moderno para esta temporada.</p>
             <div class="card-date">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6c0-1.11-.89-2-2-2zM5 20V9h14v11H5z" />
@@ -102,8 +102,8 @@ $urlBase = getBaseUrl();
         <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 2" />
           <div class="card-img-overlay">
-            <h5 class="card-title">Tecnología y Estilo</h5>
-            <p class="card-text">Cómo la tecnología está influyendo en el diseño de prendas con materiales inteligentes y sostenibles.</p>
+            <h5 class="card-title title-content">Tecnología y Estilo</h5>
+            <p class="card-text text-content">Cómo la tecnología está influyendo en el diseño de prendas con materiales inteligentes y sostenibles.</p>
             <div class="card-date">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6c0-1.11-.89-2-2-2zM5 20V9h14v11H5z" />
@@ -119,8 +119,8 @@ $urlBase = getBaseUrl();
         <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 3" />
           <div class="card-img-overlay">
-            <h5 class="card-title">Consejos de Estilo</h5>
-            <p class="card-text">Ideas para combinar colores y accesorios que realcen tu personalidad y estilo único.</p>
+            <h5 class="card-title title-content">Consejos de Estilo</h5>
+            <p class="card-text text-content">Ideas para combinar colores y accesorios que realcen tu personalidad y estilo único.</p>
             <div class="card-date">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6c0-1.11-.89-2-2-2zM5 20V9h14v11H5z" />
