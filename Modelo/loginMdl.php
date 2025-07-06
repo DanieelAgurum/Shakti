@@ -38,7 +38,7 @@ public function iniciarSesion(): void
     $con  = $this->conectarBD();
     $stmt = $con->prepare(
         'SELECT u.id, u.contraseña, u.nombre, u.apellidos, u.fecha_nac,
-                u.nickname, u.correo, u.id_rol, u.documentos, u.direccion,
+                u.nickname, u.correo, u.descripcion, u.id_rol, u.documentos, u.direccion,
                 u.telefono, u.foto, u.estatus,
                 r.nombre_rol
            FROM usuarias u
@@ -61,10 +61,10 @@ public function iniciarSesion(): void
             'apellidos'     => $reg['apellidos'],
             'nickname'      => $reg['nickname'],
             'correo'        => $reg['correo'],
+            'descripcion'     => $reg['descripcion'],
             'fecha_nac'     => $reg['fecha_nac'],
             'telefono'      => $reg['telefono'],
             'direccion'     => $reg['direccion'],
-            'descripcion'     => $reg['descripcion'],
             'documentos'    => $reg['documentos'],
             'estatus'       => $reg['estatus'],
             'foto'          => $reg['foto'],
