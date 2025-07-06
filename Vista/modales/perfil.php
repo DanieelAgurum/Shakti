@@ -26,8 +26,9 @@
                                 <label class="control-label">Nombre:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nombreN"
+                                <input type="text" id="nombreN" class="form-control" name="nombreN"
                                     value="<?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>">
+                                <div class="text-danger small" id="errorNombreN"></div>
                             </div>
                         </div>
 
@@ -37,8 +38,9 @@
                                 <label class="control-label">Apellidos:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="apellidosN"
+                                <input type="text" id="apellidosN" class="form-control" name="apellidosN"
                                     value="<?= htmlspecialchars($_SESSION['apellidos'] ?? '') ?>">
+                                <div class="text-danger small" id="errorApellidosN"></div>
                             </div>
                         </div>
 
@@ -48,8 +50,9 @@
                                 <label class="control-label">Nombre de usuaria:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nicknameN"
+                                <input type="text" id="nicknameN" class="form-control" name="nicknameN"
                                     value="<?= htmlspecialchars($_SESSION['nickname'] ?? '') ?>">
+                                <div class="text-danger small" id="errorNicknameN"></div>
                             </div>
                         </div>
 
@@ -59,7 +62,8 @@
                                 <label class="control-label">Nueva contraseña:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="password" class="form-control" name="contraseñaN">
+                                <input type="password" id="contraseñaN" class="form-control" name="contraseñaN">
+                                <div class="text-danger small" id="errorcontraseñaN"></div>
                             </div>
                         </div>
 
@@ -69,8 +73,9 @@
                                 <label class="control-label">Teléfono:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="telefono"
+                                <input type="text" id="telefono" class="form-control" name="telefono"
                                     value="<?= htmlspecialchars($_SESSION['telefono'] ?? '') ?>">
+                                <div class="text-danger small" id="errorTelefono"></div>
                             </div>
                         </div>
 
@@ -80,8 +85,9 @@
                                 <label class="control-label">Dirección:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="direccion"
+                                <input type="text" id="direccion" class="form-control" name="direccion"
                                     value="<?= htmlspecialchars($_SESSION['direccion'] ?? '') ?>">
+                                <div class="text-danger small" id="errorDireccion"></div>
                             </div>
                         </div>
 
@@ -93,6 +99,7 @@
                             <div class="col-sm-10">
                                 <input type="date" class="form-control" id="fecha_nacN" name="fecha_nac"
                                     value="<?= htmlspecialchars($_SESSION['fecha_nacimiento'] ?? '') ?>">
+                                <div class="text-danger small" id="errorFechaN"></div>
                             </div>
                         </div>
 
@@ -100,6 +107,7 @@
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
                             <textarea class="form-control" name="descripcion" id="descripcion" rows="3"><?= htmlspecialchars($_SESSION['descripcion'] ?? '') ?></textarea>
+                            <div class="text-danger small" id="errorDescripcion"></div>
                         </div>
 
                         <!-- Botones -->
