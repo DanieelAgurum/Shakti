@@ -8,16 +8,16 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (isset($_SESSION['correo']) || isset($_SESSION['id_rol'])) {
-    if ($_SESSION['id_rol'] == 1) {
-        header("Location: {$urlBase}Vista/usuaria/perfil.php");
-        exit;
-    } else if ($_SESSION['id_rol'] == 3) {
-        header("Location: {$urlBase}Vista/admin");
-        exit;
-    }
-} else {
-    header("Location: {$urlBase}index.php");
+  if ($_SESSION['id_rol'] == 1) {
+    header("Location: {$urlBase}Vista/usuaria/perfil.php");
     exit;
+  } else if ($_SESSION['id_rol'] == 3) {
+    header("Location: {$urlBase}Vista/admin");
+    exit;
+  }
+} else {
+  header("Location: {$urlBase}index.php");
+  exit;
 }
 
 $idUsuaria = $_SESSION['id'] ?? null;
@@ -155,6 +155,98 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
       });
     </script>
   <?php endif; ?>
+
+  <script>
+    const editForm = document.getElementById('editarPerfilForm');
+
+    const updateValidators = {
+      nombreN: value => {
+        if (value.trim() !== '' && !/^[a-zA-ZÀ-ÿ\s]+$/.test(value.trim()))
+          return 'El nombre solo puede contener letras y espacios';
+        return true;
+      },
+      apellidosN: value => {
+        if (value.trim() !== '' && !/^[a-zA-ZÀ-ÿ\s]+$/.test(value.trim()))
+          return 'Los apellidos solo pueden contener letras y espacios';
+        return true;
+      },
+      nicknameN: value => {
+        if (value.trim() !== '' && !/^[a-zA-Z0-9_]{4,20}$/.test(value.trim()))
+          return 'Debe tener entre 4 y 20 caracteres (letras, números, guion bajo)';
+        return true;
+      },
+      correo: value => {
+        if (value.trim() !== '' && !/\S+@\S+\.\S+/.test(value.trim()))
+          return 'Correo electrónico inválido';
+        return true;
+      },
+      contraseñaN: value => {
+        if (value.trim() !== '' && !/^[a-zA-Z0-9._]{8,}$/.test(value.trim()))
+          return 'Debe tener al menos 8 caracteres (letras, números, puntos y guiones bajos)';
+        return true;
+      },
+      telefono: value => {
+        if (value.trim() !== '' && !/^\d+$/.test(value.trim()))
+          return 'Solo se permiten números';
+        return true;
+      },
+      fecha_nac: value => {
+        if (value.trim() === '') return true; // no obligatorio
+        const fecha = new Date(value);
+        const hoy = new Date();
+        if (fecha > hoy) return 'No puede ser una fecha futura';
+        const edad = hoy.getFullYear() - fecha.getFullYear();
+        if (edad < 18) return 'Debes tener al menos 18 años';
+        return true;
+      }
+    };
+
+    function showError(input, message) {
+      const errorElem = document.getElementById('error' + input.id.charAt(0).toUpperCase() + input.id.slice(1));
+      if (errorElem) errorElem.textContent = message;
+      input.classList.add('is-invalid');
+    }
+
+    function clearError(input) {
+      const errorElem = document.getElementById('error' + input.id.charAt(0).toUpperCase() + input.id.slice(1));
+      if (errorElem) errorElem.textContent = '';
+      input.classList.remove('is-invalid');
+    }
+
+    function validateUpdateField(input) {
+      const val = input.value;
+      const field = input.id;
+      if (!updateValidators[field]) return true;
+
+      const result = updateValidators[field](val);
+      if (result !== true) {
+        showError(input, result);
+        return false;
+      } else {
+        clearError(input);
+        return true;
+      }
+    }
+
+    editForm.addEventListener('submit', e => {
+      let valid = true;
+      Object.keys(updateValidators).forEach(field => {
+        const input = editForm[field];
+        if (input && !validateUpdateField(input)) valid = false;
+      });
+      if (!valid) e.preventDefault();
+    });
+
+    // Validar en tiempo real
+    Object.keys(updateValidators).forEach(field => {
+      const input = editForm[field];
+      if (input) {
+        input.addEventListener('input', () => validateUpdateField(input));
+        input.addEventListener('blur', () => validateUpdateField(input));
+      }
+    });
+  </script>
+
 
   <?php include '../modales/perfil.php'; ?>
   <?php include '../../components/usuaria/footer.php'; ?>
