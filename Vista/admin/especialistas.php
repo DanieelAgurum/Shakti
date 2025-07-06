@@ -111,10 +111,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-sm btn-outline-primary" target="_blank" href="data:application/pdf;base64,<?php echo base64_encode($row['id_oficial']); ?>">ID Oficial</a><br>
+                                                    <a class="btn btn-sm btn-outline-primary" target="_blank" href="../../Modelo/ver_documento.php?id=<?php echo $row['id']; ?>&doc=0">ID Oficial</a><br>
                                                     <?php for ($i = 1; $i <= 4; $i++): ?>
                                                         <?php if (!empty($row["documento$i"])): ?>
-                                                            <a class="btn btn-sm btn-outline-secondary mt-1" target="_blank" href="data:application/pdf;base64,<?php echo base64_encode($row["documento$i"]); ?>">Documento <?php echo $i; ?></a><br>
+                                                            <a class="btn btn-sm btn-outline-secondary mt-1" target="_blank" href="../../Modelo/ver_documento.php?id=<?php echo $row['id']; ?>&doc=<?php echo $i; ?>">Documento <?php echo $i; ?></a><br>
                                                         <?php endif; ?>
                                                     <?php endfor; ?>
                                                 </td>
@@ -174,13 +174,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             },
         });
     </script>
-    <footer class="py-4 bg-light mt-auto">
-        <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyright &copy; TechnoLution 2023</div>
-            </div>
-        </div>
-    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="../../components/admin/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
