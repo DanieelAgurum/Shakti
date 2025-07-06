@@ -8,7 +8,9 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form method="post" action="../../Controlador/UsuariasControlador.php" enctype="multipart/form-data">
+                    <div id="formErrorAlert" class="alert alert-danger d-none" role="alert"></div>
+                    <form method="post" id="actualizarForm" action="../../Controlador/UsuariasControlador.php" enctype="multipart/form-data">
+
                         <!-- Foto -->
                         <div class="row form-group mb-2">
                             <div class="col-sm-2">
@@ -28,7 +30,7 @@
                             <div class="col-sm-10">
                                 <input type="text" id="nombreN" class="form-control" name="nombreN"
                                     value="<?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>">
-                                <div class="text-danger small" id="errorNombreN"></div>
+                                <small class="error" id="errorNombreN"></small>
                             </div>
                         </div>
 
@@ -40,7 +42,7 @@
                             <div class="col-sm-10">
                                 <input type="text" id="apellidosN" class="form-control" name="apellidosN"
                                     value="<?= htmlspecialchars($_SESSION['apellidos'] ?? '') ?>">
-                                <div class="text-danger small" id="errorApellidosN"></div>
+                                <small class="error" id="errorApellidosN"></small>
                             </div>
                         </div>
 
@@ -52,7 +54,7 @@
                             <div class="col-sm-10">
                                 <input type="text" id="nicknameN" class="form-control" name="nicknameN"
                                     value="<?= htmlspecialchars($_SESSION['nickname'] ?? '') ?>">
-                                <div class="text-danger small" id="errorNicknameN"></div>
+                                <small class="error" id="errorNicknameN"></small>
                             </div>
                         </div>
 
@@ -63,7 +65,7 @@
                             </div>
                             <div class="col-sm-10">
                                 <input type="password" id="contraseñaN" class="form-control" name="contraseñaN">
-                                <div class="text-danger small" id="errorcontraseñaN"></div>
+                                <small class="error" id="errorContraseñaN"></small>
                             </div>
                         </div>
 
@@ -73,9 +75,9 @@
                                 <label class="control-label">Teléfono:</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" id="telefono" class="form-control" name="telefono"
+                                <input type="number" id="telefono" class="form-control" name="telefono"
                                     value="<?= htmlspecialchars($_SESSION['telefono'] ?? '') ?>">
-                                <div class="text-danger small" id="errorTelefono"></div>
+                                <small class="error" id="errorTelefono"></small>
                             </div>
                         </div>
 
@@ -87,7 +89,7 @@
                             <div class="col-sm-10">
                                 <input type="text" id="direccion" class="form-control" name="direccion"
                                     value="<?= htmlspecialchars($_SESSION['direccion'] ?? '') ?>">
-                                <div class="text-danger small" id="errorDireccion"></div>
+                                <small class="error" id="errorDireccion"></small>
                             </div>
                         </div>
 
@@ -97,9 +99,9 @@
                                 <label for="fecha_nac" class="form-label me-2">Fecha de nacimiento</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="date" class="form-control" id="fecha_nacN" name="fecha_nac"
+                                <input type="date" class="form-control" id="fecha_nac" name="fecha_nac"
                                     value="<?= htmlspecialchars($_SESSION['fecha_nacimiento'] ?? '') ?>">
-                                <div class="text-danger small" id="errorFechaN"></div>
+                                <small class="error" id="errorFecha_nac"></small>
                             </div>
                         </div>
 
@@ -107,15 +109,15 @@
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
                             <textarea class="form-control" name="descripcion" id="descripcion" rows="3"><?= htmlspecialchars($_SESSION['descripcion'] ?? '') ?></textarea>
-                            <div class="text-danger small" id="errorDescripcion"></div>
+                            <small class="error" id="errorDescripcion"></small>
                         </div>
 
                         <!-- Botones -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancelar</button>
                             <input type="hidden" value="2" name="opcion">
-                            <button type="submit" name="completar" value="actualizarDatos" class="btn btn-primary">
-                                <i class="fa-solid fa-circle-check"></i> Guardar
+                            <button type="submit" name="completar" value="actualizarDatos" class="btn btn-outline-success">
+                                <i class="bi bi-check2-circle"></i> Guardar
                             </button>
                         </div>
                     </form>
@@ -174,9 +176,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancelar</button>
                         <input type="hidden" value="1" name="opcion">
-                        <button type="submit" name="completar" value="completarPerfilModal" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Guardar</button>
+                        <button type="submit" name="completar" value="completarPerfilModal" class="btn btn-outline-success"><i class="bi bi-check2-circle"></i> Guardar</button>
                     </div>
                 </form>
             </div>

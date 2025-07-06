@@ -34,7 +34,6 @@ if (!empty($_SESSION['foto'])) {
   $fotoSrc = 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
 }
 
-
 $cp = new Completar();
 $documentos = $cp->mostrarDocumentos($idUsuaria);
 ?>
@@ -69,7 +68,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
                   <h4><?php echo ucwords(strtolower($_SESSION['nombre'] ?? '')) ?></h4>
                   <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['descripcion'] ?? '')); ?></p>
                   <p class="text-muted font-size-sm"><?php echo ucwords(strtolower($_SESSION['direccion'] ?? '')); ?></p>
-                  <button class="btn btn-outline-primary">Mensaje</button>
+                  <button class="btn btn-outline-primary"> <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes</button>
                 </div>
               </div>
             </div>
@@ -101,11 +100,11 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
               <?php endforeach; ?>
 
               <div class="d-flex justify-content-end gap-2 mb-3">
-                <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#completarPerfilModal">
-                  Completar perfil
+                <button type="button" class="btn btn-outline-primary position-relative" data-bs-toggle="modal" data-bs-target="#completarPerfilModal">
+                  <i class="bi bi-file-earmark-check-fill"></i> Completar perfil
                 </button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
-                  <i class="fa-solid fa-circle-plus"></i> Editar perfil
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                  <i class="bi bi-pencil-fill"></i> Editar perfil
                 </button>
               </div>
             </div>
@@ -156,99 +155,8 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
     </script>
   <?php endif; ?>
 
-  <script>
-    const editForm = document.getElementById('editarPerfilForm');
-
-    const updateValidators = {
-      nombreN: value => {
-        if (value.trim() !== '' && !/^[a-zA-ZÀ-ÿ\s]+$/.test(value.trim()))
-          return 'El nombre solo puede contener letras y espacios';
-        return true;
-      },
-      apellidosN: value => {
-        if (value.trim() !== '' && !/^[a-zA-ZÀ-ÿ\s]+$/.test(value.trim()))
-          return 'Los apellidos solo pueden contener letras y espacios';
-        return true;
-      },
-      nicknameN: value => {
-        if (value.trim() !== '' && !/^[a-zA-Z0-9_]{4,20}$/.test(value.trim()))
-          return 'Debe tener entre 4 y 20 caracteres (letras, números, guion bajo)';
-        return true;
-      },
-      correo: value => {
-        if (value.trim() !== '' && !/\S+@\S+\.\S+/.test(value.trim()))
-          return 'Correo electrónico inválido';
-        return true;
-      },
-      contraseñaN: value => {
-        if (value.trim() !== '' && !/^[a-zA-Z0-9._]{8,}$/.test(value.trim()))
-          return 'Debe tener al menos 8 caracteres (letras, números, puntos y guiones bajos)';
-        return true;
-      },
-      telefono: value => {
-        if (value.trim() !== '' && !/^\d+$/.test(value.trim()))
-          return 'Solo se permiten números';
-        return true;
-      },
-      fecha_nac: value => {
-        if (value.trim() === '') return true; // no obligatorio
-        const fecha = new Date(value);
-        const hoy = new Date();
-        if (fecha > hoy) return 'No puede ser una fecha futura';
-        const edad = hoy.getFullYear() - fecha.getFullYear();
-        if (edad < 18) return 'Debes tener al menos 18 años';
-        return true;
-      }
-    };
-
-    function showError(input, message) {
-      const errorElem = document.getElementById('error' + input.id.charAt(0).toUpperCase() + input.id.slice(1));
-      if (errorElem) errorElem.textContent = message;
-      input.classList.add('is-invalid');
-    }
-
-    function clearError(input) {
-      const errorElem = document.getElementById('error' + input.id.charAt(0).toUpperCase() + input.id.slice(1));
-      if (errorElem) errorElem.textContent = '';
-      input.classList.remove('is-invalid');
-    }
-
-    function validateUpdateField(input) {
-      const val = input.value;
-      const field = input.id;
-      if (!updateValidators[field]) return true;
-
-      const result = updateValidators[field](val);
-      if (result !== true) {
-        showError(input, result);
-        return false;
-      } else {
-        clearError(input);
-        return true;
-      }
-    }
-
-    editForm.addEventListener('submit', e => {
-      let valid = true;
-      Object.keys(updateValidators).forEach(field => {
-        const input = editForm[field];
-        if (input && !validateUpdateField(input)) valid = false;
-      });
-      if (!valid) e.preventDefault();
-    });
-
-    // Validar en tiempo real
-    Object.keys(updateValidators).forEach(field => {
-      const input = editForm[field];
-      if (input) {
-        input.addEventListener('input', () => validateUpdateField(input));
-        input.addEventListener('blur', () => validateUpdateField(input));
-      }
-    });
-  </script>
-
-
   <?php include '../modales/perfil.php'; ?>
+  <script src="../../validacionRegistro/validacionActualizacion.js"></script>
   <?php include '../../components/usuaria/footer.php'; ?>
 
 </body>

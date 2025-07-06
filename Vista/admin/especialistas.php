@@ -111,10 +111,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-sm btn-outline-primary" target="_blank" href="../../Modelo/ver_documento.php?id=<?php echo $row['id']; ?>&doc=0">ID Oficial</a><br>
+                                                    <a class="btn btn-sm btn-outline-primary" target="_blank" href="../../Modelo/ver_documento.php?id=<?php echo $row['id']; ?>&doc=0"><i class="fa-solid fa-id-card"></i> ID Oficial</a><br>
                                                     <?php for ($i = 1; $i <= 4; $i++): ?>
                                                         <?php if (!empty($row["documento$i"])): ?>
-                                                            <a class="btn btn-sm btn-outline-secondary mt-1" target="_blank" href="../../Modelo/ver_documento.php?id=<?php echo $row['id']; ?>&doc=<?php echo $i; ?>">Documento <?php echo $i; ?></a><br>
+                                                            <a class="btn btn-sm btn-outline-secondary mt-1" target="_blank" href="../../Modelo/ver_documento.php?id=<?php echo $row['id']; ?>&doc=<?php echo $i; ?>"><i class="fa-solid fa-file-pdf"></i> Documento <?php echo $i; ?></a><br>
                                                         <?php endif; ?>
                                                     <?php endfor; ?>
                                                 </td>
