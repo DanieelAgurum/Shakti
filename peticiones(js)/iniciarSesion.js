@@ -7,8 +7,6 @@ function iniciarSesion() {
     data: datos,
     dataType: "json",
     success: function (respuesta) {
-
-
       if (respuesta.success) {
         switch (parseInt(respuesta.id_rol)) {
           case 1:
@@ -26,10 +24,6 @@ function iniciarSesion() {
       } else {
         $("#mensaje-error").text(respuesta.message).show();
       }
-    },
-    error: function (xhr, status, error) {
-      console.error("Error en la petición AJAX:", status, error);
-      $("#mensaje-error").text("Error de servidor. Intenta más tarde.").show();
     },
   });
 }
