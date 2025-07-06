@@ -38,8 +38,6 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
             left: 100%;
             margin-top: 0;
             display: none;
-            min-width: 10rem;
-            max-height: 100px;
             overflow-y: auto;
             z-index: 1055;
             background-color: white;
