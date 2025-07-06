@@ -1,26 +1,42 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/conexion.php';
+
 $conexion = new ConectarDB();
 $con = $conexion->open();
 
-$token = $_GET['token'];
+$token = $_GET['token'] ?? null;
 $urlBase = getBaseUrl();
 
 try {
-    $sql = "SELECT u.id, t.fecha, t.token FROM tokens_contrasena t JOIN usuarias u ON u.id = t.id_usuaria WHERE t.token = :token AND t.fecha >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)  LIMIT 1";
-    $stmt = $con->prepare($sql);
-    $stmt->bindParam(':token', $token, PDO::PARAM_STR);
-    $stmt->execute();
-    if ($stmt->rowCount()) {
+    if (!$token) {
         header("Location: {$urlBase}/Vista/registro.php");
         exit;
     }
+
+    $sql = "SELECT u.id, t.fecha, t.token 
+            FROM tokens_contrasena t 
+            JOIN usuarias u ON u.id = t.id_usuaria 
+            WHERE t.token = :token 
+              AND t.fecha >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)  
+            LIMIT 1";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($stmt->rowCount() == 0) {
+        header("Location: {$urlBase}/Vista/registro.php");
+        exit;
+    }
+
 } catch (\Throwable $th) {
+    error_log("Error en validación de token: " . $th->getMessage());
     header("Location: {$urlBase}/Vista/registro.php");
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
