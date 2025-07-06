@@ -59,9 +59,9 @@ class buscadorForoMdl
 
                         <div class="post-actions">
                             <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-outline-primary btn-like" data-id="' . $publicacion['id_publicacion'] . '">
-                                    <i class="bi bi-hand-thumbs-up"></i> Me gusta
-                                    <span class="badge bg-primary likes-count">0</span>
+                                <button class="btn btn-sm btn-outline-danger btn-like" data-id="' . $publicacion['id_publicacion'] . '">
+                                    <i class="bi bi-suit-heart-fill"></i> Me gusta
+                                    <span class="badge bg-danger likes-count">0</span>
                                 </button>
                                 <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="' . $publicacion['id_publicacion'] . '">
                                     <i class="bi bi-chat"></i> Comentarios
@@ -125,9 +125,9 @@ class buscadorForoMdl
 
                         <div class="post-actions">
                             <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-outline-primary btn-like" data-id="' . $publicacion['id_publicacion'] . '">
-                                    <i class="bi bi-hand-thumbs-up"></i> Me gusta
-                                    <span class="badge bg-primary likes-count">0</span>
+                                <button class="btn btn-sm btn-outline-danger btn-like" data-id="' . $publicacion['id_publicacion'] . '">
+                                    <i class="bi bi-suit-heart-fill"></i> Me gusta
+                                    <span class="badge bg-danger likes-count">0</span>
                                 </button>
                                 <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="' . $publicacion['id_publicacion'] . '">
                                     <i class="bi bi-chat"></i> Comentarios
