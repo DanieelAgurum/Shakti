@@ -6,9 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
-$publicacionModelo = new PublicacionModelo();
-$publicaciones = $publicacionModelo->obtenerTodasConNickname();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -70,10 +67,11 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
     <!-- Publicaciones recientes -->
     <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4">
         <?php
-        require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/buscadorForoMdl.php';
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/buscadorForoCtrl.php';
         ?>
     </section>
     <?php
+
     include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php';
     ?>
 
