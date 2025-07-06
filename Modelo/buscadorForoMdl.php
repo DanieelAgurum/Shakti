@@ -47,7 +47,6 @@ class buscadorForoMdl
                                     <i class="bi bi-three-dots-vertical text-black fs-5"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-start">
-                                    <li><a class="dropdown-item" href="#">Editar</a></li>
                                     <li><a class="dropdown-item" href="#">Eliminar</a></li>
                                     <li><a class="dropdown-item" href="#">Compartir</a></li>
                                 </ul>
@@ -114,7 +113,6 @@ class buscadorForoMdl
                                     <i class="bi bi-three-dots-vertical text-black fs-5"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-start">
-                                    <li><a class="dropdown-item" href="#">Editar</a></li>
                                     <li><a class="dropdown-item" href="#">Eliminar</a></li>
                                     <li><a class="dropdown-item" href="#">Compartir</a></li>
                                 </ul>
