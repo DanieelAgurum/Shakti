@@ -147,7 +147,28 @@ class Usuarias
     {
         $con = $this->conectarBD();
 
-        // Obtener datos actuales
+        $nickNuevo = mysqli_real_escape_string($con, $nickN);
+        $nickQuery = "SELECT id FROM usuarias WHERE nickname = '$nickNuevo' AND id != $idUsuaria LIMIT 1";
+        $nickResult = mysqli_query($con, $nickQuery);
+
+        if ($nickResult && mysqli_num_rows($nickResult) > 0) {
+
+            session_start();
+            if (isset($_SESSION['id_rol'])) {
+                $msg = "El nombre de usuaria ya está en uso, por favor elige otro.";
+                if ($_SESSION['id_rol'] == 1) {
+                    header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode($msg));
+                } else if ($_SESSION['id_rol'] == 2) {
+                    header("Location: ../Vista/especialista/perfil.php?status=error&message=" . urlencode($msg));
+                } else {
+                    header("Location: ../Vista/login.php?status=error&message=" . urlencode("Rol no reconocido"));
+                }
+            } else {
+                header("Location: ../Vista/login.php?status=error&message=" . urlencode("Sesión no iniciada"));
+            }
+            exit;
+        }
+
         $result = mysqli_query($con, "SELECT * FROM usuarias WHERE id = $idUsuaria");
         if (!$result || mysqli_num_rows($result) == 0) {
             die("Error: no se encontró la usuaria.");
@@ -172,7 +193,6 @@ class Usuarias
             $campos[] = "contraseña = '" . mysqli_real_escape_string($con, $hash) . "'";
         }
 
-        // Validar imagen y que sea la extensión correcta
         if ($foto && isset($foto['error']) && $foto['error'] === 0) {
             $check = getimagesize($foto['tmp_name']);
             if ($check !== false) {
@@ -240,7 +260,6 @@ class Usuarias
             $_SESSION['descripcion'] = $actual['descripcion'];
         }
 
-        // Redirección según rol
         if (isset($_SESSION['id_rol'])) {
             if ($_SESSION['id_rol'] == 1) {
                 header("Location: ../Vista/usuaria/perfil.php?status=success&message=" . urlencode("Datos actualizados correctamente"));

@@ -53,8 +53,8 @@ if (!empty($_SESSION['foto'])) {
                                     <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
                                     <p class="text-secondary mb-1"><?php echo isset($_SESSION['descripcion']) ? ucwords(strtolower($_SESSION['descripcion'])) : " " ?></p>
                                     <p class="text-muted font-size-sm"><?php echo isset($_SESSION['direccion']) ? ucwords(strtolower($_SESSION['direccion'])) : " " ?></p>
-                                    <button class="btn btn-outline-primary">Mensaje</button>
-                                    <button class="btn btn-secondary">Diario</button>
+                                    <button class="btn btn-outline-primary"><i class="bi bi-envelope-paper-heart-fill"></i> Mensajes</button>
+                                    <button class="btn btn-outline-secondary"><i class="bi bi-book-fill"></i> Diario</button>
                                 </div>
                             </div>
                         </div>
@@ -115,8 +115,8 @@ if (!empty($_SESSION['foto'])) {
                             </div>
                             <hr>
                             <div class="d-flex justify-content-end gap-2 mb-3">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
-                                    <i class="fa-solid fa-circle-plus"></i> Editar perfil
+                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                                    <i class="bi bi-pencil-fill"></i> Editar perfil
                                 </button>
                             </div>
                         </div>
@@ -137,6 +137,7 @@ if (!empty($_SESSION['foto'])) {
     <?php endif; ?>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <?php include '../modales/perfil.php'; ?>
+    <script src="../../validacionRegistro/validacionActualizacion.js"></script>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>
 
