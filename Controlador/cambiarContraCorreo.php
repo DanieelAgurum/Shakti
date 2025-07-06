@@ -20,7 +20,7 @@ if (isset($_GET['opcion'])) {
             break;
         case 2:
             $token->obtenerRuta($urlBase);
-            $token->cambiarContra($_REQUEST['token'], $_REQUESt['contraseña']);
+            $token->cambiarContra($_REQUEST['token'], $_REQUEST['contraseña']);
             break;
         default:
             header("Location: {$urlBase}/index.php");
