@@ -1,29 +1,42 @@
+<!-- Modal para agregar y modificar -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tipo de Reporte</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="row g-3">
-                    <div class="col-auto">
-                        <label for="staticEmail2" class="visually-hidden">Nombre (Tipo de reporte)</label>
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="email@example.com">
+                <div id="mensaje">
+
+                </div>
+
+                <form class="row g-3" id="agregarTipoReporte" >
+                    <input type="hidden" name="opcion" value="1">
+                    <div class="col-12">
+                        <label for="staticEmail2" class="form-label">Nombre (Tipo de reporte)</label>
+                        <input type="text" class="form-control" name="nombre" value="">
                     </div>
-                    <div class="col-auto">
-                        <label for="inputPassword2" class="visually-hidden"></label>
-                        <input type="password" class="form-control" id="inputPassword2" placeholder="Password">
+                    <div class="col-12">
+                        <label for="selectTipo" class="form-label">Seleccione tipo</label>
+                        <select class="form-select" id="selectTipo" name="tipo">
+                            <option selected disabled>Elige una opción</option>
+                            <option value="1">Contenido</option>
+                            <option value="2">Usuario</option>
+                            <option value="3">Posts</option>
+                            <option value="4">Todas</option>
+                        </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="enviarDatos()" class="btn btn-primary">Guardar</button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- Modal -->

@@ -98,7 +98,6 @@ include 'modales/usuarias.php';
                                                         data-bs-target="#miModal">
                                                         <i class="fa-solid fa-eraser"></i> Eliminar
                                                     </a>
-
                                                 </td>
                                             </tr>
                                     <?php

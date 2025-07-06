@@ -7,7 +7,7 @@ function iniciarSesion() {
     data: datos,
     dataType: "json",
     success: function (respuesta) {
-      // console.log("Respuesta del servidor:", respuesta);
+
 
       if (respuesta.success) {
         switch (parseInt(respuesta.id_rol)) {

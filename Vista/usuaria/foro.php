@@ -70,7 +70,7 @@ $publicaciones = $publicacionModelo->obtenerTodasConNickname();
     <!-- Publicaciones recientes -->
     <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4">
         <?php
-        require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/buscadorForoCtrl.php';
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/buscadorForoMdl.php';
         ?>
     </section>
     <?php
