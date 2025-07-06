@@ -86,7 +86,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
                 'Correo electrónico' => $_SESSION['correo'] ?? '',
                 'Teléfono' => $_SESSION['telefono'] ?? '',
                 'Dirección' => $_SESSION['direccion'] ?? '',
-                'Estado de cuenta' => (isset($_SESSION['status']) && $_SESSION['status'] == 1) ? 'Activa' : 'Desactivada'
+                'Estado de cuenta' => (isset($_SESSION['estatus']) && $_SESSION['estatus'] == 1) ? 'Activa' : 'Desactivada'
               ];
               foreach ($fields as $label => $value): ?>
                 <div class="row">
