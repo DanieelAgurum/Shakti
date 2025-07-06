@@ -51,7 +51,7 @@ if (!empty($_SESSION['foto'])) {
                                 <img src="<?php echo $fotoSrc; ?>" alt="<?php echo isset($_SESSION['nombre_rol']) ? ucwords(strtolower($_SESSION['nombre_rol'])) : " " ?>" class="rounded-circle" width="150" height="150" width="150">
                                 <div class="mt-3">
                                     <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
-                                    <p class="text-secondary mb-1"><?php echo isset($_SESSION['nombre_rol']) ? ucwords(strtolower($_SESSION['nombre_rol'])) : " " ?></p>
+                                    <p class="text-secondary mb-1"><?php echo isset($_SESSION['descripcion']) ? ucwords(strtolower($_SESSION['descripcion'])) : " " ?></p>
                                     <p class="text-muted font-size-sm"><?php echo isset($_SESSION['direccion']) ? ucwords(strtolower($_SESSION['direccion'])) : " " ?></p>
                                     <button class="btn btn-outline-primary">Mensaje</button>
                                     <button class="btn btn-secondary">Diario</button>

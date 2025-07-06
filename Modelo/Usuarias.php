@@ -21,6 +21,8 @@ class Usuarias
     private $fecha_nacN;
     private $telefono;
     private $direccion;
+    private $descripcion;
+
 
     public function conectarBD()
     {
@@ -124,6 +126,7 @@ class Usuarias
         $_SESSION['fecha_nacimiento'] = $usuaria['fecha_nac'];
         $_SESSION['telefono'] = $usuaria['telefono'];
         $_SESSION['direccion'] = $usuaria['direccion'];
+        $_SESSION['descripcion'] = $usuaria['descripcion'];
 
         // Redirigir según rol
         switch ($usuaria['id_rol']) {
@@ -140,7 +143,7 @@ class Usuarias
         exit;
     }
 
-    public function actualizarDatos($foto, $nomN, $apeN, $nickN, $corN, $contN, $fec, $tel, $dir, $idUsuaria)
+    public function actualizarDatos($foto, $nomN, $apeN, $nickN, $corN, $contN, $fec, $tel, $dir, $desc, $idUsuaria)
     {
         $con = $this->conectarBD();
 
@@ -161,6 +164,8 @@ class Usuarias
         if ($fec !== $actual['fecha_nac']) $campos[] = "fecha_nac = '" . mysqli_real_escape_string($con, $fec) . "'";
         if ($tel !== $actual['telefono']) $campos[] = "telefono = '" . mysqli_real_escape_string($con, $tel) . "'";
         if ($dir !== $actual['direccion']) $campos[] = "direccion = '" . mysqli_real_escape_string($con, $dir) . "'";
+        if ($desc !== $actual['descripcion']) $campos[] = "descripcion = '" . mysqli_real_escape_string($con, $desc) . "'";
+
 
         if (!empty($contN)) {
             $hash = password_hash($contN, PASSWORD_DEFAULT);
@@ -232,6 +237,7 @@ class Usuarias
             $_SESSION['fecha_nacimiento'] = $actual['fecha_nac'];
             $_SESSION['telefono'] = $actual['telefono'];
             $_SESSION['direccion'] = $actual['direccion'];
+            $_SESSION['descripcion'] = $actual['descripcion'];
         }
 
         // Redirección según rol

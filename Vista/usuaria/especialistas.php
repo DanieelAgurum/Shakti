@@ -46,7 +46,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
         <div class="row" id="resultados">
             <?php
             $db = (new ConectarDB())->open();
-            $sql = "SELECT id, nombre, apellidos, correo, foto FROM usuarias WHERE estatus = 1 AND id_rol = 2";
+            $sql = "SELECT id, nombre, apellidos, correo, foto, descripcion FROM usuarias WHERE estatus = 1 AND id_rol = 2";
             $stmt = $db->query($sql);
 
             foreach ($stmt as $row) {

@@ -67,7 +67,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
                 <img src="<?php echo $fotoSrc; ?>" alt="Especialista" class="rounded-circle" width="150" height="150">
                 <div class="mt-3">
                   <h4><?php echo ucwords(strtolower($_SESSION['nombre'] ?? '')) ?></h4>
-                  <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['nombre_rol'] ?? '')); ?></p>
+                  <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['descripcion'] ?? '')); ?></p>
                   <p class="text-muted font-size-sm"><?php echo ucwords(strtolower($_SESSION['direccion'] ?? '')); ?></p>
                   <button class="btn btn-outline-primary">Mensaje</button>
                 </div>

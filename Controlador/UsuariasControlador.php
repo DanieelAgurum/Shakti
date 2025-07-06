@@ -35,6 +35,7 @@ switch ($_REQUEST['opcion']) {
             $_REQUEST['fecha_nac'],
             $_REQUEST['telefono'],
             $_REQUEST['direccion'],
+            $_REQUEST['descripcion'],
             $_SESSION['id']
         );
 
