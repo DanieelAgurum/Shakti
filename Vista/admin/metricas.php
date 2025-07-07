@@ -62,7 +62,8 @@ $topLikes = $modelo->obtenerTopLikes();
         }
 
         #pieChart,
-        #barChart {
+        #barChart,
+        #likes {
             height: 450px;
             border: 1px solid #ccc;
         }
@@ -79,15 +80,14 @@ $topLikes = $modelo->obtenerTopLikes();
         ?>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4">
+                <div class="container-fluid px-4 mb-5">
                     <h1 class="mt-4 text-center solid"><strong>Métricas</strong></h1>
                     <div class="chart-container mt-4 row">
                         <div id="pieChart" class="chart-box col-5"></div>
                         <div id="barChart" class="chart-box col-5"></div>
-                        <div id="likes" class="chart-box" style="height: 400px;"></div>
+                        <div id="likes" class="chart-box"></div>
                     </div>
                 </div>
-
             </main>
         </div>
     </div>
@@ -100,7 +100,6 @@ $topLikes = $modelo->obtenerTopLikes();
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-
     <script>
         anychart.onDocumentReady(function() {
             try {
@@ -110,16 +109,14 @@ $topLikes = $modelo->obtenerTopLikes();
 
                 const pieDataSet = anychart.data.set(vistasData);
                 const pieChart = anychart.pie(pieDataSet);
-
                 pieChart.labels().enabled(false);
                 pieChart.legend(true);
                 pieChart.legend().position("right");
                 pieChart.legend().itemsLayout("vertical");
                 pieChart.legend().itemsFormat(function() {
                     const total = vistasData.reduce((acc, item) => acc + item.value, 0);
-                    const currentValue = this.value;
-                    const percent = (currentValue / total) * 100;
-                    return this.x + ': ' + currentValue + ' (' + percent.toFixed(1) + '%)';
+                    const percent = (this.value / total) * 100;
+                    return this.x + ': ' + this.value + ' (' + percent.toFixed(1) + '%)';
                 });
                 pieChart.title()
                     .enabled(true)
@@ -133,8 +130,7 @@ $topLikes = $modelo->obtenerTopLikes();
 
                 const barChart = anychart.bar();
                 barChart.data(tiempoData, 'x', 'value');
-                barChart.labels().enabled(true);
-                barChart.labels().format('{%value}');
+                barChart.labels().enabled(true).format('{%value}');
                 barChart.title()
                     .enabled(true)
                     .text("Tiempo total por página (segundos)")
@@ -147,11 +143,17 @@ $topLikes = $modelo->obtenerTopLikes();
                 barChart.container("barChart");
                 barChart.draw();
 
-                var likesChart = anychart.pie3d(likesData);
-                likesChart.title('Publicaciones con más "Me gusta"');
+                const likesChart = anychart.pie3d(likesData);
+                likesChart.title()
+                    .enabled(true)
+                    .text('Publicaciones con más "Me gusta"')
+                    .fontSize(26)
+                    .fontWeight("bold")
+                    .fontColor("#333")
+                    .useHtml(false);
                 likesChart.radius('43%');
                 likesChart.innerRadius('30%');
-                likesChart.container('likes');
+                likesChart.container("likes");
                 likesChart.draw();
 
             } catch (e) {

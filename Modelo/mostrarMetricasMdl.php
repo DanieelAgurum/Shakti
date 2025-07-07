@@ -41,20 +41,22 @@ class mostrarMetricasMdl
 
     public function obtenerTopLikes()
     {
-        $query = "SELECT p.titulo, COUNT(l.id_publicacion) AS total_likes
-              FROM publicacion p
-              LEFT JOIN likes_publicaciones l ON p.id_publicacion = l.id_publicacion
-              GROUP BY p.id_publicacion
-              ORDER BY total_likes DESC
-              LIMIT 5";
+        $sql = "SELECT p.id_publicacion, p.titulo, u.nickname, COUNT(l.id_like) AS total_likes
+            FROM publicacion p
+            LEFT JOIN likes_publicaciones l ON p.id_publicacion = l.id_publicacion
+            LEFT JOIN usuarias u ON p.id_usuarias = u.id
+            GROUP BY p.id_publicacion, p.titulo, u.nickname
+            ORDER BY total_likes DESC
+            LIMIT 5";
 
-        $resultado = mysqli_query($this->con, $query);
+        $result = mysqli_query($this->con, $sql);
+
         $topLikes = [];
-
-        if ($resultado) {
-            while ($row = mysqli_fetch_assoc($resultado)) {
-                // Empujar en formato [titulo, total_likes]
-                $topLikes[] = [htmlspecialchars($row['titulo']), (int)$row['total_likes']];
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                // Concatenar título y autor para la etiqueta
+                $label = '"' . $row['titulo'] . '" (' . $row['nickname'] . ')';
+                $topLikes[] = [$label, (int)$row['total_likes']];
             }
         }
         return $topLikes;
