@@ -55,6 +55,10 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
 
     <!-- Lista de publicaciones -->
     <?php if (count($publicaciones) > 0): ?>
+
+      <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/likeModelo.php';
+      $likeModelo = new likeModelo(); ?>
+
       <?php foreach ($publicaciones as $pub): ?>
         <div class="card mb-3 shadow-sm">
           <div class="card-header d-flex justify-content-between align-items-center">
@@ -77,9 +81,21 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
           </div>
           <div class="card-footer d-flex justify-content-between align-items-center mb-2">
             <div>
-              <button class="btn btn-sm btn-outline-danger btn-like" data-id="<?= $pub['id_publicacion'] ?>">
-                <i class="bi bi-suit-heart-fill"></i> Me gusta<span class="badge bg-danger likes-count">0</span>
+              <?php
+              $likes = $likeModelo->contarLikes($pub['id_publicacion']);
+              $yaDioLike = $likeModelo->usuarioYaDioLike($id_usuaria, $pub['id_publicacion']);
+              $btnLikeClass = $yaDioLike ? 'btn-danger' : 'btn-outline-danger';
+              ?>
+
+              <?php if (!isset($_SESSION['id_usuaria'])) {
+                echo '<div class="alert alert-danger">¡No hay sesión activa!</div>';
+              } ?>
+
+              <button class="btn btn-sm <?= $btnLikeClass ?> btn-like" data-id="<?= $pub['id_publicacion'] ?>">
+                <i class="bi bi-suit-heart-fill"></i> Me gusta
+                <span class="badge bg-danger likes-count"><?= $likes ?></span>
               </button>
+
               <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="<?= $pub['id_publicacion'] ?>">
                 <i class="bi bi-chat"></i> Comentarios
               </button>
@@ -154,18 +170,6 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
       });
     });
 
-    document.querySelectorAll('.btn-like').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const badge = btn.querySelector('.likes-count');
-        let count = parseInt(badge.textContent) || 0;
-        count++;
-        badge.textContent = count;
-        btn.classList.add('btn-primary');
-        btn.classList.remove('btn-outline-primary');
-        btn.disabled = true;
-      });
-    });
-
     document.querySelectorAll('.comment-form').forEach(form => {
       form.addEventListener('submit', e => {
         e.preventDefault();
@@ -204,6 +208,11 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
       });
     });
   </script>
+
+  <script src="../../peticiones(js)/likesContar.js"></script>
+
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
+
 </body>
 
 </html>
