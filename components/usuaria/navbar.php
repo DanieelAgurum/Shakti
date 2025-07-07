@@ -45,7 +45,7 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      
+
 
       <div class="collapse navbar-collapse" id="navbarEspecialista">
         <ul class="navbar-nav ms-auto align-items-center">
@@ -67,10 +67,6 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
                                                             }
                                                             ?>">Libre y Segura</a>
           </li>
-
-
-
-
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a>
           </li>
@@ -78,24 +74,20 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a>
           </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-                                                            switch ($_SESSION['id_rol'] ?? 0) {
-                                                              case 1:
-                                                              case 2:
-                                                                echo 'usuaria/alzalaVoz.php';
-                                                                break;
-                                                              case 3:
-                                                                echo 'admin/';
-                                                                break;
-                                                              default:
-                                                                echo 'login.php';
-                                                                break;
-                                                            }
-                                                            ?>">Alza la voz</a>
-          </li>
-
+          <?php if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] == 1): ?>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
+                                                              switch ($_SESSION['id_rol'] ?? 0) {
+                                                                case 1:
+                                                                  echo 'usuaria/alzalaVoz.php';
+                                                                  break;
+                                                                default:
+                                                                  echo 'login.php';
+                                                                  break;
+                                                              }
+                                                              ?>">Alza la voz</a>
+            </li>
+          <?php endif; ?>
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
                                                             switch ($_SESSION['id_rol'] ?? 0) {
@@ -112,7 +104,7 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
                                                             }
                                                             ?>">Publicaciones</a>
           </li>
-          
+
           <?php if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1): ?>
             <li class="nav-item">
               <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/especialistas.php">Especialistas</a>
