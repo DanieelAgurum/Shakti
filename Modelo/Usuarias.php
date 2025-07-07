@@ -117,6 +117,7 @@ class Usuarias
         // Iniciar sesión
         session_start();
         $_SESSION['id'] = $usuaria['id'];
+        $_SESSION['id_usuaria'] = $usuaria['id'];
         $_SESSION['id_rol'] = $usuaria['id_rol'];
         $_SESSION['nombre_rol'] = $usuaria['nombre_rol'];
         $_SESSION['nombre'] = $usuaria['nombre'];
