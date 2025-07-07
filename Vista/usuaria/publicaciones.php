@@ -92,9 +92,11 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               } ?>
 
               <button class="btn btn-sm <?= $btnLikeClass ?> btn-like" data-id="<?= $pub['id_publicacion'] ?>">
-                <i class="bi bi-suit-heart-fill"></i> Me gusta
+                <i class="bi <?= $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart' ?> heart-icon"></i>
+                <span class="like-text">Me gusta</span>
                 <span class="badge bg-danger likes-count"><?= $likes ?></span>
               </button>
+
 
               <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="<?= $pub['id_publicacion'] ?>">
                 <i class="bi bi-chat"></i> Comentarios

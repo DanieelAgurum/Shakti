@@ -64,7 +64,6 @@ class buscadorForoMdl
             echo "<p>No hay publicaciones.</p>";
         }
     }
-
     private function imprimirPublicacion($publicacion, $idUsuaria)
     {
         $idPublicacion = $publicacion['id_publicacion'];
@@ -79,45 +78,47 @@ class buscadorForoMdl
         }
 
         $btnClass = $yaDioLike ? 'btn-danger' : 'btn-outline-danger';
+        $iconClass = $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart';
 
         echo '<article class="instagram-post">
-        <header class="post-header">
-            <div class="profile-info">
-                <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />
-                <div class="profile-details">
-                    <span class="username">' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '</span>
-                </div>
-            </div>
-        </header>
-
-        <div class="post-content">
-            <p class="ps-3 pt-2">' . nl2br(htmlspecialchars($publicacion['contenido'])) . '</p>
-        </div>
-
-        <div class="post-actions">
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm ' . $btnClass . ' btn-like" data-id="' . $idPublicacion . '">
-                    <i class="bi bi-suit-heart-fill"></i> Me gusta
-                    <span class="badge bg-danger likes-count">' . $likes . '</span>
-                </button>
-                <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="' . $idPublicacion . '">
-                    <i class="bi bi-chat"></i> Comentarios
-                </button>
+    <header class="post-header">
+        <div class="profile-info">
+            <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />
+            <div class="profile-details">
+                <span class="username">' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '</span>
             </div>
         </div>
-        <div class="comments-section mt-3 d-none" id="comments-' . $idPublicacion . '">
-                <div class="existing-comments mb-3">
-                    <p class="text-muted">Aún no hay comentarios.</p>
-                </div>
-                <form class="comment-form" data-id="' . $idPublicacion . '">
-                    <div class="input-group">
-                        <input type="text" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
-                        <button class="btn btn-sm btn-primary" type="submit">Enviar</button>
-                    </div>
-                </form>
+    </header>
+
+    <div class="post-content">
+        <p class="ps-3 pt-2">' . nl2br(htmlspecialchars($publicacion['contenido'])) . '</p>
+    </div>
+
+    <div class="post-actions">
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm ' . $btnClass . ' btn-like" data-id="' . $idPublicacion . '">
+                <i class="bi ' . $iconClass . ' heart-icon"></i> Me gusta
+                <span class="badge bg-danger likes-count">' . $likes . '</span>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="' . $idPublicacion . '">
+                <i class="bi bi-chat"></i> Comentarios
+            </button>
+        </div>
+    </div>
+    <div class="comments-section mt-3 d-none" id="comments-' . $idPublicacion . '">
+        <div class="existing-comments mb-3">
+            <p class="text-muted">Aún no hay comentarios.</p>
+        </div>
+        <form class="comment-form" data-id="' . $idPublicacion . '">
+            <div class="input-group">
+                <input type="text" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
+                <button class="btn btn-sm btn-primary" type="submit">Enviar</button>
             </div>
-    </article>';
+        </form>
+    </div>
+</article>';
     }
+
 
     public function cerrarBD()
     {
