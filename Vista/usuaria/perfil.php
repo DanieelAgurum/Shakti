@@ -52,7 +52,6 @@ if (!empty($_SESSION['foto'])) {
                                 <div class="mt-3">
                                     <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
                                     <p class="text-secondary mb-1"><?php echo isset($_SESSION['descripcion']) ? ucwords(strtolower($_SESSION['descripcion'])) : " " ?></p>
-                                    <p class="text-muted font-size-sm"><?php echo isset($_SESSION['direccion']) ? ucwords(strtolower($_SESSION['direccion'])) : " " ?></p>
                                     <button class="btn btn-outline-primary"><i class="bi bi-envelope-paper-heart-fill"></i> Mensajes</button>
                                     <button class="btn btn-outline-secondary"><i class="bi bi-book-fill"></i> Diario</button>
                                 </div>
