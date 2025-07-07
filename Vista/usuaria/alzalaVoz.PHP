@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
-if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 2) {
+if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
     header("Location: {$urlBase}Vista/especialista/perfil.php");
     exit;
 }
