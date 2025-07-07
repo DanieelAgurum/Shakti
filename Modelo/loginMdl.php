@@ -66,7 +66,7 @@ class loginMdln
                 if ($row = mysqli_fetch_assoc($result)) {
                     $_SESSION['foto'] = $row['foto'];
                 }
-
+                $_SESSION['id'] = $reg['id'];
                 $_SESSION['id_usuaria'] = $reg['id'];
                 $_SESSION['id_rol'] = $reg['id_rol'];
                 $_SESSION['nombre_rol'] = $reg['nombre_rol'];
