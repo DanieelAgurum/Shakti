@@ -13,7 +13,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
-                        alert(data.error);
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Ups...',
+                            text: 'Únete a la comunidad para darle like y comentar.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ir a iniciar sesión'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/Shakti/Vista/login.php';
+                            }
+                        });
                         return;
                     }
 
