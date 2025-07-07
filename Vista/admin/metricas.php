@@ -27,6 +27,9 @@ $vistasFormateadas = array_map(function ($item) {
 $tiemposFormateados = array_map(function ($item) {
     return ['x' => $item[0], 'value' => (float)$item[1]];
 }, $tiempos);
+
+$topLikes = $modelo->obtenerTopLikes();
+
 ?>
 
 <!DOCTYPE html>
@@ -36,15 +39,12 @@ $tiemposFormateados = array_map(function ($item) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Métricas - Shakti</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
     <link rel="stylesheet" href="../../components/admin/styles.css" />
     <script src="https://kit.fontawesome.com/3c934cb418.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fuggles&family=Lato&family=Mooli&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fuggles&family=Lato&family=Mooli&display=swap" rel="stylesheet" />
     <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" rel="stylesheet" />
     <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" rel="stylesheet" />
     <style>
@@ -81,25 +81,19 @@ $tiemposFormateados = array_map(function ($item) {
             <main>
                 <div class="container-fluid px-4">
                     <h1 class="mt-4 text-center solid"><strong>Métricas</strong></h1>
-
                     <div class="chart-container mt-4 row">
                         <div id="pieChart" class="chart-box col-5"></div>
                         <div id="barChart" class="chart-box col-5"></div>
+                        <div id="likes" class="chart-box" style="height: 400px;"></div>
                     </div>
                 </div>
+
             </main>
         </div>
     </div>
 
-    <footer class="mt-auto text-muted">
-        <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div>&copy; TechnoLution 2023</div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
         crossorigin="anonymous"></script>
@@ -112,8 +106,8 @@ $tiemposFormateados = array_map(function ($item) {
             try {
                 const vistasData = <?= json_encode($vistasFormateadas) ?>;
                 const tiempoData = <?= json_encode($tiemposFormateados) ?>;
+                const likesData = <?= json_encode($topLikes) ?>;
 
-                // Pie chart
                 const pieDataSet = anychart.data.set(vistasData);
                 const pieChart = anychart.pie(pieDataSet);
 
@@ -137,28 +131,35 @@ $tiemposFormateados = array_map(function ($item) {
                 pieChart.container("pieChart");
                 pieChart.draw();
 
-                // Bar chart
                 const barChart = anychart.bar();
                 barChart.data(tiempoData, 'x', 'value');
                 barChart.labels().enabled(true);
-                barChart.labels().format('{%value}'); // <- Minúsculas
+                barChart.labels().format('{%value}');
                 barChart.title()
                     .enabled(true)
                     .text("Tiempo total por página (segundos)")
                     .fontSize(26)
                     .fontWeight("bold")
                     .fontColor("#333")
-                    .useHtml(false); // asegurarse que no intente interpretar HTML
+                    .useHtml(false);
                 barChart.yAxis().title("Segundos");
-                barChart.xAxis().title("Vistas")
+                barChart.xAxis().title("Vistas");
                 barChart.container("barChart");
                 barChart.draw();
+
+                var likesChart = anychart.pie3d(likesData);
+                likesChart.title('Publicaciones con más "Me gusta"');
+                likesChart.radius('43%');
+                likesChart.innerRadius('30%');
+                likesChart.container('likes');
+                likesChart.draw();
 
             } catch (e) {
                 console.error("Error creando las gráficas:", e);
             }
         });
     </script>
+
 </body>
 
 </html>

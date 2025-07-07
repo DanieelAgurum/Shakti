@@ -38,4 +38,25 @@ class mostrarMetricasMdl
             'tiempos' => $tiempos
         ];
     }
+
+    public function obtenerTopLikes()
+    {
+        $query = "SELECT p.titulo, COUNT(l.id_publicacion) AS total_likes
+              FROM publicacion p
+              LEFT JOIN likes_publicaciones l ON p.id_publicacion = l.id_publicacion
+              GROUP BY p.id_publicacion
+              ORDER BY total_likes DESC
+              LIMIT 5";
+
+        $resultado = mysqli_query($this->con, $query);
+        $topLikes = [];
+
+        if ($resultado) {
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                // Empujar en formato [titulo, total_likes]
+                $topLikes[] = [htmlspecialchars($row['titulo']), (int)$row['total_likes']];
+            }
+        }
+        return $topLikes;
+    }
 }

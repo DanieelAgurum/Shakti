@@ -129,14 +129,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             </main>
         </div>
     </div>
-
-    <footer class="mt-auto text-dark">
-        <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-mute text-dark">Copyright &copy; TechnoLution 2023</div>
-            </div>
-        </div>
-    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="../../components/admin/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
