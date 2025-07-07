@@ -10,7 +10,7 @@ if (!isset($_SESSION['correo'])) {
   exit;
 }
 
-$id_usuaria = $_SESSION['id_usuaria'];
+$id_usuaria = $_SESSION['id'];
 $mensaje = $_SESSION['mensaje'] ?? '';
 unset($_SESSION['mensaje']);
 
