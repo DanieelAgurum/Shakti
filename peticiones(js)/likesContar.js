@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.error) {
                         Swal.fire({
                             icon: 'info',
-                            title: '¡Espera!',
-                            text: 'Debes iniciar sesión para dar like a esta publicación.',
+                            title: 'Ups...',
+                            text: 'Únete a la comunidad para darle like y comentar',
                             confirmButtonText: 'Iniciar sesión',
                             confirmButtonColor: '#3085d6'
                         }).then(result => {
