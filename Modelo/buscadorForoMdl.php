@@ -64,6 +64,7 @@ class buscadorForoMdl
             echo "<p>No hay publicaciones.</p>";
         }
     }
+
     private function imprimirPublicacion($publicacion, $idUsuaria)
     {
         $idPublicacion = $publicacion['id_publicacion'];
@@ -81,7 +82,7 @@ class buscadorForoMdl
         $iconClass = $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart';
 
         echo '<article class="instagram-post">
-    <header class="post-header">
+        <header class="post-header">
         <div class="profile-info">
             <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />
             <div class="profile-details">
@@ -89,13 +90,18 @@ class buscadorForoMdl
             </div>
         </div>
         <div class="dropdown">
-            <button class="btn btn-link p-0 shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-link p-0 shadow-none btn-like" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-three-dots-vertical text-black fs-5"></i>
             </button>
-                <ul class="dropdown-menu dropdown-menu-start">
-                    <li><a class="dropdown-item" href="#">Eliminar</a></li>
-                    <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Reportar</a></li>
-                </ul>
+            <ul class="dropdown-menu dropdown-menu-start">
+                <li><a class="dropdown-item" href="#">Eliminar</a></li>
+                <li>
+                    <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" 
+                       onclick="rellenarDatosReporte(\'' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '\', \'' . $publicacion['id_publicacion'] . '\')">
+                       Reportar
+                    </a>
+                </li>
+            </ul>
         </div>
     </header>
 
