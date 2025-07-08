@@ -64,18 +64,23 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                 <button type="button" style="margin-bottom: 8px;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                     Nuevo <i class="fa-solid fa-circle-plus"></i>
                                 </button>
-
-                                <?php if (isset($_GET['status'])): ?>
+                                <?php if (isset($_GET['estado'])): ?>
                                     <?php
                                     $mensajes = [
-                                        'eliminada' => 'La cuenta fue eliminada correctamente.',
-                                        'estatus_actualizado' => 'El estado de la cuenta fue actualizado correctamente.',
-                                        'error_activar' => 'Error al activar la cuenta.',
-                                        'error_eliminar' => 'Error al eliminar la cuenta.',
-                                        'error_estatus' => 'Error al cambiar el estado de la cuenta.',
+                                        'eliminado' => 'Se eliminó correctamente.',
+                                        'agregado' => 'Se agregó correctamente.',
+                                        'modificado' => 'Se modificó correctamente.',
                                     ];
-                                    $clase = in_array($_GET['status'], ['eliminada', 'estatus_actualizado']) ? 'success' : 'danger';
-                                    $mensaje = $mensajes[$_GET['status']] ?? 'Acción desconocida.';
+
+                                    $clases = [
+                                        'agregado' => 'success',   // verde
+                                        'modificado' => 'primary', // azul
+                                        'eliminado' => 'danger',   // rojo
+                                    ];
+
+                                    $estado = $_GET['estado'];
+                                    $mensaje = $mensajes[$estado] ?? 'Acción desconocida.';
+                                    $clase = $clases[$estado] ?? 'secondary';
                                     ?>
                                     <div class="alert alert-<?= $clase; ?> alert-dismissible fade show" role="alert">
                                         <?= htmlspecialchars($mensaje); ?>
@@ -111,7 +116,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 
     <!-- Script de inicialización de DataTable -->
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#MiAgenda').DataTable({
                 language: {
                     decimal: "",
