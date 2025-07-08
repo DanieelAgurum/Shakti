@@ -22,6 +22,7 @@ $urlBase = getBaseUrl();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/buscadorEnForo.js"></script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
@@ -67,7 +68,7 @@ $urlBase = getBaseUrl();
     </div>
 
     <!-- Publicaciones recientes -->
-    <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4">
+    <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4 animate__animated animate__fadeInLeft">
         <?php
         require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/buscadorForoCtrl.php';
         ?>
