@@ -46,7 +46,12 @@ class Comentario
     {
         $conn = $this->conectarBD();
 
-        $query = "SELECT c.id_comentario, c.comentario, c.fecha_comentario, u.nombre 
+        $query = "SELECT 
+                c.id_comentario, 
+                c.comentario, 
+                c.fecha_comentario AS fecha, 
+                c.id_padre,
+                u.nombre 
               FROM comentarios c 
               JOIN usuarias u ON c.id_usuaria = u.id 
               WHERE c.id_publicacion = ? 
