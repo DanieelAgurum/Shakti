@@ -88,6 +88,15 @@ class buscadorForoMdl
                 <span class="username">' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '</span>
             </div>
         </div>
+        <div class="dropdown">
+            <button class="btn btn-link p-0 shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical text-black fs-5"></i>
+            </button>
+                <ul class="dropdown-menu dropdown-menu-start">
+                    <li><a class="dropdown-item" href="#">Eliminar</a></li>
+                    <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Reportar</a></li>
+                </ul>
+        </div>
     </header>
 
     <div class="post-content">
