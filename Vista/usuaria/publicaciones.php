@@ -75,22 +75,21 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
           $fecha = !empty($c['fecha']) ? date('d M Y H:i', strtotime($c['fecha'])) : 'Sin fecha';
 
           echo "<div class='mb-2 p-2 bg-light rounded'>
-                <strong>{$nombre}:</strong> {$contenido}<br>
-                <small class='text-muted'>{$fecha}</small> 
-                <button class='btn btn-sm btn-link btn-responder' data-id='{$id_comentario}'>Responder</button>
-              </div>";
+            <strong>{$nombre}:</strong> {$contenido}<br>
+            <small class='text-muted'>{$fecha}</small> 
+            <button class='btn btn-sm btn-link btn-responder' data-id='{$id_comentario}'>Responder</button>
+          </div>";
 
-          // Comentarios hijos
+          // Mostrar respuestas (comentarios hijos)
+          echo "<div class='ms-4'>";
           if (isset($hijos[$id_comentario])) {
-            echo "<div class='ms-4'>";
             renderComentarios($hijos[$id_comentario], $hijos);
-            echo "</div>";
           }
+          echo "</div>";
         }
       }
+
       ?>
-
-
       <?php foreach ($publicaciones as $pub): ?>
         <div class="card mb-3 shadow-sm">
           <div class="card-header d-flex justify-content-between align-items-center">
@@ -327,7 +326,6 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
         });
       });
     });
-    
   </script>
 
 
