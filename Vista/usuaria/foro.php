@@ -24,7 +24,6 @@ $urlBase = getBaseUrl();
     <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarReporte.js"></script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/reportarPostUsuarias.php'; ?>
@@ -77,6 +76,8 @@ $urlBase = getBaseUrl();
     </section>
 
     <script src="../../peticiones(js)/likesContar.js"></script>
+    <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
+
 
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
 

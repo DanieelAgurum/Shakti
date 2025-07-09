@@ -81,6 +81,42 @@ class buscadorForoMdl
         $btnClass = $yaDioLike ? 'btn-danger' : 'btn-outline-danger';
         $iconClass = $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart';
 
+        // Obtener comentarios
+        require_once __DIR__ . '/../modelo/comentariosModelo.php';
+        $comentarioModelo = new Comentario();
+        $allCom = $comentarioModelo->obtenerComentariosPorPublicacion($idPublicacion);
+        $comRaiz = [];
+        $comHijos = [];
+        foreach ($allCom as $c) {
+            $idPadre = $c['id_padre'] ?? null;
+            if (is_null($idPadre)) $comRaiz[$c['id_comentario']] = $c;
+            else $comHijos[$idPadre][] = $c;
+        }
+
+        if (!function_exists('renderComentarios')) {
+            function renderComentarios($comentarios, $hijos)
+            {
+                foreach ($comentarios as $c) {
+                    $id_comentario = isset($c['id_comentario']) ? (int)$c['id_comentario'] : 0;
+                    $nombre = htmlspecialchars($c['nombre'] ?? 'Anónimo');
+                    $contenido = nl2br(htmlspecialchars($c['comentario'] ?? ''));
+                    $fecha = !empty($c['fecha']) ? date('d M Y H:i', strtotime($c['fecha'])) : 'Sin fecha';
+
+                    echo "<div class='mb-2 p-2 bg-light rounded'>
+                    <strong>{$nombre}:</strong> {$contenido}<br>
+                    <small class='text-muted'>{$fecha}</small> 
+                    <button class='btn btn-sm btn-link btn-responder' data-id='{$id_comentario}'>Responder</button>
+                </div>";
+
+                    echo "<div class='ms-4'>";
+                    if (isset($hijos[$id_comentario])) {
+                        renderComentarios($hijos[$id_comentario], $hijos);
+                    }
+                    echo "</div>";
+                }
+            }
+        }
+
         echo '<article class="instagram-post">
         <header class="post-header">
         <div class="profile-info">
@@ -121,12 +157,17 @@ class buscadorForoMdl
         </div>
     </div>
     <div class="comments-section mt-3 d-none" id="comments-' . $idPublicacion . '">
-        <div class="existing-comments mb-3">
-            <p class="text-muted">Aún no hay comentarios.</p>
-        </div>
+        <div class="existing-comments mb-3">';
+        if ($allCom) renderComentarios($comRaiz, $comHijos);
+        else echo "<p class='text-muted'>Aún no hay comentarios.</p>";
+        echo '</div>
+
         <form class="comment-form" data-id="' . $idPublicacion . '">
             <div class="input-group">
-                <input type="text" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
+                <input type="text" name="comentario" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
+                <input type="hidden" name="opcion" value="1">
+                <input type="hidden" name="id_publicacion" value="' . $idPublicacion . '">
+                <input type="hidden" name="id_padre" value="">
                 <button class="btn btn-sm btn-primary" type="submit">Enviar</button>
             </div>
         </form>
