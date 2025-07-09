@@ -34,6 +34,18 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+  <style>
+    .respuestas {
+  margin-left: 1rem;
+  border-left: 2px solid #ddd;
+  padding-left: 1rem;
+}
+.ver-respuestas {
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+  </style>
 </head>
 
 <body>
@@ -60,29 +72,36 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
 
     <!-- Lista de publicaciones -->
     <?php if (count($publicaciones) > 0): ?>
-      <?php
 
+      <?php
       function renderComentarios($comentarios, $hijos)
       {
         foreach ($comentarios as $c) {
-          $id_comentario = isset($c['id_comentario']) ? (int)$c['id_comentario'] : 0;
+          $id_comentario = (int)($c['id_comentario'] ?? 0);
           $nombre = htmlspecialchars($c['nombre'] ?? 'Anónimo');
           $contenido = nl2br(htmlspecialchars($c['comentario'] ?? ''));
           $fecha = !empty($c['fecha']) ? date('d M Y H:i', strtotime($c['fecha'])) : 'Sin fecha';
 
-          echo "<div class='mb-2 p-2 bg-light rounded'>
+          echo "<div class='comentario-raiz mb-2 p-2 bg-light rounded' id='comentario-$id_comentario'>
             <strong>{$nombre}:</strong> {$contenido}<br>
-            <small class='text-muted'>{$fecha}</small> 
-            <button class='btn btn-sm btn-link btn-responder' data-id='{$id_comentario}'>Responder</button>
-          </div>";
+            <small class='text-muted'>{$fecha}</small>
+            <button class='btn btn-outline-primary btn-sm btn-link btn-responder' data-id='{$id_comentario}'>Responder</button>";
 
-          echo "<div class='ms-4'>";
           if (isset($hijos[$id_comentario])) {
+            $totalHijos = count($hijos[$id_comentario]);
+            echo "<button class='btn btn-sm btn-outline-secondary ver-respuestas' data-id='{$id_comentario}'>
+                    Ver respuestas ({$totalHijos})
+                </button>";
+
+            echo "<div class='respuestas ms-4 d-none' id='respuestas-{$id_comentario}'>";
             renderComentarios($hijos[$id_comentario], $hijos);
+            echo "</div>";
           }
+
           echo "</div>";
         }
       }
+
       ?>
 
       <?php foreach ($publicaciones as $pub): ?>
@@ -170,6 +189,23 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
       <p class="text-center text-muted">No has creado publicaciones aún.</p>
     <?php endif; ?>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Mostrar respuestas ocultas
+      document.querySelectorAll(".ver-respuestas").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          const divRespuestas = document.getElementById(`respuestas-${id}`);
+          const isVisible = !divRespuestas.classList.contains("d-none");
+
+          divRespuestas.classList.toggle("d-none");
+
+          // Cambiar texto del botón
+          btn.textContent = isVisible ? `Ver respuestas` : `Ocultar respuestas`;
+        });
+      });
+    });
+  </script>
 
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script src="../../validacionRegistro/abrirComentarios.js"></script>
