@@ -27,10 +27,17 @@ class buscadorForoMdl
 
         if (!empty($this->buscar)) {
             $busquedaSegura = mysqli_real_escape_string($this->con, $this->buscar);
+
             $sql = "SELECT p.contenido, p.id_publicacion, p.titulo, u.id, u.nickname, u.foto, u.id_rol 
-                    FROM publicacion p 
-                    JOIN usuarias u ON p.id_usuarias = u.id 
-                    WHERE id_rol = 1 AND (p.contenido LIKE '%$busquedaSegura%' OR p.titulo LIKE '%$busquedaSegura%')";
+                FROM publicacion p 
+                JOIN usuarias u ON p.id_usuarias = u.id 
+                WHERE u.id_rol = 1 AND (
+                    p.contenido LIKE '%$busquedaSegura%' OR 
+                    p.titulo LIKE '%$busquedaSegura%' OR 
+                    u.nickname LIKE '%$busquedaSegura%'";
+
+            $sql .= ")";
+
             $consulta = mysqli_query($this->con, $sql);
 
             if ($consulta && mysqli_num_rows($consulta) > 0) {
@@ -44,6 +51,7 @@ class buscadorForoMdl
             $this->todos();
         }
     }
+
 
     public function todos()
     {
@@ -165,7 +173,7 @@ class buscadorForoMdl
         else echo "<p class='text-muted'>Aún no hay comentarios.</p>";
         echo '</div>
 
-        <form class="comment-form" data-id="' . $idPublicacion . '">
+        <form class="comment-form" data-id-publicacion="' . $idPublicacion . '">
             <div class="input-group">
                 <input type="text" name="comentario" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
                 <input type="hidden" name="opcion" value="1">
@@ -184,5 +192,16 @@ class buscadorForoMdl
         if ($this->con) {
             mysqli_close($this->con);
         }
+    }
+
+    // Método para verificar si una columna existe en una tabla
+    private function columnaExiste($tabla, $columna)
+    {
+        $this->conectarBD();
+        $tabla = mysqli_real_escape_string($this->con, $tabla);
+        $columna = mysqli_real_escape_string($this->con, $columna);
+        $sql = "SHOW COLUMNS FROM `$tabla` LIKE '$columna'";
+        $resultado = mysqli_query($this->con, $sql);
+        return ($resultado && mysqli_num_rows($resultado) > 0);
     }
 }
