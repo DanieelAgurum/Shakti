@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 08-07-2025 a las 10:48:03
+-- Tiempo de generación: 09-07-2025 a las 05:24:24
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -45,8 +45,7 @@ CREATE TABLE `reportar` (
 --
 ALTER TABLE `reportar`
   ADD PRIMARY KEY (`id_reporte`),
-  ADD UNIQUE KEY `id_tipo_reporte` (`id_tipo_reporte`,`id_reportada`),
-  ADD KEY `id_usuaria` (`id_usuaria`),
+  ADD KEY `id_tipo_reporte` (`id_tipo_reporte`),
   ADD KEY `id_publicacion` (`id_publicacion`);
 
 --
@@ -57,7 +56,7 @@ ALTER TABLE `reportar`
 -- AUTO_INCREMENT de la tabla `reportar`
 --
 ALTER TABLE `reportar`
-  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

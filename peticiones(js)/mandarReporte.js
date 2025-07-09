@@ -8,29 +8,18 @@ function enviarReporte(event) {
     data: datos,
     dataType: "json",
     success: function (respuesta) {
-      if (respuesta.opcion === 0) {
-        // Éxito
-        Swal.fire({
-          icon: "success",
-          title: "¡Éxito!",
-          text: respuesta.mensaje,
-          confirmButtonText: "Aceptar",
-        }).then(() => {
-          $("#modalReportar").modal("hide"); // Cerrar modal
-          $("#reportarPublicacion")[0].reset(); // Resetear formulario
-        });
-      } else if (respuesta.opcion === 1) {
-        // Error
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: respuesta.mensaje,
-          confirmButtonText: "Aceptar",
-        }).then(() => {
-          $("#modalReportar").modal("hide"); // Cerrar modal
-          $("#reportarPublicacion")[0].reset(); // Resetear formulario
-        });
-      }
+      let icono = respuesta.opcion === 0 ? "success" : "error";
+      let titulo = respuesta.opcion === 0 ? "¡Éxito!" : "Error";
+
+      Swal.fire({
+        icon: icono,
+        title: titulo,
+        text: respuesta.mensaje,
+        confirmButtonText: "Aceptar",
+      }).then(() => {
+        $("#modalReportar").modal("hide");
+        $("#reportarPublicacion")[0].reset();
+      });
     },
     error: function (xhr, status, error) {
       Swal.fire({

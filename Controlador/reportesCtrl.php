@@ -13,6 +13,11 @@ if (isset($_REQUEST['opcion'])) {
                 $id_reporto = $_REQUEST['id_usuaria'];
                 $rep->inicializar($nick, $publi, $tipo, $id_reporto);
                 echo $rep->agregarReporte();
+            } else {
+                echo json_encode([
+                    'opcion' => 1,
+                    'mensaje' => 'Seleccione una opción válida.'
+                ]);
             }
             break;
     }
