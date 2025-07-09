@@ -140,7 +140,6 @@ class buscadorForoMdl
                 <i class="bi bi-three-dots-vertical text-black fs-5"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-start">
-                <li><a class="dropdown-item" href="#">Eliminar</a></li>
                 <li>
                     <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" 
                        onclick="rellenarDatosReporte(\'' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '\', \'' . $publicacion['id_publicacion'] . '\')">
