@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
           div.innerHTML = `<strong>${data.nombre}:</strong> ${data.comentario}<br><small class="text-muted">${data.fecha}</small><button class="btn btn-sm btn-link btn-responder" data-id="${data.id_comentario}">Responder</button>`;
 
           if (data.id_padre) {
-            // encuentra el div del padre
             const padreBtn = contDiv.querySelector(`.btn-responder[data-id="${data.id_padre}"]`);
             const wrapper = document.createElement("div");
             wrapper.classList.add("ms-4");
@@ -111,6 +110,13 @@ document.addEventListener("DOMContentLoaded", () => {
             wrapper.append(div);
           } else {
             existing.append(div);
+          }
+
+          // 🔴 ACTUALIZAR CONTADOR DE COMENTARIOS
+          const countSpan = document.getElementById(`comentarios-count-${idPub}`);
+          if (countSpan) {
+            const currentCount = parseInt(countSpan.textContent) || 0;
+            countSpan.textContent = currentCount + 1;
           }
 
           form.reset();

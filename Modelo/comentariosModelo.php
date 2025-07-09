@@ -73,4 +73,17 @@ class Comentario
 
         return $comentarios;
     }
+
+    public function contarComentariosPorPublicacion($idPublicacion)
+    {
+        $conn = $this->conectarBD();
+        $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM comentarios WHERE id_publicacion = ?");
+        $stmt->bind_param("i", $idPublicacion);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'] ?? 0;
+        $stmt->close();
+        $conn->close();
+        return $total;
+    }
 }
