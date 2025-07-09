@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/Shakti/Modelo/reportesMdl.php";
 $rep = new reportesMdl();
+$rep->conectarBD();
 
 if (isset($_REQUEST['opcion'])) {
     switch ($_REQUEST['opcion']) {
