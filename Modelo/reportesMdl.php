@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 class reportesMdl
 {
     private $nickname;
@@ -41,21 +37,13 @@ class reportesMdl
         if (empty($this->nickname) || empty($this->publicacion) || empty($this->tipo) || empty($this->id_reporto)) {
             return json_encode([
                 'opcion' => 1,
-                'mensaje' => 'Todos los campos son obligatorios.'
+                'mensaje' => 'Seleccione una opción válida.'
             ]);
         }
 
         // 2. Verificar que la publicación exista y obtener la usuaria dueña
         $sqlAutor = "SELECT id_usuarias FROM publicacion WHERE id_publicacion = ?";
         $stmtAutor = $this->con->prepare($sqlAutor);
-
-        if (!$stmtAutor) {
-            return json_encode([
-                'opcion' => 1,
-                'mensaje' => 'Error al preparar la consulta de autor.'
-            ]);
-        }
-
         $stmtAutor->bind_param("i", $this->publicacion);
         $stmtAutor->execute();
         $resultado = $stmtAutor->get_result();
@@ -81,14 +69,6 @@ class reportesMdl
         // 4. Validar que no exista reporte duplicado
         $sqlVerificar = "SELECT id_reporte FROM reportar WHERE id_usuaria = ? AND id_publicacion = ?";
         $stmtVerificar = $this->con->prepare($sqlVerificar);
-
-        if (!$stmtVerificar) {
-            return json_encode([
-                'opcion' => 1,
-                'mensaje' => 'Error al preparar la verificación de reporte.'
-            ]);
-        }
-
         $stmtVerificar->bind_param("ii", $this->id_reporto, $this->publicacion);
         $stmtVerificar->execute();
         $verificacion = $stmtVerificar->get_result();
@@ -104,14 +84,6 @@ class reportesMdl
         $sqlInsertar = "INSERT INTO reportar (id_tipo_reporte, id_usuaria, id_reportada, id_publicacion, fecha) 
                         VALUES (?, ?, ?, ?, NOW())";
         $stmtInsertar = $this->con->prepare($sqlInsertar);
-
-        if (!$stmtInsertar) {
-            return json_encode([
-                'opcion' => 1,
-                'mensaje' => 'Error al preparar el guardado del reporte.'
-            ]);
-        }
-
         $stmtInsertar->bind_param("iiii", $this->tipo, $this->id_reporto, $id_reportada, $this->publicacion);
 
         if ($stmtInsertar->execute()) {
