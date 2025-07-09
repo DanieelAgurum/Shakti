@@ -22,7 +22,6 @@
                             <option value="1">Contenido</option>
                             <option value="2">Usuario</option>
                             <option value="3">Posts</option>
-                            <option value="4">Todas</option>
                         </select>
                     </div>
                 </form>
@@ -60,7 +59,6 @@
                             <option value="1">Contenido</option>
                             <option value="2">Usuario</option>
                             <option value="3">Posts</option>
-                            <option value="4">Todas</option>
                         </select>
                     </div>
                 </form>

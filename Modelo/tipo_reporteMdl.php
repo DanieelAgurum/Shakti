@@ -184,7 +184,7 @@ class TipoReporteMdl
     public function verTipos()
     {
         $this->conectarBD();
-        $sql = "SELECT id_tipo_reporte, nombre_reporte, tipo_objetivo FROM tipo_reporte";
+        $sql = "SELECT id_tipo_reporte, nombre_reporte, tipo_objetivo FROM tipo_reporte ORDER BY id_tipo_reporte DESC;";
         $result = $this->con->query($sql);
 
         if (!$result || $result->num_rows === 0) {
@@ -207,9 +207,6 @@ class TipoReporteMdl
                     break;
                 case 3:
                     $nombreTipo = "Post";
-                    break;
-                case 4:
-                    $nombreTipo = "Todos";
                     break;
                 default:
                     $nombreTipo = "Indefinido";
