@@ -32,49 +32,47 @@ function validarEdicion(id) {
   return true;
 }
 
-// Mostrar/ocultar sección comentarios
-document.querySelectorAll('.btn-toggle-comments').forEach(btn => {
-  btn.addEventListener('click', () => {
+// Delegación para mostrar/ocultar sección de comentarios
+document.addEventListener('click', e => {
+  if (e.target.closest('.btn-toggle-comments')) {
+    const btn = e.target.closest('.btn-toggle-comments');
     const pubId = btn.getAttribute('data-id');
     const commentsSection = document.getElementById('comments-' + pubId);
-    commentsSection.classList.toggle('d-none');
-  });
-});
+    if (commentsSection) {
+      commentsSection.classList.toggle('d-none');
+    }
+  }
 
-// Mostrar formulario edición y ocultar texto
-document.querySelectorAll('.btn-toggle-edit').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id = btn.getAttribute('data-id');
+  // Delegación para botón "Responder"
+  if (e.target.classList.contains('btn-responder')) {
+    const idPadre = e.target.dataset.id;
+    const form = e.target.closest('.comments-section').querySelector('.comment-form');
+    form.querySelector("input[name='id_padre']").value = idPadre;
+    form.querySelector("input[name='comentario']").focus();
+  }
+
+  // Mostrar formulario de edición
+  if (e.target.classList.contains('btn-toggle-edit')) {
+    const id = e.target.getAttribute('data-id');
     document.getElementById('edit-form-' + id).classList.remove('d-none');
     document.getElementById('titulo-text-' + id).style.display = 'none';
     document.getElementById('contenido-text-' + id).style.display = 'none';
-    btn.style.display = 'none'; // Oculta botón editar mientras editas
-  });
-});
+    e.target.style.display = 'none';
+  }
 
-// Cancelar edición
-document.querySelectorAll('.btn-cancel').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id = btn.getAttribute('data-id');
+  // Cancelar edición
+  if (e.target.classList.contains('btn-cancel')) {
+    const id = e.target.getAttribute('data-id');
     document.getElementById('edit-form-' + id).classList.add('d-none');
     document.getElementById('titulo-text-' + id).style.display = 'block';
     document.getElementById('contenido-text-' + id).style.display = 'block';
-    document.querySelector('.btn-toggle-edit[data-id="' + id + '"]').style.display =
-      'inline-block';
-  });
+    const btnEdit = document.querySelector('.btn-toggle-edit[data-id="' + id + '"]');
+    if (btnEdit) btnEdit.style.display = 'inline-block';
+  }
 });
 
-// Enviar comentario con AJAX y actualizar la lista de comentarios
+// Enviar comentario (formulario AJAX)
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll('.btn-responder').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const idPadre = e.target.dataset.id;
-      const form = e.target.closest('.comments-section').querySelector('.comment-form');
-      form.querySelector("input[name='id_padre']").value = idPadre;
-      form.querySelector("input[name='comentario']").focus();
-    });
-  });
-
   document.querySelectorAll(".comment-form").forEach(form => {
     form.addEventListener("submit", async e => {
       e.preventDefault();
@@ -100,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const div = document.createElement("div");
           div.classList.add("mb-2", "p-2", "bg-light", "rounded");
-          div.innerHTML = `<strong>${data.nombre}:</strong> ${data.comentario}<br><small class="text-muted">${data.fecha}</small><button class="btn btn-sm btn-link btn-responder" data-id="${data.id_comentario}">Responder</button>`;
+          div.innerHTML = `<strong>${data.nombre}:</strong> ${data.comentario}<br><small class="text-muted">${data.fecha}</small> <button class="btn btn-sm btn-link btn-responder" data-id="${data.id_comentario}">Responder</button>`;
 
           if (data.id_padre) {
             const padreBtn = contDiv.querySelector(`.btn-responder[data-id="${data.id_padre}"]`);
@@ -112,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
             existing.append(div);
           }
 
-          // 🔴 ACTUALIZAR CONTADOR DE COMENTARIOS
+          // Actualizar contador
           const countSpan = document.getElementById(`comentarios-count-${idPub}`);
           if (countSpan) {
             const currentCount = parseInt(countSpan.textContent) || 0;
