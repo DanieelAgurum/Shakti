@@ -36,15 +36,15 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
   <style>
     .respuestas {
-  margin-left: 1rem;
-  border-left: 2px solid #ddd;
-  padding-left: 1rem;
-}
-.ver-respuestas {
-  font-size: 0.9rem;
-  margin-top: 0.3rem;
-}
+      margin-left: 1rem;
+      border-left: 2px solid #ddd;
+      padding-left: 1rem;
+    }
 
+    .ver-respuestas {
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
   </style>
 </head>
 
