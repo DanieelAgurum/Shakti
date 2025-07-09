@@ -117,6 +117,8 @@ class buscadorForoMdl
             }
         }
 
+        $comentariosTotales = $comentarioModelo->contarComentariosPorPublicacion($idPublicacion);
+
         echo '<article class="instagram-post">
         <header class="post-header">
         <div class="profile-info">
@@ -151,8 +153,9 @@ class buscadorForoMdl
                 <i class="bi ' . $iconClass . ' heart-icon"></i> Me gusta
                 <span class="badge bg-danger likes-count">' . $likes . '</span>
             </button>
-            <button class="btn btn-sm btn-outline-secondary btn-toggle-comments" data-id="' . $idPublicacion . '">
+            <button class="btn btn-sm btn-outline-primary btn-toggle-comments" data-id="' . $idPublicacion . '">
                 <i class="bi bi-chat"></i> Comentarios
+                <span class="badge bg-primary comentarios-count" id="comentarios-count-' . $idPublicacion . '">' . $comentariosTotales . '</span>
             </button>
         </div>
     </div>
