@@ -72,7 +72,10 @@ class PublicacionModelo
             } else {
 
                 foreach ($publicaciones as $pub) {
-                    $foto = htmlspecialchars($pub['foto'] ?? 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png');
+                    $foto = !empty($pub['foto'])
+                        ? "data:image/*;base64," . base64_encode($pub['foto'])
+                        : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+
                     $nickname = htmlspecialchars($pub['nickname'] ?? '');
                     $contenido = nl2br(htmlspecialchars($pub['contenido']));
                     $idPub = (int)$pub['id_publicacion'];
@@ -90,7 +93,7 @@ class PublicacionModelo
                                     <i class="bi bi-three-dots-vertical text-black fs-5"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-start">
-                                    <li><a class="dropdown-item" href="#">Eliminar</a></li>
+                                    <!-- <li><a class="dropdown-item" href="#">Eliminar</a></li> -->
                                     <li>
                                         <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" onclick="rellenarDatosReporte('$nickname', $idPub)"> Reportar</a>
                                     </li>
