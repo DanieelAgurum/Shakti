@@ -110,15 +110,20 @@ class buscadorForoMdl
                     $contenido = nl2br(htmlspecialchars($c['comentario'] ?? ''));
                     $fecha = !empty($c['fecha']) ? date('d M Y H:i', strtotime($c['fecha'])) : 'Sin fecha';
 
-                    echo "<div class='mb-2 p-2 bg-light rounded'>
-                    <strong>{$nombre}:</strong> {$contenido}<br>
-                    <small class='text-muted'>{$fecha}</small> 
-                    <button class='btn btn-sm btn-link btn-responder likes-count' data-id='{$id_comentario}'>Responder</button>
-                </div>";
+                    echo "<div class='comentario-raiz mb-2 p-2 bg-light rounded' id='comentario-$id_comentario'>
+                <strong>{$nombre}:</strong> {$contenido}<br>
+                <small class='text-muted'>{$fecha}</small>
+                <button class='btn btn-sm btn-link btn-responder likes-count' data-id='{$id_comentario}'>Responder</button>";
 
-                    echo "<div class='ms-4'>";
                     if (isset($hijos[$id_comentario])) {
+                        $totalHijos = count($hijos[$id_comentario]);
+                        echo "<button class='btn btn-sm btn-outline-secondary ver-respuestas' data-id='{$id_comentario}'>
+                        Ver respuestas ({$totalHijos})
+                      </button>";
+
+                        echo "<div class='respuestas ms-4 d-none' id='respuestas-{$id_comentario}'>";
                         renderComentarios($hijos[$id_comentario], $hijos);
+                        echo "</div>";
                     }
                     echo "</div>";
                 }
