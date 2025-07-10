@@ -102,10 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (data.id_padre) {
             const padreBtn = contDiv.querySelector(`.btn-responder[data-id="${data.id_padre}"]`);
-            const wrapper = document.createElement("div");
-            wrapper.classList.add("ms-4");
-            padreBtn.after(wrapper);
-            wrapper.append(div);
+            if (padreBtn) {
+              const wrapper = document.createElement("div");
+              wrapper.classList.add("ms-4");
+              padreBtn.after(wrapper);
+              wrapper.append(div);
+            }
           } else {
             existing.append(div);
           }
@@ -120,17 +122,31 @@ document.addEventListener("DOMContentLoaded", () => {
           form.reset();
           form.querySelector("input[name='id_padre']").value = "";
 
+        } else if (data.status === "error") {
+          Swal.fire({
+            icon: "info",
+            title: "Ups...",
+            text: data.message,
+            confirmButtonText: 'Iniciar sesión',
+            confirmButtonColor: '#3085d6'
+          }).then(result => {
+            if (result.isConfirmed) {
+              window.location.href = '/Shakti/Vista/login.php';
+            }
+          });
+          return;
         } else {
           Swal.fire({
-            icon: "error",
+            icon: "info",
             title: "Error",
-            text: data.message
+            text: data.message || "Ocurrió un error inesperado"
           });
         }
       } catch (err) {
         Swal.fire({
           icon: "error",
-          title: "Error AJAX"
+          title: "Error AJAX",
+          text: "No se pudo enviar el comentario"
         });
         console.error(err);
       }

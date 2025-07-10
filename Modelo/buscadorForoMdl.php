@@ -113,7 +113,7 @@ class buscadorForoMdl
                     echo "<div class='mb-2 p-2 bg-light rounded'>
                     <strong>{$nombre}:</strong> {$contenido}<br>
                     <small class='text-muted'>{$fecha}</small> 
-                    <button class='btn btn-sm btn-link btn-responder' data-id='{$id_comentario}'>Responder</button>
+                    <button class='btn btn-sm btn-link btn-responder likes-count' data-id='{$id_comentario}'>Responder</button>
                 </div>";
 
                     echo "<div class='ms-4'>";

@@ -6,7 +6,7 @@ require_once("../Modelo/comentariosModelo.php");
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['id_usuaria']) || !isset($_SESSION['nombre'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Sesión no válida']);
+    echo json_encode(['status' => 'error', 'message' => 'Únete a la comunidad para darle like y comentar']);
     exit;
 }
 
