@@ -55,10 +55,33 @@ class mostrarMetricasMdl
         if ($result) {
             while ($row = mysqli_fetch_assoc($result)) {
                 // Concatenar título y autor para la etiqueta
-                $label = '"' . $row['titulo'] . '" (' . $row['nickname'] . ')';
+                $label = '"' . $row['titulo'] . '" ( Hecha por ' . $row['nickname'] . ')';
                 $topLikes[] = [$label, (int)$row['total_likes']];
             }
         }
         return $topLikes;
+    }
+
+    public function obtenerTopComentarios()
+    {
+        $sql = "SELECT p.id_publicacion, p.titulo, u.nickname, COUNT(c.id_comentario) AS total_comentarios
+            FROM publicacion p
+            LEFT JOIN comentarios c ON p.id_publicacion = c.id_publicacion
+            LEFT JOIN usuarias u ON p.id_usuarias = u.id
+            GROUP BY p.id_publicacion, p.titulo, u.nickname
+            ORDER BY total_comentarios DESC
+            LIMIT 5";
+
+        $result = mysqli_query($this->con, $sql);
+
+        $topComentarios = [];
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                // Concatenar título y autor para la etiqueta
+                $label = '"' . $row['titulo'] . '" ( Hecha por ' . $row['nickname'] . ')';
+                $topComentarios[] = [$label, (int)$row['total_comentarios']];
+            }
+        }
+        return $topComentarios;
     }
 }

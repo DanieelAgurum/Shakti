@@ -29,6 +29,7 @@ $tiemposFormateados = array_map(function ($item) {
 }, $tiempos);
 
 $topLikes = $modelo->obtenerTopLikes();
+$topComentarios = $modelo->obtenerTopComentarios();
 
 ?>
 
@@ -63,7 +64,8 @@ $topLikes = $modelo->obtenerTopLikes();
 
         #pieChart,
         #barChart,
-        #likes {
+        #likes,
+        #comentarios {
             height: 450px;
             border: 1px solid #ccc;
         }
@@ -85,18 +87,19 @@ $topLikes = $modelo->obtenerTopLikes();
                     <div class="chart-container mt-4 row">
                         <div id="pieChart" class="chart-box col-5"></div>
                         <div id="barChart" class="chart-box col-5"></div>
-                        <div id="likes" class="chart-box"></div>
+                    </div>
+                    <div class="chart-container mt-4 row">
+                        <div id="likes" class="chart-box col-5"></div>
+                        <div id="comentarios" class="chart-box col-5"></div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
 
-    <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
-    </script>
+    <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
@@ -106,6 +109,7 @@ $topLikes = $modelo->obtenerTopLikes();
                 const vistasData = <?= json_encode($vistasFormateadas) ?>;
                 const tiempoData = <?= json_encode($tiemposFormateados) ?>;
                 const likesData = <?= json_encode($topLikes) ?>;
+                const comentariosData = <?= json_encode($topComentarios) ?>;
 
                 const pieDataSet = anychart.data.set(vistasData);
                 const pieChart = anychart.pie(pieDataSet);
@@ -155,6 +159,19 @@ $topLikes = $modelo->obtenerTopLikes();
                 likesChart.innerRadius('30%');
                 likesChart.container("likes");
                 likesChart.draw();
+
+                const comentariosChart = anychart.pie3d(comentariosData);
+                comentariosChart.title()
+                    .enabled(true)
+                    .text('Publicaciones con más Comentarios')
+                    .fontSize(26)
+                    .fontWeight("bold")
+                    .fontColor("#333")
+                    .useHtml(false);
+                comentariosChart.radius('43%');
+                comentariosChart.innerRadius('30%');
+                comentariosChart.container("comentarios");
+                comentariosChart.draw();
 
             } catch (e) {
                 console.error("Error creando las gráficas:", e);
