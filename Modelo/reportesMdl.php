@@ -203,4 +203,5 @@ class reportesMdl
         $fila = $resultado->fetch_assoc();
         return $fila['contenido'];
     }
+    
 }

@@ -6,10 +6,11 @@ error_reporting(E_ALL);
 class PublicacionModelo
 {
     private $conn;
+    private $buscar;
 
     public function conectar()
     {
-        if (!$this->conn) {
+        if (!($this->conn instanceof PDO)) {
             try {
                 $this->conn = new PDO("mysql:host=localhost;dbname=shakti", "root", "", [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -54,80 +55,103 @@ class PublicacionModelo
         }
     }
 
-    public function obtenerPublicacionesAdmin(): void
+    public function inicializar($buscar)
+    {
+        $this->buscar = $buscar;
+    }
+
+    public function buscar()
     {
         $this->conectar();
-        try {
-            $sql = "SELECT p.*, u.nickname, u.foto 
-                    FROM publicacion p 
-                    INNER JOIN usuarias u ON p.id_usuarias = u.id 
-                    WHERE u.id_rol IN (2,3) 
-                    ORDER BY p.fecha_publicacion DESC";
-            $stmt = $this->conn->query($sql);
-            $publicaciones = $stmt->fetchAll();
 
-            if (empty($publicaciones)) {
-                echo '<p class="text-center mt-4">No hay publicaciones por ahora.</p>';
-                return;
-            } else {
+        if (!empty($this->buscar)) {
+            // Escapamos la cadena de búsqueda con PDO->quote() que añade comillas y escapa caracteres
+            $busquedaSegura = $this->conn->quote('%' . $this->buscar . '%');
 
-                foreach ($publicaciones as $pub) {
-                    $foto = !empty($pub['foto'])
-                        ? "data:image/*;base64," . base64_encode($pub['foto'])
-                        : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+            $sql = "SELECT p.contenido, p.id_publicacion, p.titulo, u.id, u.nickname, u.foto, u.id_rol 
+                FROM publicacion p 
+                JOIN usuarias u ON p.id_usuarias = u.id 
+                WHERE u.id_rol IN (2,3) AND (
+                    p.contenido LIKE $busquedaSegura OR 
+                    p.titulo LIKE $busquedaSegura OR 
+                    u.nickname LIKE $busquedaSegura
+                )";
 
-                    $nickname = htmlspecialchars($pub['nickname'] ?? '');
-                    $contenido = nl2br(htmlspecialchars($pub['contenido']));
-                    $idPub = (int)$pub['id_publicacion'];
-                    echo <<<HTML
-                    <article class="instagram-post">
-                        <header class="post-header">
-                            <div class="profile-info">
-                                <img src="$foto" alt="Foto" class="profile-pic">
-                                <div class="profile-details">
-                                    <span class="username">$nickname</span>
-                                </div>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-link p-0 shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots-vertical text-black fs-5"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-start">
-                                    <!-- <li><a class="dropdown-item" href="#">Eliminar</a></li> -->
-                                    <li>
-                                        <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" onclick="rellenarDatosReporte('$nickname', $idPub)"> Reportar</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </header>
-                        <div class="post-content">
-                            <p class="ps-3 pt-2">$contenido</p>
-                        </div>
-                        <div class="post-actions">
-                        </div>
-                        </article>
-                    HTML;
+            try {
+                $consulta = $this->conn->query($sql);
+
+                if ($consulta && $consulta->rowCount() > 0) {
+                    while ($publicacion = $consulta->fetch()) {
+                        $this->imprimirPublicacion($publicacion);
+                    }
+                } else {
+                    echo "<p>No se encontraron resultados para '" . htmlspecialchars($this->buscar) . "'</p>";
                 }
+            } catch (PDOException $e) {
+                echo "<p>Error en la búsqueda: " . htmlspecialchars($e->getMessage()) . "</p>";
             }
-        } catch (PDOException $e) {
-            error_log("Error al obtener publicaciones admin: " . $e->getMessage());
-            echo '<p class="text-center text-danger">Error al cargar publicaciones.</p>';
+        } else {
+            $this->todos();
         }
     }
 
-    public function obtenerTodas(): array
+
+    public function todos()
     {
         $this->conectar();
-        try {
-            $sql = "SELECT * FROM publicacion ORDER BY fecha_publicacion DESC";
-            $stmt = $this->conn->query($sql);
-            return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            error_log("Error al obtener todas las publicaciones: " . $e->getMessage());
-            return [];
+
+        $sql = "SELECT p.*, u.nickname, u.foto 
+            FROM publicacion p 
+            INNER JOIN usuarias u ON p.id_usuarias = u.id 
+            WHERE u.id_rol IN (2,3) 
+            ORDER BY p.fecha_publicacion DESC";
+
+        $stmt = $this->conn->query($sql);
+        $publicaciones = $stmt->fetchAll();
+
+        if (!empty($publicaciones)) {
+            foreach ($publicaciones as $publicacion) {
+                $this->imprimirPublicacion($publicacion);
+            }
+        } else {
+            echo "<p>No hay publicaciones.</p>";
         }
     }
 
+    private function imprimirPublicacion($publicacion)
+    {
+
+        echo '<article class="instagram-post">
+        <header class="post-header">
+        <div class="profile-info">
+            <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />
+            <div class="profile-details">
+                <span class="username">' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '</span>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-link p-0 shadow-none btn-like" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical text-black fs-5"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-start">
+                <li>
+                    <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" 
+                       onclick="rellenarDatosReporte(\'' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '\', \'' . $publicacion['id_publicacion'] . '\')">
+                       Reportar
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="post-content">
+        <p class="ps-3 pt-2">' . nl2br(htmlspecialchars($publicacion['contenido'])) . '</p>
+    </div>
+
+    <div class="post-actions">
+    </div>
+</article>';
+    }
     public function obtenerPorUsuaria(int $id_usuaria): array
     {
         $this->conectar();

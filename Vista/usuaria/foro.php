@@ -62,8 +62,7 @@ $urlBase = getBaseUrl();
         <div class="search-box">
             <form method="GET">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ...">
-                <input type="hidden" name="opcion" value="1">
+                <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ..." value="<?= $_GET['buscador'] ?? '' ?>">
             </form>
         </div>
     </div>

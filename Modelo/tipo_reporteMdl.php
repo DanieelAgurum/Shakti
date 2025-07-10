@@ -217,7 +217,7 @@ class TipoReporteMdl
             echo "<td>$nombre</td>";
             echo "<td>" . $nombreTipo . "</td>";
             echo '<td class="text-center">
-            <button type="button" onclick="modificarDatos(' . $id . ', \'' . addslashes($nombre) . '\', ' . $tipo . ')" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarModal"> <i class="fa-solid fa-pen"></i> Editar
+            <button type="button" onclick="modificarDatos(' . $id . ', \'' . addslashes($nombre) . ')" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarModal"> <i class="fa-solid fa-pen"></i> Editar
             </button> 
         <button type="button"
         class="btn btn-danger btn-sm btnEliminar" data-id="' . $id . '"

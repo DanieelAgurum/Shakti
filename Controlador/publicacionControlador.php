@@ -67,6 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_publicacion'])
     exit;
 }
 
-// Opcional: Redirigir si se accede sin acción específica
-header("Location: ../Vista/usuaria/publicaciones.php");
-exit;
+if (isset($_GET['buscador'])) {
+    $buscar = $_GET['buscador'] ?? '';
+    $publicacionModelo->inicializar($buscar);
+    $publicacionModelo->buscar();
+} else {
+    $publicacionModelo->todos();
+}

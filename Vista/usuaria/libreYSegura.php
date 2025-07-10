@@ -34,17 +34,14 @@ $urlBase = getBaseUrl();
         <div class="search-box">
             <form method="GET">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ...">
-                <input type="hidden" name="opcion" value="admin">
+                <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ..." value="<?= $_GET['buscador'] ?? ''?>">
             </form>
         </div>
     </div>
 
     <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4">
         <?php
-        require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
-        $publicacionModelo = new PublicacionModelo();
-        $publicacionModelo->obtenerPublicacionesAdmin();
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/publicacionControlador.php';
         ?>
     </section>
 
