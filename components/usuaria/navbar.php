@@ -20,16 +20,12 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panel - Shakti</title>
-
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-
   <!-- CSS personalizado -->
   <link rel="stylesheet" href="<?php echo $urlBase ?>css/estilos.css" />
-
   <!-- Scripts Bootstrap -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
@@ -39,18 +35,12 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
   <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm bg-white">
     <div class="container">
       <a class="navbar-brand" href="<?= $urlBase ?>index.php">SHAKTI</a>
-
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
         aria-controls="navbarEspecialista" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
-
-
       <div class="collapse navbar-collapse" id="navbarEspecialista">
         <ul class="navbar-nav ms-auto align-items-center">
-
-
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
                                                             switch ($_SESSION['id_rol'] ?? 0) {
@@ -70,7 +60,6 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a>
           </li>
-
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a>
           </li>
@@ -110,15 +99,12 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
               <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/especialistas.php">Especialistas</a>
             </li>
           <?php endif; ?>
-
-
           <!-- Menú desplegable de usuario -->
           <li class="nav-item dropdown ms-3">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle me-1"></i>
               <?= isset($_SESSION['nickname']) ? ucwords(strtolower($_SESSION['nickname'])) : '' ?>
             </a>
-
             <ul class="dropdown-menu dropdown-menu-end">
               <?php if (isset($_SESSION['correo'])): ?>
                 <li>
