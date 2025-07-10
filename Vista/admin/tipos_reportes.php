@@ -17,31 +17,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tipo de Reportes - Shakti</title>
-
-    <!-- CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fuggles&family=Lato&family=Mooli&display=swap">
-    <link rel="stylesheet" href="../../components/admin/bootstrap.min.css">
-    <link rel="stylesheet" href="../../components/admin/datatables.min.css">
-    <link rel="stylesheet" href="../../components/admin/styles.css">
-    <link rel="stylesheet" href="../../components/admin/custom.css">
-
-    <!-- JS -->
-    <script src="https://kit.fontawesome.com/3c934cb418.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-
-    <script src="../../components/admin/js/bootstrap.min.js"></script>
-    <script src="../../components/admin/js/datatables.min.js"></script>
-    <script src="../../components/admin/js/scripts.js"></script>
-    <script src="../../components/admin/js/chart-area-demo.js"></script>
-    <script src="../../components/admin/js/chart-bar-demo.js"></script>
-    <script src="../../components/admin/js/datatables-simple-demo.js"></script>
     <script src="js/tiposReportes.js"></script>
 </head>
 
@@ -70,20 +45,25 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                         'eliminado' => 'Se eliminó correctamente.',
                                         'agregado' => 'Se agregó correctamente.',
                                         'modificado' => 'Se modificó correctamente.',
+                                        'hay_reportes' => 'Hay reportes asociados a este tipo, no se puede eliminar.',
                                     ];
 
                                     $clases = [
                                         'agregado' => 'success',   // verde
                                         'modificado' => 'primary', // azul
                                         'eliminado' => 'danger',   // rojo
+                                        'hay_reportes' => 'warning', // amarillo
                                     ];
 
                                     $estado = $_GET['estado'];
                                     $mensaje = $mensajes[$estado] ?? 'Acción desconocida.';
                                     $clase = $clases[$estado] ?? 'secondary';
+                                    // $boton = '<button type="button" class="btn-sm btn-danger"><i class="fa-solid fa-eraser"></i> Eliminar</button>';
+
                                     ?>
                                     <div class="alert alert-<?= $clase; ?> alert-dismissible fade show" role="alert">
                                         <?= htmlspecialchars($mensaje); ?>
+                                        <?= $_GET['estado'] === 'hay_reportes' ? $boton : ''; ?>
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                                     </div>
                                 <?php endif; ?>

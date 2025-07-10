@@ -21,5 +21,10 @@ if (isset($_REQUEST['opcion'])) {
                 ]);
             }
             break;
+        case 2:
+            if (isset($_REQUEST['id'])) {
+                $rep->eliminarReporte($_REQUEST['id'], $_REQUEST['tipo']);
+            };
+            break;
     }
 }

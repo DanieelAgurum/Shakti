@@ -1,4 +1,5 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 
 class reportesMdl
 {
@@ -7,6 +8,12 @@ class reportesMdl
     private $tipo;
     private $id_reporto;
     public $con;
+    private $urlBase;
+
+    public function base()
+    {
+        $this->urlBase = function_exists('getBaseUrl') ? getBaseUrl() : '';
+    }
 
     public function conectarBD()
     {
@@ -139,7 +146,7 @@ class reportesMdl
         if ($consulta->num_rows > 0) {
             while ($reporte = $consulta->fetch_assoc()) {
                 $idUsuaria = $reporte['id_usuaria'];
-                $nombre = $reporte['nombre_usuaria'];
+                $nombre = ucwords(strtolower($reporte['nombre_usuaria']));
                 $idPublicacion = $reporte['id_publicacion'];
 
                 // Obtener contenido de la publicación
@@ -172,15 +179,19 @@ class reportesMdl
                     : 'Sin motivos';
 
                 echo <<<HTML
-            <tr>
-                <td>{$num}</td>
-                <td>{$nombre}</td>
-                <td>{$contenido}</td>
-                <td>{$tipoTexto}</td>
-                <td>{$motivos}</td>
-                <td><button class="btn btn-danger btn-sm btnEliminar" data-idpub="{$idPublicacion}">Eliminar</button></td>
-            </tr>
-            HTML;
+                    <tr>
+                        <td>{$num}</td>
+                        <td>{$nombre}</td>
+                        <td>{$contenido}</td>
+                        <td>{$tipoTexto}</td>
+                        <td>{$motivos}</td>
+                        <td>   
+                            <button type="button" class="btn btn-danger btn-sm btnEliminar" data-id="{$idPublicacion}" data-nombre="{$nombre}" data-contenido="{$tipoTexto}" data-bs-toggle="modal" data-bs-target="#miModal">                        
+                                <i class="fa-solid fa-eraser"></i> Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                 HTML;
                 $num++;
             }
         } else {
@@ -203,5 +214,38 @@ class reportesMdl
         $fila = $resultado->fetch_assoc();
         return $fila['contenido'];
     }
-    
+
+    public function eliminarReporte($id_publicacion, $tipo)
+    {
+        $this->base(); // para urlBase
+        $this->conectarBD();
+
+        // Eliminar comentarios asociados
+        $sqlComentarios = "DELETE FROM comentarios WHERE id_publicacion = ?";
+        $stmtComentarios = $this->con->prepare($sqlComentarios);
+        $stmtComentarios->bind_param("i", $id_publicacion);
+        $stmtComentarios->execute();
+
+        $estado = "eliminado" . $tipo;
+
+        // Eliminar reportes asociados
+        $sqlReportes = "DELETE FROM reportar WHERE id_publicacion = ?";
+        $stmtReportes = $this->con->prepare($sqlReportes);
+        $stmtReportes->bind_param("i", $id_publicacion);
+        $stmtReportes->execute();
+
+        // Eliminar publicación
+        $sqlPublicacion = "DELETE FROM publicacion WHERE id_publicacion = ?";
+        $stmtPublicacion = $this->con->prepare($sqlPublicacion);
+        $stmtPublicacion->bind_param("i", $id_publicacion);
+        $resultado = $stmtPublicacion->execute();
+
+        if ($resultado) {
+            header("Location: " . $this->urlBase . "/Vista/admin/reportes.php?estado={$estado}");
+            exit;
+        } else {
+            header("Location: " . $this->urlBase . "/Vista/admin/reportes.php?estado=error");
+            exit;
+        }
+    }
 }
