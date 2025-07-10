@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
       // Mostrar nombre en el modal
       document.getElementById("nombreUsuariaModal").textContent = nombre;
 
-      // Generar link con los parámetros que quieras
-      const link = `../../Controlador/tipo_reporteCtrl.php?opcion=3&id=${id}`;
+      // Generar link para eliminar (cambia según tu controlador)
+      const link = `../../Controlador/tipo_reporteCtrl.php?opcion=3&id=${encodeURIComponent(id)}`;
       document.getElementById("btnEliminarLink").setAttribute("href", link);
     });
   });

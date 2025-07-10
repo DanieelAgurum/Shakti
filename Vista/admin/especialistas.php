@@ -19,15 +19,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Especialistas - Shakti</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../components/admin/styles.css">
-    <script src="https://kit.fontawesome.com/3c934cb418.js" crossorigin="anonymous"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fuggles&family=Lato&family=Mooli&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../components/admin/custom.css">
-    <link rel="stylesheet" href="../../components/admin/datatables.min.css">
-    <link rel="stylesheet" href="../../components/admin/bootstrap.min.css">
 </head>
 
 <body class="sb-nav-fixed">
@@ -141,10 +132,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             </main>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="../../components/admin/js/bootstrap.min.js"></script>
-    <script src="../../components/admin/js/datatables.min.js"></script>
-    <script type="text/javascript" src="../../components/admin/js/datatables.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#MiAgenda').DataTable();
@@ -174,13 +161,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             },
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="../../components/admin/js/scripts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="../../components/admin/js/chart-area-demo.js"></script>
-    <script src="../../components/admin/js/chart-bar-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-    <script src="../../components/admin/js/datatables-simple-demo.js"></script>
 </body>
 
 </html>

@@ -16,12 +16,6 @@ if (empty($_SESSION['correo']) || $_SESSION['nombre_rol'] !== 'administrador') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Perfil Administrador - Shakti</title>
-    <link rel="stylesheet" href="../css/estilos.css" />
-    <link rel="stylesheet" href="../css/registro.css" />
-    <link rel="stylesheet" href="../css/perfil.css" />
-    <link rel="stylesheet" href="../css/footer.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
     <?php include '../../components/admin/navbar.php'; ?>
 </head>
 

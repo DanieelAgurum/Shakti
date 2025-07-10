@@ -25,10 +25,6 @@ unset($_SESSION['mensaje']);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin - Publicaciones</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="<?= $urlBase ?>components/admin/styles.css" />
-  <link rel="stylesheet" href="<?= $urlBase ?>components/admin/custom.css" />
-  <link rel="stylesheet" href="<?= $urlBase ?>components/admin/datatables.min.css" />
 </head>
 
 <body class="sb-nav-fixed">
@@ -100,8 +96,6 @@ unset($_SESSION['mensaje']);
     </div>
   </div>
 
-  <script src="<?= $urlBase ?>components/admin/bootstrap.bundle.min.js"></script>
-  <script src="<?= $urlBase ?>components/admin/datatables.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       new DataTable('#tablaPublicaciones');
