@@ -148,8 +148,8 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               $yaDioLike = $likeModelo->usuarioYaDioLike($id_usuaria, $pub['id_publicacion']);
               $btnLikeClass = $yaDioLike ? 'btn-danger' : 'btn-outline-danger';
               ?>
-              <button class="btn btn-sm <?= $btnLikeClass ?> btn-like" data-id="<?= $pub['id_publicacion'] ?>">
-                <i class="bi <?= $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart' ?>"></i>
+              <button class="btn btn-sm <?= $btnLikeClass ?>  btn-like" data-id="<?= $pub['id_publicacion'] ?>">
+                <i class="bi heart-icon <?= $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart' ?>"></i>
                 <span class="like-text">Me gusta</span>
                 <span class="badge bg-danger likes-count"><?= $likes ?></span>
               </button>
@@ -189,6 +189,8 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
       <p class="text-center text-muted">No has creado publicaciones aún.</p>
     <?php endif; ?>
   </div>
+  <script src="../../peticiones(js)/likesContar.js"></script>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       // Mostrar respuestas ocultas
@@ -209,7 +211,6 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
 
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script src="../../validacionRegistro/abrirComentarios.js"></script>
-  <script src="../../peticiones(js)/likesContar.js"></script>
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
 
 </body>
