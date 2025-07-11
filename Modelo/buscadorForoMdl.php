@@ -29,19 +29,21 @@ class buscadorForoMdl
             $busquedaSegura = mysqli_real_escape_string($this->con, $this->buscar);
 
             $sql = "SELECT p.contenido, p.id_publicacion, p.titulo, u.id, u.nickname, u.foto, u.id_rol 
-                FROM publicacion p 
-                JOIN usuarias u ON p.id_usuarias = u.id 
-                WHERE u.id_rol = 1 AND (
-                    p.contenido LIKE '%$busquedaSegura%' OR 
-                    p.titulo LIKE '%$busquedaSegura%' OR 
-                    u.nickname LIKE '%$busquedaSegura%'";
+        FROM publicacion p 
+        JOIN usuarias u ON p.id_usuarias = u.id 
+        WHERE u.id_rol = 1 AND (
+            p.contenido LIKE ? OR 
+            p.titulo LIKE ? OR 
+            u.nickname LIKE ?)";
 
-            $sql .= ")";
+            $stmt = $this->con->prepare($sql);
+            $like = "%" . $this->buscar . "%";
+            $stmt->bind_param("sss", $like, $like, $like);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-            $consulta = mysqli_query($this->con, $sql);
-
-            if ($consulta && mysqli_num_rows($consulta) > 0) {
-                while ($publicacion = mysqli_fetch_assoc($consulta)) {
+            if ($result && $result->num_rows > 0) {
+                while ($publicacion = $result->fetch_assoc()) {
                     $this->imprimirPublicacion($publicacion, $idUsuaria);
                 }
             } else {
@@ -121,7 +123,7 @@ class buscadorForoMdl
                         Ver respuestas ({$totalHijos})
                       </button>";
 
-                        echo "<div class='respuestas ms-4 d-none' id='respuestas-{$id_comentario}'>";
+                        echo "<div class='respuestas respuesta-indentada d-none' id='respuestas-{$id_comentario}'>";
                         renderComentarios($hijos[$id_comentario], $hijos);
                         echo "</div>";
                     }
