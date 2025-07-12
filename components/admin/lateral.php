@@ -33,6 +33,7 @@
                                  <a class="nav-link text-dark" href="#">Contenido</a>
                                  <a class="nav-link text-dark" href="#">Documentos</a>
                                  <a class="nav-link text-dark" href="#">Organizaciones</a>
+                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/preguntas_frecuentes.php">Preguntas Frecuentes</a>
                                  <a class="nav-link text-dark" href="#">Comentarios</a>
                              </nav>
                          </div>
