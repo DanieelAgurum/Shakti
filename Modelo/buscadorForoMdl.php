@@ -28,7 +28,7 @@ class buscadorForoMdl
         if (!empty($this->buscar)) {
             $busquedaSegura = mysqli_real_escape_string($this->con, $this->buscar);
 
-            $sql = "SELECT p.contenido, p.id_publicacion, p.titulo, u.id, u.nickname, u.foto, u.id_rol 
+            $sql = "SELECT p.titulo, p.contenido, p.id_publicacion, p.titulo, u.id, u.nickname, u.foto, u.id_rol 
         FROM publicacion p 
         JOIN usuarias u ON p.id_usuarias = u.id 
         WHERE u.id_rol = 1 AND (
@@ -60,7 +60,7 @@ class buscadorForoMdl
         $this->conectarBD();
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
 
-        $sql = "SELECT p.contenido, p.id_publicacion, u.id, u.nickname, u.foto, u.id_rol 
+        $sql = "SELECT p.titulo, p.contenido, p.id_publicacion, u.id, u.nickname, u.foto, u.id_rol 
                 FROM publicacion p 
                 JOIN usuarias u ON p.id_usuarias = u.id 
                 WHERE id_rol = 1";
@@ -76,6 +76,7 @@ class buscadorForoMdl
     }
 
     private function imprimirPublicacion($publicacion, $idUsuaria)
+
     {
         $idPublicacion = $publicacion['id_publicacion'];
 
@@ -140,6 +141,7 @@ class buscadorForoMdl
             <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />
             <div class="profile-details">
                 <span class="username">' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '</span>
+                <p class="post-title text-end small mb-2 ">' . htmlspecialchars($publicacion['titulo']) . '</p>
             </div>
         </div>
         <div class="dropdown">

@@ -19,63 +19,47 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 
 
-<div class="container mt-3 mb-3">
-    <div class="form m-auto">
-        <div class="contact-info">
-            <h3 class="title">Comunicate con nosotros</h3>
-            <p class="text">Si tienes alguna duda, comentario o sugerencia, no dudes en contactarnos.</p>
-            <div class="info">
-                <div class="social-information"> <i class="fa-solid fa-location-dot fa-bounce"></i>
-                    <p>Nezahualcoyotl, Estado de México</p>
+    <div class="container mt-3 mb-3">
+        <div class="form m-auto">
+            <div class="contact-info">
+                <h3 class="title">Comunicate con nosotros</h3>
+                <p class="text">Si tienes alguna duda, comentario o sugerencia, no dudes en contactarnos.</p>
+                <div class="info">
+                    <div class="social-information"> <i class="fa-solid fa-location-dot fa-bounce"></i>
+                        <p>Nezahualcoyotl, Estado de México</p>
+                    </div>
+                    <div class="social-information"> <i class="fa-solid fa-envelope fa-bounce"></i>
+                        <p>shakti@gmail.com</p>
+                    </div>
+                    <div class="social-information"> <i class="fa-solid fa-mobile fa-bounce"></i>
+                        <p>+52 5678012353 </p>
+                    </div>
                 </div>
-                <div class="social-information"> <i class="fa-solid fa-envelope fa-bounce"></i>
-                    <p>shakti@gmail.com</p>
-                </div>
-                <div class="social-information"> <i class="fa-solid fa-mobile fa-bounce"></i>
-                    <p>+52 5678012353 </p>
+                <div class="social-media">
+                    <p>Conecta con nosotros :</p>
+                    <div class="social-icons">
+                        <a href="#"> <i class="bi bi-facebook"></i> </a>
+                        <a href="#"> <i class="bi bi-instagram"></i> </a>
+                        <a href="#"> <i class="bi bi-tiktok"></i> </a>
+                    </div>
                 </div>
             </div>
-            <div class="social-media">
-                <p>Conecta con nosotros :</p>
-                <div class="social-icons">
-                    <a href="#"> <i class="bi bi-facebook"></i> </a>
-                    <a href="#"> <i class="bi bi-instagram"></i> </a>
-                    <a href="#"> <i class="bi bi-tiktok"></i> </a>
-                </div>
+            <div class="contact-info-form"> <span class="circle one"></span> <span class="circle two"></span>
+                <form action="#" method="post" class="colortext" autocomplete="off">
+                    <div class="social-input-containers">
+                        <input type="email" name="correo" id="inputblanco" class="input text-black" placeholder="Correo electrónico" value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : " "; ?>">
+                    </div>
+                    <div class="social-input-containers textarea">
+                        <textarea name="comentario" id="input" class="input" placeholder="Dejanos tu mensaje"></textarea>
+                    </div>
+                    <div class="float-end">
+                        <input type="hidden" name="opcion" value="1">
+                        <input type="submit" value="Enviar" class="btn btn-outline-dark">
+                    </div>
+                </form>
             </div>
-        </div>
-        <div class="contact-info-form"> <span class="circle one"></span> <span class="circle two"></span>
-            <form action="#" method="post" class="colortext" autocomplete="off">
-                <!--  
-                    // if (isset($_GET['message'])) {
-                    //     $message = $_GET["message"];
-                    //     echo '<div class="alert bg-light" role="alert"><strong>' . $message . '</strong></div>';
-                    // }
-                    -->
-                <div class="social-input-containers">
-                    <input type="email" name="correo" id="inputblanco" class="input text-black" placeholder="Correo eléctronico" value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : " "; ?>">
-                </div>
-                <!-- <div class="social-input-containers">
-                    <select name="asunto" class="input">
-                        <option value="" disabled selected>Selecciona una opción</option>
-                        <option class="text-dark" value="Opinión">Opinión</option>
-                        <option class="text-dark" value="Reseña">Reseña</option>
-                        <option class="text-dark" value="Sugerencia">Sugerencia</option>
-                        <option class="text-dark" value="Pregunta">Pregunta</option>
-                        <option class="text-dark" value="Queja">Queja</option>
-                    </select>
-                </div> -->
-                <div class="social-input-containers textarea">
-                    <textarea name="comentario" id="input" class="input" placeholder="Dejanos tu mensaje"></textarea>
-                </div>
-                <div class="float-end">
-                    <input type="hidden" name="opcion" value="1">
-                    <input type="submit" value="Enviar" class="btn btn-outline-dark">
-                </div>
-            </form>
         </div>
     </div>
-</div>
 
 <?php include '../components/usuaria/footer.php'; ?>
 <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
