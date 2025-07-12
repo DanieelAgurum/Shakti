@@ -76,7 +76,7 @@ class loginMdln
                 $_SESSION['correo'] = $reg['correo'];
                 $_SESSION['fecha_nacimiento'] = $reg['fecha_nac'];
                 $_SESSION['telefono'] = $reg['telefono'];
-                 $_SESSION['descripcion'] = $reg['descripcion'];
+                $_SESSION['descripcion'] = $reg['descripcion'];
                 $_SESSION['direccion'] = $reg['direccion'];
                 $_SESSION['documentos'] = $reg['documentos'];
                 $_SESSION['estatus'] = $reg['estatus'];

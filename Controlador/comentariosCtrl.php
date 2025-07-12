@@ -24,6 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['opcion'])) {
             $modelo = new Comentario();
             $id_comentario = $modelo->agregarComentario($comentario, $id_publicacion, $id_usuaria, $id_padre);
 
+            if ($id_comentario === 'malas_palabras') {
+                echo json_encode(['status' => 'error', 'message' => 'malas_palabras']);
+                exit;
+            }
+
             if ($id_comentario) {
                 echo json_encode([
                     'status' => 'ok',
