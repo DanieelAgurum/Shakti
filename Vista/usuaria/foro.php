@@ -52,6 +52,11 @@ $urlBase = getBaseUrl();
             visibility: visible !important;
             opacity: 1 !important;
         }
+
+        .input-error {
+            border: 2px solid red;
+            background-color: #ffe6e6;
+        }
     </style>
 </head>
 

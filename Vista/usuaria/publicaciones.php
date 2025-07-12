@@ -45,6 +45,11 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
       font-size: 0.9rem;
       margin-top: 0.3rem;
     }
+
+    .input-error {
+      border: 2px solid red;
+      background-color: #ffe6e6;
+    }
   </style>
 </head>
 

@@ -122,7 +122,23 @@ document.addEventListener("DOMContentLoaded", () => {
           form.reset();
           form.querySelector("input[name='id_padre']").value = "";
 
-        } else if (data.status === "error") {
+        } else if (data.status === "error" && data.message === "malas_palabras") {
+          const input = form.querySelector("input[name='comentario']");
+          input.classList.add("input-error");
+
+          Swal.fire({
+            icon: "warning",
+            title: "Cuida tus palabras",
+            text: "Te invitamos a expresarte con respeto.",
+            confirmButtonColor: "#f27474"
+          });
+
+          setTimeout(() => {
+            input.classList.remove("input-error");
+          }, 3000);
+          return;
+
+        } else if (data.message && data.message.includes('Únete a la comunidad')) {
           Swal.fire({
             icon: "info",
             title: "Ups...",
@@ -135,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           });
           return;
+
         } else {
           Swal.fire({
             icon: "info",
@@ -142,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
             text: data.message || "Ocurrió un error inesperado"
           });
         }
+
       } catch (err) {
         Swal.fire({
           icon: "error",
