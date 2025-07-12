@@ -468,3 +468,63 @@ small.error {
   color: #dc3545;
   font-size: 0.875em;
 }
+
+.accordion-button {
+  background-color: transparent;
+  color: inherit;
+  box-shadow: none;
+  border: none;
+}
+
+.accordion-button:focus,
+.accordion-button:active,
+.accordion-button:not(.collapsed) {
+  background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%) !important;
+  color: inherit;
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  filter: none !important;
+}
+
+.accordion-item {
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.accordion-button::after {
+  background-image: none !important;
+  content: "" !important;
+}
+
+.accordion-button::before {
+  content: "🧠";
+  margin-right: 0.75rem;
+  transition: transform 0.3s ease;
+}
+
+.accordion-button:not(.collapsed)::before {
+  content: "❤️";
+}
+
+.accordion-item {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-button {
+  padding: 1rem 1.5rem;
+}
+
+.accordion-body {
+  text-align: justify;
+  padding: 1.5rem;
+  background-color: #fdfdfd;
+}
+
+.accordion-button:hover {
+  background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%) !important;
+  transition: background-color 0.3s ease;
+}
