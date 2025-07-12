@@ -25,7 +25,23 @@ $urlBase = getBaseUrl();
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+  <style>
+    .square-button {
+      width: 50px;
+      height: 50px;
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 0;
+      font-size: 20px;
+      transition: background-color 0.3s ease;
+    }
 
+    .square-button:hover {
+      background-color: #b0b0b0ff;
+      ;
+    }
+  </style>
 </head>
 
 <body class="bg-white text-black">
@@ -149,44 +165,36 @@ $urlBase = getBaseUrl();
           <div class="row justify-content-xl-end">
             <div class="col-12 col-xl-11">
               <h2 class="h1 mb-3">¿Cómo podemos ayudarte?</h2>
-              <p class="lead text-secondary mb-5">Esperamos que hayas encontrado una respuesta a tu pregunta. Si necesitas ayuda, por favor busca tu consulta en nuestro Centro de Soporte o contáctanos por correo electrónico.</p>
-              <div class="accordion accordion-flush" id="accordionFlushExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                      Accordion Item #1
-                    </button>
-                  </h2>
-                  <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item’s accordion body.</div>
-                  </div>
+              <p class="lead text-secondary mb-5">
+                Esperamos que hayas encontrado una respuesta a tu pregunta. Si necesitas ayuda, por favor busca tu consulta en nuestro Centro de Soporte o contáctanos por correo electrónico.
+              </p>
+              <div id="carouselAcordeon" class="carousel slide" >
+                <div class="carousel-inner">
+                  <?php
+                  require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/preguntasFrecuentesCtrl.php';
+                  $tabla = new preguntasFrecuentesMdl();
+                  $tabla->conectarBD();
+                  $tabla->mostrarTodas();
+                  ?>
                 </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                      Accordion Item #2
-                    </button>
-                  </h2>
-                  <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item’s accordion body. Let’s imagine this being filled with some actual content.</div>
-                  </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                      Accordion Item #3
-                    </button>
-                  </h2>
-                  <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item’s accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-                  </div>
-                </div>
+              </div>
+
+              <div class="d-flex justify-content-center mt-4 gap-3">
+                <button class="btn btn-black text-white d-flex align-items-center justify-content-center square-button"
+                  type="button" data-bs-target="#carouselAcordeon" data-bs-slide="prev">
+                  <i class="fas fa-arrow-left" style="color: black;"></i>
+                </button>
+                <button class="btn btn-black text-white d-flex align-items-center justify-content-center square-button"
+                  type="button" data-bs-target="#carouselAcordeon" data-bs-slide="next">
+                  <i class="fas fa-arrow-right" style="color: black;"></i>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </section>
 
   <?php
