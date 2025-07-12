@@ -528,3 +528,8 @@ small.error {
   background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%) !important;
   transition: background-color 0.3s ease;
 }
+
+.text-danger {
+  margin-top: 4px;
+  font-size: 0.875rem;
+}

@@ -73,6 +73,12 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
                     </div>
                 </div>
             <?php } ?>
+            <?php echo '<div class="col-md-12 text-center">';
+            if ($stmt->rowCount() == 0) {
+                echo '<p class="text-muted">No se encontraron especialistas.</p>';
+            }
+            echo '</div>';
+            ?>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
