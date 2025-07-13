@@ -11,9 +11,9 @@
       <div class="col-md-4 mb-3 mb-md-0">
         <nav class="nav justify-content-center justify-content-md-start gap-3">
           <a href="#" class="nav-link px-2 text-secondary footer-link">Nosotras</a>
-          <a href="../vista/planes.php" class="nav-link px-2 text-secondary footer-link">Servicios</a>
+          <a href="<?= $urlBase ?>Vista/planes.php" class="nav-link px-2 text-secondary footer-link">Servicios</a>
           <a href="#" class="nav-link px-2 text-secondary footer-link">Contacto</a>
-          <a href="../vista/politicas.php" class="nav-link px-2 text-secondary footer-link">Política de Privacidad</a>
+          <a href="<?= $urlBase ?>Vista/politicas.php" class="nav-link px-2 text-secondary footer-link">Política de Privacidad</a>
         </nav>
       </div>
 
