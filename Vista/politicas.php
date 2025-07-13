@@ -58,6 +58,7 @@
 
     <section class="policy-section">
       <h2>8. Uso de datos anónimos</h2>
+      <p>Kaizen podrá utilizar datos anónimos para fines estadísticos y de investigación, como la identificación de patrones de violencia de género y la mejora de los servicios ofrecidos en la plataforma. Estos datos no permitirán identificar a las usuarias individuales.</p>
       <p>Datos anónimos recopilados (como estadísticas generales de uso) podrán ser utilizados para mejorar la plataforma y generar informes sobre violencia de género, sin identificar a las usuarias.</p>
     </section>
 
@@ -65,7 +66,7 @@
 
     <p><strong>Fecha de la última actualización del aviso de privacidad:</strong> 13 de julio de 2025</p>
 
-    <p>Para cualquier duda o aclaración sobre el aviso de privacidad y confidencialidad de la información, favor de comunicarse con el responsable de privacidad en <a href="mailto:privacy@shakti.org">privacy@shakti.org</a>.</p>
+    <p>Para cualquier duda o aclaración sobre el aviso de privacidad y confidencialidad de la información, favor de comunicarse con el responsable de privacidad en <a href="mailto:shakti@gmail.com">shakti@gmail.com</a>.</p>
   </div>
 
   <?php include_once '../components/usuaria/footer.php'; ?>
