@@ -35,17 +35,26 @@ class Notas
             header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode("Sesión no iniciada"));
         }
     }
-    public function obtenerNotas()
+    public function obtenerNotas($id_usuaria)
     {
         $con = $this->conectarBD();
-        $sql = "SELECT * FROM notas ORDER BY fecha DESC";
-        $resultado = mysqli_query($con, $sql);
+        $sql = "SELECT * FROM notas WHERE id_usuaria = ? ORDER BY fecha DESC";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("i", $id_usuaria);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
         $notas = [];
-        while ($fila = mysqli_fetch_assoc($resultado)) {
+        while ($fila = $resultado->fetch_assoc()) {
             $notas[] = $fila;
         }
+
+        $stmt->close();
+        $con->close();
+
         return $notas;
     }
+
     public function obtenerNotaPorId($id)
     {
         $con = $this->conectarBD();

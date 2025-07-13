@@ -26,7 +26,7 @@ if (!empty($_SESSION['foto'])) {
 }
 
 $notasModel = new Notas();
-$notas = $notasModel->obtenerNotas()
+$notas = $notasModel->obtenerNotas($_SESSION['id_usuaria']); // <--- PASAR ID
 ?>
 
 
