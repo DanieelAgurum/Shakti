@@ -345,7 +345,7 @@ class Comentario
             'putas',
             'putazo',
             'putilla',
-            'putina',
+            'putita',
             'putito',
             'puton',
             'putona',
