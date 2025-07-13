@@ -13,6 +13,7 @@
           <a href="#" class="nav-link px-2 text-secondary footer-link">Nosotras</a>
           <a href="#" class="nav-link px-2 text-secondary footer-link">Servicios</a>
           <a href="#" class="nav-link px-2 text-secondary footer-link">Contacto</a>
+          <a href="politicas.php" class="nav-link px-2 text-secondary footer-link">Política de Privacidad</a>
         </nav>
       </div>
 
