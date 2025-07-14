@@ -22,17 +22,12 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
     <link rel="stylesheet" href="<?= htmlspecialchars($urlBase) ?>/css/alzalaVoz.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
-
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
 
 </head>
 
 <body>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
-    <br>
-    <br>
-    <br>
-
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container mt-3 mb-3 d-flex justify-content-center align-items-center min-vh-100">
         <div class="card shadow alzalaVoz-card p-4 w-100" style="max-width: 600px;">
             <h1 class="text-center mb-4 fw-bold">Test Violentómetro</h1>
 
@@ -86,10 +81,6 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
             </form>
         </div>
     </div>
-
-    <br><br><br>
-    <br><br>
-    <br>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
 </body>
