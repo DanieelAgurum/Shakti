@@ -56,8 +56,12 @@ $notas = $notasModel->obtenerNotas($_SESSION['id_usuaria']); // <--- PASAR ID
                                 <div class="mt-3">
                                     <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
                                     <p class="text-secondary mb-1"><?php echo isset($_SESSION['descripcion']) ? ucwords(strtolower($_SESSION['descripcion'])) : " " ?></p>
-                                    <button class="btn btn-outline-primary">
-                                        <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
+                                 <button class="btn btn-outline-primary" onclick="window.location.href='<?php echo '../chat.php'; ?>'">
+                                 <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
+</button>
+
+</a>
+
                                     </button>
                                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">
                                         <i class="bi bi-book-fill"></i> Notas
