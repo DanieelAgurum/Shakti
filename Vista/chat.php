@@ -9,7 +9,7 @@ $idUsuario = $_SESSION['id'];
 $especialistaControlador = new EspecialistaControlador();
 
 if ($rolUsuario == 2) {
-    $usuariosChat = []; // Este se llenará dinámicamente desde Firebase
+    $usuariosChat = []; // Se llena desde Firebase dinámicamente
     $tituloLista = "Usuarias con chat activo";
 } else {
     $usuariosChat = $especialistaControlador->listarEspecialistas();
@@ -27,6 +27,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
   <link rel="stylesheet" href="/Shakti/css/chat.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert2 -->
 </head>
 
 <body>
@@ -35,16 +36,17 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
       <div class="col-md-4" id="lista-especialistas">
         <h5><?= htmlspecialchars($tituloLista) ?></h5>
 
-        <?php if (!empty($usuariosChat)) : ?>
+        <?php if ($rolUsuario != 2 && !empty($usuariosChat)) : ?>
           <?php foreach ($usuariosChat as $usuario) : ?>
             <div class="card mb-3 card-chat-item" onclick="seleccionarUsuario(<?= (int)$usuario['id'] ?>)">
               <div class="row g-0 h-100 align-items-center">
                 <div class="col-4 d-flex align-items-center justify-content-center">
                   <img 
                     src="/Shakti/verFoto.php?id=<?= (int)$usuario['id'] ?>" 
-                    class="img-thumbnail perfil-img"
+                    class="img-thumbnail perfil-img rounded-circle"
                     alt="<?= htmlspecialchars($usuario['nombre']) ?>" 
                     onerror="this.onerror=null;this.src='/Shakti/assets/img/default.png';"
+                    style="width: 80px; height: 80px; object-fit: cover;"
                   />
                 </div>
                 <div class="col-8">
@@ -113,12 +115,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
         window.seleccionarEspecialista(id);
       }
     }
-
-    <?php if ($rolUsuario == 2 && !empty($usuariosChat)) : ?>
-    window.addEventListener('DOMContentLoaded', () => {
-      seleccionarUsuario(<?= (int)$usuariosChat[0]['id'] ?>);
-    });
-    <?php endif; ?>
   </script>
 </body>
 </html>

@@ -1,5 +1,6 @@
-import { ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+import { ref, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
+// Elementos del DOM
 const mensajesContenedor = document.getElementById("mensajes");
 const formChat = document.getElementById("form-chat");
 const inputMensaje = document.getElementById("mensaje-input");
@@ -7,7 +8,7 @@ const inputMensaje = document.getElementById("mensaje-input");
 let chatId = null;
 let idDestino = null;
 
-// Función para seleccionar un usuario (especialista o usuaria)
+// Seleccionar usuaria o especialista
 window.seleccionarEspecialista = function(idUsuarioDestino) {
   idDestino = idUsuarioDestino;
   chatId = generarChatId(window.usuarioActual.id, idDestino);
@@ -30,13 +31,47 @@ function cargarMensajes() {
     mensajesContenedor.innerHTML = "";
     snapshot.forEach((child) => {
       const msg = child.val();
+      const key = child.key;
       if (!msg || !msg.texto) return;
+
       const div = document.createElement("div");
-      div.classList.add("mensaje");
-      div.classList.add(msg.remitenteId == window.usuarioActual.id ? "usuario" : "especialista");
-      div.textContent = msg.texto;
+      div.classList.add("mensaje", msg.remitenteId == window.usuarioActual.id ? "usuario" : "especialista");
+
+      // Texto del mensaje
+      const p = document.createElement("p");
+      p.textContent = msg.texto;
+      div.appendChild(p);
+
+      // Hora del mensaje
+      const hora = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const spanHora = document.createElement("span");
+      spanHora.className = "hora-msg text-muted small d-block";
+      spanHora.textContent = hora;
+      div.appendChild(spanHora);
+
+      // Botones de editar y eliminar si es el remitente
+      if (msg.remitenteId == window.usuarioActual.id) {
+        const btnsDiv = document.createElement("div");
+        btnsDiv.classList.add("msg-options");
+
+        const btnEditar = document.createElement("button");
+        btnEditar.textContent = "Editar";
+        btnEditar.className = "btn btn-sm btn-link text-primary";
+        btnEditar.onclick = () => editarMensaje(chatId, key, msg.texto);
+
+        const btnEliminar = document.createElement("button");
+        btnEliminar.textContent = "Eliminar";
+        btnEliminar.className = "btn btn-sm btn-link text-danger";
+        btnEliminar.onclick = () => eliminarMensaje(chatId, key);
+
+        btnsDiv.appendChild(btnEditar);
+        btnsDiv.appendChild(btnEliminar);
+        div.appendChild(btnsDiv);
+      }
+
       mensajesContenedor.appendChild(div);
     });
+
     mensajesContenedor.scrollTop = mensajesContenedor.scrollHeight;
   });
 }
@@ -48,7 +83,6 @@ formChat.addEventListener("submit", (e) => {
   if (!texto || !chatId) return;
 
   const mensajesRef = ref(window.firebaseDB, "chats/" + chatId);
-
   push(mensajesRef, {
     texto,
     remitenteId: window.usuarioActual.id,
@@ -58,6 +92,68 @@ formChat.addEventListener("submit", (e) => {
 
   inputMensaje.value = "";
 });
+
+// Editar mensaje con SweetAlert2
+function editarMensaje(chatId, msgKey, textoAnterior) {
+  Swal.fire({
+    title: 'Editar mensaje',
+    input: 'text',
+    inputValue: textoAnterior,
+    showCancelButton: true,
+    confirmButtonText: 'Guardar',
+    cancelButtonText: 'Cancelar',
+    inputValidator: (value) => {
+      if (!value.trim()) {
+        return 'El mensaje no puede estar vacío';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const msgRef = ref(window.firebaseDB, `chats/${chatId}/${msgKey}`);
+      update(msgRef, {
+        texto: result.value.trim(),
+        timestamp: Date.now()
+      });
+    }
+  });
+}
+
+// Eliminar mensaje con SweetAlert2
+function eliminarMensaje(chatId, msgKey) {
+  Swal.fire({
+    title: '¿Eliminar mensaje?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const msgRef = ref(window.firebaseDB, `chats/${chatId}/${msgKey}`);
+      remove(msgRef);
+    }
+  });
+}
+
+// Eliminar toda la charla con SweetAlert2
+window.eliminarChatCompleto = function () {
+  if (!chatId) return;
+
+  Swal.fire({
+    title: '¿Eliminar toda la conversación?',
+    text: 'Todos los mensajes se eliminarán de forma permanente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar todo',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const chatRef = ref(window.firebaseDB, "chats/" + chatId);
+      remove(chatRef);
+      mensajesContenedor.innerHTML = "<p class='text-muted'>Charla eliminada.</p>";
+    }
+  });
+};
 
 // Obtener datos de usuarias desde PHP
 async function obtenerDatosUsuarias(ids) {
@@ -69,7 +165,6 @@ async function obtenerDatosUsuarias(ids) {
       body: JSON.stringify({ ids })
     });
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
     const text = await res.text();
     if (!text) return [];
 
@@ -110,15 +205,7 @@ function cargarChatsActivosEspecialista() {
       }
     }
 
-    const usuariasIds = Array.from(usuariasIdsSet);
-
-    if (usuariasIds.length === 0) {
-      contenedor.innerHTML = '<p class="text-muted">No hay chats activos para mostrar.</p>';
-      return;
-    }
-
-    const usuarias = await obtenerDatosUsuarias(usuariasIds);
-
+    const usuarias = await obtenerDatosUsuarias([...usuariasIdsSet]);
     if (!usuarias.length) {
       contenedor.innerHTML = '<p class="text-muted">No hay chats activos para mostrar.</p>';
       return;
@@ -140,7 +227,7 @@ function cargarChatsActivosEspecialista() {
             <img 
               src="${fotoUrl}" 
               class="img-thumbnail perfil-img rounded-circle" 
-              alt="${u.nombre || 'Usuaria'}" 
+              alt="${u.nombre || 'Usuaria'}"
               onerror="this.onerror=null;this.src='/Shakti/img/usuario.jpg';"
               style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;"
             />
@@ -158,7 +245,6 @@ function cargarChatsActivosEspecialista() {
       contenedor.appendChild(card);
     });
 
-    // Seleccionar automáticamente el primero
     window.seleccionarEspecialista(usuarias[0].id);
   });
 }
