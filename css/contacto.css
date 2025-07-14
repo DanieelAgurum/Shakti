@@ -117,7 +117,7 @@ form {
 textarea.input {
     color: white;
     padding: 0.8rem 1.2rem;
-    min-height: 150px;
+    min-height: 350px;
     border-radius: 4px;
     resize: none;
     overflow-y: auto
@@ -292,7 +292,6 @@ textarea.input::placeholder {
     font-size: 22px;
     margin-bottom: 23px;
     margin-right: 8px;
-    background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
 }
 
 .big-circle {

@@ -34,8 +34,13 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.dropdown-item.cerrar {
+  color: #dc3545;
+}
+
+
 /* Estilo para item de cerrar sesión */
-.dropdown-item.text-danger:hover {
+.dropdown-item.cerrar:hover {
   background-color: #dc3545;
   color: white;
 }

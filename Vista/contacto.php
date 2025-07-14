@@ -10,11 +10,10 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contacto - Shakti</title>
-    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="../css/contacto.css">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
@@ -28,13 +27,13 @@ if (session_status() === PHP_SESSION_NONE) {
             <h3 class="title">Comunicate con nosotros</h3>
             <p class="text">Si tienes alguna duda, comentario o sugerencia, no dudes en contactarnos.</p>
             <div class="info">
-                <div class="social-information"> <i class="fa-solid fa-location-dot fa-bounce"></i>
+                <div class="social-information"> <i class="bi bi-geo-alt"></i></i>
                     <p>Nezahualcoyotl, Estado de México</p>
                 </div>
-                <div class="social-information"> <i class="fa-solid fa-envelope fa-bounce"></i>
+                <div class="social-information"> <i class="bi bi-envelope-at"></i></i>
                     <p>shakti@gmail.com</p>
                 </div>
-                <div class="social-information"> <i class="fa-solid fa-mobile fa-bounce"></i>
+                <div class="social-information"> <i class="bi bi-telephone"></i>
                     <p>+52 5678012353 </p>
                 </div>
             </div>
@@ -50,7 +49,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="contact-info-form"> <span class="circle one"></span> <span class="circle two"></span>
             <form action="#" method="post" class="colortext" autocomplete="off">
                 <div class="social-input-containers">
-                    <input type="email" name="correo" id="inputblanco" class="input text-black" placeholder="Correo electrónico" value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : " "; ?>">
+                    <input type="email" name="correo" class="input" placeholder="Correo electrónico" value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : " "; ?>">
                 </div>
                 <div class="social-input-containers textarea">
                     <textarea name="comentario" id="input" class="input" placeholder="Dejanos tu mensaje"></textarea>
