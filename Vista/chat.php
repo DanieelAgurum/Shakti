@@ -9,11 +9,9 @@ $idUsuario = $_SESSION['id'];
 $especialistaControlador = new EspecialistaControlador();
 
 if ($rolUsuario == 2) {
-    
     $usuariosChat = [];
     $tituloLista = "Usuarias con chat activo";
 } else {
-
     $usuariosChat = $especialistaControlador->listarEspecialistas();
     $tituloLista = "Especialistas";
 }
@@ -77,7 +75,12 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
             <div class="card mb-3" style="max-width: 540px; cursor: pointer;" onclick="seleccionarUsuario(<?= (int)$usuario['id'] ?>)">
               <div class="row g-0 align-items-center">
                 <div class="col-md-4">
-                  <img src="<?= htmlspecialchars($usuario['foto'] ?? '/path/to/default.png') ?>" class="img-fluid rounded-start img-thumbnail" alt="<?= htmlspecialchars($usuario['nombre']) ?>" />
+                  <img 
+                    src="/Shakti/verFoto.php?id=<?= (int)$usuario['id'] ?>" 
+                    class="img-fluid rounded-start img-thumbnail" 
+                    alt="<?= htmlspecialchars($usuario['nombre']) ?>" 
+                    onerror="this.onerror=null;this.src='/Shakti/assets/img/default.png';"
+                  />
                 </div>
                 <div class="col-md-8">
                   <div class="card-body">
@@ -146,7 +149,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
       }
     }
 
-    // 🧠 Autocarga primer chat si es especialista
+    // Autocargar primer chat si es especialista
     <?php if ($rolUsuario == 2 && !empty($usuariosChat)) : ?>
     window.addEventListener('DOMContentLoaded', () => {
       seleccionarUsuario(<?= (int)$usuariosChat[0]['id'] ?>);
