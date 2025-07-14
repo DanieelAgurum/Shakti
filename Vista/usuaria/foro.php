@@ -27,8 +27,6 @@ $urlBase = getBaseUrl();
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarReporte.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script src="<?= $urlBase ?>peticiones(js)/likesContar.js"></script>
-    <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
     <script src="<?= $urlBase ?>validacionRegistro/respuestas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
 
@@ -109,7 +107,8 @@ $urlBase = getBaseUrl();
         const onScrollDebounced = debounce(onScroll, 200);
         window.addEventListener('scroll', onScrollDebounced);
     </script>
-
+    <script src="<?= $urlBase ?>peticiones(js)/likesContar.js"></script>
+    <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
 </body>
 
 </html>
