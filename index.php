@@ -101,7 +101,7 @@ $urlBase = getBaseUrl();
     </h2>
     <div class="row g-4">
       <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow animacion text-white">
+        <div class="card card-custom animate__animated animate__fadeInLeft animate__slow animacion text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 1" />
           <div class="card-img-overlay">
             <h5 class="card-title title-content">Moda Urbana 2025</h5>
@@ -120,7 +120,7 @@ $urlBase = getBaseUrl();
       <!-- Repite para las otras dos tarjetas -->
 
       <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow animacion text-white">
+        <div class="card card-custom animate__animated animate__fadeInLeft animate__slow animacion text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 2" />
           <div class="card-img-overlay">
             <h5 class="card-title title-content">Tecnología y Estilo</h5>
@@ -137,7 +137,7 @@ $urlBase = getBaseUrl();
       </div>
 
       <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow animacion text-white">
+        <div class="card card-custom animate__animated animate__fadeInLeft animate__slow animacion text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 3" />
           <div class="card-img-overlay">
             <h5 class="card-title title-content">Consejos de Estilo</h5>
