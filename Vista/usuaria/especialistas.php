@@ -46,7 +46,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
         <div class="row" id="resultados">
             <?php
             $db = (new ConectarDB())->open();
-            $sql = "SELECT id, nombre, apellidos, correo, foto, descripcion FROM usuarias WHERE estatus = 1 AND id_rol = 2";
+            $sql = "SELECT id, nombre, apellidos, correo, foto, descripcion, telefono, estatus, nickname FROM usuarias WHERE estatus = 1 AND id_rol = 2";
             $stmt = $db->query($sql);
 
             foreach ($stmt as $row) {
@@ -67,11 +67,16 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
                             </h4>
                             <hr>
                             <p><i class="fas fa-quote-left"></i> <?= htmlspecialchars($row['descripcion'] ?? 'Especialista en bienestar y atención a víctimas.') ?></p>
-                            <a href="<?= $urlBase ?>Vista/usuaria/perfil_especialista.php?id=<?= $row['id'] ?>" class="btn btn-outline-success mt-2">Ver perfil</a>
-                            <a href="<?= $urlBase ?>Vista/usuaria/perfil_especialista.php?id=<?= $row['id'] ?>" class="btn btn-outline-primary mt-2">Mensaje</a>
+                            <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista<?= $row['id'] ?>">
+                                <i class="bi bi-eye-fill"></i> Ver perfil
+                            </button>
+                            <button type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista<?= $row['id'] ?>">
+                                <i class="bi bi-envelope-paper-heart"></i> Mensaje
+                            </button>
                         </div>
                     </div>
                 </div>
+                <?php include '../modales/especialistas.php'; ?>
             <?php } ?>
             <?php echo '<div class="col-md-12 text-center">';
             if ($stmt->rowCount() == 0) {
@@ -81,10 +86,12 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
             ?>
         </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="../../peticiones(js)/especialistas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <?php include '../../components/usuaria/footer.php'; ?>
+
 </body>
 
 </html>
