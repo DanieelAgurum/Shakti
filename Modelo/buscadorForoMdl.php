@@ -24,6 +24,10 @@ class buscadorForoMdl
 
     public function buscardor($limit = 10, $offset = 0)
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
         $this->conectarBD();
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
 
@@ -63,7 +67,10 @@ class buscadorForoMdl
 
     public function todos($limit = 10, $offset = 0)
     {
-        
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->conectarBD();
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
 
@@ -221,16 +228,5 @@ class buscadorForoMdl
             mysqli_close($this->con);
             $this->con = null;
         }
-    }
-
-    // Método para verificar si una columna existe en una tabla
-    private function columnaExiste($tabla, $columna)
-    {
-        $this->conectarBD();
-        $tabla = mysqli_real_escape_string($this->con, $tabla);
-        $columna = mysqli_real_escape_string($this->con, $columna);
-        $sql = "SHOW COLUMNS FROM `$tabla` LIKE '$columna'";
-        $resultado = mysqli_query($this->con, $sql);
-        return ($resultado && mysqli_num_rows($resultado) > 0);
     }
 }
