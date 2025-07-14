@@ -41,6 +41,12 @@ $urlBase = getBaseUrl();
       background-color: #b0b0b0ff;
       ;
     }
+
+    @media (max-width: 576px) {
+      .animacion {
+        animation: none !important;
+      }
+    }
   </style>
 </head>
 
@@ -95,7 +101,7 @@ $urlBase = getBaseUrl();
     </h2>
     <div class="row g-4">
       <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow text-white">
+        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow animacion text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 1" />
           <div class="card-img-overlay">
             <h5 class="card-title title-content">Moda Urbana 2025</h5>
@@ -114,7 +120,7 @@ $urlBase = getBaseUrl();
       <!-- Repite para las otras dos tarjetas -->
 
       <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow text-white">
+        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow animacion text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 2" />
           <div class="card-img-overlay">
             <h5 class="card-title title-content">Tecnología y Estilo</h5>
@@ -131,7 +137,7 @@ $urlBase = getBaseUrl();
       </div>
 
       <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow text-white">
+        <div class="card card-custom animate__animated animate__fadeInLeft animate__delay-1s animate__slow animacion text-white">
           <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 3" />
           <div class="card-img-overlay">
             <h5 class="card-title title-content">Consejos de Estilo</h5>
@@ -159,16 +165,16 @@ $urlBase = getBaseUrl();
     <div class="container">
       <div class="row gy-5 gy-lg-0 align-items-lg-center">
         <div class="col-12 col-lg-6">
-          <img class="img-fluid rounded animate__animated animate__fadeInLeft  animate__delay-1s animate__slow" loading="lazy" src="img/Woman thinking-amico.svg" alt="How can we help you?">
+          <img class="img-fluid rounded animate__animated animate__fadeInLeft  animate__delay-1s animate__slow animacion" loading="lazy" src="img/Woman thinking-amico.svg" alt="How can we help you?">
         </div>
-        <div class="col-12 col-lg-6 animate__animated animate__fadeInRight  animate__delay-1s animate__slow">
+        <div class="col-12 col-lg-6 animate__animated animate__fadeInRight  animate__delay-1s animate__slow animacion">
           <div class="row justify-content-xl-end">
             <div class="col-12 col-xl-11">
               <h2 class="h1 mb-3">¿Cómo podemos ayudarte?</h2>
               <p class="lead text-secondary mb-5">
                 Esperamos que hayas encontrado una respuesta a tu pregunta. Si necesitas ayuda, por favor busca tu consulta en nuestro Centro de Soporte o contáctanos por correo electrónico.
               </p>
-              <div id="carouselAcordeon" class="carousel slide" >
+              <div id="carouselAcordeon" class="carousel slide">
                 <div class="carousel-inner">
                   <?php
                   require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/preguntasFrecuentesCtrl.php';
