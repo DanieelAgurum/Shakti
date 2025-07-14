@@ -7,7 +7,7 @@ const inputMensaje = document.getElementById("mensaje-input");
 let chatId = null;
 let idDestino = null;
 
-// Función para seleccionar un usuario
+// Función para seleccionar un usuario (especialista o usuaria)
 window.seleccionarEspecialista = function(idUsuarioDestino) {
   idDestino = idUsuarioDestino;
   chatId = generarChatId(window.usuarioActual.id, idDestino);
@@ -127,27 +127,34 @@ function cargarChatsActivosEspecialista() {
     contenedor.innerHTML = `<h5>Usuarias con chat activo</h5>`;
 
     usuarias.forEach(u => {
-      const fotoUrl = u.foto ? `/Shakti/verFoto.php?id=${u.id}` : '/Shakti/assets/img/default.png';
+      const fotoUrl = u.foto ? `/Shakti/verFoto.php?id=${u.id}` : '/Shakti/img/usuario.jpg';
 
       const card = document.createElement('div');
-      card.className = "card mb-3";
-      card.style = "max-width: 540px; cursor: pointer;";
+      card.className = "card mb-3 card-chat-item";
+      card.style.cursor = "pointer";
       card.onclick = () => window.seleccionarEspecialista(u.id);
 
       card.innerHTML = `
-        <div class="row g-0 align-items-center">
-          <div class="col-md-4">
-            <img src="${fotoUrl}" class="img-fluid rounded-start img-thumbnail" alt="${u.nombre || 'Usuaria'}" onerror="this.src='/Shakti/assets/img/default.png'" />
+        <div class="row g-0 h-100 align-items-center">
+          <div class="col-4 d-flex align-items-center justify-content-center">
+            <img 
+              src="${fotoUrl}" 
+              class="img-thumbnail perfil-img rounded-circle" 
+              alt="${u.nombre || 'Usuaria'}" 
+              onerror="this.onerror=null;this.src='/Shakti/img/usuario.jpg';"
+              style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;"
+            />
           </div>
-          <div class="col-md-8">
-            <div class="card-body">
+          <div class="col-8">
+            <div class="card-body py-2">
               <h6 class="card-title mb-1">${u.nombre || 'Sin nombre'}</h6>
-              <p class="card-text mb-1">${u.descripcion || ''}</p>
+              <p class="card-text mb-1 text-truncate">${u.descripcion || ''}</p>
               <small class="text-muted">Activo</small>
             </div>
           </div>
         </div>
       `;
+
       contenedor.appendChild(card);
     });
 

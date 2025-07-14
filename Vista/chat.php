@@ -9,7 +9,7 @@ $idUsuario = $_SESSION['id'];
 $especialistaControlador = new EspecialistaControlador();
 
 if ($rolUsuario == 2) {
-    $usuariosChat = [];
+    $usuariosChat = []; // Este se llenará dinámicamente desde Firebase
     $tituloLista = "Usuarias con chat activo";
 } else {
     $usuariosChat = $especialistaControlador->listarEspecialistas();
@@ -24,44 +24,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
 <head>
   <meta charset="UTF-8" />
   <title>Chat - <?= htmlspecialchars($tituloLista) ?></title>
+  <link rel="stylesheet" href="/Shakti/css/chat.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-  <style>
-    #lista-especialistas {
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    #chat-area {
-      max-height: 80vh;
-      border-left: 1px solid #ddd;
-      overflow-y: auto;
-      padding: 1rem;
-    }
-    .mensaje {
-      max-width: 75%;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      margin-bottom: 0.5rem;
-      word-wrap: break-word;
-    }
-    .mensaje.usuario {
-      background-color: #007bff;
-      color: white;
-      margin-left: auto;
-    }
-    .mensaje.especialista {
-      background-color: #e9ecef;
-      color: black;
-      margin-right: auto;
-    }
-    #lista-especialistas::-webkit-scrollbar {
-      width: 8px;
-    }
-    #lista-especialistas::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-    }
-  </style>
 </head>
 
 <body>
@@ -72,20 +37,20 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
 
         <?php if (!empty($usuariosChat)) : ?>
           <?php foreach ($usuariosChat as $usuario) : ?>
-            <div class="card mb-3" style="max-width: 540px; cursor: pointer;" onclick="seleccionarUsuario(<?= (int)$usuario['id'] ?>)">
-              <div class="row g-0 align-items-center">
-                <div class="col-md-4">
+            <div class="card mb-3 card-chat-item" onclick="seleccionarUsuario(<?= (int)$usuario['id'] ?>)">
+              <div class="row g-0 h-100 align-items-center">
+                <div class="col-4 d-flex align-items-center justify-content-center">
                   <img 
                     src="/Shakti/verFoto.php?id=<?= (int)$usuario['id'] ?>" 
-                    class="img-fluid rounded-start img-thumbnail" 
+                    class="img-thumbnail perfil-img"
                     alt="<?= htmlspecialchars($usuario['nombre']) ?>" 
                     onerror="this.onerror=null;this.src='/Shakti/assets/img/default.png';"
                   />
                 </div>
-                <div class="col-md-8">
-                  <div class="card-body">
+                <div class="col-8">
+                  <div class="card-body py-2">
                     <h6 class="card-title mb-1"><?= ucwords(strtolower(htmlspecialchars($usuario['nombre']))) ?></h6>
-                    <p class="card-text mb-1"><?= ucfirst(htmlspecialchars($usuario['descripcion'] ?? '')) ?></p>
+                    <p class="card-text mb-1 text-truncate"><?= ucfirst(htmlspecialchars($usuario['descripcion'] ?? '')) ?></p>
                     <small class="text-muted">Activo</small>
                   </div>
                 </div>
@@ -149,7 +114,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
       }
     }
 
-    // Autocargar primer chat si es especialista
     <?php if ($rolUsuario == 2 && !empty($usuariosChat)) : ?>
     window.addEventListener('DOMContentLoaded', () => {
       seleccionarUsuario(<?= (int)$usuariosChat[0]['id'] ?>);

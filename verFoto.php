@@ -16,7 +16,7 @@ try {
 
     if (!$row || empty($row['foto'])) {
         // Redirigir a imagen por defecto si no hay foto
-        header("Location: /Shakti/assets/img/default.png");
+        header("Location: /Shakti/img/usuario.jpg");
         exit;
     }
 
