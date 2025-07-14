@@ -52,7 +52,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
             foreach ($stmt as $row) {
             ?>
                 <div class="col-md-4 mb-4">
-                    <div class="card testimonial-card animate__animated animate__backInUp">
+                    <div class="card testimonial-card animate__animated animate__backInUp animacion">
                         <div class="card-up aqua-gradient"></div>
                         <div class="avatar mx-auto white">
                             <?php
@@ -82,26 +82,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('input[name="especialista"]').on('keyup', function() {
-                var especialista = $(this).val();
-
-                $.ajax({
-                    url: '../../modelo/buscar_especialistas.php',
-                    type: 'GET',
-                    data: {
-                        especialista: especialista
-                    },
-                    success: function(response) {
-                        $('#resultados').html(response);
-                    }
-
-                });
-                console.log(especialista);
-            });
-        });
-    </script>
+    <script src="../../peticiones(js)/especialistas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>

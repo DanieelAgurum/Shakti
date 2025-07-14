@@ -27,35 +27,14 @@ $urlBase = getBaseUrl();
     <script src="<?= $urlBase ?>peticiones(js)/mandarReporte.js"></script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/reportarPostUsuarias.php'; ?>
-
+    <script src="../../validacionRegistro/abrirComentarios.js"></script>
+    <script src="../../peticiones(js)/likesContar.js"></script>
+    <script src="../../validacionRegistro/respuestas.js"></script>
     <style>
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 0;
-            left: 100%;
-            margin-top: 0;
-            display: none;
-            overflow-y: auto;
-            z-index: 1055;
-            background-color: white;
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            border-radius: 0.375rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .175);
-        }
-
-        .dropdown-menu.show {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-
-        .input-error {
-            border: 2px solid red;
-            background-color: #ffe6e6;
+        @media (max-width: 576px) {
+            .animacion {
+                animation: none !important;
+            }
         }
     </style>
 </head>
@@ -73,32 +52,15 @@ $urlBase = getBaseUrl();
     </div>
 
     <!-- Publicaciones recientes -->
-    <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4 animate__animated animate__fadeInLeft">
+    <section class="container mb-5 d-flex flex-wrap justify-content-center gap-4 animate__animated animate__fadeInLeft animacion">
         <?php
         require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/buscadorForoCtrl.php';
         ?>
     </section>
-    <script src="../../validacionRegistro/abrirComentarios.js"></script>
-    <script src="../../peticiones(js)/likesContar.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Mostrar respuestas ocultas
-            document.querySelectorAll(".ver-respuestas").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    const id = btn.dataset.id;
-                    const divRespuestas = document.getElementById(`respuestas-${id}`);
-                    const isVisible = !divRespuestas.classList.contains("d-none");
-
-                    divRespuestas.classList.toggle("d-none");
-
-                    // Cambiar texto del botón
-                    btn.textContent = isVisible ? `Ver respuestas` : `Ocultar respuestas`;
-                });
-            });
-        });
-    </script>
 
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
+
+
 
     <!-- Scripts -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>

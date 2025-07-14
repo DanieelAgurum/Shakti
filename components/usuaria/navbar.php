@@ -29,6 +29,13 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
   <!-- Scripts Bootstrap -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  <style>
+    @media (max-width: 576px) {
+      .animacion {
+        animation: none !important;
+      }
+    }
+  </style>
 </head>
 
 <body>

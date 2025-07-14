@@ -347,6 +347,7 @@ body {
   }
 }
 
+
 /* Index */
 .swiper {
   width: 100%;
@@ -532,4 +533,10 @@ small.error {
 .text-danger {
   margin-top: 4px;
   font-size: 0.875rem;
+}
+
+@media (max-width: 576px) {
+  .animacion {
+    animation: none !important;
+  }
 }
