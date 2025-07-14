@@ -59,10 +59,8 @@ $urlBase = getBaseUrl();
     </div>
 
     <section id="contenedorPublicaciones" class="container mb-5 d-flex flex-wrap justify-content-center gap-4">
-        <!-- Aquí se cargan las publicaciones por AJAX -->
     </section>
 
-    <!-- Loader inferior para scroll infinito -->
     <div id="scrollLoader" class="text-center my-4 d-none">
         <div class="spinner-border text-danger" role="status">
             <span class="visually-hidden">Cargando más publicaciones...</span>
@@ -81,12 +79,11 @@ $urlBase = getBaseUrl();
     </style>
 
     <script>
-        const limite = 8;
+        const limite = 6;
         let paginaActual = 1;
         let cargando = false;
         let noHayMas = false;
 
-        // Función para "debounce" de scroll
         function debounce(fn, delay) {
             let timer;
             return function(...args) {
@@ -105,9 +102,19 @@ $urlBase = getBaseUrl();
             }
 
             const offset = (pagina - 1) * limite;
+            const terminoBusqueda = document.querySelector('input[name="buscador"]').value.trim();
+
+            const url = new URL('/shakti/controlador/buscadorForoCtrl.php', window.location.origin);
+            url.searchParams.append('limit', limite);
+            url.searchParams.append('offset', offset);
+
+            if (terminoBusqueda.length > 0) {
+                url.searchParams.append('buscador', terminoBusqueda);
+                url.searchParams.append('opcion', '1');
+            }
 
             try {
-                const res = await fetch(`/shakti/controlador/buscadorForoCtrl.php?limit=${limite}&offset=${offset}`);
+                const res = await fetch(url.toString());
                 if (!res.ok) throw new Error('Error en la petición');
 
                 const data = await res.text();
@@ -125,10 +132,10 @@ $urlBase = getBaseUrl();
                 }
 
                 paginaActual = pagina + 1;
-                cargando = false; // Mover cargando = false aquí para evitar bloquear scroll si no hay error
+                cargando = false;
 
             } catch (error) {
-                cargando = false; // En error también liberar bandera
+                cargando = false;
             } finally {
                 if (pagina !== 1) {
                     scrollLoader.classList.add('d-none');
@@ -150,7 +157,7 @@ $urlBase = getBaseUrl();
             const loader = document.getElementById('loaderInicio');
             if (loader) {
                 loader.classList.add('fade-out');
-                setTimeout(() => loader.remove(), 500);
+                setTimeout(() => loader.remove(), 100);
             }
             window.addEventListener('scroll', onScrollDebounced);
         });

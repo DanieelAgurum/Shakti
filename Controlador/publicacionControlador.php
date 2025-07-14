@@ -1,5 +1,4 @@
 <?php
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -7,15 +6,18 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
 
 $publicacionModelo = new PublicacionModelo();
-$id_usuaria = $_SESSION['id_usuaria'] ?? null; // Asegúrate de que 'id_usuaria' esté bien guardado al iniciar sesión
+$id_usuaria = $_SESSION['id_usuaria'] ?? null;
 
-if (!$id_usuaria) {
+// ⚠️ Solo redirigimos si intenta guardar, editar o eliminar sin sesión
+$requiereSesion = ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['guardar_publicacion']) || isset($_POST['editar_publicacion']))) || isset($_GET['borrar_id']);
+
+if ($requiereSesion && !$id_usuaria) {
     $_SESSION['mensaje'] = "Debes iniciar sesión para realizar esta acción.";
     header("Location: ../Vista/usuaria/publicaciones.php");
     exit;
 }
 
-// GUARDAR PUBLICACIÓN
+// 🟣 GUARDAR PUBLICACIÓN
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion'])) {
     $titulo = trim($_POST['titulo'] ?? '');
     $contenido = trim($_POST['contenido'] ?? '');
@@ -33,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion']
     exit;
 }
 
-// ELIMINAR PUBLICACIÓN
+// 🔴 ELIMINAR PUBLICACIÓN
 if (isset($_GET['borrar_id'])) {
     $id = intval($_GET['borrar_id']);
 
@@ -49,7 +51,7 @@ if (isset($_GET['borrar_id'])) {
     exit;
 }
 
-// EDITAR PUBLICACIÓN
+// ✏️ EDITAR PUBLICACIÓN
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_publicacion'])) {
     $id = intval($_POST['id_publicacion']);
     $titulo = trim($_POST['titulo'] ?? '');
@@ -71,10 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_publicacion'])
     exit;
 }
 
+// 🔍 CONSULTAS (AJAX o vistas)
 if (isset($_GET['buscador'])) {
-    $buscar = $_GET['buscador'] ?? '';
+    $buscar = $_GET['buscador'];
     $publicacionModelo->inicializar($buscar);
-    $publicacionModelo->buscar();
+    $publicacionModelo->buscar($id_usuaria); // importante: pasar el id_usuaria
 } else {
-    $publicacionModelo->todos();
+    $publicacionModelo->todos($id_usuaria); // importante: pasar el id_usuaria
 }
