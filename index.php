@@ -177,9 +177,9 @@ $urlBase = getBaseUrl();
                 <div class="carousel-inner">
                   <?php
                   require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/preguntasFrecuentesCtrl.php';
-                  $tabla = new preguntasFrecuentesMdl();
-                  $tabla->conectarBD();
-                  $tabla->mostrarTodas();
+                  $preg = new preguntasFrecuentesMdl();
+                  $preg->conectarBD();
+                  $preg->mostrarTodas();
                   ?>
                 </div>
               </div>
