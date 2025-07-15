@@ -6,7 +6,6 @@
     <link href="../../components/admin/bootstrap.min.css" rel="stylesheet" />
     <link href="../../components/admin/datatables.min.css" rel="stylesheet" />
     <link href="../../components/admin/styles.css" rel="stylesheet" />
-    <link href="../../components/admin/custom.css" rel="stylesheet" />
 
     <!-- JS -->
     <script src="https://kit.fontawesome.com/3c934cb418.js" crossorigin="anonymous"></script>

@@ -18,7 +18,6 @@ $urlBase = getBaseUrl();
 
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
-  <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
