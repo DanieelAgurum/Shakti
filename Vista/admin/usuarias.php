@@ -34,7 +34,7 @@ include 'modales/usuarias.php';
         ?>
         <div id="layoutSidenav_content">
             <main>
-                <div style="margin-top: -100px">
+                <div class="container-fluid px-4 mb-5">
                     <h1 class="mt-4"></h1>
                     <div class="container">
                         <h1 class="page-header text-center"> <strong> Usuarias </strong></h1>

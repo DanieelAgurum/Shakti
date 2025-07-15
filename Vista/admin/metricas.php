@@ -77,12 +77,12 @@ $topComentarios = $modelo->obtenerTopComentarios();
                 <div class="container-fluid px-4 mb-5">
                     <h1 class="mt-4 text-center solid"><strong>Métricas</strong></h1>
                     <div class="chart-container mt-4 row">
-                        <div id="pieChart" class="chart-box col-5"></div>
-                        <div id="barChart" class="chart-box col-5"></div>
+                        <div id="pieChart" class="chart-box col-12 col-xl-5"></div>
+                        <div id="barChart" class="chart-box col-12 col-xl-5"></div>
                     </div>
                     <div class="chart-container mt-4 row">
-                        <div id="likes" class="chart-box col-5"></div>
-                        <div id="comentarios" class="chart-box col-5"></div>
+                        <div id="likes" class="chart-box col-12 col-xl-5"></div>
+                        <div id="comentarios" class="chart-box col-12 col-xl-5"></div>
                     </div>
                 </div>
             </main>
