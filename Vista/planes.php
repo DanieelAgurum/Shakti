@@ -31,7 +31,7 @@
 
             <div class="plan-card subscription">
                 <h2>Suscripción</h2>
-                <h3>$500</h3>
+                <h3>$200</h3>
                 <ul>
                     <li>✅ Acceso ilimitado a comentarios</li>
                     <li>✅ Atención por un especialista</li>
