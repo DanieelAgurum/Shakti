@@ -569,3 +569,8 @@ small.error {
     animation: none !important;
   }
 }
+
+.input-error {
+  border: 2px solid #dc3545 !important;
+  background-color: #f8d7da;
+}

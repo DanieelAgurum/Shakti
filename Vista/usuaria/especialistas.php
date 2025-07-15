@@ -66,7 +66,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
                                 <?= ucwords(htmlspecialchars($row['nombre'] . ' ' . $row['apellidos'])) ?>
                             </h4>
                             <hr>
-                            <p><i class="fas fa-quote-left"></i> <?= htmlspecialchars($row['descripcion'] ?? 'Especialista en bienestar y atención a víctimas.') ?></p>
                             <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista<?= $row['id'] ?>">
                                 <i class="bi bi-eye-fill"></i> Ver perfil
                             </button>

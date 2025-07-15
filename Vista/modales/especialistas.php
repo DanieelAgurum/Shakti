@@ -30,7 +30,6 @@
                                 <strong>Telefono:</strong>
                                 <div class="text-muted"><?= htmlspecialchars($row['telefono']) ?></div>
                             </div>
-                            <!-- Aquí puedes añadir más campos si los agregas a la consulta -->
                         </div>
                     </div>
                 </div>
