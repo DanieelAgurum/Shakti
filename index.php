@@ -88,7 +88,7 @@ $urlBase = getBaseUrl();
       <p class="lead">Tu bienestar es primero</p>
       <div class="hero-buttons ">
         <a href="#" class="btn btn-primary me-2">Más contenido....</a>
-        <a href="#" class="btn btn-outline-secondary">Organizaciones</a>
+        <a href="<?= $urlBase ?>Vista/admin/organizaciones.php" class="btn btn-outline-secondary">Organizaciones</a>
       </div>
     <?php endif; ?>
   </main>
