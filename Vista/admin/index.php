@@ -86,7 +86,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Organizaciones</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="organizaciones.php">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -123,15 +123,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                 <div class="card-body">Métricas</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
                                     <a class="small text-dark stretched-link" href="metricas.php">Ver detalles</a>
-                                    <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card text-dark mb-4">
-                                <div class="card-body">Organizaciones</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="organizaciones.php">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
