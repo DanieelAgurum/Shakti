@@ -1,6 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
-require_once 'organizacion.php';
+require_once 'organizacionesModelo.php';
 $urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$organizaciones = $organizacion->getAll();
+$organizaciones = $organizaciones->getAll();
 ?>
 
 <!DOCTYPE html>
