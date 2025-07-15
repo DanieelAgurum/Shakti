@@ -27,7 +27,7 @@ class buscadorForoMdl
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        
+
         $this->conectarBD();
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
 
@@ -161,7 +161,7 @@ class buscadorForoMdl
         $comentariosTotales = $comentarioModelo->contarComentariosPorPublicacion($idPublicacion);
 
         // Mostrar la publicación
-        echo '<article class="instagram-post">
+        echo '<article class="instagram-post animate__animated animate__fadeInLeft">
             <header class="post-header">
                 <div class="profile-info">
                     <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />

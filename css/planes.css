@@ -1,86 +1,118 @@
 .intro {
-    color: #666;
-    margin-bottom: 30px;
+  color: #666;
+  margin-bottom: 30px;
 }
 
 h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 p {
-    text-align: center;
-    color: #666;
+  text-align: center;
+  color: #666;
 }
 
 .plans {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .plan-card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 300px;
-    border: 2px solid transparent;
-    transition: border-color 0.3s;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 300px;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
 }
 
 .plan-card.free {
-    border-color: #007BFF;
+  border-color: #007bff;
 }
 
 .plan-card.subscription {
-    border-color: #28a745;
+  border-color: #28a745;
 }
 
 .plan-card h2 {
-    color: #444;
-    margin-bottom: 10px;
+  color: #444;
+  margin-bottom: 10px;
 }
 
 .plan-card h3 {
-    color: #666;
-    margin: 10px 0;
+  color: #666;
+  margin: 10px 0;
 }
 
 .plan-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 20px 0;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
 }
 
 .plan-card ul li {
-    margin-bottom: 10px;
-    color: #666;
+  margin-bottom: 10px;
+  color: #666;
 }
 
 .plan-button {
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
 }
 
 .plan-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .plan-button:hover:not(:disabled) {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 .subscription-note {
-    color: #555;
-    font-size: 0.9em;
-    margin-bottom: 20px;
+  color: #555;
+  font-size: 0.9em;
+  margin-bottom: 20px;
+}
+
+/* Carga de posts */
+#loaderInicio.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+#scrollLoader {
+  transition: opacity 0.3s ease;
+}
+
+/* Glosario */
+.card-title {
+  font-weight: bold;
+  color: #5a5a5a;
+}
+
+.card-text {
+  text-align: justify;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.text-purple {
+  color: #a855f7;
+}
+
+.card:hover {
+  transform: scale(1.015);
+  transition: 0.3s ease;
+  box-shadow: 0 0.5rem 1.2rem rgba(113, 44, 249, 0.15);
 }
