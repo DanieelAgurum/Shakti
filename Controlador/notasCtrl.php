@@ -2,6 +2,7 @@
 session_start();
 date_default_timezone_set('America/Mexico_City');
 include("../modelo/notasModelo.php");
+
 $n = new Notas();
 $n->conectarBD();
 

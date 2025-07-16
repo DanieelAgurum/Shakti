@@ -22,6 +22,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal para editar la nota específica -->
 <div class="modal fade" id="editarNotaModal<?= $index ?>" tabindex="-1" aria-labelledby="editarNotaModalLabel<?= $index ?>" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -51,6 +52,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal para eliminar la nota específica -->
 <div class="modal fade" id="eliminarNotaModal<?= $index ?>" tabindex="-1" aria-labelledby="editarNotaModalLabel<?= $index ?>" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -73,6 +75,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal para agregar una nueva nota -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
