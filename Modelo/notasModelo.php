@@ -1,7 +1,6 @@
 <?php
 
 date_default_timezone_set('America/Mexico_City');
-
 define('CLAVE_SECRETA', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
 
 class Notas
