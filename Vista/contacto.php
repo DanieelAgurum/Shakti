@@ -11,6 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contacto - Shakti</title>
     <link rel="stylesheet" href="../css/contacto.css">
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -47,7 +48,7 @@ if (session_status() === PHP_SESSION_NONE) {
             </div>
         </div>
         <div class="contact-info-form"> <span class="circle one"></span> <span class="circle two"></span>
-            <form action="#" method="post" class="colortext" autocomplete="off">
+            <form id="contactForm" class="colortext" autocomplete="off">
                 <div class="social-input-containers">
                     <input type="email" name="correo" class="input" placeholder="Correo electrónico" value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : " "; ?>">
                 </div>
@@ -55,8 +56,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <textarea name="comentario" id="input" class="input" placeholder="Dejanos tu mensaje"></textarea>
                 </div>
                 <div class="float-end">
-                    <input type="hidden" name="opcion" value="1">
-                    <input type="submit" value="Enviar" class="btn btn-outline-dark">
+                    <input value="Enviar" onclick="contactForm()" class="btn btn-outline-dark">
                 </div>
             </form>
         </div>
@@ -65,6 +65,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <?php include '../components/usuaria/footer.php'; ?>
 <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
+<script src="<?= $urlBase ?>peticiones(js)/mandarFormContact.js"></script>
 </body>
 
 </html>
