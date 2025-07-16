@@ -85,16 +85,6 @@ p {
   margin-bottom: 20px;
 }
 
-/* Carga de posts */
-#loaderInicio.fade-out {
-  opacity: 0;
-  transition: opacity 0.5s ease-out;
-}
-
-#scrollLoader {
-  transition: opacity 0.3s ease;
-}
-
 /* Glosario */
 .card-title {
   font-weight: bold;

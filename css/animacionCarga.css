@@ -1,0 +1,83 @@
+/* Animacion carga*/
+#loaderInicio.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+#scrollLoader {
+  transition: opacity 0.3s ease;
+}
+
+#loaderInicio.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+#scrollLoader {
+  transition: opacity 0.3s ease;
+}
+
+.heart-spinner {
+  width: 60px;
+  height: 60px;
+  margin: auto;
+  background-color: #dc3545;
+  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M471.7 73.4c-54.5-46.4-136-38.3-186.4 13.7L256 116.6l-29.3-29.5C176.3 35.1 94.7 27 40.3 73.4c-62.5 53.2-66.1 149.8-9.2 207.6l193.5 194.2c12.5 12.5 32.8 12.5 45.3 0L480.9 281c56.9-57.8 53.3-154.4-9.2-207.6z'/%3E%3C/svg%3E")
+    center/contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M471.7 73.4c-54.5-46.4-136-38.3-186.4 13.7L256 116.6l-29.3-29.5C176.3 35.1 94.7 27 40.3 73.4c-62.5 53.2-66.1 149.8-9.2 207.6l193.5 194.2c12.5 12.5 32.8 12.5 45.3 0L480.9 281c56.9-57.8 53.3-154.4-9.2-207.6z'/%3E%3C/svg%3E")
+    center/contain no-repeat;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animación de carga para el foro */
+.foro {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  animation: orbit 2s linear infinite;
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(60px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translateX(60px) rotate(-360deg);
+  }
+}
+
+.heart svg {
+  width: 40px;
+  height: 40px;
+  fill: crimson;
+}

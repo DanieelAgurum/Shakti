@@ -19,9 +19,7 @@ $urlBase = getBaseUrl();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
-    <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
-
+    <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -48,21 +46,41 @@ $urlBase = getBaseUrl();
         </div>
     </div>
 
-    <!-- Loader inicial (solo se muestra una vez después del buscador) -->
-    <div id="loaderInicio" class="text-center my-4">
-        <div class="spinner-border text-danger" role="status" style="width: 2.5rem; height: 2.5rem;">
-            <span class="visually-hidden">Cargando publicaciones...</span>
+    <div class="foro">
+        <div id="loaderInicio" class="loader-container d-none">
+            <div class="orbit">
+                <div class="heart">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                   2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09
+                   C13.09 3.81 14.76 3 16.5 3 
+                   19.58 3 22 5.42 22 8.5
+                   c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                </div>
+            </div>
         </div>
     </div>
 
     <section id="contenedorPublicaciones" class="container mb-5 d-flex flex-wrap justify-content-center gap-4">
     </section>
 
-    <div id="scrollLoader" class="text-center my-4 d-none">
-        <div class="spinner-border text-danger" role="status">
-            <span class="visually-hidden">Cargando más publicaciones...</span>
+    <div class="foro">
+        <div id="scrollLoader" class="loader-container">
+            <div class="orbit">
+                <div class="heart">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                   2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09
+                   C13.09 3.81 14.76 3 16.5 3 
+                   19.58 3 22 5.42 22 8.5
+                   c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                </div>
+            </div>
         </div>
     </div>
+
     <script src="<?= $urlBase ?>peticiones(js)/scroll_infinito.js"></script>
 </body>
 
