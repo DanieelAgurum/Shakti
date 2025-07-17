@@ -71,7 +71,7 @@ async function cargarMasPublicaciones(pagina) {
 function onScroll() {
   const distanciaAlFondo =
     document.body.offsetHeight - (window.innerHeight + window.scrollY);
-  if (distanciaAlFondo < 100000) {
+  if (distanciaAlFondo < 10000) {
     cargarMasPublicaciones(paginaActual);
   }
 }
