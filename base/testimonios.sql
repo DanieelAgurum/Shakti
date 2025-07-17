@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-07-2025 a las 00:35:51
+-- Tiempo de generación: 17-07-2025 a las 03:27:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,7 +40,7 @@ CREATE TABLE `testimonios` (
 --
 
 INSERT INTO `testimonios` (`id_testimonio`, `calificacion`, `opinion`, `id_usuaria`, `fecha`) VALUES
-(23, 4, 'BUENA APP', 40, '2025-07-16 22:35:30');
+(25, 5, 'ME ENCANTA LA APP, ME HACE SENTIR MUY SEGURA', 40, '2025-07-17 01:17:05');
 
 --
 -- Índices para tablas volcadas
@@ -51,7 +51,7 @@ INSERT INTO `testimonios` (`id_testimonio`, `calificacion`, `opinion`, `id_usuar
 --
 ALTER TABLE `testimonios`
   ADD PRIMARY KEY (`id_testimonio`),
-  ADD KEY `id_usuaria` (`id_usuaria`);
+  ADD UNIQUE KEY `id_usuaria` (`id_usuaria`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -61,7 +61,7 @@ ALTER TABLE `testimonios`
 -- AUTO_INCREMENT de la tabla `testimonios`
 --
 ALTER TABLE `testimonios`
-  MODIFY `id_testimonio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_testimonio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- Restricciones para tablas volcadas
