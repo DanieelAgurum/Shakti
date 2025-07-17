@@ -1,4 +1,5 @@
 import { ref, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+import { db } from "/Shakti/peticiones(js)/firebaseInit.js";  // Importa la base de datos Firebase
 
 // Elementos del DOM
 const mensajesContenedor = document.getElementById("mensajes");
@@ -10,8 +11,12 @@ let idDestino = null;
 
 // Seleccionar usuaria o especialista
 window.seleccionarEspecialista = function(idUsuarioDestino) {
+  if (!idUsuarioDestino) return console.error("ID destino inválido");
+  if (!window.usuarioActual?.id) return console.error("Usuario actual no definido");
+
   idDestino = idUsuarioDestino;
   chatId = generarChatId(window.usuarioActual.id, idDestino);
+
   mensajesContenedor.innerHTML = "";
   formChat.style.display = "block";
   cargarMensajes();
@@ -19,13 +24,15 @@ window.seleccionarEspecialista = function(idUsuarioDestino) {
 
 // Generar chatId determinista
 function generarChatId(id1, id2) {
+  if (!id1 || !id2) return null;
   return id1 < id2 ? `${id1}_${id2}` : `${id2}_${id1}`;
 }
 
 // Cargar mensajes en tiempo real
 function cargarMensajes() {
-  if (!chatId) return;
-  const mensajesRef = ref(window.firebaseDB, "chats/" + chatId);
+  if (!chatId) return console.error("Chat ID no definido");
+
+  const mensajesRef = ref(db, "chats/" + chatId);
 
   onValue(mensajesRef, (snapshot) => {
     mensajesContenedor.innerHTML = "";
@@ -82,7 +89,7 @@ formChat.addEventListener("submit", (e) => {
   const texto = inputMensaje.value.trim();
   if (!texto || !chatId) return;
 
-  const mensajesRef = ref(window.firebaseDB, "chats/" + chatId);
+  const mensajesRef = ref(db, "chats/" + chatId);
   push(mensajesRef, {
     texto,
     remitenteId: window.usuarioActual.id,
@@ -109,7 +116,7 @@ function editarMensaje(chatId, msgKey, textoAnterior) {
     }
   }).then((result) => {
     if (result.isConfirmed) {
-      const msgRef = ref(window.firebaseDB, `chats/${chatId}/${msgKey}`);
+      const msgRef = ref(db, `chats/${chatId}/${msgKey}`);
       update(msgRef, {
         texto: result.value.trim(),
         timestamp: Date.now()
@@ -129,7 +136,7 @@ function eliminarMensaje(chatId, msgKey) {
     cancelButtonText: 'Cancelar'
   }).then((result) => {
     if (result.isConfirmed) {
-      const msgRef = ref(window.firebaseDB, `chats/${chatId}/${msgKey}`);
+      const msgRef = ref(db, `chats/${chatId}/${msgKey}`);
       remove(msgRef);
     }
   });
@@ -148,7 +155,7 @@ window.eliminarChatCompleto = function () {
     cancelButtonText: 'Cancelar'
   }).then((result) => {
     if (result.isConfirmed) {
-      const chatRef = ref(window.firebaseDB, "chats/" + chatId);
+      const chatRef = ref(db, "chats/" + chatId);
       remove(chatRef);
       mensajesContenedor.innerHTML = "<p class='text-muted'>Charla eliminada.</p>";
     }
@@ -182,12 +189,16 @@ async function obtenerDatosUsuarias(ids) {
 
 // Cargar chats activos si es especialista
 function cargarChatsActivosEspecialista() {
-  if (window.usuarioActual.rol !== "2") return;
+  if (window.usuarioActual?.rol !== "2") return;
 
-  const chatsRef = ref(window.firebaseDB, "chats");
+  const chatsRef = ref(db, "chats");
   onValue(chatsRef, async (snapshot) => {
     const chats = snapshot.val();
     const contenedor = document.getElementById('lista-especialistas');
+    if (!contenedor) {
+      console.error("Contenedor de lista-especialistas no encontrado");
+      return;
+    }
     contenedor.innerHTML = "";
 
     if (!chats) {
@@ -245,10 +256,13 @@ function cargarChatsActivosEspecialista() {
       contenedor.appendChild(card);
     });
 
-    window.seleccionarEspecialista(usuarias[0].id);
+    // Selecciona el primer chat automáticamente
+    if (usuarias.length > 0) {
+      window.seleccionarEspecialista(usuarias[0].id);
+    }
   });
 }
 
-if (window.usuarioActual.rol === "2") {
+if (window.usuarioActual?.rol === "2") {
   cargarChatsActivosEspecialista();
 }
