@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/conexion.php';
+
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -28,6 +29,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     <title>Especialistas - Shakti</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
     <?php include '../../components/usuaria/navbar.php'; ?>
 </head>
 
@@ -42,52 +44,12 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     </div>
 
     <!-- Cards -->
-    <div class="container">
-        <div class="row" id="resultados">
-            <?php
-            $db = (new ConectarDB())->open();
-            $sql = "SELECT id, nombre, apellidos, correo, foto, descripcion, telefono, estatus, nickname FROM usuarias WHERE estatus = 1 AND id_rol = 2";
-            $stmt = $db->query($sql);
+    <?php
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/especialistaModelo.php';
+    $esp = new EspecialistaModelo();
+    $esp->mostrarEspecialistas();
+    ?>
 
-            foreach ($stmt as $row) {
-            ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card testimonial-card animate__animated animate__backInUp animacion">
-                        <div class="card-up aqua-gradient"></div>
-                        <div class="avatar mx-auto white">
-                            <?php
-                            $foto = $row['foto'];
-                            $src = $foto ? 'data:image/jpeg;base64,' . base64_encode($foto) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
-                            ?>
-                            <img src="<?= $src ?>" class="rounded-circle" width="150" height="150" alt="Especialista">
-                        </div>
-                        <div class="card-body text-center">
-                            <h4 class="card-title font-weight-bold">
-                                <?= ucwords(htmlspecialchars($row['nombre'] . ' ' . $row['apellidos'])) ?>
-                            </h4>
-                            <p style="max-height: 70px; overflow-y: auto;" class="descripcion-scroll">
-                                <?= ucwords(htmlspecialchars($row['descripcion'])) ?>
-                            </p>
-                            <hr>
-                            <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista<?= $row['id'] ?>">
-                                <i class="bi bi-eye-fill"></i> Ver perfil
-                            </button>
-                            <button type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista<?= $row['id'] ?>">
-                                <i class="bi bi-envelope-paper-heart"></i> Mensaje
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <?php include '../modales/especialistas.php'; ?>
-            <?php } ?>
-            <?php echo '<div class="col-md-12 text-center">';
-            if ($stmt->rowCount() == 0) {
-                echo '<p class="text-muted">No se encontraron especialistas.</p>';
-            }
-            echo '</div>';
-            ?>
-        </div>
-    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="../../peticiones(js)/especialistas.js"></script>

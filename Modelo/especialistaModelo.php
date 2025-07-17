@@ -1,16 +1,19 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/Conexion.php';
 
-class EspecialistaModelo {
+class EspecialistaModelo
+{
     private $conexion;
 
-    public function __construct() {
+    public function __construct()
+    {
         $db = new ConectarDB();
         $this->conexion = $db->open();
     }
 
     // Obtener todos los especialistas (id_rol = 2)
-    public function obtenerTodos() {
+    public function obtenerTodos()
+    {
         $sql = "SELECT id, nombre, descripcion FROM usuarias WHERE id_rol = 2";
         $stmt = $this->conexion->prepare($sql);
         $stmt->execute();
@@ -18,7 +21,8 @@ class EspecialistaModelo {
     }
 
     // Obtener usuaria o especialista por id o id2
-    public function obtenerPorId($id) {
+    public function obtenerPorId($id)
+    {
         $sql = "SELECT id, nombre, descripcion, id_rol FROM usuarias WHERE id = :id LIMIT 1";
         $stmt = $this->conexion->prepare($sql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
@@ -33,7 +37,8 @@ class EspecialistaModelo {
     }
 
     // Obtener múltiples usuarias o especialistas por IDs
-    public function obtenerUsuariasPorIds(array $ids) {
+    public function obtenerUsuariasPorIds(array $ids)
+    {
         if (empty($ids)) return [];
 
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
@@ -53,9 +58,53 @@ class EspecialistaModelo {
     }
 
     // Generar un chatId determinista entre dos usuarios (especialista y usuaria)
-    public function generarChatId($idUsuario1, $idUsuario2) {
-        return ($idUsuario1 < $idUsuario2) 
-            ? "{$idUsuario1}_{$idUsuario2}" 
+    public function generarChatId($idUsuario1, $idUsuario2)
+    {
+        return ($idUsuario1 < $idUsuario2)
+            ? "{$idUsuario1}_{$idUsuario2}"
             : "{$idUsuario2}_{$idUsuario1}";
+    }
+
+    function mostrarEspecialistas()
+    {
+        $db = (new ConectarDB())->open();
+        $sql = "SELECT id, nombre, apellidos, correo, foto, descripcion, telefono, estatus, nickname FROM usuarias WHERE estatus = 1 AND id_rol = 2";
+        $stmt = $db->query($sql);
+
+        echo '<div class="container"><div class="row" id="resultados">';
+
+        foreach ($stmt as $row) {
+            $foto = $row['foto'];
+            $src = $foto ? 'data:image/jpeg;base64,' . base64_encode($foto) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+
+            echo '
+        <div class="col-md-4 mb-4">
+            <div class="card testimonial-card animate__animated animate__backInUp animacion">
+                <div class="card-up aqua-gradient"></div>
+                <div class="avatar mx-auto white">
+                    <img src="' . $src . '" class="rounded-circle" width="150" height="150" alt="Especialista">
+                </div>
+                <div class="card-body text-center">
+                    <h4 class="card-title font-weight-bold">' . ucwords(htmlspecialchars($row['nombre'] . ' ' . $row['apellidos'])) . '</h4>
+                    <p style="max-height: 70px; overflow-y: auto;" class="descripcion-scroll">' . ucwords(htmlspecialchars($row['descripcion'])) . '</p>
+                    <hr>
+                    <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $row['id'] . '">
+                        <i class="bi bi-eye-fill"></i> Ver perfil
+                    </button>
+                    <button type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $row['id'] . '">
+                        <i class="bi bi-envelope-paper-heart"></i> Mensaje
+                    </button>
+                </div>
+            </div>
+        </div>';
+
+            include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/especialistas.php';
+        }
+
+        if ($stmt->rowCount() == 0) {
+            echo '<div class="col-md-12 text-center text-muted">No se encontraron especialistas.</div>';
+        }
+
+        echo '</div></div>';
     }
 }
