@@ -26,9 +26,14 @@ class Testimonios
 
     public function guardarTestimonio($usuariaId, $calificacion, $opinion)
     {
-        $stmt = $this->db->prepare("INSERT INTO testimonios (id_usuaria, calificacion, opinion) VALUES (?, ?, ?)");
+        $sql = "INSERT INTO testimonios (id_usuaria, calificacion, opinion)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE calificacion = VALUES(calificacion), opinion = VALUES(opinion)";
+
+        $stmt = $this->db->prepare($sql);
         return $stmt->execute([$usuariaId, $calificacion, $opinion]);
     }
+
 
     public function obtenerTestimonios()
     {

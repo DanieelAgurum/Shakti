@@ -114,7 +114,7 @@ $testimonios = $testimonio->obtenerTestimonios();
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background-color: #6366f1;
+      background-color: #000000ff;
       opacity: 0.5;
     }
 
