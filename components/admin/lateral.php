@@ -50,6 +50,7 @@
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/tipos_reportes.php">Tipo de Reportes</a>
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/metricas.php">Métricas</a>
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/publicaciones.php">CRUD Publicaciones</a>
+                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/glosario.php">Glosario</a>
                              </nav>
                          </div>
 
