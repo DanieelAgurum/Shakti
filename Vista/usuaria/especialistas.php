@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/conexion.php';
+
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -28,6 +29,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     <title>Especialistas - Shakti</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
     <?php include '../../components/usuaria/navbar.php'; ?>
 </head>
 
@@ -41,52 +43,34 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
         </div>
     </div>
 
-    <!-- Cards -->
-    <div class="container">
-        <div class="row" id="resultados">
-            <?php
-            $db = (new ConectarDB())->open();
-            $sql = "SELECT id, nombre, apellidos, correo, foto, descripcion, telefono, estatus, nickname FROM usuarias WHERE estatus = 1 AND id_rol = 2";
-            $stmt = $db->query($sql);
-
-            foreach ($stmt as $row) {
-            ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card testimonial-card animate__animated animate__backInUp animacion">
-                        <div class="card-up aqua-gradient"></div>
-                        <div class="avatar mx-auto white">
-                            <?php
-                            $foto = $row['foto'];
-                            $src = $foto ? 'data:image/jpeg;base64,' . base64_encode($foto) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
-                            ?>
-                            <img src="<?= $src ?>" class="rounded-circle" width="150" height="150" alt="Especialista">
-                        </div>
-                        <div class="card-body text-center">
-                            <h4 class="card-title font-weight-bold">
-                                <?= ucwords(htmlspecialchars($row['nombre'] . ' ' . $row['apellidos'])) ?>
-                            </h4>
-                            <hr>
-                            <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista<?= $row['id'] ?>">
-                                <i class="bi bi-eye-fill"></i> Ver perfil
-                            </button>
-                            <button type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista<?= $row['id'] ?>">
-                                <i class="bi bi-envelope-paper-heart"></i> Mensaje
-                            </button>
-                        </div>
-                    </div>
+    <div class="foro">
+        <div id="loaderInicio" class="loader-container">
+            <div class="orbit">
+                <div class="heart">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+               2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09
+               C13.09 3.81 14.76 3 16.5 3 
+               19.58 3 22 5.42 22 8.5
+               c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
                 </div>
-                <?php include '../modales/especialistas.php'; ?>
-            <?php } ?>
-            <?php echo '<div class="col-md-12 text-center">';
-            if ($stmt->rowCount() == 0) {
-                echo '<p class="text-muted">No se encontraron especialistas.</p>';
-            }
-            echo '</div>';
-            ?>
+            </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <div class="container mt-4">
+        <div id="contenedor-especialistas" class="row">
+            <div id="resultados" class="row"></div>
+            <div class="mt-3">
+                <ul id="paginacion" class="pagination justify-content-center"></ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="../../peticiones(js)/cargaEspecialistas.js"></script>
     <script src="../../peticiones(js)/especialistas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <?php include '../../components/usuaria/footer.php'; ?>

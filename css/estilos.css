@@ -574,3 +574,18 @@ small.error {
   border: 2px solid #dc3545 !important;
   background-color: #f8d7da;
 }
+
+.descripcion-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #cccccc transparent;
+  padding-right: 5px;
+}
+
+.descripcion-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.descripcion-scroll::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
