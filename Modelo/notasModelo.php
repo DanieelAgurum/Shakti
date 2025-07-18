@@ -134,4 +134,43 @@ class Notas
         $stmt->close();
         $con->close();
     }
+
+    public function obtenerNotasPaginadas($id_usuaria, $offset, $limite)
+{
+    $con = $this->conectarBD();
+    $sql = "SELECT * FROM notas WHERE id_usuaria = ? ORDER BY fecha DESC LIMIT ?, ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("iii", $id_usuaria, $offset, $limite);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    $notas = [];
+    while ($fila = $resultado->fetch_assoc()) {
+        $fila['titulo'] = $this->descifrarAES($fila['titulo']);
+        $fila['nota'] = $this->descifrarAES($fila['nota']);
+        $notas[] = $fila;
+    }
+
+    $stmt->close();
+    $con->close();
+
+    return $notas;
+}
+
+public function contarNotas($id_usuaria)
+{
+    $con = $this->conectarBD();
+    $sql = "SELECT COUNT(*) AS total FROM notas WHERE id_usuaria = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $id_usuaria);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $total = $resultado->fetch_assoc()['total'];
+
+    $stmt->close();
+    $con->close();
+
+    return $total;
+}
+
 }

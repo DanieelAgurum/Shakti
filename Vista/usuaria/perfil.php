@@ -25,8 +25,17 @@ if (!empty($_SESSION['foto'])) {
     $fotoSrc = 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
 }
 
-$notasModel = new Notas();
-$notas = $notasModel->obtenerNotas($_SESSION['id_usuaria']); // <--- PASAR ID
+$notasObj = new Notas();
+$idUsuaria = $_SESSION['id_usuaria'];
+
+$notasPorPagina = 3;
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$offset = ($pagina - 1) * $notasPorPagina;
+
+$notas = $notasObj->obtenerNotasPaginadas($idUsuaria, $offset, $notasPorPagina);
+
+$totalNotas = $notasObj->contarNotas($idUsuaria);
+$totalPaginas = ceil($totalNotas / $notasPorPagina);
 ?>
 
 
@@ -90,14 +99,20 @@ $notas = $notasModel->obtenerNotas($_SESSION['id_usuaria']); // <--- PASAR ID
                                 </li>
                                 <?php include '../modales/notas.php'; ?>
                             <?php endforeach; ?>
-                            <li class="list-group-item d-flex justify-content-end align-items-center">
-                                <h6 class="mb-0">
-                                    <a href="" class="text-decoration-none">Ver más</a>
-                                </h6>
-                            </li>
+                            <?php if ($totalPaginas > 1): ?>
+                                <nav aria-label="Paginación de notas">
+                                    <ul class="pagination justify-content-end px-3 pb-2 mt-2">
+                                        <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                                            <li class="page-item <?= $i == $pagina ? 'active' : '' ?>">
+                                                <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+                                    </ul>
+                                </nav>
+                            <?php endif; ?>
                         </ul>
                     </div>
-                </div> 
+                </div>
                 <!-- Columna derecha con datos del perfil -->
                 <div class="col-md-8">
                     <div class="card mb-3">
