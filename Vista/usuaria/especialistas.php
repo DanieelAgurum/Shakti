@@ -60,8 +60,8 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     </div>
 
     <div class="container mt-4">
-        <div id="contenedor-especialistas" class="row">
-            <div id="resultados" class="row"></div>
+        <div id="contenedor-especialistas" class="row justify-content-center">
+            <div id="resultados" class="row justify-content-center"></div>
             <div class="mt-3">
                 <ul id="paginacion" class="pagination justify-content-center"></ul>
             </div>
