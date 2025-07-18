@@ -381,7 +381,7 @@ $testimonios = $testimonio->obtenerTestimonios();
   <!-- Testimonios -->
   <div class="w-75">
     <div class="container py-5">
-      <h2 class="text-center mb-5">Lo que dicen nuestras usuarias</h2>
+      <h2 class="text-center mb-4">Ellas ya vivieron la experiencia</h2>
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
