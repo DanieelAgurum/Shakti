@@ -97,7 +97,7 @@ $notas = $notasModel->obtenerNotas($_SESSION['id_usuaria']); // <--- PASAR ID
                             </li>
                         </ul>
                     </div>
-                </div> <!-- /col-md-4 -->
+                </div> 
                 <!-- Columna derecha con datos del perfil -->
                 <div class="col-md-8">
                     <div class="card mb-3">
