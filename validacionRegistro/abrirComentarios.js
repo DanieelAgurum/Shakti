@@ -55,6 +55,21 @@ document.addEventListener("click", (e) => {
     form.querySelector("input[name='comentario']").focus();
   }
 
+  if (e.target.closest(".ver-respuestas")) {
+    const btn = e.target.closest(".ver-respuestas");
+    const id = btn.getAttribute("data-id");
+    const respuestasDiv = document.getElementById("respuestas-" + id);
+    if (respuestasDiv) {
+      respuestasDiv.classList.toggle("d-none");
+      if (respuestasDiv.classList.contains("d-none")) {
+        const total = btn.textContent.match(/\d+/);
+        btn.textContent = `Ver respuestas (${total ? total[0] : ""})`;
+      } else {
+        btn.textContent = "Ocultar respuestas";
+      }
+    }
+  }
+
   // Mostrar formulario de edición
   if (e.target.classList.contains("btn-toggle-edit")) {
     const id = e.target.getAttribute("data-id");
