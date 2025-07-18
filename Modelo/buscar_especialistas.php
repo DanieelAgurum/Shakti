@@ -45,17 +45,24 @@ if ($result->num_rows > 0) {
             <div class="card testimonial-card animate__animated animate__backInUp">
                 <div class="card-up aqua-gradient"></div>
                 <div class="avatar mx-auto white">
-                    <img src="' . $src . '" class="rounded-circle img-fluid" alt="Foto de perfil">
+                    <img src="' . $src . '"  class="rounded-circle" width="150" height="150" alt="Especialista">
                 </div>
                 <div class="card-body text-center">
                     <h4 class="card-title font-weight-bold">' . $nombreCompleto . '</h4>
+                    <p style="max-height: 70px; overflow-y: auto;" class="descripcion-scroll">
+                        ' . ucwords(htmlspecialchars($row['descripcion'])) . '
+                    </p>
                     <hr>
-                    <p><i class="fas fa-quote-left"></i> ' . $descripcion . '</p>
-                    <a href="/Shakti/Vista/usuaria/perfil_especialista.php?id=' . $row['id'] . '" class="btn btn-outline-success mt-2">Ver perfil</a>
-                    <a href="/Shakti/Vista/usuaria/perfil_especialista.php?id=' . $row['id'] . '" class="btn btn-outline-primary mt-2">Mensaje</a>
+                    <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $row['id'] . '">
+                        <i class="bi bi-eye-fill"></i> Ver perfil
+                    </button>
+                    <button type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $row['id'] . '">
+                        <i class="bi bi-envelope-paper-heart"></i> Mensaje
+                    </button>
                 </div>
             </div>
         </div>';
+        include '../vista/modales/especialistas.php';
     }
 } else {
     echo '<div class="w-100 m-auto"><h3 class="text-center">No se encontraron resultados</h3></div>';
