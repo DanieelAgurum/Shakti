@@ -170,7 +170,7 @@ if (!empty($serviciosRegistrados) && is_string($serviciosRegistrados[0])) {
     </script>
   <?php endif; ?>
 
-  <?php include '../modales/perfil.php'; ?>
+  <?php include '../modales/servicios.php'; ?>
 
   <script src="../../validacionRegistro/validacionActualizacion.js"></script>
   <?php include '../../components/usuaria/footer.php'; ?>
