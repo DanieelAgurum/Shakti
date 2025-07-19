@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } else {
-        header('Location: ../Vista/especialista/perfil.php?status=error&message=' . urlencode('Faltan datos obligatorios'));
+        header('Location: ../Vista/especialista/perfil.php?status=error&message=' . urlencode('No se registro ningún servicio'));
         exit;
     }
 }
