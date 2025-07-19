@@ -68,10 +68,9 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
                   <h4><?php echo ucwords(strtolower($_SESSION['nombre'] ?? '')) ?></h4>
                   <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['descripcion'] ?? '')); ?></p>
                   <p class="text-muted font-size-sm"><?php echo ucwords(strtolower($_SESSION['direccion'] ?? '')); ?></p>
-                                 <button class="btn btn-outline-primary" onclick="window.location.href='<?php echo '../chat.php'; ?>'">
-                                 <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
-                                    </button>
-
+                  <button class="btn btn-outline-primary" onclick="window.location.href='<?php echo '../chat.php'; ?>'">
+                    <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
+                  </button>
                 </div>
               </div>
             </div>
@@ -105,6 +104,9 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
               <div class="d-flex justify-content-end gap-2 mb-3">
                 <button type="button" class="btn btn-outline-primary position-relative" data-bs-toggle="modal" data-bs-target="#completarPerfilModal">
                   <i class="bi bi-file-earmark-check-fill"></i> Completar perfil
+                </button>
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarServiciosModal">
+                  <i class="bi bi-person-heart"></i> Registrar servicios
                 </button>
                 <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
                   <i class="bi bi-pencil-fill"></i> Editar perfil
