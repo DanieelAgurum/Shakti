@@ -67,10 +67,12 @@ class EspecialistaModelo
     // Obtener especialistas paginados (PDO)
     public function obtenerEspecialistasPaginados($offset, $limite)
     {
-        $sql = "SELECT id, nombre, apellidos, correo, foto, descripcion, telefono, estatus, nickname 
-                FROM usuarias 
-                WHERE estatus = 1 AND id_rol = 2 
-                LIMIT :offset, :limite";
+        $sql = "SELECT u.id, u.nombre, u.apellidos, u.correo, u.foto, u.descripcion, 
+                   u.telefono, u.estatus, u.nickname, s.servicio
+            FROM usuarias u
+            LEFT JOIN servicios_especialistas s ON u.id = s.id_usuaria
+            WHERE u.estatus = 1 AND u.id_rol = 2
+            LIMIT :offset, :limite";
         $stmt = $this->conexion->prepare($sql);
         $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
         $stmt->bindValue(':limite', (int)$limite, PDO::PARAM_INT);

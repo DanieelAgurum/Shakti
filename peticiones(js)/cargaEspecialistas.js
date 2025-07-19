@@ -8,7 +8,7 @@ function cargarEspecialistas(pagina = 1) {
         $("#loaderInicio").hide();
     }, 'json').fail(function () {
         console.error('Error al cargar especialistas');
-        $("#loaderInicio").hide(); // También ocultarlo en caso de error
+        $("#loaderInicio").hide();
     });
 }
 

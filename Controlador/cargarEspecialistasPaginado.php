@@ -40,7 +40,6 @@ foreach ($especialistas as $row) {
         </div>
     </div>';
 
-    // Incluir modal (capturamos su contenido y lo añadimos al string)
     ob_start();
     include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/especialistas.php';
     $cards .= ob_get_clean();

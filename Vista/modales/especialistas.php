@@ -27,6 +27,10 @@
                                 <div class="text-muted"><?= htmlspecialchars($row['descripcion']) ?></div>
                             </div>
                             <div class="col-md-6 mb-3">
+                                <strong>Servicios:</strong>
+                                <div class="text-muted"><?= htmlspecialchars($row['servicio']) ?></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <strong>Telefono:</strong>
                                 <div class="text-muted"><?= htmlspecialchars($row['telefono']) ?></div>
                             </div>
