@@ -1,5 +1,6 @@
 <?php
 include '../../Modelo/completarPerfil.php';
+require_once '../../Modelo/ServiciosMdl.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
@@ -36,6 +37,14 @@ if (!empty($_SESSION['foto'])) {
 
 $cp = new Completar();
 $documentos = $cp->mostrarDocumentos($idUsuaria);
+$serviciosMdl = new ServiciosMdl();
+$idUsuaria = $_SESSION['id_usuaria'];
+$serviciosRegistrados = $serviciosMdl->obtenerServiciosPorUsuaria($idUsuaria);
+
+if (!empty($serviciosRegistrados) && is_string($serviciosRegistrados[0])) {
+    $serviciosRegistrados = array_map('trim', explode(',', $serviciosRegistrados[0]));
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -105,7 +114,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
                 <button type="button" class="btn btn-outline-primary position-relative" data-bs-toggle="modal" data-bs-target="#completarPerfilModal">
                   <i class="bi bi-file-earmark-check-fill"></i> Completar perfil
                 </button>
-                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarServiciosModal">
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#agregarServicios">
                   <i class="bi bi-person-heart"></i> Registrar servicios
                 </button>
                 <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
@@ -149,6 +158,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
       </div>
     </div>
   </div>
+
   <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
     <script>
       Swal.fire({
@@ -161,6 +171,7 @@ $documentos = $cp->mostrarDocumentos($idUsuaria);
   <?php endif; ?>
 
   <?php include '../modales/perfil.php'; ?>
+
   <script src="../../validacionRegistro/validacionActualizacion.js"></script>
   <?php include '../../components/usuaria/footer.php'; ?>
 
