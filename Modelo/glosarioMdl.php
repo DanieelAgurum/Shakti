@@ -170,6 +170,8 @@ class GlosarioMdl extends ConectarDB
                 $id = $fila['id_glosario'];
                 $titulo_js = json_encode($fila['titulo']);
                 $concepto_js = json_encode($fila['concepto']);
+                $titulo_js = json_encode($fila['titulo']);
+                $concepto_js = json_encode($fila['concepto']);
 
                 echo '<tr>';
                 echo "<td>{$contador}</td>";
@@ -190,6 +192,29 @@ class GlosarioMdl extends ConectarDB
             $this->close();
         } catch (PDOException $e) {
             echo '<tr><td colspan="5">Error al cargar el glosario: ' . htmlspecialchars($e->getMessage()) . '</td></tr>';
+        }
+    }
+
+    public function mostrarGlosario()
+    {
+        $conexion = $this->open();
+        $sql = "SELECT * FROM glosario ORDER BY id_glosario DESC";
+        $consulta = $conexion->prepare($sql);
+        $consulta->execute();
+
+        while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+            echo '<div class="col">
+                    <div class="card border-0 shadow-sm h-100 animate__animated animate__fadeInLeft">
+                        <div class="card-body">
+                            <h5 class="card-title">';
+            echo $fila['icono'];
+            echo $fila['titulo'];
+            echo '</h5> ';
+            echo $fila['concepto'];
+            echo '</div>
+                    </div>
+                </div>
+            ';
         }
     }
 }
