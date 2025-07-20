@@ -26,7 +26,18 @@ if (isset($_REQUEST['opcion'])) {
                 ]);
             }
             break;
+        case 2:
+            echo $glo->modificarGlosario(
+                $_REQUEST['id_glosario'],
+                $_REQUEST['iconoModificado'],
+                $_REQUEST['tituloModificado'],
+                $_REQUEST['descripcionModificado']
+            );
 
+            break;
+        case 3:
+            $glo->eliminarGlosario($_REQUEST['id_glosario']);
+            break;
         default:
             echo json_encode(['opcion' => 0, 'mensaje' => 'Opción no válida']);
             break;

@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar a Glosario</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Término</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
@@ -37,13 +37,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modificarModalLabel">Modificar término</h1>
+                <h1 class="modal-title fs-5" id="modificarModalLabel">Modificar Término</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <div id="mensajeModificados"></div>
+                <div id="mensajeModificar"></div>
                 <form class="row g-3" id="formModificarGlosario">
-                    <input type="hidden" name="id" id="idGlosario">
+                    <input type="hidden" name="id_glosario" id="idGlosario">
                     <input type="hidden" name="opcion" value="2">
                     <div class="col-12">
                         <label class="form-label" for="iconoModificado">Ícono</label>
@@ -61,7 +61,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" onclick="enviarDatosModificados()" class="btn btn-primary">Modificar</button>
+                <button type="button" onclick="enviarDatosModificados(event)" class="btn btn-primary">Modificar</button>
             </div>
         </div>
     </div>

@@ -81,15 +81,13 @@ function enviarDatosModificados(event) {
     $.ajax({
         type: "POST",
         url: "../../Controlador/glosarioCtrl.php",
-        data: datos + "&opcion=2",
-        success: function (response) {
-            var data = JSON.parse(response);
-            if (data.opcion === 1) {
-                mensajeContenedor.innerHTML = '<div class="alert alert-success">' + data.mensaje + '</div>';
-                // Recargar página o tabla
-                location.reload();
+        data: datos,
+        dataType: "json",
+        success: function (respuesta) {
+            if (respuesta.opcion == 1) {
+                window.location.href = "glosario.php?estado=modificado";
             } else {
-                mensajeContenedor.innerHTML = '<div class="alert alert-danger">' + data.mensaje + '</div>';
+                mensajeContenedor.innerHTML = '<div class="alert alert-danger">' + respuesta.mensaje + '</div>';
             }
         },
         error: function () {

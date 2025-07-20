@@ -48,6 +48,31 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                         </button>
                         <div class="row">
                             <div class="col-sm-12">
+                                <?php if (isset($_GET['estado'])): ?>
+                                    <?php
+                                    $mensajes = [
+                                        'agregado' => 'Agregado correctamente al glosario.',
+                                        'modificado' => 'Se actualizó correctamente en el glosario.',
+                                        'eliminado' => 'Eliminado correctamente del glosario.',
+                                        'error' => 'Ocurrió un error, inténtalo de nuevo.',
+                                    ];
+
+                                    $clases = [
+                                        'agregado' => 'success',
+                                        'modificado' => 'primary',
+                                        'eliminado' => 'danger',
+                                        'error' => 'warning',
+                                    ];
+
+                                    $estado = isset($_GET['estado']) ? $_GET['estado'] : null;
+                                    ?>
+                                    <?php if (isset($mensajes[$estado]) && isset($clases[$estado])): ?>
+                                        <div class="alert alert-<?php echo htmlspecialchars($clases[$estado]); ?> alert-dismissible fade show" role="alert">
+                                            <?php echo htmlspecialchars($mensajes[$estado]); ?>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                                 <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top:20px center;">
                                     <thead>
                                         <tr>
