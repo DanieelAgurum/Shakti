@@ -1,94 +1,161 @@
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+import { ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 import { db } from "/Shakti/peticiones(js)/firebaseInit.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const usuario = window.usuarioActual;
-
-  if (!usuario?.id) {
-    console.error("Usuario no definido o sin ID");
-    return;
-  }
-  if (!db) {
-    console.error("Firebase DB no inicializado");
+  if (!usuario?.id || !db) {
+    console.error("Usuario no definido o Firebase no inicializado");
     return;
   }
 
   const notiContenedor = document.getElementById("listaNotificaciones");
   const contador = document.getElementById("contadorNotificaciones");
+  const modal = document.getElementById("modalNotificaciones");
 
-  if (!notiContenedor || !contador) {
-    console.error("No se encontró el contenedor o contador de notificaciones");
+  if (!notiContenedor || !contador || !modal) {
+    console.error("Faltan elementos del DOM");
     return;
   }
 
-  let mensajesNuevos = 0;
-  let toastActual = null;  // Referencia al toast actual para ocultarlo antes de mostrar otro
+  let toastActual = null;
+  const mensajesMostrados = new Set();
+  const mensajesNoLeidos = [];
+  let modalAbierto = false;
+  let yaInicializado = false;
+
+  modal.addEventListener('show.bs.modal', () => {
+    modalAbierto = true;
+
+    mensajesNoLeidos.forEach(({ chatId, msgId }) => {
+      const leidoRef = ref(db, `chats/${chatId}/${msgId}/leidoPor/${usuario.id}`);
+      set(leidoRef, true);
+    });
+
+    mensajesNoLeidos.length = 0;
+    contador.style.display = "none";
+
+    if (notiContenedor.children.length === 0) {
+      notiContenedor.innerHTML = '<li class="dropdown-item text-muted">No tienes notificaciones.</li>';
+    }
+  });
+
+  modal.addEventListener('hidden.bs.modal', () => {
+    modalAbierto = false;
+  });
+
+  // Función para obtener datos de usuarios desde PHP (similar a la que tienes en chat)
+  async function obtenerDatosUsuarios(ids) {
+    if (!ids || ids.length === 0) return {};
+    try {
+      const res = await fetch('/Shakti/api/usuariasPorIds.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids })
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const text = await res.text();
+      if (!text) return {};
+
+      // El endpoint devuelve líneas con: id|nombre|descripcion|foto
+      const mapUsuarios = {};
+      text.trim().split('\n').forEach(line => {
+        const partes = line.split('|');
+        if (partes.length >= 2) {
+          const id = partes[0].trim();
+          const nombre = partes[1].trim();
+          mapUsuarios[id] = nombre;
+        }
+      });
+      return mapUsuarios;
+    } catch (error) {
+      console.error("Error al obtener datos de usuarios:", error);
+      return {};
+    }
+  }
 
   const chatsRef = ref(db, 'chats');
-  onValue(chatsRef, (snapshot) => {
-    notiContenedor.innerHTML = "";
-    mensajesNuevos = 0;
-    let ultimaNotificacion = null;
+  onValue(chatsRef, async (snapshot) => {
+    if (!snapshot.exists()) return;
 
-    snapshot.forEach((chatSnap) => {
+    let mensajesNuevos = 0;
+    const nuevosMensajes = [];
+    const remitentesIdsSet = new Set();
+
+    snapshot.forEach(chatSnap => {
       const chatId = chatSnap.key;
       if (!chatId.includes(usuario.id)) return;
 
-      chatSnap.forEach((msgSnap) => {
+      chatSnap.forEach(msgSnap => {
         const mensaje = msgSnap.val();
+        const msgId = msgSnap.key;
 
-        if (mensaje.remitenteId !== usuario.id) {
+        const yaLeido = mensaje.leidoPor && mensaje.leidoPor[usuario.id];
+        const esParaUsuario = mensaje.remitenteId !== usuario.id;
+
+        if (esParaUsuario && !yaLeido && !mensajesMostrados.has(msgId)) {
+          mensajesMostrados.add(msgId);
           mensajesNuevos++;
-          ultimaNotificacion = mensaje;
+          mensajesNoLeidos.push({ chatId, msgId });
+          remitentesIdsSet.add(mensaje.remitenteId);
 
-          // Crear la notificación en el modal
-          const li = document.createElement("li");
-          li.className = "dropdown-item";
-          li.textContent = `📩 Nuevo mensaje: "${mensaje.texto}"`;
-          notiContenedor.appendChild(li);
-
-          // Quitar esta notificación del modal después de 5 minutos
-          setTimeout(() => {
-            if (li.parentNode) {
-              li.parentNode.removeChild(li);
-
-              // Si no quedan notificaciones, mostrar mensaje por defecto
-              if (notiContenedor.children.length === 0) {
-                notiContenedor.innerHTML = '<li class="dropdown-item text-muted">No tienes notificaciones.</li>';
-                contador.style.display = "none";
-              }
-            }
-          }, 5 * 60 * 1000); // 5 minutos
+          // Guardamos datos básicos para luego agregar nombre real
+          nuevosMensajes.push({
+            texto: mensaje.texto,
+            remitenteId: mensaje.remitenteId,
+            nombre: null // Aquí pondremos el nombre luego
+          });
         }
       });
     });
 
-    // Mostrar u ocultar contador
     if (mensajesNuevos > 0) {
       contador.style.display = "inline-block";
       contador.textContent = mensajesNuevos;
-    } else {
+
+      // Pedimos nombres reales de los remitentes
+      const mapaNombres = await obtenerDatosUsuarios(Array.from(remitentesIdsSet));
+
+      notiContenedor.innerHTML = "";
+      nuevosMensajes.forEach(msg => {
+        const nombreReal = mapaNombres[msg.remitenteId] || "Desconocido";
+        msg.nombre = nombreReal;
+
+        const li = document.createElement("li");
+        li.className = "dropdown-item";
+        li.textContent = `📩 ${nombreReal} te escribió: "${msg.texto}"`;
+        notiContenedor.appendChild(li);
+
+        setTimeout(() => {
+          if (li.parentNode) li.remove();
+          if (notiContenedor.children.length === 0) {
+            notiContenedor.innerHTML = '<li class="dropdown-item text-muted">No tienes notificaciones.</li>';
+            contador.style.display = "none";
+          }
+        }, 60 * 1000);
+      });
+
+      if (yaInicializado && !modalAbierto) {
+        const { texto, nombre } = nuevosMensajes[nuevosMensajes.length - 1];
+        if (toastActual) toastActual.hideToast();
+
+        toastActual = Toastify({
+          text: `📩 ${nombre} te escribió: "${texto}"`,
+          duration: 60 * 1000,
+          close: true,
+          gravity: "top",
+          position: "right",
+          style: { background: "#a442b2" },
+          stopOnFocus: true,
+        });
+        toastActual.showToast();
+      }
+    }
+
+    if (notiContenedor.children.length === 0 && mensajesNuevos === 0) {
       contador.style.display = "none";
       notiContenedor.innerHTML = '<li class="dropdown-item text-muted">No tienes notificaciones.</li>';
     }
 
-    // Mostrar solo un toast con la última notificación
-    if (ultimaNotificacion) {
-      if (toastActual) {
-        toastActual.hideToast();
-        toastActual = null;
-      }
-
-      toastActual = Toastify({
-        text: `📩 Nuevo mensaje: "${ultimaNotificacion.texto}"`,
-        duration: 300000, // 5 minutos
-        close: true,
-        gravity: "top",
-        position: "right",
-        style: { background: "#4caf50" },
-        stopOnFocus: true,
-      });
-      toastActual.showToast();
-    }
+    yaInicializado = true;
   });
 });

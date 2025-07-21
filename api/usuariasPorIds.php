@@ -33,14 +33,16 @@ try {
         $nombre = limpiar($row['nombre']);
         $descripcion = limpiar($row['descripcion']);
 
-        // Ruta para ver la foto desde ver_foto.php
-        $fotoUrl = "/Shakti/controlador/ver_foto.php?id={$id}";
+        // Ajusta esta ruta según corresponda
+        $fotoUrl = "/Shakti/verFoto.php?id={$id}";
 
         echo "{$id}|{$nombre}|{$descripcion}|{$fotoUrl}\n";
     }
 } catch (Exception $e) {
     http_response_code(500);
-    echo "ERROR: " . $e->getMessage();
+    // Mejor no enviar mensaje con ERROR al cliente JS, solo vacío o un log interno
+    error_log("Error en usuariasPorIds.php: " . $e->getMessage());
+    echo "";
 }
 
 function limpiar($cadena) {

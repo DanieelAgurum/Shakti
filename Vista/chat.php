@@ -27,26 +27,85 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
   <link rel="stylesheet" href="/Shakti/css/chat.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    .chat-container {
+      border: 2px solid #a442b2;
+      border-radius: 12px;
+      background-color: #fff;
+      padding: 1rem;
+      box-shadow: 0 0 8px rgba(164, 66, 178, 0.1);
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #mensajes {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+
+    #form-chat {
+      display: none;
+    }
+
+    .card-chat-item {
+      border: 1px solid #a442b2;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .card-chat-item.active {
+      border: 2px solid #a442b2;
+      box-shadow: 0 0 5px rgba(164, 66, 178, 0.4);
+    }
+
+    .perfil-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #a442b2;
+    }
+
+    @media (max-width: 768px) {
+      #lista-especialistas,
+      #chat-area {
+        margin-bottom: 2rem;
+      }
+
+      .perfil-img {
+        width: 60px;
+        height: 60px;
+      }
+
+      .chat-container {
+        height: 60vh;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <div class="container-fluid mt-4">
-    <div class="row">
-      <div class="col-md-4" id="lista-especialistas">
+    <div class="row flex-column flex-md-row">
+      <!-- Lista de especialistas/usuarias -->
+      <div class="col-12 col-md-4 mb-3" id="lista-especialistas">
         <h5><?= htmlspecialchars($tituloLista) ?></h5>
 
         <?php if ($rolUsuario != 2 && !empty($usuariosChat)) : ?>
           <?php foreach ($usuariosChat as $usuario) : ?>
-            <div class="card mb-3 card-chat-item" onclick="seleccionarUsuario(<?= (int)$usuario['id'] ?>)">
+            <div class="card mb-3 card-chat-item" 
+                 id="usuario-<?= (int)$usuario['id'] ?>" 
+                 onclick="seleccionarUsuario(<?= (int)$usuario['id'] ?>)">
               <div class="row g-0 h-100 align-items-center">
                 <div class="col-4 d-flex align-items-center justify-content-center">
                   <img 
                     src="/Shakti/verFoto.php?id=<?= (int)$usuario['id'] ?>" 
-                    class="img-thumbnail perfil-img rounded-circle"
+                    class="img-thumbnail perfil-img"
                     alt="<?= htmlspecialchars($usuario['nombre']) ?>" 
                     onerror="this.onerror=null;this.src='/Shakti/assets/img/default.png';"
-                    style="width: 80px; height: 80px; object-fit: cover;"
                   />
                 </div>
                 <div class="col-8">
@@ -64,41 +123,58 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
         <?php endif; ?>
       </div>
 
-      <div class="col-md-8" id="chat-area">
+      <!-- Área de chat -->
+      <div class="col-12 col-md-8" id="chat-area">
         <h5>Chat</h5>
-        <div id="mensajes" style="height: 70vh; overflow-y: auto; border: 1px solid #ddd; padding: 1rem; border-radius: 8px; background: #f8f9fa;">
-          <p class="text-muted">Selecciona un usuario para empezar a chatear.</p>
-        </div>
-        <form id="form-chat" class="mt-3" style="display:none;">
-          <div class="input-group">
-            <input type="text" id="mensaje-input" class="form-control" placeholder="Escribe un mensaje..." autocomplete="off" />
-            <button type="submit" class="btn btn-primary">Enviar</button>
+        <div class="chat-container">
+          <!-- Mensajes -->
+          <div id="mensajes">
+            <p class="text-muted">Selecciona un usuario para empezar a chatear.</p>
           </div>
-        </form>
+
+          <!-- Formulario de mensaje -->
+          <form id="form-chat">
+            <div class="input-group">
+              <input type="text" id="mensaje-input" class="form-control" placeholder="Escribe un mensaje..." autocomplete="off" />
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Scripts -->
   <script>
     window.usuarioActual = {
       id: "<?= (int)$_SESSION['id'] ?>",
       rol: "<?= (int)$_SESSION['id_rol'] ?>",
       nombre: "<?= addslashes($_SESSION['nombre']) ?>"
     };
-  </script>
 
-  <!-- Importa la inicialización de Firebase -->
-  <script type="module" src="/shakti/peticiones(js)/firebaseInit.js"></script>
-
-  <!-- Importa el script del chat que usa firebaseInit.js -->
-  <script type="module" src="/Shakti/assets/chat.js"></script>
-
-  <script>
     function seleccionarUsuario(id) {
       if (window.seleccionarEspecialista) {
         window.seleccionarEspecialista(id);
       }
+
+      // Remover clase activa de otros usuarios
+      document.querySelectorAll('.card-chat-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Agregar clase activa al seleccionado
+      const seleccionado = document.getElementById(`usuario-${id}`);
+      if (seleccionado) {
+        seleccionado.classList.add('active');
+      }
+
+      // Mostrar formulario y limpiar el área de mensajes
+      document.getElementById('form-chat').style.display = 'block';
+      document.getElementById('mensajes').innerHTML = "<p class='text-muted'>Cargando mensajes...</p>";
     }
   </script>
+
+  <script type="module" src="/shakti/peticiones(js)/firebaseInit.js"></script>
+  <script type="module" src="/Shakti/assets/chat.js"></script>
 </body>
 </html>

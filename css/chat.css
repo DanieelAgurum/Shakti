@@ -1,74 +1,54 @@
-
 .card-chat-item {
   max-width: 540px;
   cursor: pointer;
   height: 120px;
+  transition: all 0.3s ease-in-out;
 }
+
+.card-chat-item:hover,
+.card-chat-item.active {
+  border: 2px solid #a442b2;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(164, 66, 178, 0.2);
+}
+
 .perfil-img {
-  border-radius: 50%;
+  border-radius: 50% !important;
   width: 80px;
   height: 80px;
   object-fit: cover;
 }
+
 .lista-especialistas {
-      max-height: 80vh;
-      overflow-y: auto;
-    }
+  max-height: 80vh;
+  overflow-y: auto;
+}
 
-    .chat-area {
-      max-height: 80vh;
-      border-left: 1px solid #ddd;
-      overflow-y: auto;
-      padding: 1rem;
-    }
+.chat-area {
+  max-height: 80vh;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+  padding: 1rem;
+}
 
-    .mensaje {
-      max-width: 75%;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      margin-bottom: 0.5rem;
-      word-wrap: break-word;
-    }
+#lista-especialistas::-webkit-scrollbar {
+  width: 8px;
+}
 
-    .mensaje.usuario {
-      background-color: #ddd;
-      color: black;
-      margin-left: auto;
-    }
+#lista-especialistas::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
 
-    .mensaje.especialista {
-      background-color: #e9ecef;
-      color: black;
-      margin-right: auto;
-    }
+.chat-container {
+  border: 2px solid #a442b2;
+  border-radius: 12px;
+  background-color: #fff;
+  padding: 1rem;
+  box-shadow: 0 0 8px rgba(164, 66, 178, 0.1);
+}
 
-    #lista-especialistas::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    #lista-especialistas::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-    }
-
-    /* Estilo para las imágenes de perfil, forzando círculo */
-    .perfil-img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 50% !important;  /* Esto hace que sea circular */
-    }
-
-    .card-chat-item {
-      max-width: 540px;
-      cursor: pointer;
-      height: 120px;
-    }
-
-
-
-    /* burbujas de chat*/
-  .mensaje {
+.mensaje {
   max-width: 70%;
   margin: 8px 0;
   padding: 10px 14px;
@@ -125,4 +105,21 @@
 
 .msg-options button:hover {
   color: #6d2779;
+}
+
+@media (max-width: 768px) {
+  #lista-especialistas,
+  #chat-area {
+    margin-bottom: 2rem;
+  }
+
+  .card-chat-item {
+    height: auto;
+    flex-direction: column;
+  }
+
+  .perfil-img {
+    width: 60px;
+    height: 60px;
+  }
 }
