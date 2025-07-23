@@ -17,7 +17,6 @@
           <a href="<?= $urlBase ?>Vista/contacto.php" class="nav-link px-2 text-secondary">Contacto</a>
           <a href="<?= $urlBase ?>Vista/politicas.php" class="nav-link px-2 text-secondary">Privacidad</a>
           <a href="<?= $urlBase ?>Vista/glosario.php" class="nav-link px-2 text-secondary">Glosario</a>
-          <a href="<?= $urlBase ?>Vista/contenido.php" class="nav-link px-2 text-secondary">Contenido</a>
         </nav>
       </div>
 
