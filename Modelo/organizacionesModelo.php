@@ -9,7 +9,7 @@ class organizacionesModelo {
 
     public function getAll() {
         try {
-            $sql = "SELECT id, nombre, descripcion, imagen, estatus FROM organizaciones";
+            $sql = "SELECT id, nombre, descripcion, numero, imagen, estatus FROM organizaciones";
             $stmt = $this->db->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -21,7 +21,7 @@ class organizacionesModelo {
 
     public function getById($id) {
         try {
-            $sql = "SELECT id, nombre, descripcion, imagen, estatus FROM organizaciones WHERE id = :id";
+            $sql = "SELECT id, nombre, descripcion, numero, imagen, estatus FROM organizaciones WHERE id = :id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -32,12 +32,13 @@ class organizacionesModelo {
         }
     }
 
-    public function create($nombre, $descripcion, $imagen, $estatus = 1) {
+    public function create($nombre, $descripcion, $numero, $imagen, $estatus = 1) {
         try {
-            $sql = "INSERT INTO organizaciones (nombre, descripcion, imagen, estatus) VALUES (:nombre, :descripcion, :imagen, :estatus)";
+            $sql = "INSERT INTO organizaciones (nombre, descripcion, numero, imagen, estatus) VALUES (:nombre, :descripcion, :numero, :imagen, :estatus)";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
+            $stmt->bindParam(':numero', $numero, PDO::PARAM_STR);
             $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB);
             $stmt->bindParam(':estatus', $estatus, PDO::PARAM_INT);
             return $stmt->execute();
@@ -47,14 +48,15 @@ class organizacionesModelo {
         }
     }
 
-    public function update($id, $nombre, $descripcion, $imagen, $estatus) {
+    public function update($id, $nombre, $descripcion, $numero, $imagen, $estatus = 1) {
         try {
-            $sql = "UPDATE organizaciones SET nombre = :nombre, descripcion = :descripcion, imagen = :imagen, estatus = :estatus WHERE id = :id";
+            $sql = "UPDATE organizaciones SET nombre = :nombre, descripcion = :descripcion, numero = :numero, imagen = :imagen, estatus = :estatus WHERE id = :id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
-            $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB);
+            $stmt->bindParam(':numero', $numero, PDO::PARAM_STR);
+            $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB, $imagen ? PDO::PARAM_LOB : PDO::PARAM_NULL);
             $stmt->bindParam(':estatus', $estatus, PDO::PARAM_INT);
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -75,4 +77,3 @@ class organizacionesModelo {
         }
     }
 }
-?>
