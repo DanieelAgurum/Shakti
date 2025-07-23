@@ -5,69 +5,130 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (empty($_SESSION['correo'])) {
+if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     header("Location: {$urlBase}");
     exit;
 }
-
-require_once 'organizacionesModelo.php';
-$organizacion = new organizacionesModelo();
-$organizaciones = $organizacion->getAll();
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizaciones - Shakti</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        table {
-            background-color: #ecf0f1;
-        }
-        th, td {
-            text-align: center;
-            vertical-align: middle;
-        }
-        img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-    </style>
 </head>
-<body>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Nuestras Organizaciones</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Numero</th>
-                    <th>Imagen</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($organizaciones as $org): ?>
-                    <tr>
-                        <td><?php echo $org['nombre']; ?></td>
-                        <td><?php echo $org['descripcion']; ?></td>
-                        <td><?php echo $org['numero']; ?></td>
-                        <td>
-                            <?php if (!empty($org['imagen'])): ?>
-                                <img src="data:image/*;base64,<?php echo base64_encode($org['imagen']); ?>" alt="<?php echo $org['nombre']; ?>">
-                            <?php else: ?>
-                                <img src="https://via.placeholder.com/60" alt="Default Image">
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+
+<body class="sb-nav-fixed">
+    <?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/navbar.php';
+    ?>
+    <div id="layoutSidenav">
+        <?php
+        include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/lateral.php';
+        ?>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4 mb-5">
+                    <h1 class="mt-4"></h1>
+                    <div class="container">
+                        <h1 class="page-header text-center"> <strong> Organizaciones </strong></h1>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <?php if (isset($_GET['status'])): ?>
+                                    <?php
+                                    $mensajes = [
+                                        'eliminada' => 'La organización fue eliminada correctamente.',
+                                        'estatus_actualizado' => 'El estado de la organización fue actualizado correctamente.',
+                                        'error_activar' => 'Error al activar la organización.',
+                                        'error_eliminar' => 'Error al eliminar la organización.',
+                                        'error_estatus' => 'Error al cambiar el estado de la organización.',
+                                    ];
+                                    $clase = in_array($_GET['status'], ['activada', 'eliminada']) ? 'success' : 'danger';
+                                    ?>
+                                    <div class="alert alert-<?php echo $clase; ?> alert-dismissible fade show" role="alert">
+                                        <?php echo $mensajes[$_GET['status']]; ?>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top:20px center;">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    include_once '../../Modelo/conexion.php';
+                                    $database = new ConectarDB();
+                                    $db = $database->open();
+
+                                    try {
+                                        $sql = "SELECT id, nombre, descripcion, imagen, estatus FROM organizaciones";
+                                        foreach ($db->query($sql) as $row) {
+                                    ?>
+                                            <tr>
+                                                <td><?php echo $row['id']; ?></td>
+                                                <td>
+                                                    <?php if (!empty($row['imagen'])): ?>
+                                                        <img src="data:image/*;base64,<?php echo base64_encode($row['imagen']); ?>" width="60px" height="60px" alt="">
+                                                    <?php else: ?>
+                                                        <img src="https://cdn1.iconfinder.com/data/icons/business-1218/512/business_organization-512.png" width="60px" height="60px" alt="">
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><?php echo $row['nombre']; ?></td>
+                                                <td><?php echo $row['descripcion']; ?></td>
+                                                <?php include '../modales/perfil_organizacion.php'; ?>
+                                            </tr>
+                                    <?php
+                                        }
+                                    } catch (PDOException $e) {
+                                        echo 'Hay problemas con la conexión: ' . $e->getMessage();
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#MiAgenda').DataTable();
+        });
+    </script>
+    <script>
+        var table = $('#MiAgenda').DataTable({
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 a 0 de 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        });
+    </script>
 </body>
+
 </html>
