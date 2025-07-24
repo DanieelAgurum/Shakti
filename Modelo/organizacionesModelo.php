@@ -9,7 +9,8 @@ class organizacionesModelo {
 
     public function getAll() {
         try {
-            $sql = "SELECT id, nombre, descripcion, numero, imagen, estatus FROM organizaciones";
+            // Eliminado 'estatus' de la selección
+            $sql = "SELECT id, nombre, descripcion, numero, imagen FROM organizaciones";
             $stmt = $this->db->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -21,7 +22,8 @@ class organizacionesModelo {
 
     public function getById($id) {
         try {
-            $sql = "SELECT id, nombre, descripcion, numero, imagen, estatus FROM organizaciones WHERE id = :id";
+            // Eliminado 'estatus' de la selección
+            $sql = "SELECT id, nombre, descripcion, numero, imagen FROM organizaciones WHERE id = :id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -32,15 +34,16 @@ class organizacionesModelo {
         }
     }
 
-    public function create($nombre, $descripcion, $numero, $imagen, $estatus = 1) {
+    // Eliminado el parámetro 'estatus' del método create
+    public function create($nombre, $descripcion, $numero, $imagen) {
         try {
-            $sql = "INSERT INTO organizaciones (nombre, descripcion, numero, imagen, estatus) VALUES (:nombre, :descripcion, :numero, :imagen, :estatus)";
+            // Eliminado 'estatus' de la inserción SQL
+            $sql = "INSERT INTO organizaciones (nombre, descripcion, numero, imagen) VALUES (:nombre, :descripcion, :numero, :imagen)";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
             $stmt->bindParam(':numero', $numero, PDO::PARAM_STR);
             $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB);
-            $stmt->bindParam(':estatus', $estatus, PDO::PARAM_INT);
             return $stmt->execute();
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -48,16 +51,17 @@ class organizacionesModelo {
         }
     }
 
-    public function update($id, $nombre, $descripcion, $numero, $imagen, $estatus = 1) {
+    // Eliminado el parámetro 'estatus' del método update
+    public function update($id, $nombre, $descripcion, $numero, $imagen) {
         try {
-            $sql = "UPDATE organizaciones SET nombre = :nombre, descripcion = :descripcion, numero = :numero, imagen = :imagen, estatus = :estatus WHERE id = :id";
+            // Eliminado 'estatus' de la actualización SQL y del bindParam
+            $sql = "UPDATE organizaciones SET nombre = :nombre, descripcion = :descripcion, numero = :numero, imagen = :imagen WHERE id = :id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
             $stmt->bindParam(':numero', $numero, PDO::PARAM_STR);
-            $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB, $imagen ? PDO::PARAM_LOB : PDO::PARAM_NULL);
-            $stmt->bindParam(':estatus', $estatus, PDO::PARAM_INT);
+            $stmt->bindParam(':imagen', $imagen, PDO::PARAM_LOB); // Eliminado PDO::PARAM_NULL condicional si imagen es null
             return $stmt->execute();
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
