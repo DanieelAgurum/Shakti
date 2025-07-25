@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-07-2025 a las 03:54:43
+-- Tiempo de generación: 25-07-2025 a las 22:45:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -32,11 +32,16 @@ CREATE TABLE `organizaciones` (
   `nombre` varchar(100) NOT NULL,
   `descripcion` text NOT NULL,
   `numero` varchar(20) NOT NULL,
-  `imagen` blob DEFAULT NULL,
-  `estatus` int(11) NOT NULL DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `imagen` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `organizaciones`
+--
+
+INSERT INTO `organizaciones` (`id`, `nombre`, `descripcion`, `numero`, `imagen`) VALUES
+(2, 'Prueba 2', 'Descripcion de la prueba dos', '55754548851', NULL),
+(3, 'fdssssssss', 'dasdasdadsa', '5555555', NULL);
 
 --
 -- Índices para tablas volcadas
@@ -56,9 +61,10 @@ ALTER TABLE `organizaciones`
 -- AUTO_INCREMENT de la tabla `organizaciones`
 --
 ALTER TABLE `organizaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
