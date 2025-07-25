@@ -69,8 +69,12 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             <input type="text" class="form-control mb-2" name="titulo" placeholder="Título de tu publicación" minlength="3" required>
             <textarea class="form-control" name="contenido" rows="3" placeholder="¿Qué estás pensando?" minlength="5" required></textarea>
           </div>
-          <input type="hidden" name="guardar_publicacion" value="1" />
-          <button type="submit" class="btn btn-primary">Publicar</button>
+          <div class="form-check form-switch form-check-reverse">
+            <input class="form-check-input" name="anonima" value="1" type="checkbox" id="switchCheckReverse">
+            <label class="form-check-label" for="switchCheckReverse">Publicar de forma anónima</label>
+          </div>
+          <input type="hidden" name="guardar_publicacion" value="1"/>
+          <button type="submit" class="btn btn-outline-primary"><i class="bi bi-check2-circle"></i> Publicar</button>
         </form>
       </div>
     </div>
@@ -141,8 +145,10 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               <input type="hidden" name="id_publicacion" value="<?= $pub['id_publicacion'] ?>" />
               <input type="text" class="form-control mb-2" name="titulo" id="titulo-<?= $pub['id_publicacion'] ?>" value="<?= htmlspecialchars($pub['titulo']) ?>" minlength="3" required>
               <textarea class="form-control mb-2" name="contenido" id="contenido-<?= $pub['id_publicacion'] ?>" rows="3" minlength="5" required><?= htmlspecialchars($pub['contenido']) ?></textarea>
-              <button type="submit" class="btn btn-sm btn-success">Guardar</button>
-              <button type="button" class="btn btn-sm btn-secondary btn-cancel" data-id="<?= $pub['id_publicacion'] ?>">Cancelar</button>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-sm btn-outline-success"><i class="bi bi-check2-circle"></i> Guardar</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel" data-id="<?= $pub['id_publicacion'] ?>"><i class="bi bi-x-lg"></i> Cancelar</button>
+              </div>
             </form>
           </div>
 
@@ -153,21 +159,25 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               $yaDioLike = $likeModelo->usuarioYaDioLike($id_usuaria, $pub['id_publicacion']);
               $btnLikeClass = $yaDioLike ? 'btn-danger' : 'btn-outline-danger';
               ?>
-              <button class="btn btn-sm <?= $btnLikeClass ?>  btn-like" data-id="<?= $pub['id_publicacion'] ?>">
-                <i class="bi heart-icon <?= $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart' ?>"></i>
-                <span class="like-text">Me gusta</span>
-                <span class="badge bg-danger likes-count"><?= $likes ?></span>
-              </button>
-              <button class="btn btn-sm btn-outline-primary btn-toggle-comments" data-id="<?= $pub['id_publicacion'] ?>">
-                <i class="bi bi-chat"></i> Comentarios
-                <span class="badge bg-primary comentarios-count" id="comentarios-count-<?= $pub['id_publicacion'] ?>">
-                  <?= $totalComentarios ?>
-                </span>
-              </button>
+              <div class="d-grid gap-2 d-md-flex">
+                <button class="btn btn-sm <?= $btnLikeClass ?>  btn-like" data-id="<?= $pub['id_publicacion'] ?>">
+                  <i class="bi heart-icon <?= $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart' ?>"></i>
+                  <span class="like-text">Me gusta</span>
+                  <span class="badge bg-danger likes-count"><?= $likes ?></span>
+                </button>
+                <button class="btn btn-sm btn-outline-primary btn-toggle-comments" data-id="<?= $pub['id_publicacion'] ?>">
+                  <i class="bi bi-chat"></i> Comentarios
+                  <span class="badge bg-primary comentarios-count" id="comentarios-count-<?= $pub['id_publicacion'] ?>">
+                    <?= $totalComentarios ?>
+                  </span>
+                </button>
+              </div>
             </div>
             <div>
-              <button class="btn btn-sm btn-warning btn-toggle-edit" data-id="<?= $pub['id_publicacion'] ?>">Editar</button>
-              <a href="<?= $urlBase ?>Controlador/PublicacionControlador.php?borrar_id=<?= $pub['id_publicacion'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta publicación?');">Eliminar</a>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-sm btn-outline-success btn-toggle-edit" data-id="<?= $pub['id_publicacion'] ?>"><i class="bi bi-pencil-square"></i> Editar</button>
+                <a href="<?= $urlBase ?>Controlador/PublicacionControlador.php?borrar_id=<?= $pub['id_publicacion'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar esta publicación?');"><i class="bi bi-trash3"></i> Eliminar</a>
+              </div>
             </div>
           </div>
 
@@ -183,7 +193,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               <input type="hidden" name="id_padre" value="">
               <div class="input-group mb-2">
                 <input type="text" name="comentario" class="form-control form-control-sm" placeholder="Escribe un comentario..." required>
-                <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
+                <button type="submit" class="btn btn-sm btn-outline-primary">Enviar <i class="bi bi-arrow-right-circle"></i></button>
               </div>
             </form>
           </div>

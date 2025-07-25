@@ -74,10 +74,9 @@ class buscadorForoMdl
         $this->conectarBD();
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
 
-        $sql = "SELECT p.titulo, p.contenido, p.id_publicacion, u.id, u.nickname, u.foto, u.id_rol 
+        $sql = "SELECT p.titulo, p.contenido, p.anonima, p.id_publicacion, u.id, u.nickname, u.foto
             FROM publicacion p 
             JOIN usuarias u ON p.id_usuarias = u.id 
-            WHERE u.id_rol = 1
             LIMIT $limit OFFSET $offset";
 
         $consulta = mysqli_query($this->con, $sql);
@@ -98,6 +97,14 @@ class buscadorForoMdl
     {
         $idPublicacion = (int)$publicacion['id_publicacion'];
 
+        $esAnonima = isset($publicacion['anonima']) && $publicacion['anonima'] == '1';
+
+        // Nombre y foto dependiendo si es anónima
+        $nombreMostrar = $esAnonima ? 'Anónima' : htmlspecialchars(ucwords(strtolower($publicacion['nickname'])));
+        $fotoMostrar = $esAnonima
+            ? 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png'
+            : (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png');
+
         // Contar likes
         $likesConsulta = mysqli_query($this->con, "SELECT COUNT(*) AS total FROM likes_publicaciones WHERE id_publicacion = $idPublicacion");
         $likes = ($likesConsulta && $row = mysqli_fetch_assoc($likesConsulta)) ? $row['total'] : 0;
@@ -112,7 +119,7 @@ class buscadorForoMdl
         $btnClass = $yaDioLike ? 'btn-danger' : 'btn-outline-danger';
         $iconClass = $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart';
 
-        // Obtener comentarios (requiere archivo de modelo Comentario)
+        // Obtener comentarios
         require_once __DIR__ . '/../modelo/comentariosModelo.php';
         $comentarioModelo = new Comentario();
         $allCom = $comentarioModelo->obtenerComentariosPorPublicacion($idPublicacion);
@@ -129,7 +136,7 @@ class buscadorForoMdl
             }
         }
 
-        // Función recursiva para renderizar comentarios y respuestas
+        // Función recursiva para comentarios
         if (!function_exists('renderComentarios')) {
             function renderComentarios($comentarios, $hijos)
             {
@@ -140,15 +147,15 @@ class buscadorForoMdl
                     $fecha = !empty($c['fecha']) ? date('d M Y H:i', strtotime($c['fecha'])) : 'Sin fecha';
 
                     echo "<div class='comentario-raiz bg-light rounded' id='comentario-$id_comentario'>
-                            <strong>{$nombre}:</strong> {$contenido}<br>
-                            <small class='text-muted'>{$fecha}</small>
-                            <button class='btn btn-sm btn-link btn-responder likes-count' data-id='{$id_comentario}'>Responder</button>";
+                        <strong>{$nombre}:</strong> {$contenido}<br>
+                        <small class='text-muted'>{$fecha}</small>
+                        <button class='btn btn-sm btn-link btn-responder likes-count' data-id='{$id_comentario}'>Responder</button>";
 
                     if (isset($hijos[$id_comentario])) {
                         $totalHijos = count($hijos[$id_comentario]);
                         echo "<button class='btn btn-sm btn-outline-secondary ver-respuestas' data-id='{$id_comentario}'>
-                                Ver respuestas ({$totalHijos})
-                              </button>";
+                            Ver respuestas ({$totalHijos})
+                          </button>";
                         echo "<div class='p-2 d-none' id='respuestas-{$id_comentario}'>";
                         renderComentarios($hijos[$id_comentario], $hijos);
                         echo "</div>";
@@ -162,64 +169,65 @@ class buscadorForoMdl
 
         // Mostrar la publicación
         echo '<article class="instagram-post animate__animated animate__fadeInLeft">
-            <header class="post-header">
-                <div class="profile-info">
-                    <img src="' . (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png') . '" alt="Foto" class="profile-pic" />
-                    <div class="profile-details">
-                        <span class="username">' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '</span>
-                        <p class="post-title text-end small mb-2">' . htmlspecialchars($publicacion['titulo']) . '</p>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-link p-0 shadow-none btn-like" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-three-dots-vertical text-black fs-5"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-start">
-                        <li>
-                            <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" 
-                               onclick="rellenarDatosReporte(\'' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '\', \'' . $idPublicacion . '\')">
-                               Reportar
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </header>
-
-            <div class="post-content">
-                <p class="ps-3 pt-2">' . nl2br(htmlspecialchars($publicacion['contenido'])) . '</p>
-            </div>
-
-            <div class="post-actions">
-                <div class="d-flex gap-2">
-                    <button class="btn btn-sm ' . $btnClass . ' btn-like" data-id="' . $idPublicacion . '">
-                        <i class="bi ' . $iconClass . ' heart-icon"></i> Me gusta
-                        <span class="badge bg-danger likes-count">' . $likes . '</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-primary btn-toggle-comments" data-id="' . $idPublicacion . '">
-                        <i class="bi bi-chat"></i> Comentarios
-                        <span class="badge bg-primary comentarios-count" id="comentarios-count-' . $idPublicacion . '">' . $comentariosTotales . '</span>
-                    </button>
+        <header class="post-header">
+            <div class="profile-info">
+                <img src="' . $fotoMostrar . '" alt="Foto" class="profile-pic" />
+                <div class="profile-details">
+                    <span class="username">' . $nombreMostrar . '</span>
+                    <p class="post-title text-end small mb-2">' . htmlspecialchars($publicacion['titulo']) . '</p>
                 </div>
             </div>
+            <div class="dropdown">
+                <button class="btn btn-link p-0 shadow-none btn-like" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical text-black fs-5"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-start">
+                    <li>
+                        <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" 
+                           onclick="rellenarDatosReporte(\'' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))). '\', \'' . $idPublicacion . '\')">
+                           Reportar
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </header>
 
-            <div class="comments-section mt-3 d-none" id="comments-' . $idPublicacion . '">
-                <div class="existing-comments mb-3">';
+        <div class="post-content">
+            <p class="ps-3 pt-2">' . nl2br(htmlspecialchars($publicacion['contenido'])) . '</p>
+        </div>
+
+        <div class="post-actions">
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm ' . $btnClass . ' btn-like" data-id="' . $idPublicacion . '">
+                    <i class="bi ' . $iconClass . ' heart-icon"></i> Me gusta
+                    <span class="badge bg-danger likes-count">' . $likes . '</span>
+                </button>
+                <button class="btn btn-sm btn-outline-primary btn-toggle-comments" data-id="' . $idPublicacion . '">
+                    <i class="bi bi-chat"></i> Comentarios
+                    <span class="badge bg-primary comentarios-count" id="comentarios-count-' . $idPublicacion . '">' . $comentariosTotales . '</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="comments-section mt-3 d-none" id="comments-' . $idPublicacion . '">
+            <div class="existing-comments mb-3">';
         if ($allCom) renderComentarios($comRaiz, $comHijos);
         else echo "<p class='text-muted'>Aún no hay comentarios.</p>";
         echo '</div>
 
-                <form class="comment-form" data-id-publicacion="' . $idPublicacion . '">
-                    <div class="input-group">
-                        <input type="text" name="comentario" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
-                        <input type="hidden" name="opcion" value="1">
-                        <input type="hidden" name="id_publicacion" value="' . $idPublicacion . '">
-                        <input type="hidden" name="id_padre" value="">
-                        <button class="btn btn-sm btn-primary" type="submit">Enviar</button>
-                    </div>
-                </form>
-            </div>
-        </article>';
+            <form class="comment-form" data-id-publicacion="' . $idPublicacion . '">
+                <div class="input-group">
+                    <input type="text" name="comentario" class="form-control form-control-sm" placeholder="Escribe un comentario..." required />
+                    <input type="hidden" name="opcion" value="1">
+                    <input type="hidden" name="id_publicacion" value="' . $idPublicacion . '">
+                    <input type="hidden" name="id_padre" value="">
+                    <button class="btn btn-sm btn-outline-primary" type="submit">Enviar <i class="bi bi-arrow-right-circle"></i></button>
+                </div>
+            </form>
+        </div>
+    </article>';
     }
+
 
     // Cerrar conexión (opcional)
     public function cerrarBD()

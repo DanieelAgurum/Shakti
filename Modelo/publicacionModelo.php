@@ -22,15 +22,16 @@ class PublicacionModelo
         }
     }
 
-    public function guardar(string $titulo, string $contenido, int $id_usuaria): bool
+    public function guardar(string $titulo, string $contenido, int $anonima, int $id_usuaria): bool
     {
         $this->conectar();
         try {
-            $sql = "INSERT INTO publicacion (titulo, contenido, fecha_publicacion, id_usuarias)
-                    VALUES (:titulo, :contenido, NOW(), :id_usuaria)";
+            $sql = "INSERT INTO publicacion (titulo, contenido, fecha_publicacion, anonima, id_usuarias)
+                    VALUES (:titulo, :contenido, NOW(), :anonima, :id_usuaria)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':titulo', $titulo);
             $stmt->bindParam(':contenido', $contenido);
+            $stmt->bindParam(':anonima', $anonima);
             $stmt->bindParam(':id_usuaria', $id_usuaria);
             return $stmt->execute();
         } catch (PDOException $e) {
