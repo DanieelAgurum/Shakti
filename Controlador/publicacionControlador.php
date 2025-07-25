@@ -21,13 +21,15 @@ if ($requiereSesion && !$id_usuaria) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion'])) {
     $titulo = trim($_POST['titulo'] ?? '');
     $contenido = trim($_POST['contenido'] ?? '');
+    $anonima = isset($_POST['anonima']) ? '1' : '0';
+    
 
     if ($contenido === '' || strlen($contenido) < 5) {
         $_SESSION['mensaje'] = "El contenido no puede estar vacío o tener menos de 5 caracteres.";
     } elseif (strlen($titulo) < 3) {
         $_SESSION['mensaje'] = "El título debe tener al menos 3 caracteres.";
     } else {
-        $guardado = $publicacionModelo->guardar($titulo, $contenido, $id_usuaria);
+        $guardado = $publicacionModelo->guardar($titulo, $contenido, $anonima, $id_usuaria);
         $_SESSION['mensaje'] = $guardado ? "Publicación guardada con éxito." : "Error al guardar la publicación.";
     }
 
