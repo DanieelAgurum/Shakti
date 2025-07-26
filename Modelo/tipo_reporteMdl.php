@@ -257,7 +257,7 @@ class TipoReporteMdl
                     $nombreTipo = "Post";
                     break;
                 case 4:
-                    $nombreTipo = "Todas";
+                    $nombreTipo = "Comentario";
                     break;
                 default:
                     $nombreTipo = "Indefinido";
