@@ -22,6 +22,7 @@
                             <option value="1">Contenido</option>
                             <option value="2">Usuario</option>
                             <option value="3">Posts</option>
+                            <option value="4">Comentarios</option>
                         </select>
                     </div>
                 </form>
@@ -57,8 +58,9 @@
                         <select class="form-select" id="tipoModificado" name="tipoModificado">
                             <option selected disabled>Elige una opción</option>
                             <option value="1">Contenido</option>
-                            <option value="2">Usuario</option>
+                            <option value="2">Usuaria</option>
                             <option value="3">Posts</option>
+                            <option value="4">Comentarios</option>
                         </select>
                     </div>
                 </form>
