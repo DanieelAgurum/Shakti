@@ -148,31 +148,31 @@
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Identificación oficial con fotografía</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" name="id_oficial" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="id_oficial" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Título profesional:</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" name="documento1" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="documento1" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label">Cédula profesional o matrícula:</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" name="documento2" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="documento2" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label">Certificados de diplomados o posgrados:</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" name="documento3" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="documento3" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label">Constancias de práctica o experiencia laboral:</label>
                         <div class="input-group">
-                            <input type="file" class="form-control" name="documento4" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            <input type="file" class="form-control" name="documento4" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
                         </div>
                     </div>
                     <div class="modal-footer">
