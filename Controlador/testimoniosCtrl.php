@@ -2,8 +2,10 @@
 session_start();
 
 if (!isset($_SESSION['id_usuaria'])) {
-    http_response_code(401);
-    echo json_encode(['error' => 'sin sesion']);
+    echo json_encode([
+        'status' => 'no-session',
+        'message' => 'Únete a la comunidad para darle like y comentar'
+    ]);
     exit;
 }
 
@@ -16,10 +18,22 @@ $testimonio = new Testimonios($db);
 
 switch ($_REQUEST['opcion']) {
     case 1:
-        $usuarioId = $_SESSION['id_usuaria']; 
-        $calificacion = $_REQUEST['calificacion'];
+        $usuarioId = $_SESSION['id_usuaria'];
+        $calificacion = $_REQUEST['calificacion'] ?? null;
         $opinion = $_REQUEST['opinion'] ?? '';
-        $testimonio->guardarTestimonio($usuarioId, $calificacion, $opinion);
+
+        if (!is_numeric($calificacion) || $calificacion < 1 || $calificacion > 5 || empty(trim($opinion))) {
+            echo json_encode(['status' => 'error', 'message' => 'Datos inválidos.']);
+            exit;
+        }
+
+        $resultado = $testimonio->guardarTestimonio($usuarioId, $calificacion, $opinion);
+
+        if ($resultado) {
+            echo json_encode(['status' => 'success', 'message' => 'Testimonio guardado correctamente']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'No se pudo guardar el testimonio']);
+        }
         break;
 
     case 2:

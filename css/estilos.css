@@ -589,3 +589,186 @@ small.error {
   background-color: #ccc;
   border-radius: 10px;
 }
+
+.square-button {
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 0;
+  font-size: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.square-button:hover {
+  background-color: #b0b0b0ff;
+  ;
+}
+
+@media (max-width: 576px) {
+  .animacion {
+    animation: none !important;
+  }
+}
+
+.opiniones {
+  background: linear-gradient(145deg, #f3f4f6, #ffffff);
+  border-radius: 40px;
+  transition: transform 0.3s ease;
+}
+
+.quote-icon {
+  font-size: 4rem;
+  color: #4b0082;
+  opacity: 0.2;
+}
+
+.fotoOpinion {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.carousel {
+  background-color: transparent;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 40px;
+  height: 40px;
+  background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.carousel-control-prev {
+  left: -20px;
+}
+
+.carousel-control-next {
+  right: -20px;
+}
+
+.carousel-indicators {
+  bottom: -50px;
+}
+
+.carousel-indicators button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #000000ff;
+  opacity: 0.5;
+}
+
+.carousel-indicators .active {
+  opacity: 1;
+}
+
+div.stars {
+  display: inline-block;
+}
+
+input.star {
+  display: none;
+}
+
+label.star {
+  float: right;
+  padding: 10px;
+  font-size: 16px;
+  color: #4A148C;
+  transition: all .2s;
+}
+
+input.star:checked~label.star:before {
+  content: '\f005';
+  color: #FD4;
+  transition: all .25s;
+}
+
+input.star-5:checked~label.star:before {
+  color: #FE7;
+  text-shadow: 0 0 20px #952;
+}
+
+input.star-1:checked~label.star:before {
+  color: #F62;
+}
+
+label.star:hover {
+  transform: rotate(-15deg) scale(1.3);
+}
+
+label.star:before {
+  content: '\f006';
+  font-family: FontAwesome;
+}
+
+.custom-rating {
+  background: linear-gradient(135deg, #fff9c4, #ffe082);
+  /* amarillo suave */
+  color: #5d4037;
+  /* café oscuro para buen contraste */
+  padding: 0.5rem 1.2rem;
+  border: 2px solid #ffca28;
+  /* borde dorado */
+  border-radius: 30px;
+  font-weight: 600;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.custom-rating i {
+  color: #fbc02d;
+  font-size: 1.2rem;
+}
+
+.rating-container {
+  border: solid #4b0082;
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.rating-title {
+  color: #2d3436;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.rating-feedback {
+  margin-top: 1.5rem;
+  color: #636e72;
+}
+
+.submit-rating {
+  background: linear-gradient(145deg, #f7b731, #f0932b);
+  border: none;
+  padding: 10px 25px;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.submit-rating:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(247, 183, 49, 0.4);
+}
+
+.rating-emoji {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
