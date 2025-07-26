@@ -76,7 +76,7 @@ $testimonios = $testimonio->obtenerTestimonios();
       <p class="lead">Tu bienestar es primero</p>
       <div class="hero-buttons ">
         <a href="#" class="btn btn-primary me-2">Más contenido....</a>
-        <a href="<?= $urlBase ?>Vista/admin/organizaciones.php" class="btn btn-outline-secondary">Organizaciones</a>
+        <a href="<?= $urlBase ?>Vista/organizacionVista.php" class="btn btn-outline-secondary">Organizaciones</a>
       </div>
     <?php endif; ?>
   </main>
@@ -275,7 +275,7 @@ $testimonios = $testimonio->obtenerTestimonios();
   </div>
 
   <script src="peticiones(js)/testimonios.js"></script>
-  
+
   <?php
   include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php';
   ?>
