@@ -188,7 +188,6 @@ $testimonios = $testimonio->obtenerTestimonios();
     </div>
   </section>
 
-
   <!-- Testimonios -->
   <div class="w-75">
     <div class="container py-5">
