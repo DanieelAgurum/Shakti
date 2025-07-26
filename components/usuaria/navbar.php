@@ -67,6 +67,9 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
             ?>">Libre y Segura</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="<?= $urlBase ?>Vista/organizacionVista.php">Organizaciones</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a>
           </li>
           <li class="nav-item">

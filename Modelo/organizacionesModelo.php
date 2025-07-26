@@ -180,12 +180,18 @@ class organizacionesModelo {
             $nombre = addslashes($row['nombre']);
             $descripcion = addslashes($row['descripcion']);
             $numero = addslashes($row['numero']);
+            $imagen = !empty($row['imagen']) ? base64_encode($row['imagen']) : null;
 
             echo '<tr>';
             echo '<td>' . htmlspecialchars($num, ENT_QUOTES, 'UTF-8') . '</td>';
             echo '<td>' . htmlspecialchars($row['nombre'], ENT_QUOTES, 'UTF-8') . '</td>';
             echo '<td>' . htmlspecialchars($row['descripcion'], ENT_QUOTES, 'UTF-8') . '</td>';
             echo '<td>' . htmlspecialchars($row['numero'], ENT_QUOTES, 'UTF-8') . '</td>';
+            if ($imagen) {
+                echo '<td><img src="data:image/jpeg;base64,' . $imagen . '" alt="Imagen" style="width: 100px; height: auto;"></td>';
+            } else {
+                echo '<td>No disponible</td>';
+            }
             echo '<td class="text-center">';
             echo '<button type="button" onclick="modificarDatos(' . $id . ', \'' . $nombre . '\', \'' . $descripcion . '\', \'' . $numero . '\')" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarModal">';
             echo '<i class="fa-solid fa-pen"></i> Editar';
