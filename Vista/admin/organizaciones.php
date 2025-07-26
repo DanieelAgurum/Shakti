@@ -72,7 +72,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                             <th>Nombre</th>
                                             <th>Descripción</th>
                                             <th>Numero</th>
-                                            <!-- <th>Imagen</th> -->
+                                            <th>Imagen</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
