@@ -33,7 +33,7 @@ try {
           <div class="col">
             <div class="card h-100 shadow-sm">
                <?php if (!empty($item['imagen'])): ?>
-                <img src="data:image/jpeg;base64,<?= base64_encode($item['imagen']) ?>" class="card-img-top" alt="Imagen" style="height: 300px; object-fit: cover;">
+                <img src="data:image/jpg;base64,<?= base64_encode($item['imagen']) ?>" class="card-img-top" alt="Imagen" style="height: 300px; object-fit: cover;">
               <?php endif; ?>
               
               <div class="card-body">

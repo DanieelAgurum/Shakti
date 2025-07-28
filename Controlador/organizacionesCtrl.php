@@ -8,11 +8,10 @@ $preg->conectarBD();
 if (isset($_REQUEST['opcion'])) {
     switch ($_REQUEST['opcion']) {
         case 1:
-            $preg->inicializar($_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero'], $imagen = !empty($_FILES['imagen']['tmp_name']) ? file_get_contents($_FILES['imagen']['tmp_name']) : null);
+            $preg->inicializar($_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero'], $_FILES['imagen']);
             $resultado = $preg->agregarOrganizacion();
             echo $resultado;
             break;
-
         case 2:
             $resultado = $preg->modificarOrganizacion($_REQUEST['id'], $_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero']);
             echo $resultado;
