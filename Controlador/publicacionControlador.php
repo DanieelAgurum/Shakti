@@ -4,12 +4,12 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/NotificacionesModelo.php';
 
 $publicacionModelo = new PublicacionModelo();
 $id_usuaria = $_SESSION['id_usuaria'] ?? null;
 
-// ⚠️ Solo redirigimos si intenta guardar, editar o eliminar sin sesión
-$requiereSesion = ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['guardar_publicacion']) || isset($_POST['editar_publicacion']))) || isset($_GET['borrar_id']);
+$requiereSesion = ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['guardar_publicacion']) || isset($_POST['editar_publicacion']))) || isset($_GET['borrar_id']) || isset($_GET['leida_id']);
 
 if ($requiereSesion && !$id_usuaria) {
     $_SESSION['mensaje'] = "Debes iniciar sesión para realizar esta acción.";
@@ -22,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion']
     $titulo = trim($_POST['titulo'] ?? '');
     $contenido = trim($_POST['contenido'] ?? '');
     $anonima = isset($_POST['anonima']) ? '1' : '0';
-    
 
     if ($contenido === '' || strlen($contenido) < 5) {
         $_SESSION['mensaje'] = "El contenido no puede estar vacío o tener menos de 5 caracteres.";
@@ -30,9 +29,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion']
         $_SESSION['mensaje'] = "El título debe tener al menos 3 caracteres.";
     } else {
         $guardado = $publicacionModelo->guardar($titulo, $contenido, $anonima, $id_usuaria);
-        $_SESSION['mensaje'] = $guardado ? "Publicación guardada con éxito." : "Error al guardar la publicación.";
+
+        if ($guardado) {
+            // 🔔 Crear notificaciones para otras usuarias
+            Notificacion::crearDesdePublicacion($id_usuaria);
+            $_SESSION['mensaje'] = "Publicación guardada con éxito.";
+        } else {
+            $_SESSION['mensaje'] = "Error al guardar la publicación.";
+        }
     }
 
+    header("Location: ../Vista/usuaria/publicaciones.php");
+    exit;
+}
+
+// 🧹 MARCAR NOTIFICACIÓN COMO LEÍDA
+if (isset($_GET['leida_id'])) {
+    $id_notificacion = intval($_GET['leida_id']);
+    Notificacion::marcarComoLeida($id_notificacion);
     header("Location: ../Vista/usuaria/publicaciones.php");
     exit;
 }
@@ -75,11 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_publicacion'])
     exit;
 }
 
-// 🔍 CONSULTAS (AJAX o vistas)
+// 🔍 CONSULTA DE PUBLICACIONES
 if (isset($_GET['buscador'])) {
     $buscar = $_GET['buscador'];
     $publicacionModelo->inicializar($buscar);
-    $publicacionModelo->buscar($id_usuaria); // importante: pasar el id_usuaria
+    $publicacionModelo->buscar($id_usuaria);
 } else {
-    $publicacionModelo->todos($id_usuaria); // importante: pasar el id_usuaria
+    $publicacionModelo->todos($id_usuaria);
 }
