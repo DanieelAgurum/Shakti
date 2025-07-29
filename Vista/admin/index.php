@@ -75,9 +75,9 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                         </div>
                         <div class="col-xl-3 col-md-6">
                             <div class="card text-dark mb-4">
-                                <div class="card-body">Documentos</div>
+                                <div class="card-body">Documentos legales</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="libre_segura.php">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
