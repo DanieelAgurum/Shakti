@@ -17,6 +17,7 @@ if (isset($_SESSION['id_rol'])) {
       exit;
   }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
