@@ -23,7 +23,7 @@ $consulta_reporte = $conn->query($sql_reportes);
                     <input type="hidden" id="id_usuaria" name="id_usuaria" value="<?= htmlspecialchars($_SESSION['id_usuaria']) ?>">
                     <input type="hidden" name="opcion" value="1">
                     <input type="hidden" id="publicacion" name="publicacion">
-                    
+                    <input type="hidden" name="tipo_de_reporte" value="2">
                     <?php if ($consulta_reporte && $consulta_reporte->num_rows > 0): ?>
                         <?php foreach ($consulta_reporte as $registro_reporte): ?>
                             <div class="form-check form-check-inline">

@@ -10,9 +10,10 @@ if (isset($_REQUEST['opcion'])) {
             if (isset($_REQUEST['nickname']) && isset($_REQUEST['publicacion']) && isset($_REQUEST['tipoReporte']) && isset($_REQUEST['id_usuaria'])) {
                 $nick = $_REQUEST['nickname'];
                 $publi = $_REQUEST['publicacion'];
+                $tipoRep = $_REQUEST['tipo_de_reporte'];
                 $tipo = $_REQUEST['tipoReporte'];
                 $id_reporto = $_REQUEST['id_usuaria'];
-                $rep->inicializar($nick, $publi, $tipo, $id_reporto);
+                $rep->inicializar($nick, $publi, $tipo, $id_reporto, $tipoRep);
                 echo $rep->agregarReporte();
             } else {
                 echo json_encode([
