@@ -65,32 +65,33 @@ class buscadorForoMdl
             $this->todos($limit, $offset);
         }
     }
-
     public function todos($limit = 10, $offset = 0)
     {
         $this->conectarBD();
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
         $publicacionDestacada = null;
 
-        $hashSeleccionado = $_GET['publicacion'] ?? null;
+
+        $hashSeleccionado = isset($_GET['publicacion']) ? preg_replace('/[^a-f0-9]/i', '', $_GET['publicacion']) : null;
         $idDestacada = null;
 
-        if ($hashSeleccionado && $offset === 0) { 
-            $sqlBuscar = "SELECT id_publicacion FROM publicacion";
-            $resBuscar = mysqli_query($this->con, $sqlBuscar);
-            while ($row = mysqli_fetch_assoc($resBuscar)) {
+        if ($hashSeleccionado && $offset === 0) {
+            $stmtBuscar = $this->con->prepare("SELECT id_publicacion FROM publicacion");
+            $stmtBuscar->execute();
+            $resBuscar = $stmtBuscar->get_result();
+            while ($row = $resBuscar->fetch_assoc()) {
                 if (hash('sha256', $row['id_publicacion']) === $hashSeleccionado) {
                     $idDestacada = (int)$row['id_publicacion'];
                     break;
                 }
             }
+            $stmtBuscar->close();
 
             if ($idDestacada !== null) {
-                
                 $sqlDestacada = "SELECT p.titulo, p.contenido, p.anonima, p.id_publicacion, u.id, u.nickname, u.foto
-                FROM publicacion p 
-                JOIN usuarias u ON p.id_usuarias = u.id 
-                WHERE p.id_publicacion = ?";
+                             FROM publicacion p 
+                             JOIN usuarias u ON p.id_usuarias = u.id 
+                             WHERE p.id_publicacion = ?";
                 $stmtDest = $this->con->prepare($sqlDestacada);
                 $stmtDest->bind_param("i", $idDestacada);
                 $stmtDest->execute();
@@ -111,24 +112,34 @@ class buscadorForoMdl
             $nuevoLimit = $limit - 1;
         }
 
-        $excluir = ($idDestacada !== null) ? "WHERE p.id_publicacion != $idDestacada" : "";
+        if ($idDestacada !== null) {
+            $sql = "SELECT p.titulo, p.contenido, p.anonima, p.id_publicacion, u.id, u.nickname, u.foto
+                FROM publicacion p 
+                JOIN usuarias u ON p.id_usuarias = u.id 
+                WHERE p.id_publicacion != ?
+                ORDER BY p.fecha_publicacion DESC
+                LIMIT ? OFFSET ?";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bind_param("iii", $idDestacada, $nuevoLimit, $offset);
+        } else {
+            $sql = "SELECT p.titulo, p.contenido, p.anonima, p.id_publicacion, u.id, u.nickname, u.foto
+                FROM publicacion p 
+                JOIN usuarias u ON p.id_usuarias = u.id 
+                ORDER BY p.fecha_publicacion DESC
+                LIMIT ? OFFSET ?";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bind_param("ii", $nuevoLimit, $offset);
+        }
 
-        $sql = "SELECT p.titulo, p.contenido, p.anonima, p.id_publicacion, u.id, u.nickname, u.foto
-        FROM publicacion p 
-        JOIN usuarias u ON p.id_usuarias = u.id 
-        $excluir
-        ORDER BY p.fecha_publicacion DESC
-        LIMIT $nuevoLimit OFFSET $offset";
+        $stmt->execute();
+        $consulta = $stmt->get_result();
 
-        $consulta = mysqli_query($this->con, $sql);
-
-        if ($consulta && mysqli_num_rows($consulta) > 0) {
-            while ($publicacion = mysqli_fetch_assoc($consulta)) {
+        if ($consulta && $consulta->num_rows > 0) {
+            while ($publicacion = $consulta->fetch_assoc()) {
                 $this->imprimirPublicacion($publicacion, $idUsuaria);
             }
-        } else if (!$publicacionDestacada) {
-            echo "<p>No hay publicaciones.</p>";
         }
+        $stmt->close();
     }
 
     private function imprimirPublicacion($publicacion, $idUsuaria, $destacada = false)
