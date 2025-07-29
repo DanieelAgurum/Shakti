@@ -2,7 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -13,7 +17,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <!-- Estilos -->
     <link rel="stylesheet" href="../css/contacto.css">
-    <link rel="stylesheet" href="<?= $urlBase ?>../css/animacionCarga.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -25,12 +30,16 @@ if (session_status() === PHP_SESSION_NONE) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
+
+</head>
+
+
+
+<body>
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
     ?>
-</head>
 
-<body>
     <div class="container mt-3 mb-3 animate__animated animate__delay-0.5s animate__fadeInDown">
         <div class="form m-auto">
             <div class="contact-info">
