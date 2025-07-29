@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['opcion'])) {
 
                     if ($puedeEditar) {
                         echo " <div class='dropdown position-absolute top-0 end-0 mt-2 me-2'>
-              <button class='btn btn-sm btn-link p-0 text-dark' type='button' data-bs-toggle='dropdown'>
+              <button class='btn btn-sm btn-link p-0 text-dark' type='button' data-bs-toggle='dropdown' title='Opciones' data-bs-toggle='tooltip'>
                 <i class='bi bi-three-dots-vertical fs-5'></i>
               </button>
               <ul class='dropdown-menu dropdown-menu-end'>
@@ -173,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['opcion'])) {
 
                     if ($puedeEditar) {
                         echo " <div class='dropdown position-absolute top-0 end-0 mt-2 me-2'>
-              <button class='btn btn-sm btn-link p-0 text-dark' type='button' data-bs-toggle='dropdown'>
+              <button class='btn btn-sm btn-link p-0 text-dark' type='button' data-bs-toggle='dropdown' title='Opciones' data-bs-toggle='tooltip'>
                 <i class='bi bi-three-dots-vertical fs-5'></i>
               </button>
               <ul class='dropdown-menu dropdown-menu-end'>

@@ -12,9 +12,8 @@
       <!-- Navegación -->
       <div class="col-12 col-md-4 mb-3 mb-md-0">
         <nav class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
-          <a href="#" class="nav-link px-2 text-secondary">Nosotras</a>
-          <a href="<?= $urlBase ?>Vista/planes.php" class="nav-link px-2 text-secondary">Servicios</a>
-          <a href="<?= $urlBase ?>Vista/contacto.php" class="nav-link px-2 text-secondary">Contacto</a>
+          <a href="<?= $urlBase ?>Vista/planes.php" class="nav-link px-2 text-secondary">¡Suscríbete!</a>
+          <a href="<?= $urlBase ?>Vista/contacto.php" class="nav-link px-2 text-secondary">Contáctanos</a>
           <a href="<?= $urlBase ?>Vista/politicas.php" class="nav-link px-2 text-secondary">Privacidad</a>
           <a href="<?= $urlBase ?>Vista/glosario.php" class="nav-link px-2 text-secondary">Glosario</a>
         </nav>
