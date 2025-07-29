@@ -78,6 +78,7 @@ class buscadorForoMdl
         $sql = "SELECT p.titulo, p.contenido, p.anonima, p.id_publicacion, u.id, u.nickname, u.foto
             FROM publicacion p 
             JOIN usuarias u ON p.id_usuarias = u.id 
+            ORDER BY p.fecha_publicacion DESC
             LIMIT $limit OFFSET $offset";
 
         $consulta = mysqli_query($this->con, $sql);
@@ -92,6 +93,7 @@ class buscadorForoMdl
             }
         }
     }
+
 
     private function imprimirPublicacion($publicacion, $idUsuaria)
     {
