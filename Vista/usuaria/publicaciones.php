@@ -41,11 +41,6 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
       padding-left: 1rem;
     }
 
-    .ver-respuestas {
-      font-size: 0.9rem;
-      margin-top: 0.3rem;
-    }
-
     .input-error {
       border: 2px solid red;
       background-color: #ffe6e6;
@@ -73,7 +68,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             <input class="form-check-input" name="anonima" value="1" type="checkbox" id="switchCheckReverse">
             <label class="form-check-label" for="switchCheckReverse">Publicar de forma anónima</label>
           </div>
-          <input type="hidden" name="guardar_publicacion" value="1"/>
+          <input type="hidden" name="guardar_publicacion" value="1" />
           <button type="submit" class="btn btn-outline-primary"><i class="bi bi-check2-circle"></i> Publicar</button>
         </form>
       </div>
@@ -81,37 +76,6 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
 
     <!-- Lista de publicaciones -->
     <?php if (count($publicaciones) > 0): ?>
-
-      <?php
-      function renderComentarios($comentarios, $hijos)
-      {
-        foreach ($comentarios as $c) {
-          $id_comentario = (int)($c['id_comentario'] ?? 0);
-          $nombre = htmlspecialchars($c['nombre'] ?? 'Anónimo');
-          $contenido = nl2br(htmlspecialchars($c['comentario'] ?? ''));
-          $fecha = !empty($c['fecha']) ? date('d M Y H:i', strtotime($c['fecha'])) : 'Sin fecha';
-
-          echo "<div class='comentario-raiz mb-2 p-2 bg-light rounded' id='comentario-$id_comentario'>
-            <strong>{$nombre}:</strong> {$contenido}<br>
-            <small class='text-muted'>{$fecha}</small>
-            <button class='btn btn-outline-primary btn-sm btn-link btn-responder' data-id='{$id_comentario}'>Responder</button>";
-
-          if (isset($hijos[$id_comentario])) {
-            $totalHijos = count($hijos[$id_comentario]);
-            echo "<button class='btn btn-sm btn-outline-secondary ver-respuestas' data-id='{$id_comentario}'>
-                    Ver respuestas ({$totalHijos})
-                </button>";
-
-            echo "<div class='respuestas ms-4 d-none' id='respuestas-{$id_comentario}'>";
-            renderComentarios($hijos[$id_comentario], $hijos);
-            echo "</div>";
-          }
-
-          echo "</div>";
-        }
-      }
-
-      ?>
 
       <?php foreach ($publicaciones as $pub): ?>
         <?php
@@ -183,10 +147,41 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
 
           <div class="comments-section mt-3 d-none" id="comments-<?= $pub['id_publicacion'] ?>">
             <div class="existing-comments mb-3">
-              <?php if ($allCom) renderComentarios($comRaiz, $comHijos);
-              else echo "<p class='text-muted'>Aún no hay comentarios.</p>"; ?>
-            </div>
+              <?php if ($comRaiz): ?>
+                <?php foreach ($comRaiz as $comentario):
+                  $idComentario = $comentario['id_comentario'];
+                  $nombre = htmlspecialchars($comentario['nombre'] ?? 'Anónimo');
+                  $contenido = nl2br(htmlspecialchars($comentario['comentario']));
+                  $fecha = !empty($comentario['fecha_comentario']) ? date('d M Y H:i', strtotime($comentario['fecha_comentario'])) : 'Sin fecha';
+                  $tiempoComentario = strtotime($comentario['fecha_comentario']);
+                  $puedeEditar = (time() - $tiempoComentario) <= 300;
+                  $respuestasCount = $comentarioModelo->contarRespuestasPorPadre($idComentario);
 
+                ?>
+                  <div class="comentario-raiz mb-2 p-2 bg-light rounded" id="comentario-<?= $idComentario ?>">
+                    <strong><?= $nombre ?>:</strong> <?= $contenido ?><br>
+                    <small class="text-muted"><?= $fecha ?></small>
+
+                    <button class="btn btn-outline-primary btn-sm btn-responder" data-id="<?= $idComentario ?>">Responder</button>
+                    <div class="ms-4 d-none" id="respuestas-<?= $idComentario ?>"></div>
+
+                    <?php if ($puedeEditar): ?>
+                      <button class="btn btn-outline-success btn-sm btn-edit-comentario" data-id="<?= $idComentario ?>"><i class="bi bi-pencil-square"></i> Editar</button>
+                      <button class="btn btn-outline-danger btn-sm btn-eliminar-comentario" data-id="<?= $idComentario ?>"><i class="bi bi-trash3"></i> Eliminar</button>
+
+                    <?php endif; ?>
+                    <?php if ($respuestasCount > 0): ?>
+                      <button class="btn btn-sm btn-outline-secondary ver-respuestas" data-id="<?= $idComentario ?>" data-count="<?= $respuestasCount ?>">
+                        Ver respuestas (<?= $respuestasCount ?>)
+                      </button>
+                    <?php endif; ?>
+                  </div>
+                  <div class="ms-4 mt-2" id="form-responder-<?= $idComentario ?>"></div>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <p class="text-muted">Aún no hay comentarios.</p>
+              <?php endif; ?>
+            </div>
             <form class="comment-form" data-id-publicacion="<?= $pub['id_publicacion'] ?>">
               <input type="hidden" name="opcion" value="1">
               <input type="hidden" name="id_publicacion" value="<?= $pub['id_publicacion'] ?>">
@@ -197,33 +192,16 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               </div>
             </form>
           </div>
-
         </div>
       <?php endforeach; ?>
     <?php else: ?>
       <p class="text-center text-muted">No has creado publicaciones aún.</p>
     <?php endif; ?>
+
   </div>
   <script src="../../peticiones(js)/likesContar.js"></script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Mostrar respuestas ocultas
-      document.querySelectorAll(".ver-respuestas").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.dataset.id;
-          const divRespuestas = document.getElementById(`respuestas-${id}`);
-          const isVisible = !divRespuestas.classList.contains("d-none");
-
-          divRespuestas.classList.toggle("d-none");
-
-          // Cambiar texto del botón
-          btn.textContent = isVisible ? `Ver respuestas` : `Ocultar respuestas`;
-        });
-      });
-    });
-  </script>
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script src="../../validacionRegistro/abrirComentarios.js"></script>
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>

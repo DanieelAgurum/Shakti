@@ -33,6 +33,12 @@ $urlBase = getBaseUrl();
     include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
     include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/reportarPostUsuarias.php';
     ?>
+    <script>
+        $(document).on('click', '.btn-toggle-comments', function() {
+            const id = $(this).data('id');
+            $('#comments-' + id).toggleClass('d-none');
+        });
+    </script>
 </head>
 
 <body class="bg-white text-black">
