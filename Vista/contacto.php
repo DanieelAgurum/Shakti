@@ -83,6 +83,7 @@ $urlBase = getBaseUrl();
                     </div>
                     <div class="float-end">
                         <button id="btnEnviar" class="btn btn-outline-dark" type="submit">
+                            <i class="bi bi-send-fill" id="icono" ></i>
                             <div id="loaderInicioBtn" class="heart-spinner d-none" role="status"
                                 aria-label="Cargando..."></div>
                             <span>Enviar</span>
