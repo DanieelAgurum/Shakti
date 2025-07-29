@@ -1,5 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/notificacionesModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
 
 $notificaciones = [];
 $notificacionesNoLeidas = 0;
@@ -20,10 +22,10 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panel - Shakti</title>
   <!-- Toastify CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 
-<!-- Toastify JS -->
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <!-- Toastify JS -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -52,19 +54,19 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
         <ul class="navbar-nav ms-auto align-items-center">
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-              switch ($_SESSION['id_rol'] ?? 0) {
-                case 1:
-                case 2:
-                  echo 'usuaria/libreYSegura.php';
-                  break;
-                case 3:
-                  echo 'admin/';
-                  break;
-                default:
-                  echo 'login.php';
-                  break;
-              }
-            ?>">Libre y Segura</a>
+                                                            switch ($_SESSION['id_rol'] ?? 0) {
+                                                              case 1:
+                                                              case 2:
+                                                                echo 'usuaria/libreYSegura.php';
+                                                                break;
+                                                              case 3:
+                                                                echo 'admin/';
+                                                                break;
+                                                              default:
+                                                                echo 'login.php';
+                                                                break;
+                                                            }
+                                                            ?>">Libre y Segura</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a>
@@ -75,32 +77,32 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
           <?php if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] == 1): ?>
             <li class="nav-item">
               <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-                switch ($_SESSION['id_rol'] ?? 0) {
-                  case 1:
-                    echo 'usuaria/alzalaVoz.php';
-                    break;
-                  default:
-                    echo 'login.php';
-                    break;
-                }
-              ?>">Alza la voz</a>
+                                                              switch ($_SESSION['id_rol'] ?? 0) {
+                                                                case 1:
+                                                                  echo 'usuaria/alzalaVoz.php';
+                                                                  break;
+                                                                default:
+                                                                  echo 'login.php';
+                                                                  break;
+                                                              }
+                                                              ?>">Alza la voz</a>
             </li>
           <?php endif; ?>
           <li class="nav-item">
             <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-              switch ($_SESSION['id_rol'] ?? 0) {
-                case 1:
-                case 2:
-                  echo 'usuaria/publicaciones.php';
-                  break;
-                case 3:
-                  echo 'admin/';
-                  break;
-                default:
-                  echo 'login.php';
-                  break;
-              }
-            ?>">Publicaciones</a>
+                                                            switch ($_SESSION['id_rol'] ?? 0) {
+                                                              case 1:
+                                                              case 2:
+                                                                echo 'usuaria/publicaciones.php';
+                                                                break;
+                                                              case 3:
+                                                                echo 'admin/';
+                                                                break;
+                                                              default:
+                                                                echo 'login.php';
+                                                                break;
+                                                            }
+                                                            ?>">Publicaciones</a>
           </li>
 
           <?php if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1): ?>
@@ -119,22 +121,24 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
               <?php if (isset($_SESSION['correo'])): ?>
                 <li>
                   <a class="dropdown-item" href="<?= $urlBase ?>Vista/<?php
-                    switch ($_SESSION['id_rol'] ?? 0) {
-                      case 1:
-                        echo 'usuaria/perfil.php';
-                        break;
-                      case 2:
-                        echo 'especialista/perfil.php';
-                        break;
-                      default:
-                        echo 'login.php';
-                        break;
-                    }
-                  ?>">
+                                                                      switch ($_SESSION['id_rol'] ?? 0) {
+                                                                        case 1:
+                                                                          echo 'usuaria/perfil.php';
+                                                                          break;
+                                                                        case 2:
+                                                                          echo 'especialista/perfil.php';
+                                                                          break;
+                                                                        default:
+                                                                          echo 'login.php';
+                                                                          break;
+                                                                      }
+                                                                      ?>">
                     Mi perfil <i class="bi bi-person-circle me-1"></i>
                   </a>
                 </li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li>
                   <a class="dropdown-item d-flex justify-content-between align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
                     Notificaciones <i class="bi bi-bell-fill"></i>
@@ -143,9 +147,13 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
                     </span>
                   </a>
                 </li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li><a class="dropdown-item" href="#">Configuración <i class="bi bi-gear-fill"></i></a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li>
                   <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
                     <input type="hidden" name="opcion" value="2" />
