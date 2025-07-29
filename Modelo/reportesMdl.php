@@ -101,7 +101,7 @@ class reportesMdl
         if ($stmtInsertar->execute()) {
             return json_encode([
                 'opcion' => 0,
-                'mensaje' => 'Reporte enviado correctamente.' . $this->tipoRep
+                'mensaje' => 'Reporte enviado correctamente.'
             ]);
         } else {
             return json_encode([

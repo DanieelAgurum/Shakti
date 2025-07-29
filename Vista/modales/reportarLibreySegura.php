@@ -6,7 +6,6 @@ $sql = "SELECT * FROM tipo_reporte WHERE tipo_objetivo IN (1)";
 $consulta = $conn->query($sql);
 ?>
 
-<!-- Modal para reportar -->
 <div class="modal fade" id="modalReportar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -38,5 +37,3 @@ $consulta = $conn->query($sql);
         </div>
     </div>
 </div>
-
-<!-- data-bs-dismiss="modal" -->
