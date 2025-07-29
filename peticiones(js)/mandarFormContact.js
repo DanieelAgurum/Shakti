@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contactForm");
   const scrollLoader = document.getElementById("loaderInicioBtn");
   const btnEnviar = document.getElementById("btnEnviar");
+  const icono = document.getElementById("icono");
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Mostrar el spinner y deshabilitar el botón
     scrollLoader.classList.remove("d-none");
+    icono.classList.add("d-none");
     btnEnviar.disabled = true;
 
     $.ajax({
@@ -32,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
       success: function (respuesta) {
         form.reset();
         scrollLoader.classList.add("d-none");
+        icono.classList.remove("d-none")
         btnEnviar.disabled = false;
 
         if (respuesta.trim() === "Enviado") {
@@ -52,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       error: function () {
         scrollLoader.classList.add("d-none");
+        icono.classList.remove("d-none");
         btnEnviar.disabled = false;
 
         Swal.fire({
