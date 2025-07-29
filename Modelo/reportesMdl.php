@@ -7,6 +7,7 @@ class reportesMdl
     private $publicacion;
     private $tipo;
     private $id_reporto;
+    private $tipoRep;
     public $con;
     private $urlBase;
 
@@ -28,12 +29,13 @@ class reportesMdl
         }
     }
 
-    public function inicializar($nickname, $publicacion, $tipo, $id_reporto)
+    public function inicializar($nickname, $publicacion, $tipo, $id_reporto, $tipoRep)
     {
         $this->nickname = $nickname;
         $this->publicacion = $publicacion;
         $this->tipo = $tipo;
         $this->id_reporto = $id_reporto;
+        $this->tipoRep = $tipoRep;
     }
 
     public function agregarReporte()
@@ -78,10 +80,17 @@ class reportesMdl
         $verificacion = $stmtVerificar->get_result();
 
         if ($verificacion->num_rows > 0) {
-            return json_encode([
-                'opcion' => 1,
-                'mensaje' => 'Ya reportaste este contenido.'
-            ]);
+            if ($this->tipoRep == 2) {
+                return json_encode([
+                    'opcion' => 1,
+                    'mensaje' => 'Ya reportaste a este especialista.'
+                ]);
+            } else if($this->tipoRep == 3){
+                return json_encode([
+                    'opcion' => 3,
+                    'mensaje' => 'Ya reportaste este contenido.'
+                ]);
+            }
         }
 
         $sqlInsertar = "INSERT INTO reportar (id_tipo_reporte, id_usuaria, id_reportada, id_publicacion, fecha) 
@@ -92,7 +101,7 @@ class reportesMdl
         if ($stmtInsertar->execute()) {
             return json_encode([
                 'opcion' => 0,
-                'mensaje' => 'Reporte enviado correctamente.'
+                'mensaje' => 'Reporte enviado correctamente.' . $this->tipoRep
             ]);
         } else {
             return json_encode([
