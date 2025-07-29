@@ -1,15 +1,15 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
-$urlBase = getBaseUrl();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/notificacionesModelo.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+$notificaciones = [];
+$notificacionesNoLeidas = 0;
+
+if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
+  $idUsuaria = $_SESSION['id'];
+  $notificaciones = Notificacion::obtenerParaUsuaria($idUsuaria);
+  $notificacionesNoLeidas = count(array_filter($notificaciones, fn($n) => $n['leida'] == 0));
 }
 
-if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
-  header("Location: {$urlBase}Vista/admin/index.php");
-  exit;
-}
 ?>
 
 <!DOCTYPE html>
@@ -138,7 +138,9 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
                 <li>
                   <a class="dropdown-item d-flex justify-content-between align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
                     Notificaciones <i class="bi bi-bell-fill"></i>
-                    <span id="contadorNotificaciones" class="badge bg-danger rounded-pill ms-2" style="display:none;">0</span>
+                    <span id="contadorNotificaciones" class="badge bg-danger rounded-pill ms-2" <?= $notificacionesNoLeidas > 0 ? '' : 'style="display:none;"' ?>>
+                      <?= $notificacionesNoLeidas ?>
+                    </span>
                   </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
@@ -177,7 +179,23 @@ if (isset($_SESSION['correo']) && $_SESSION['id_rol'] == 3) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body" id="listaNotificaciones">
-          <p class="text-muted">No tienes notificaciones.</p>
+          <?php if (!empty($notificaciones)): ?>
+            <ul class="list-group">
+              <?php foreach ($notificaciones as $notificacion): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-start <?= $notificacion['leida'] == 0 ? 'fw-bold bg-light' : '' ?>">
+                  <div class="ms-2 me-auto">
+                    <?= htmlspecialchars($notificacion['mensaje']) ?><br />
+                    <small class="text-muted"><?= date('d/m/Y H:i', strtotime($notificacion['fecha_creacion'])) ?></small>
+                  </div>
+                  <?php if ($notificacion['leida'] == 0): ?>
+                    <span class="badge bg-danger rounded-pill">Nuevo</span>
+                  <?php endif; ?>
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          <?php else: ?>
+            <p class="text-muted">No tienes notificaciones.</p>
+          <?php endif; ?>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

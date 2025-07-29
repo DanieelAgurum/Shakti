@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     contador.style.display = "none";
 
     if (notiContenedor.children.length === 0) {
-      notiContenedor.innerHTML = '<li class="dropdown-item text-muted">No tienes notificaciones.</li>';
+      notiContenedor.innerHTML = '<p class="text-muted text-center m-0">No tienes notificaciones.</p>';
     }
   });
 
@@ -120,15 +120,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const nombreReal = mapaNombres[msg.remitenteId] || "Desconocido";
         msg.nombre = nombreReal;
 
-        const li = document.createElement("li");
-        li.className = "dropdown-item";
-        li.textContent = `📩 ${nombreReal} te escribió: "${msg.texto}"`;
-        notiContenedor.appendChild(li);
+        const div = document.createElement("div");
+        div.className = "alert alert-warning py-1 my-1";
+        div.textContent = `📩 ${nombreReal} te escribió: "${msg.texto}"`;
+        notiContenedor.appendChild(div);
 
         setTimeout(() => {
-          if (li.parentNode) li.remove();
+          if (div.parentNode) div.remove();
           if (notiContenedor.children.length === 0) {
-            notiContenedor.innerHTML = '<li class="dropdown-item text-muted">No tienes notificaciones.</li>';
+            notiContenedor.innerHTML = '<p class="text-muted text-center m-0">No tienes notificaciones.</p>';
             contador.style.display = "none";
           }
         }, 60 * 1000);
@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (notiContenedor.children.length === 0 && mensajesNuevos === 0) {
       contador.style.display = "none";
-      notiContenedor.innerHTML = '<li class="dropdown-item text-muted">No tienes notificaciones.</li>';
+      notiContenedor.innerHTML = '<p class="text-muted text-center m-0">No tienes notificaciones.</p>';
     }
 
     yaInicializado = true;

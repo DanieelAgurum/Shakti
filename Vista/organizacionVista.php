@@ -21,6 +21,7 @@ try {
   <meta charset="UTF-8">
   <title>Organizaciones - Shakti</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
 </head>
 <body>
   <div class="container mt-5">
@@ -32,7 +33,7 @@ try {
           <div class="col">
             <div class="card h-100 shadow-sm">
                <?php if (!empty($item['imagen'])): ?>
-                <img src="data:image/jpeg;base64,<?= base64_encode($item['imagen']) ?>" class="card-img-top" alt="Imagen" style="height: 200px; object-fit: cover;">
+                <img src="data:image/jpg;base64,<?= base64_encode($item['imagen']) ?>" class="card-img-top" alt="Imagen" style="height: 300px; object-fit: cover;">
               <?php endif; ?>
               
               <div class="card-body">
@@ -52,7 +53,7 @@ try {
       <div class="alert alert-info">No hay contenido disponible por el momento.</div>
     <?php endif; ?>
   </div>
-
+<?php include_once '../components/usuaria/footer.php'; ?>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
