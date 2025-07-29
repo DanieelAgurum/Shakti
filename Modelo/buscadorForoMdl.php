@@ -139,7 +139,7 @@ class buscadorForoMdl
             </div>
         </div>
             <div class="dropdown">
-                <button class="btn btn-link p-0 shadow-none btn-like" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-link p-0 shadow-none btn-like" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Opciones" data-bs-toggle="tooltip">
                     <i class="bi bi-three-dots-vertical text-black fs-5"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-start">
@@ -191,7 +191,7 @@ class buscadorForoMdl
 
                 if ($puedeEditar) {
                     echo "<div class='dropdown position-absolute top-0 end-0 mt-2 me-2'>
-              <button class='btn btn-sm btn-link p-0 text-dark' type='button' data-bs-toggle='dropdown'>
+              <button class='btn btn-sm btn-link p-0 text-dark' type='button' data-bs-toggle='dropdown' title='Opciones' data-bs-toggle='tooltip'>
                 <i class='bi bi-three-dots-vertical fs-5'></i>
               </button>
               <ul class='dropdown-menu dropdown-menu-end'>
