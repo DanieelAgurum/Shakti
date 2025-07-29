@@ -136,19 +136,19 @@ class buscadorForoMdl
                 <p class="post-title text-end small mb-2">' . htmlspecialchars($publicacion['titulo']) . '</p>
             </div>
         </div>
-        <div class="dropdown">
-            <button class="btn btn-link p-0 shadow-none btn-like" type="button" data-bs-toggle="dropdown">
-                <i class="bi bi-three-dots-vertical text-black fs-5"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-start">
-                <li>
-                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalReportar" 
-                       onclick="rellenarDatosReporte(\'' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '\', \'" . $idPublicacion . "\')">
-                       Reportar
-                    </a>
-                </li>
-            </ul>
-        </div>
+            <div class="dropdown">
+                <button class="btn btn-link p-0 shadow-none btn-like" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical text-black fs-5"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-start">
+                    <li>
+                        <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" 
+                           onclick="rellenarDatosReporte(\'' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '\', \'' . $idPublicacion . '\')">
+                           Reportar
+                        </a>
+                    </li>
+                </ul>
+            </div>
     </header>
 
     <div class="post-content">
