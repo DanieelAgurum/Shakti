@@ -68,18 +68,57 @@ class buscadorForoMdl
 
     public function todos($limit = 10, $offset = 0)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         $this->conectarBD();
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
+        $publicacionDestacada = null;
+
+        $hashSeleccionado = $_GET['publicacion'] ?? null;
+        $idDestacada = null;
+
+        if ($hashSeleccionado && $offset === 0) { 
+            $sqlBuscar = "SELECT id_publicacion FROM publicacion";
+            $resBuscar = mysqli_query($this->con, $sqlBuscar);
+            while ($row = mysqli_fetch_assoc($resBuscar)) {
+                if (hash('sha256', $row['id_publicacion']) === $hashSeleccionado) {
+                    $idDestacada = (int)$row['id_publicacion'];
+                    break;
+                }
+            }
+
+            if ($idDestacada !== null) {
+                
+                $sqlDestacada = "SELECT p.titulo, p.contenido, p.anonima, p.id_publicacion, u.id, u.nickname, u.foto
+                FROM publicacion p 
+                JOIN usuarias u ON p.id_usuarias = u.id 
+                WHERE p.id_publicacion = ?";
+                $stmtDest = $this->con->prepare($sqlDestacada);
+                $stmtDest->bind_param("i", $idDestacada);
+                $stmtDest->execute();
+                $resultDest = $stmtDest->get_result();
+
+                if ($resultDest && $resultDest->num_rows > 0) {
+                    $publicacionDestacada = $resultDest->fetch_assoc();
+                    echo '<div class="row"><div class="col-12">';
+                    $this->imprimirPublicacion($publicacionDestacada, $idUsuaria, true);
+                    echo '</div></div>';
+                }
+                $stmtDest->close();
+            }
+        }
+
+        $nuevoLimit = $limit;
+        if ($idDestacada !== null && $offset === 0) {
+            $nuevoLimit = $limit - 1;
+        }
+
+        $excluir = ($idDestacada !== null) ? "WHERE p.id_publicacion != $idDestacada" : "";
 
         $sql = "SELECT p.titulo, p.contenido, p.anonima, p.id_publicacion, u.id, u.nickname, u.foto
-            FROM publicacion p 
-            JOIN usuarias u ON p.id_usuarias = u.id 
-            ORDER BY p.fecha_publicacion DESC
-            LIMIT $limit OFFSET $offset";
+        FROM publicacion p 
+        JOIN usuarias u ON p.id_usuarias = u.id 
+        $excluir
+        ORDER BY p.fecha_publicacion DESC
+        LIMIT $nuevoLimit OFFSET $offset";
 
         $consulta = mysqli_query($this->con, $sql);
 
@@ -87,15 +126,12 @@ class buscadorForoMdl
             while ($publicacion = mysqli_fetch_assoc($consulta)) {
                 $this->imprimirPublicacion($publicacion, $idUsuaria);
             }
-        } else {
-            if ($offset === 0) {
-                echo "<p>No hay publicaciones.</p>";
-            }
+        } else if (!$publicacionDestacada) {
+            echo "<p>No hay publicaciones.</p>";
         }
     }
 
-
-    private function imprimirPublicacion($publicacion, $idUsuaria)
+    private function imprimirPublicacion($publicacion, $idUsuaria, $destacada = false)
     {
         $idPublicacion = (int)$publicacion['id_publicacion'];
         $esAnonima = isset($publicacion['anonima']) && $publicacion['anonima'] == '1';
@@ -128,8 +164,9 @@ class buscadorForoMdl
         }
 
         $comentariosTotales = $comentarioModelo->contarComentariosPorPublicacion($idPublicacion);
+        $claseContenedor = $destacada ? 'col-12' : 'col-md-6 col-lg-4';
 
-        echo '<article class="card instagram-post animate__animated animate__fadeInLeft">
+        echo '<article class="card instagram-post animate__animated animate__fadeInLeft ' . ($destacada ? 'publicacion-destacada' : '') . '">
     <header class="post-header">
         <div class="profile-info">
             <img src="' . $fotoMostrar . '" alt="Foto" class="profile-pic" />
@@ -144,10 +181,17 @@ class buscadorForoMdl
                 </button>
                 <ul class="dropdown-menu dropdown-menu-start">
                     <li>
-                        <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar" 
+                        <a class="dropdown-item" href="#" type="button" data-bs-toggle="modal" data-bs-target="#modalReportar"
                            onclick="rellenarDatosReporte(\'' . htmlspecialchars(ucwords(strtolower($publicacion['nickname']))) . '\', \'' . $idPublicacion . '\')">
-                           Reportar
+                           <i class="bi bi-exclamation-triangle"></i> Reportar
                         </a>
+                    </li>
+                    <li>
+                   <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalCompartir"
+   onclick="setIdCompartir(' . $idPublicacion . ')">
+    <i class="bi bi-share-fill"></i> Compartir
+</a>
+
                     </li>
                 </ul>
             </div>
@@ -243,7 +287,6 @@ class buscadorForoMdl
     </div>
 </article>';
     }
-
 
     // Cerrar conexión (opcional)
     public function cerrarBD()
