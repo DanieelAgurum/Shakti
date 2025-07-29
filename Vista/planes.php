@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container mb-4 mt-3">
         <h1>Suscripción a Shakti</h1>
         <p class="intro">Apoya la prevención de la violencia hacia la mujer con nuestras opciones de suscripción.</p>
 
