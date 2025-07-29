@@ -8,6 +8,12 @@
             </div>
             <div class="modal-body">
                 <form method="post" action="../../Controlador/libre_seguraCtrl.php" enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label for="portada" class="form-label">Portada:</label>
+                        <input type="file" class="form-control" name="portada" id="portada" accept=".jpg" required>
+                    </div>
+
                     <div class="mb-3">
                         <label for="titulo" class="form-label">Título del documento:</label>
                         <input type="text" class="form-control" name="titulo" id="titulo" required>
@@ -48,6 +54,12 @@
             </div>
             <div class="modal-body">
                 <form method="post" action="../../Controlador/libre_seguraCtrl.php" enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label for="portada" class="form-label">Portada:</label>
+                        <input type="file" class="form-control" name="portada" id="portada" accept=".jpg">
+                    </div>
+
                     <div class="mb-3">
                         <label for="titulo" class="form-label">Título del documento:</label>
                         <input type="text" class="form-control" name="titulo" id="titulo" value="<?= htmlspecialchars($row['titulo'] ?? '') ?>">

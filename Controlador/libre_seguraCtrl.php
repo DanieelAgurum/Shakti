@@ -12,14 +12,16 @@ if (!isset($_REQUEST['opcion'])) {
 switch ($_REQUEST['opcion']) {
     case 1:
         if (
+            isset($_FILES['portada']) &&
             isset($_REQUEST['titulo'], $_REQUEST['descripcion']) &&
             isset($_FILES['documento'])
         ) {
             $l->inicializar(
+                $_FILES['portada'],
                 $_REQUEST['titulo'],
                 $_FILES['documento'],
                 $_REQUEST['descripcion']
-               
+
             );
             $exito = $l->agregar();
             header("Location: ../Vista/admin/libre_Segura.php?status=" . ($exito ? "agregado" : "error_agregar"));
@@ -31,15 +33,17 @@ switch ($_REQUEST['opcion']) {
 
     case 2:
         if (
+            isset($_FILES['portada']) &&
             isset($_REQUEST['id_legal'], $_REQUEST['titulo'], $_REQUEST['descripcion'],) &&
             isset($_FILES['documento'])
         ) {
             $exito = $l->actualizar(
                 $_REQUEST['id_legal'],
+                $_FILES['portada'],
                 $_REQUEST['titulo'],
                 $_FILES['documento'],
                 $_REQUEST['descripcion']
-               
+
             );
             header("Location: ../Vista/admin/libre_Segura.php?status=" . ($exito ? "legal_actualizado" : "error_legal"));
             exit;
