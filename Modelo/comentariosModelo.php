@@ -358,6 +358,7 @@ class Comentario
             'tonto',
             'tontito',
             'travesti',
+            'traba',
             'trava',
             'travo',
             'verga',
@@ -421,36 +422,36 @@ class Comentario
         }
     }
 
-    public function obtenerComentariosPorPublicacion($idPublicacion)
-    {
-        $conn = $this->conectarBD();
+    // public function obtenerComentariosPorPublicacion($idPublicacion)
+    // {
+    //     $conn = $this->conectarBD();
 
-        $query = "SELECT 
-                c.id_comentario, 
-                c.comentario, 
-                c.fecha_comentario AS fecha, 
-                c.id_padre,
-                u.nombre 
-              FROM comentarios c 
-              JOIN usuarias u ON c.id_usuaria = u.id 
-              WHERE c.id_publicacion = ? 
-              ORDER BY c.fecha_comentario ASC";
+    //     $query = "SELECT 
+    //             c.id_comentario, 
+    //             c.comentario, 
+    //             c.fecha_comentario AS fecha, 
+    //             c.id_padre,
+    //             u.nombre 
+    //           FROM comentarios c 
+    //           JOIN usuarias u ON c.id_usuaria = u.id 
+    //           WHERE c.id_publicacion = ? 
+    //           ORDER BY c.fecha_comentario ASC";
 
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("i", $idPublicacion);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
+    //     $stmt = $conn->prepare($query);
+    //     $stmt->bind_param("i", $idPublicacion);
+    //     $stmt->execute();
+    //     $resultado = $stmt->get_result();
 
-        $comentarios = [];
-        while ($fila = $resultado->fetch_assoc()) {
-            $comentarios[] = $fila;
-        }
+    //     $comentarios = [];
+    //     while ($fila = $resultado->fetch_assoc()) {
+    //         $comentarios[] = $fila;
+    //     }
 
-        $stmt->close();
-        $conn->close();
+    //     $stmt->close();
+    //     $conn->close();
 
-        return $comentarios;
-    }
+    //     return $comentarios;
+    // }
 
     public function contarComentariosPorPublicacion($idPublicacion)
     {
@@ -463,5 +464,91 @@ class Comentario
         $stmt->close();
         $conn->close();
         return $total;
+    }
+
+    public function obtenerComentariosPorPublicacion($id_publicacion)
+    {
+        $conn = $this->conectarBD();
+        $sql = "SELECT c.id_comentario, c.comentario, c.fecha_comentario, c.id_usuaria, c.id_padre, u.nombre
+        FROM comentarios c
+        LEFT JOIN usuarias u ON c.id_usuaria = u.id
+        WHERE c.id_publicacion = ? AND c.id_padre IS NULL
+        ORDER BY c.fecha_comentario ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $id_publicacion);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $comentarios = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        $conn->close();
+        return $comentarios;
+    }
+
+    public function obtenerRespuestasPorPadre($idComentarioPadre)
+    {
+        $conn = $this->conectarBD();
+
+        $sql = "SELECT c.id_comentario, c.comentario, c.fecha_comentario, c.id_usuaria, c.id_padre, u.nombre
+            FROM comentarios c
+            LEFT JOIN usuarias u ON c.id_usuaria = u.id
+            WHERE c.id_padre = ?
+            ORDER BY c.fecha_comentario ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idComentarioPadre);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $respuestas = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+        $conn->close();
+
+        return $respuestas;
+    }
+
+    public function contarRespuestasPorPadre($idComentarioPadre)
+    {
+        $conn = $this->conectarBD();
+        $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM comentarios WHERE id_padre = ?");
+        $stmt->bind_param("i", $idComentarioPadre);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'] ?? 0;
+        $stmt->close();
+        $conn->close();
+        return $total;
+    }
+
+    public function editarComentario($idComentario, $nuevoContenido)
+    {
+        if ($this->contieneMalasPalabrasPersonalizado($nuevoContenido)) {
+            return 'malas_palabras';
+        }
+
+        $conn = $this->conectarBD();
+        $query = "UPDATE comentarios SET comentario = ? WHERE id_comentario = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("si", $nuevoContenido, $idComentario);
+        $resultado = $stmt->execute();
+
+        $stmt->close();
+        $conn->close();
+
+        return $resultado;
+    }
+
+    public function eliminarComentario($idComentario)
+    {
+        $conn = $this->conectarBD();
+        $query = "DELETE FROM comentarios WHERE id_comentario = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $idComentario);
+        $resultado = $stmt->execute();
+
+        $stmt->close();
+        $conn->close();
+
+        return $resultado;
     }
 }
