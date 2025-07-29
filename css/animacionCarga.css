@@ -81,3 +81,33 @@
   height: 40px;
   fill: crimson;
 }
+
+
+/* Hover Especialista */
+.btn-reportar-hover {
+    position: relative;
+    overflow: visible;
+}
+
+.tooltip-hover {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 10;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s ease;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.btn-reportar-hover:hover .tooltip-hover {
+    visibility: visible;
+    opacity: 1;
+}

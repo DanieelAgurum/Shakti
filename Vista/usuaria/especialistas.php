@@ -1,7 +1,6 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/conexion.php';
-
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -30,12 +29,16 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
-    <?php include '../../components/usuaria/navbar.php'; ?>
+    <script src="https://kit.fontawesome.com/fbc3385146.js" crossorigin="anonymous"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/mandarReporte.js"></script>
+    <?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/reportarEspecialista.php';
+    ?>
 </head>
 
 <body>
 
-    <!-- Buscador -->
     <div class="search-wrapper w-100">
         <div class="search-box">
             <i class="bi bi-search search-icon"></i>
@@ -66,7 +69,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
                 <ul id="paginacion" class="pagination justify-content-center"></ul>
             </div>
         </div>
-
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
