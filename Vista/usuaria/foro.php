@@ -65,14 +65,17 @@ $urlBase = getBaseUrl();
     async function compartirWhatsapp() {
         if (!idPublicacionCompartir) return;
         const url = await generarLinkSeguro(idPublicacionCompartir);
-        const texto = encodeURIComponent("¡Mira esta publicación! 👉 " + url);
+        const texto = encodeURIComponent(
+            "¡Mira esta publicación!\n\n " + url
+        );
         window.open(`https://wa.me/?text=${texto}`, '_blank');
+
     }
 
     async function compartirFacebook() {
         if (!idPublicacionCompartir) return;
         const url = await generarLinkSeguro(idPublicacionCompartir);
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
     }
 
     async function compartirTwitter() {
