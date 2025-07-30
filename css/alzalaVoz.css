@@ -16,7 +16,7 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-label {
+.form-label {
     display: block;
     margin-top: 1rem;
     font-weight: 600;
@@ -93,4 +93,21 @@ button:hover {
     width: 100%;
     max-width: 600px;
     box-shadow: 0 0 15px rgba(111, 66, 193, 0.15);
+}
+
+/* Navbar styles */
+nav {
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+nav a {
+    color: #fff;
+    margin-right: 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
 }

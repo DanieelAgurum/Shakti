@@ -71,7 +71,6 @@ class buscadorForoMdl
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
         $publicacionDestacada = null;
 
-
         $hashSeleccionado = isset($_GET['publicacion']) ? preg_replace('/[^a-f0-9]/i', '', $_GET['publicacion']) : null;
         $idDestacada = null;
 
@@ -99,9 +98,7 @@ class buscadorForoMdl
 
                 if ($resultDest && $resultDest->num_rows > 0) {
                     $publicacionDestacada = $resultDest->fetch_assoc();
-                    echo '<div class="row"><div class="col-12">';
                     $this->imprimirPublicacion($publicacionDestacada, $idUsuaria, true);
-                    echo '</div></div>';
                 }
                 $stmtDest->close();
             }
@@ -175,9 +172,9 @@ class buscadorForoMdl
         }
 
         $comentariosTotales = $comentarioModelo->contarComentariosPorPublicacion($idPublicacion);
-        $claseContenedor = $destacada ? 'col-12' : 'col-md-6 col-lg-4';
+        $clasesContenedores = $destacada ? "post-destacado" : "instagram-post";
 
-        echo '<article class="card instagram-post animate__animated animate__fadeInLeft ' . ($destacada ? 'publicacion-destacada' : '') . '">
+        echo '<article class="card ' . $clasesContenedores .' animate__animated animate__fadeInLeft">
     <header class="post-header">
         <div class="profile-info">
             <img src="' . $fotoMostrar . '" alt="Foto" class="profile-pic" />
@@ -298,8 +295,6 @@ class buscadorForoMdl
     </div>
 </article>';
     }
-
-    // Cerrar conexión (opcional)
     public function cerrarBD()
     {
         if ($this->con) {

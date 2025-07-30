@@ -32,6 +32,11 @@ async function cargarMasPublicaciones(pagina) {
   url.searchParams.append("limit", limite);
   url.searchParams.append("offset", offset);
 
+  const publicacionParam = new URLSearchParams(window.location.search).get("publicacion");
+  if (publicacionParam) {
+    url.searchParams.append("publicacion", publicacionParam);
+  }
+
   if (terminoBusqueda.length > 0) {
     url.searchParams.append("buscador", terminoBusqueda);
     url.searchParams.append("opcion", "1");
