@@ -40,7 +40,6 @@ class reportesMdl
 
     public function agregarReporte()
     {
-        // Conectar a la base de datos
         $this->conectarBD();
 
         if (empty($this->nickname) || empty($this->publicacion) || empty($this->tipo) || empty($this->id_reporto)) {
@@ -50,28 +49,51 @@ class reportesMdl
             ]);
         }
 
-        $sqlAutor = "SELECT id_usuarias FROM publicacion WHERE id_publicacion = ?";
-        $stmtAutor = $this->con->prepare($sqlAutor);
-        $stmtAutor->bind_param("i", $this->publicacion);
-        $stmtAutor->execute();
-        $resultado = $stmtAutor->get_result();
+        $id_reportada = null;
 
-        if ($resultado->num_rows === 0) {
-            return json_encode([
-                'opcion' => 1,
-                'mensaje' => 'La publicación no existe.'
-            ]);
+        if ($this->tipoRep == 3) {
+            $sqlAutor = "SELECT id_usuarias FROM publicacion WHERE id_publicacion = ?";
+            $stmtAutor = $this->con->prepare($sqlAutor);
+            $stmtAutor->bind_param("i", $this->publicacion);
+            $stmtAutor->execute();
+            $resultado = $stmtAutor->get_result();
+
+            if ($resultado->num_rows === 0) {
+                return json_encode([
+                    'opcion' => 1,
+                    'mensaje' => 'La publicación no existe.'
+                ]);
+            }
+
+            $row = $resultado->fetch_assoc();
+            $id_reportada = $row['id_usuarias'];
+
+            if ($id_reportada == $this->id_reporto) {
+                return json_encode([
+                    'opcion' => 1,
+                    'mensaje' => 'No puedes reportar tu propia publicación.'
+                ]);
+            }
         }
 
-        $row = $resultado->fetch_assoc();
-        $id_reportada = $row['id_usuarias'];
+        if ($this->tipoRep == 2) {
+            $sqlEspecialista = "SELECT id FROM usuarias WHERE nickname = ?";
+            $stmtEspecialista = $this->con->prepare($sqlEspecialista);
+            $stmtEspecialista->bind_param("s", $this->nickname);
+            $stmtEspecialista->execute();
+            $resultado = $stmtEspecialista->get_result();
 
-        if ($id_reportada == $this->id_reporto) {
-            return json_encode([
-                'opcion' => 1,
-                'mensaje' => 'No puedes reportar tu propia publicación.'
-            ]);
+            $row = $resultado->fetch_assoc();
+            $id_reportada = $row['id'];
+
+            if ($resultado->num_rows === 0) {
+                return json_encode([
+                    'opcion' => 1,
+                    'mensaje' => 'El especialista no existe.'
+                ]);
+            }
         }
+
 
         $sqlVerificar = "SELECT id_reporte FROM reportar WHERE id_usuaria = ? AND id_publicacion = ?";
         $stmtVerificar = $this->con->prepare($sqlVerificar);
@@ -85,7 +107,7 @@ class reportesMdl
                     'opcion' => 1,
                     'mensaje' => 'Ya reportaste a este especialista.'
                 ]);
-            } else if($this->tipoRep == 3){
+            } else if ($this->tipoRep == 3) {
                 return json_encode([
                     'opcion' => 3,
                     'mensaje' => 'Ya reportaste este contenido.'
@@ -94,7 +116,7 @@ class reportesMdl
         }
 
         $sqlInsertar = "INSERT INTO reportar (id_tipo_reporte, id_usuaria, id_reportada, id_publicacion, fecha) 
-                        VALUES (?, ?, ?, ?, NOW())";
+                    VALUES (?, ?, ?, ?, NOW())";
         $stmtInsertar = $this->con->prepare($sqlInsertar);
         $stmtInsertar->bind_param("iiii", $this->tipo, $this->id_reporto, $id_reportada, $this->publicacion);
 
