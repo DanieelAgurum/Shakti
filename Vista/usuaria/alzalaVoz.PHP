@@ -20,7 +20,6 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="<?= htmlspecialchars($urlBase) ?>/css/alzalaVoz.css" />
-    <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
 
@@ -66,7 +65,7 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
 
                 foreach ($preguntas as $key => $texto) {
                     echo '<div class="mb-3">';
-                    echo "<label for='$key' class='form-label fw-semibold'>$texto</label>";
+                    echo "<label for='$key' class='form-label'>$texto</label>";
                     echo "<select class='form-select alzalaVoz-select' id='$key' name='respuestas[$key]' required>";
                     echo "<option value=''>Selecciona</option>";
                     foreach ($opciones[$key] as $val => $label) {
