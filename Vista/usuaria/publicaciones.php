@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/likeModelo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/comentariosModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/publicacionModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/likeModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/comentariosModelo.php';
 
 $urlBase = '/Shakti/';
 
@@ -33,7 +33,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/components/usuaria/navbar.php'; ?>
   <style>
     .respuestas {
       margin-left: 1rem;
@@ -200,10 +200,27 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
 
   </div>
   <script src="../../peticiones(js)/likesContar.js"></script>
-
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script src="../../validacionRegistro/abrirComentarios.js"></script>
+  <script>
+    document.querySelectorAll('.btn-toggle-edit').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        document.getElementById(`titulo-text-${id}`).style.display = 'none';
+        document.getElementById(`contenido-text-${id}`).style.display = 'none';
+        document.getElementById(`edit-form-${id}`).classList.remove('d-none');
+      });
+    });
+
+    document.querySelectorAll('.btn-cancel').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        document.getElementById(`edit-form-${id}`).classList.add('d-none');
+        document.getElementById(`titulo-text-${id}`).style.display = '';
+        document.getElementById(`contenido-text-${id}`).style.display = '';
+      });
+    });
+  </script>
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
 
 </body>
