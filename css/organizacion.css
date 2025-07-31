@@ -1,0 +1,94 @@
+/* Ajusta el padding superior del body para evitar que el contenido se solape con la barra de navegación fija */
+body {
+  padding-top: 56px;
+}
+
+/* Limita el ancho máximo del contenedor principal para un diseño más controlado */
+.container {
+  max-width: 1200px;
+}
+
+/* Define el tamaño y peso de la fuente del encabezado principal */
+h1 {
+  font-size: 2.0rem;
+  font-weight: 700;
+}
+
+/* Estiliza las tarjetas personalizadas eliminando bordes y añadiendo bordes rosas */
+.custom-card {
+  border: 2px solid #ff69b4; /* Bordes rosas */
+  border-radius: 10px;
+  transition: transform 0.2s; /* Agrega una transición suave al transformar la tarjeta */
+}
+
+/* Aplica un efecto de elevación al pasar el mouse sobre la tarjeta */
+.custom-card:hover {
+  transform: translateY(-10px);
+}
+
+/* Define la altura y el ajuste de la imagen en la parte superior de la tarjeta */
+.card-img-top {
+  height: 250px;
+  width: 100%;
+  object-fit: cover; /* Asegura que la imagen se ajuste sin distorsionarse */
+  border-top-left-radius: 10px; /* Redondea la esquina superior izquierda */
+  border-top-right-radius: 10px; /* Redondea la esquina superior derecha */
+}
+
+/* Ajusta el padding del cuerpo de la tarjeta para mejor espaciado */
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Estiliza el título dentro de la tarjeta */
+.card-title {
+  font-size: 1.25rem;
+  text-align: justify;
+  font-weight: 600;
+}
+
+/* Estiliza el texto dentro de la tarjeta */
+.card-text {
+  color: #666; /* Color gris para el texto */
+  text-align: justify;
+  margin-bottom: 1rem; /* Espacio inferior para separación */
+}
+
+/* Estiliza el pie de la tarjeta */
+.card-footer {
+  background-color: #f8f9fa; /* Fondo claro */
+  padding: 1rem; /* Espaciado interno */
+  border-top: none; /* Elimina el borde superior */
+  border-bottom-left-radius: 10px; /* Redondea la esquina inferior izquierda */
+  border-bottom-right-radius: 10px; /* Redondea la esquina inferior derecha */
+}
+
+/* Ajusta el margen inferior de la fila para mejor separación */
+.row {
+  margin-bottom: 2rem;
+}
+
+/* Ajusta el padding de las columnas para espaciado uniforme */
+.col {
+  padding: 1rem;
+}
+
+/* Media query para dispositivos con ancho máximo de 768px (tablets) */
+@media (max-width: 768px) {
+  .card-img-top {
+    height: 200px; /* Reduce la altura de la imagen */
+  }
+  h1 {
+    font-size: 2rem; /* Reduce el tamaño del encabezado */
+  }
+}
+
+/* Media query para dispositivos con ancho máximo de 576px (móviles) */
+@media (max-width: 576px) {
+  .card-img-top {
+    height: 150px; /* Reduce aún más la altura de la imagen */
+  }
+  h1 {
+    font-size: 1.5rem; /* Reduce más el tamaño del encabezado */
+  }
+}
