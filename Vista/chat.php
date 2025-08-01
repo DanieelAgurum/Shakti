@@ -168,9 +168,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
         seleccionado.classList.add('active');
       }
 
-      // Mostrar formulario y limpiar el área de mensajes
+      // Mostrar formulario de mensaje sin limpiar mensajes (chat.js manejará la carga)
       document.getElementById('form-chat').style.display = 'block';
-      document.getElementById('mensajes').innerHTML = "<p class='text-muted'>Cargando mensajes...</p>";
     }
   </script>
 
