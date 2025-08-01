@@ -47,23 +47,6 @@ class TipoReporteMdl
             ]);
         }
 
-        // Validar existencia nombre con tipo_objetivo=4
-        $queryTipo4 = "SELECT 1 FROM tipo_reporte WHERE nombre_reporte = ? AND tipo_objetivo = 4";
-        $stmtTipo4 = $this->con->prepare($queryTipo4);
-        $stmtTipo4->bind_param("s", $this->nombre);
-        $stmtTipo4->execute();
-        $resultadoTipo4 = $stmtTipo4->get_result();
-
-        if ($resultadoTipo4->num_rows > 0) {
-            $stmtTipo4->close();
-            $this->cerrarBD();
-            return json_encode([
-                "opcion" => 0,
-                "mensaje" => "Ya existe un registro general con ese nombre (tipo 'Todas')"
-            ]);
-        }
-        $stmtTipo4->close();
-
         // Validar existencia nombre y tipo_objetivo específico
         $query = "SELECT 1 FROM tipo_reporte WHERE nombre_reporte = ? AND tipo_objetivo = ?";
         $stmt = $this->con->prepare($query);
@@ -153,25 +136,7 @@ class TipoReporteMdl
         $nombre = trim($nombre);
         $tipo = intval($tipo);
 
-        // Validaciones con consultas preparadas
-        if ($tipo === 4) {
-            $sql = "SELECT 1 FROM tipo_reporte WHERE nombre_reporte = ? AND tipo_objetivo = 4 AND id_tipo_reporte != ?";
-            $stmt = $this->con->prepare($sql);
-            $stmt->bind_param("si", $nombre, $id);
-            $stmt->execute();
-            $stmt->store_result();
-            if ($stmt->num_rows > 0) {
-                $stmt->close();
-                $this->cerrarBD();
-                return json_encode([
-                    'opcion' => 1,
-                    'mensaje' => 'Ya existe este tipo con opción "Todos"'
-                ]);
-            }
-            $stmt->close();
-        }
-
-        if (in_array($tipo, [1, 2, 3])) {
+        if (in_array($tipo, [1, 2, 3, 4])) {
             // Validar nombre + tipo_objetivo
             $sql = "SELECT 1 FROM tipo_reporte WHERE nombre_reporte = ? AND tipo_objetivo = ? AND id_tipo_reporte != ?";
             $stmt = $this->con->prepare($sql);
