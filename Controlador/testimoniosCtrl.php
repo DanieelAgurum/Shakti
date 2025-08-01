@@ -29,10 +29,12 @@ switch ($_REQUEST['opcion']) {
 
         $resultado = $testimonio->guardarTestimonio($usuarioId, $calificacion, $opinion);
 
-        if ($resultado) {
+        if ($resultado === true) {
             echo json_encode(['status' => 'success', 'message' => 'Testimonio guardado correctamente']);
+        } elseif ($resultado === false) {
+            echo json_encode(['status' => 'error', 'message' => 'Tu mensaje contiene lenguaje ofensivo.']);
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'No se pudo guardar el testimonio']);
+            echo json_encode(['status' => 'error', 'message' => 'No se pudo guardar el testimonio.']);
         }
         break;
 
