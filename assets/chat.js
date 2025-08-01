@@ -259,6 +259,8 @@ function cargarChatsActivosEspecialista() {
 
     if (usuarias.length > 0 && !chatSeleccionadoManualmente) {
       window.seleccionarEspecialista(usuarias[0].id);
+
+      
     }
   });
 }

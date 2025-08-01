@@ -150,6 +150,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
       id: "<?= (int)$_SESSION['id'] ?>",
       rol: "<?= (int)$_SESSION['id_rol'] ?>",
       nombre: "<?= addslashes($_SESSION['nombre']) ?>"
+
+      
     };
 
     function seleccionarUsuario(id) {
