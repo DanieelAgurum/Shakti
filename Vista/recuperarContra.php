@@ -18,7 +18,7 @@ try {
             FROM tokens_contrasena t 
             JOIN usuarias u ON u.id = t.id_usuaria 
             WHERE t.token = :token 
-              AND t.fecha >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)  
+              AND t.fecha <= DATE_SUB(NOW(), INTERVAL 15 MINUTE)  
             LIMIT 1";
 
     $stmt = $con->prepare($sql);
