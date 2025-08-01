@@ -9,13 +9,14 @@ const inputMensaje = document.getElementById("mensaje-input");
 let chatId = null;
 let idDestino = null;
 let chatSeleccionadoManualmente = false;
-let mensajesUnsubscribe = null; // 👈 Para limpiar el listener anterior
+let chatSeleccionadoAutomaticamente = false; // NUEVO: para evitar selección múltiple automática
+let mensajesUnsubscribe = null; // Para limpiar el listener anterior
 
 // Seleccionar usuaria o especialista
 window.seleccionarEspecialista = function(idUsuarioDestino) {
   const nuevoChatId = generarChatId(window.usuarioActual.id, idUsuarioDestino);
   if (!idUsuarioDestino || !window.usuarioActual?.id) return console.error("ID inválido");
-  if (chatId === nuevoChatId) return; // 👈 Ya estás en ese chat
+  if (chatId === nuevoChatId) return; // Ya estás en ese chat
 
   idDestino = idUsuarioDestino;
   chatId = nuevoChatId;
@@ -36,9 +37,9 @@ function generarChatId(id1, id2) {
 function cargarMensajes() {
   if (!chatId) return console.error("Chat ID no definido");
 
-  if (mensajesUnsubscribe) mensajesUnsubscribe(); // 👈 Detener listener anterior
+  if (mensajesUnsubscribe) mensajesUnsubscribe(); // Detener listener anterior
 
-  const mensajesRef = query(ref(db, "chats/" + chatId), limitToLast(50)); // 👈 Solo últimos 50
+  const mensajesRef = query(ref(db, "chats/" + chatId), limitToLast(50)); // Solo últimos 50 mensajes
 
   mensajesUnsubscribe = onValue(mensajesRef, (snapshot) => {
     mensajesContenedor.innerHTML = "";
@@ -257,10 +258,10 @@ function cargarChatsActivosEspecialista() {
       contenedor.appendChild(card);
     });
 
-    if (usuarias.length > 0 && !chatSeleccionadoManualmente) {
+    // Selección automática SOLO si no se ha seleccionado manual ni automática antes
+    if (usuarias.length > 0 && !chatSeleccionadoManualmente && !chatSeleccionadoAutomaticamente) {
+      chatSeleccionadoAutomaticamente = true;
       window.seleccionarEspecialista(usuarias[0].id);
-
-      
     }
   });
 }
