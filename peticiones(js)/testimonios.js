@@ -65,6 +65,15 @@ document.getElementById("formCalificacion").addEventListener("submit", function 
                     showConfirmButton: false
                 });
                 document.getElementById("formCalificacion").reset();
+            } else if (data.message.includes("ofensivo")) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Lenguaje inapropiado",
+                    text: data.message,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
             } else {
                 Swal.fire({
                     icon: "error",
@@ -76,6 +85,8 @@ document.getElementById("formCalificacion").addEventListener("submit", function 
                 });
             }
         })
+
+        
         .catch(error => {
             Swal.fire({
                 icon: "error",
