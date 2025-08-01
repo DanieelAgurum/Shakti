@@ -142,10 +142,9 @@ class cambiarContraCorreo
                 $mail->AltBody = "Hola {$nickname}, para recuperar tu contraseña visita: {$link}";
                 $mail->send();
 
-                header("Location: " . $this->urlBase . "/Vista/login.php");
+                echo json_encode(["success" => true]);
                 exit;
             } else {
-                // Si no existe usuario, enviamos correo con link simple (sin token)
                 $mail->addAddress($this->correo);
 
                 $linkSimple = $this->urlBase . "/Vista/registro.php";
@@ -187,11 +186,12 @@ class cambiarContraCorreo
                 $mail->AltBody = "Parece que no hay una cuenta asociada a este correo. Puedes intentar registrarte en: {$linkSimple}";
                 $mail->send();
 
-                header("Location: " . $this->urlBase . "/Vista/login.php");
+                echo json_encode(["success" => true]);
                 exit;
             }
         } catch (Exception $e) {
-            echo 'Error al enviar el correo: ' . $mail->ErrorInfo;
+            echo json_encode(["success" => false, "error" => "No se pudo enviar el correo."]);
+            exit;
         }
     }
 

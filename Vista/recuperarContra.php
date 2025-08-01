@@ -29,7 +29,6 @@ try {
         header("Location: {$urlBase}/Vista/registro.php");
         exit;
     }
-
 } catch (\Throwable $th) {
     error_log("Error en validación de token: " . $th->getMessage());
     header("Location: {$urlBase}/Vista/registro.php");
@@ -57,26 +56,26 @@ try {
             <div class="auth-header text-center mb-4">
                 <h1 class="h3 fw-bold text-secondary">Cambiar Contraseña</h1>
             </div>
-
             <form class="auth-form" id="registroForm" novalidate action="../Controlador/cambiarContraCorreo.php?opcion=2" method="post">
-                <!-- Contraseña -->
                 <div class="mb-3 position-relative">
                     <label for="contraseña" class="form-label">Contraseña</label>
                     <div class="input-group">
                         <input type="password" class="form-control" name="contraseña" id="contraseña" placeholder="Ingrese su nueva contraseña" />
+                        <button class="btn btn-outline" type="button" id="togglePassword">
+                            <i class="bi bi-eye-fill" id="iconPassword"></i>
+                        </button>
                         <input type="hidden" name="token" value="<?php echo isset($token) ? htmlspecialchars($token) : "" ?>">
                     </div>
                     <small class="error" id="errorContraseña"></small>
                 </div>
 
-                <!-- Botón -->
                 <div class="d-grid">
                     <button type="submit" class="btn btn-purple w-100 shadow-sm fw-semibold" id="cambiar">Cambiar</button>
                 </div>
             </form>
-
         </div>
-        <script src="../validacionRegistro/validarContra.js"></script>
+        <script src="<?= $urlBase ?>peticiones(js)/verContra.js"></script>
+        <script src="<?= $urlBase ?>validacionRegistro/validarContra.js"></script>
         <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     </main>
     <?php include '../components/usuaria/footer.php'; ?>

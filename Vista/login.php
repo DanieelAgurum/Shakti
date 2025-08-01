@@ -93,7 +93,6 @@ if (isset($_SESSION['id_rol'])) {
       <div class="auth-header text-center mb-4">
         <h1 class="h3 fw-bold text-secondary">Bienvenido</h1>
       </div>
-
       <form class="needs-validation" id="iniciarSesion" method="post" novalidate>
         <small class="error text-center text-danger" id="mensaje-error" style="display: none;"></small>
 
@@ -111,6 +110,9 @@ if (isset($_SESSION['id_rol'])) {
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
             <input type="password" class="form-control" id="password" name="contraseña" placeholder="Ingrese su contraseña" required />
+            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+              <i class="bi bi-eye-fill" id="iconPassword"></i>
+            </button>
             <div class="invalid-feedback">La contraseña es obligatoria.</div>
           </div>
         </div>
@@ -136,28 +138,19 @@ if (isset($_SESSION['id_rol'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <form id="formRecuperar" action="../Controlador/cambiarContraCorreo.php?opcion=1" method="post" class="d-grid gap-3">
+          <form id="formRecuperar" class="d-grid gap-3">
             <h5 class="mb-3" id="mostrarMensaje"></h5>
-            <input type="email" name="correo" class="form-control" id="recuperarEmail" placeholder="Ingresar correo electrónico" required>
-            <button type="submit" class="btn btn-purple w-100">Enviar</button>
+            <input type="email" name="correo" id="recuperarEmail" class="form-control" placeholder="Ingresar correo electrónico" required>
+            <button type="submit" id="btnEnviarRecuperacion" class="btn btn-purple w-100">Enviar</button>
           </form>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="../peticiones(js)/deshabilitarModalCambiarContra.js"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/deshabilitarModalCambiarContra.js"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/verContra.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-  <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
-    <script>
-      Swal.fire({
-        icon: '<?= $_GET['status'] === 'success' ? 'success' : 'error' ?>',
-        title: '<?= $_GET['status'] === 'success' ? '¡Todo listo!' : 'Ups...' ?>',
-        text: '<?= htmlspecialchars(urldecode($_GET["message"]), ENT_QUOTES, "UTF-8") ?>',
-        confirmButtonText: 'Aceptar'
-      });
-    </script>
-  <?php endif; ?>
   <?php include_once '../components/usuaria/footer.php'; ?>
 </body>
 
