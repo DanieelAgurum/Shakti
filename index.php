@@ -1,11 +1,11 @@
 <?php
-require_once 'modelo/testimoniosMdl.php';
+require_once 'Modelo/testimoniosMdl.php';
 date_default_timezone_set('America/Mexico_City');
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 $temp = new Testimonios(null);
@@ -13,6 +13,10 @@ $db = $temp->conectarBD();
 $testimonio = new Testimonios($db);
 $testimonios = $testimonio->obtenerTestimonios();
 
+if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
+  header("Location: shakti/Vista/admin");
+  exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -23,17 +27,19 @@ $testimonios = $testimonio->obtenerTestimonios();
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shakti</title>
 
-  <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
-  <link rel="stylesheet" href="<?= $urlBase ?>css/estiloscarrucel.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>/css/estilos.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>/css/estiloscarrucel.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <script src="<?= $urlBase ?>/peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="<?= $urlBase ?>peticiones(js)/likesContar.js"></script>
-
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+  <script src="<?= $urlBase ?>/peticiones(js)/likesContar.js"></script>
+  <meta name="google-adsense-account" content="ca-pub-6265821190577353">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6265821190577353" crossorigin="anonymous"></script>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 
 </head>
 
@@ -44,22 +50,22 @@ $testimonios = $testimonio->obtenerTestimonios();
   <div class="swiper mySwiper hero-carousel mb-5">
     <div class="swiper-wrapper">
       <div class="swiper-slide">
-        <img src="<?= $urlBase ?>img/1carr.jpg" alt="Yoga" class="img-fluid w-100 h-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+        <img src="<?= $urlBase ?>/img/1carr.jpg" alt="Yoga" class="img-fluid w-100 h-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
       </div>
       <div class="swiper-slide">
-        <img src="<?= $urlBase ?>img/2carr.jpg" alt="Marcha" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+        <img src="<?= $urlBase ?>/img/2carr.jpg" alt="Marcha" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
       </div>
       <div class="swiper-slide">
-        <img src="<?= $urlBase ?>img/3carr.png" alt="Meditación" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+        <img src="<?= $urlBase ?>/img/3carr.png" alt="Meditación" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
       </div>
       <div class="swiper-slide">
-        <img src="<?= $urlBase ?>img/4carr.jpeg" alt="Unidas" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+        <img src="<?= $urlBase ?>/img/4carr.jpeg" alt="Unidas" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
       </div>
       <div class="swiper-slide">
-        <img src="<?= $urlBase ?>img/5carr.png" alt="Multiculturales" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+        <img src="<?= $urlBase ?>/img/5carr.png" alt="Multiculturales" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
       </div>
       <div class="swiper-slide">
-        <img src="<?= $urlBase ?>img/6carr.png" alt="Comunidad" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+        <img src="<?= $urlBase ?>/img/6carr.png" alt="Comunidad" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
       </div>
     </div>
     <div class="swiper-pagination"></div>
@@ -70,84 +76,19 @@ $testimonios = $testimonio->obtenerTestimonios();
   <!-- Bienvenida -->
   <main class="hero p-5 text-center">
     <?php if (!empty($_SESSION['correo'])): ?>
-      <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/usuaria/inicioUser.php'; ?>
+      <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/usuaria/inicioUser.php'; ?>
     <?php else: ?>
       <h1>Bienvenido a Nuestro Sitio Shakti</h1>
       <p class="lead">Tu bienestar es primero</p>
-      <div class="hero-buttons ">
-        <a href="#" class="btn btn-primary me-2">Más contenido....</a>
-        <a href="<?= $urlBase ?>Vista/organizacionVista.php" class="btn btn-outline-secondary">Organizaciones</a>
+      <div class="hero-buttons d-flex flex-wrap justify-content-center">
+        <a href="<?= $urlBase ?>/Vista/contenido.php" class="btn btn-primary me-2 mt-2 mb-2 w-45">Más contenido...</a>
+        <a href="<?= $urlBase ?>/Vista/organizacionVista.php" class="btn btn-outline-secondary mt-2 mb-2 w-45">Organizaciones</a>
       </div>
     <?php endif; ?>
   </main>
 
-
-  <div class="container mt-5 mb-5 ">
-    <h2 class="text-center mb-4">
-      Contenido Destacado
-    </h2>
-    <div class="row g-4">
-      <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__slow animacion text-white">
-          <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 1" />
-          <div class="card-img-overlay">
-            <h5 class="card-title title-content">Moda Urbana 2025</h5>
-            <p class="card-text text-content">Descubre las últimas tendencias en ropa casual con un toque fresco y moderno para esta temporada.</p>
-            <div class="card-date">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6c0-1.11-.89-2-2-2zM5 20V9h14v11H5z" />
-              </svg>
-              Última actualización hace 3 min
-            </div>
-            <a href="#" class="btn btn-outline-light mt-3 read-more-btn">Leer más</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Repite para las otras dos tarjetas -->
-      <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__slow animacion text-white">
-          <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 2" />
-          <div class="card-img-overlay">
-            <h5 class="card-title title-content">Tecnología y Estilo</h5>
-            <p class="card-text text-content">Cómo la tecnología está influyendo en el diseño de prendas con materiales inteligentes y sostenibles.</p>
-            <div class="card-date">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6c0-1.11-.89-2-2-2zM5 20V9h14v11H5z" />
-              </svg>
-              Última actualización hace 5 min
-            </div>
-            <a href="#" class="btn btn-outline-light mt-3 read-more-btn">Leer más</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-4">
-        <div class="card card-custom animate__animated animate__fadeInLeft animate__slow animacion text-white">
-          <img src="https://tse1.mm.bing.net/th/id/OIP.4tfg8I67q3CueL5oCkv8KAHaE8?r=0&cb=thvnext&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img" alt="Imagen 3" />
-          <div class="card-img-overlay">
-            <h5 class="card-title title-content">Consejos de Estilo</h5>
-            <p class="card-text text-content">Ideas para combinar colores y accesorios que realcen tu personalidad y estilo único.</p>
-            <div class="card-date">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6c0-1.11-.89-2-2-2zM5 20V9h14v11H5z" />
-              </svg>
-              Última actualización hace 10 min
-            </div>
-            <a href="#" class="btn btn-outline-light mt-3 read-more-btn">Leer más</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end mt-4">
-      <button type="button" class="btn btn-outline-dark px-4 py-2">
-        Ver más
-      </button>
-    </div>
-  </div>
-
   <!-- FAQ 1 - Bootstrap Brain Component -->
-  <section class="py-3 py-md-5 mb-5">
+  <section class="py-3 py-md-5 mb-3">
     <div class="container">
       <div class="row gy-5 gy-lg-0 align-items-lg-center">
         <div class="col-12 col-lg-6">
@@ -163,7 +104,7 @@ $testimonios = $testimonio->obtenerTestimonios();
               <div id="carouselAcordeon" class="carousel slide">
                 <div class="carousel-inner">
                   <?php
-                  require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/preguntasFrecuentesCtrl.php';
+                  require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/preguntasFrecuentesCtrl.php';
                   $preg = new preguntasFrecuentesMdl();
                   $preg->conectarBD();
                   $preg->mostrarTodas();
@@ -277,12 +218,11 @@ $testimonios = $testimonio->obtenerTestimonios();
   <script src="peticiones(js)/testimonios.js"></script>
 
   <?php
-  include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php';
+  include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php';
   ?>
 
   <!-- Scripts -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const swiper = new Swiper('.mySwiper', {

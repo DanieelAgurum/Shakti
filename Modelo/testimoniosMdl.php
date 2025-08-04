@@ -9,9 +9,9 @@ class Testimonios
     public function conectarBD()
     {
         try {
-            $pdo = new PDO("mysql:host=localhost;dbname=shakti", "root", "", [
+            $pdo = new PDO("mysql:host=localhost;dbname=shakti;charset=utf8mb4", "root", "", [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
             ]);
             return $pdo;
         } catch (PDOException $e) {
@@ -23,7 +23,7 @@ class Testimonios
     {
         $this->db = $db;
     }
-
+    
     function normalizarTexto($texto)
     {
         $mapa = [
@@ -390,7 +390,6 @@ class Testimonios
             }
         }
 
-        // Revisión contextual
         if ($this->contieneContextoOfensivo($contenido)) {
             return true;
         }

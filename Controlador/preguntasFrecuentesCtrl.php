@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/preguntasFrecuentesMdl.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/preguntasFrecuentesMdl.php';
 
 $preg = new preguntasFrecuentesMdl();
 $preg->conectarBD();

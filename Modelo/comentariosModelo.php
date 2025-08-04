@@ -5,14 +5,18 @@ class Comentario
     private function conectarBD()
     {
         $con = mysqli_connect("localhost", "root", "", "shakti");
+
         if (!$con) {
             header('Content-Type: application/json');
             echo json_encode([
                 'status' => 'error',
-                'message' => 'Error de conexión a la base de datos'
+                'message' => '❌ Error de conexión a la base de datos: ' . mysqli_connect_error()
             ]);
             exit;
         }
+        
+        mysqli_set_charset($con, "utf8mb4");
+
         return $con;
     }
 
@@ -92,7 +96,7 @@ class Comentario
             'te doy con el pene',
             'pene chico',
             'pene grande',
-            'enséñame tu pene',
+            'enseño mi pene',
             'metetelo por el culo',
             'abre las piernas',
             'muestra las tetas',

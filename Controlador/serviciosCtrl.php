@@ -1,5 +1,5 @@
 <?php
-require_once '../modelo/ServiciosMdl.php';
+require_once '../Modelo/serviciosMdl.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idUsuaria = $_POST['id_usuaria'] ?? null;

@@ -1,6 +1,5 @@
 <?php
-
-include("../modelo/Usuarias.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/Usuarias.php';
 
 $u = new Usuarias();
 $u->conectarBD();

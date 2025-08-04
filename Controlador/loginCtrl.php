@@ -1,6 +1,7 @@
 <?php
 
-include("../modelo/loginMdl.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/shakti/Modelo/loginMdl.php");
+
 $u = new loginMdln();
 $u -> conectarBD();
 

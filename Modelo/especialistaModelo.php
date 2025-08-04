@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
 
 class EspecialistaModelo
 {
@@ -31,7 +31,7 @@ class EspecialistaModelo
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($resultado) {
-            $resultado['foto'] = "/Shakti/controlador/ver_foto.php?id={$resultado['id']}";
+            $resultado['foto'] = "/Controlador/ver_foto.php?id={$resultado['id']}";
         }
 
         return $resultado;
@@ -50,7 +50,7 @@ class EspecialistaModelo
         $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($resultados as &$usuario) {
-            $usuario['foto'] = "/Shakti/controlador/ver_foto.php?id={$usuario['id']}";
+            $usuario['foto'] = "/Controlador/ver_foto.php?id={$usuario['id']}";
         }
 
         return $resultados;
@@ -116,14 +116,13 @@ class EspecialistaModelo
                         <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $row['id'] . '">
                             <i class="bi bi-eye-fill"></i> Ver perfil
                         </button>
-                        <button type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $row['id'] . '">
-                            <i class="bi bi-envelope-paper-heart"></i> Mensaje
-                        </button>
+                        <a href="Vista/chat.php" class="btn btn-outline-primary mt-2">
+                        <i class="bi bi-envelope-paper-heart"></i> Mensaje</a>
                     </div>
                 </div>
             </div>';
 
-            include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/especialistas.php';
+            include $_SERVER['DOCUMENT_ROOT'] . 'Vista/modales/especialistas.php';
         }
 
         if ($stmt->rowCount() == 0) {

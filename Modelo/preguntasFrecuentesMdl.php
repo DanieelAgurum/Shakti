@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 
 class preguntasFrecuentesMdl
 {
@@ -21,12 +21,10 @@ class preguntasFrecuentesMdl
     public function conectarBD()
     {
         try {
-            $this->conexion = new PDO('mysql:host=localhost;dbname=shakti;charset=utf8', 'root', '');
+            $this->conexion = new PDO('mysql:host=localhost;dbname=shakti;charset=utf8mb4', 'root', '');
             $this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // Opcional: para que fetch por defecto devuelva arrays asociativos
             $this->conexion->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            // Mejor devolver JSON con error para que la app lo pueda interpretar
             echo json_encode([
                 'opcion' => 0,
                 'mensaje' => 'Error de conexión: ' . $e->getMessage()
@@ -213,7 +211,7 @@ class preguntasFrecuentesMdl
                 $pregunta = htmlspecialchars($row['pregunta'], ENT_QUOTES, 'UTF-8');
                 $respuesta = htmlspecialchars($row['respuesta'], ENT_QUOTES, 'UTF-8');
 
-                $headingId = "flush-heading" . $grupoIndex . chr(97 + $i); 
+                $headingId = "flush-heading" . $grupoIndex . chr(97 + $i);
                 $collapseId = "flush-collapse" . $grupoIndex . chr(97 + $i);
 
                 echo '<div class="accordion-item">';

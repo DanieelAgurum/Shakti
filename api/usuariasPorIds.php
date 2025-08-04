@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/conexion.php';
 
 header('Content-Type: text/plain');
 
@@ -34,7 +34,7 @@ try {
         $descripcion = limpiar($row['descripcion']);
 
         // Ajusta esta ruta según corresponda
-        $fotoUrl = "/Shakti/verFoto.php?id={$id}";
+        $fotoUrl = "/verFoto.php?id={$id}";
 
         echo "{$id}|{$nombre}|{$descripcion}|{$fotoUrl}\n";
     }

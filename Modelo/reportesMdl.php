@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
 
 class reportesMdl
 {
@@ -18,7 +18,7 @@ class reportesMdl
 
     public function conectarBD()
     {
-        $this->con = new mysqli("localhost", "root", "", "shakti");
+        $this->con = new mysqli("localhost", "u165621799_kaizen", "Kaizen5.", "u165621799_shakti");
 
         if ($this->con->connect_error) {
             echo json_encode([

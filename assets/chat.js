@@ -1,6 +1,5 @@
-import { ref, onValue, push, update, remove, query, limitToLast } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
-import { db } from "/Shakti/peticiones(js)/firebaseInit.js";
-
+import { ref, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+import { db } from "/peticiones(js)/firebaseInit.js"; 
 // Elementos del DOM
 const mensajesContenedor = document.getElementById("mensajes");
 const formChat = document.getElementById("form-chat");
@@ -8,19 +7,14 @@ const inputMensaje = document.getElementById("mensaje-input");
 
 let chatId = null;
 let idDestino = null;
-let chatSeleccionadoManualmente = false;
-let chatSeleccionadoAutomaticamente = false; // NUEVO: para evitar selección múltiple automática
-let mensajesUnsubscribe = null; // Para limpiar el listener anterior
 
 // Seleccionar usuaria o especialista
 window.seleccionarEspecialista = function(idUsuarioDestino) {
-  const nuevoChatId = generarChatId(window.usuarioActual.id, idUsuarioDestino);
-  if (!idUsuarioDestino || !window.usuarioActual?.id) return console.error("ID inválido");
-  if (chatId === nuevoChatId) return; // Ya estás en ese chat
+  if (!idUsuarioDestino) return console.error("ID destino inválido");
+  if (!window.usuarioActual?.id) return console.error("Usuario actual no definido");
 
   idDestino = idUsuarioDestino;
-  chatId = nuevoChatId;
-  chatSeleccionadoManualmente = true;
+  chatId = generarChatId(window.usuarioActual.id, idDestino);
 
   mensajesContenedor.innerHTML = "";
   formChat.style.display = "block";
@@ -33,15 +27,13 @@ function generarChatId(id1, id2) {
   return id1 < id2 ? `${id1}_${id2}` : `${id2}_${id1}`;
 }
 
-// Cargar mensajes
+// Cargar mensajes en tiempo real
 function cargarMensajes() {
   if (!chatId) return console.error("Chat ID no definido");
 
-  if (mensajesUnsubscribe) mensajesUnsubscribe(); // Detener listener anterior
+  const mensajesRef = ref(db, "chats/" + chatId);
 
-  const mensajesRef = query(ref(db, "chats/" + chatId), limitToLast(50)); // Solo últimos 50 mensajes
-
-  mensajesUnsubscribe = onValue(mensajesRef, (snapshot) => {
+  onValue(mensajesRef, (snapshot) => {
     mensajesContenedor.innerHTML = "";
     snapshot.forEach((child) => {
       const msg = child.val();
@@ -51,16 +43,19 @@ function cargarMensajes() {
       const div = document.createElement("div");
       div.classList.add("mensaje", msg.remitenteId == window.usuarioActual.id ? "usuario" : "especialista");
 
+      // Texto del mensaje
       const p = document.createElement("p");
       p.textContent = msg.texto;
       div.appendChild(p);
 
+      // Hora del mensaje
       const hora = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const spanHora = document.createElement("span");
       spanHora.className = "hora-msg text-muted small d-block";
       spanHora.textContent = hora;
       div.appendChild(spanHora);
 
+      // Botones de editar y eliminar si es el remitente
       if (msg.remitenteId == window.usuarioActual.id) {
         const btnsDiv = document.createElement("div");
         btnsDiv.classList.add("msg-options");
@@ -104,7 +99,7 @@ formChat.addEventListener("submit", (e) => {
   inputMensaje.value = "";
 });
 
-// Editar mensaje
+// Editar mensaje con SweetAlert2
 function editarMensaje(chatId, msgKey, textoAnterior) {
   Swal.fire({
     title: 'Editar mensaje',
@@ -114,7 +109,9 @@ function editarMensaje(chatId, msgKey, textoAnterior) {
     confirmButtonText: 'Guardar',
     cancelButtonText: 'Cancelar',
     inputValidator: (value) => {
-      if (!value.trim()) return 'El mensaje no puede estar vacío';
+      if (!value.trim()) {
+        return 'El mensaje no puede estar vacío';
+      }
     }
   }).then((result) => {
     if (result.isConfirmed) {
@@ -127,7 +124,7 @@ function editarMensaje(chatId, msgKey, textoAnterior) {
   });
 }
 
-// Eliminar mensaje
+// Eliminar mensaje con SweetAlert2
 function eliminarMensaje(chatId, msgKey) {
   Swal.fire({
     title: '¿Eliminar mensaje?',
@@ -144,7 +141,7 @@ function eliminarMensaje(chatId, msgKey) {
   });
 }
 
-// Eliminar todo el chat
+// Eliminar toda la charla con SweetAlert2
 window.eliminarChatCompleto = function () {
   if (!chatId) return;
 
@@ -168,7 +165,7 @@ window.eliminarChatCompleto = function () {
 async function obtenerDatosUsuarias(ids) {
   if (!ids || ids.length === 0) return [];
   try {
-    const res = await fetch('/Shakti/api/usuariasPorIds.php', {
+    const res = await fetch('../api/usuariasPorIds.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ids })
@@ -227,7 +224,7 @@ function cargarChatsActivosEspecialista() {
     contenedor.innerHTML = `<h5>Usuarias con chat activo</h5>`;
 
     usuarias.forEach(u => {
-      const fotoUrl = u.foto ? `/Shakti/verFoto.php?id=${u.id}` : '/Shakti/img/usuario.jpg';
+      const fotoUrl = u.foto ? `/verFoto.php?id=${u.id}` : '/img/usuario.jpg';
 
       const card = document.createElement('div');
       card.className = "card mb-3 card-chat-item";
@@ -241,7 +238,7 @@ function cargarChatsActivosEspecialista() {
               src="${fotoUrl}" 
               class="img-thumbnail perfil-img rounded-circle" 
               alt="${u.nombre || 'Usuaria'}"
-              onerror="this.onerror=null;this.src='/Shakti/img/usuario.jpg';"
+              onerror="this.onerror=null;this.src='/img/usuario.jpg';"
               style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;"
             />
           </div>
@@ -258,9 +255,8 @@ function cargarChatsActivosEspecialista() {
       contenedor.appendChild(card);
     });
 
-    // Selección automática SOLO si no se ha seleccionado manual ni automática antes
-    if (usuarias.length > 0 && !chatSeleccionadoManualmente && !chatSeleccionadoAutomaticamente) {
-      chatSeleccionadoAutomaticamente = true;
+    // Selecciona el primer chat automáticamente
+    if (usuarias.length > 0) {
       window.seleccionarEspecialista(usuarias[0].id);
     }
   });
