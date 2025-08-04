@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
     header("Location: {$urlBase}Vista/especialista/perfil.php");
@@ -21,7 +21,7 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="<?= htmlspecialchars($urlBase) ?>/css/alzalaVoz.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 
 </head>
 
@@ -81,7 +81,7 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
         </div>
     </div>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
 </body>
 
 </html>
