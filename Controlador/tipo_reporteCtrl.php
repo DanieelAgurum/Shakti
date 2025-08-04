@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/Shakti/Modelo/tipo_reporteMdl.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/shakti/Modelo/tipo_reporteMdl.php";
 
 $tipoRe = new TipoReporteMdl();
 $tipoRe->conectarBD();

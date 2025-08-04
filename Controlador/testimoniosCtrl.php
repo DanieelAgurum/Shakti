@@ -9,7 +9,7 @@ if (!isset($_SESSION['id_usuaria'])) {
     exit;
 }
 
-include("../modelo/testimoniosMdl.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/testimoniosMdl.php';
 date_default_timezone_set('America/Mexico_City');
 
 $temp = new Testimonios(null);
@@ -32,7 +32,7 @@ switch ($_REQUEST['opcion']) {
         if ($resultado === true) {
             echo json_encode(['status' => 'success', 'message' => 'Testimonio guardado correctamente']);
         } elseif ($resultado === false) {
-            echo json_encode(['status' => 'error', 'message' => 'Tu mensaje contiene lenguaje ofensivo.']);
+            echo json_encode(['status' => 'error', 'message' => 'Evitemos palabras ofensivas. Gracias.']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'No se pudo guardar el testimonio.']);
         }

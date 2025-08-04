@@ -64,7 +64,7 @@ class Legales
 
         if ($nuevoDocumento !== null && $nuevaPortada !== null) {
             $stmt = $this->con->prepare("UPDATE legales SET portada = ?, titulo = ?, documento = ?, descripcion = ?, fecha = NOW() WHERE id_legal = ?");
-            $stmt->bind_param("ssssi", $nuevaPortada,$titulo, $nuevoDocumento, $descripcion, $id_legal);
+            $stmt->bind_param("ssssi", $nuevaPortada, $titulo, $nuevoDocumento, $descripcion, $id_legal);
             $stmt->send_long_data(3, $nuevaPortada);
             $stmt->send_long_data(1, $nuevoDocumento);
         } elseif ($nuevoDocumento !== null) {
@@ -73,7 +73,7 @@ class Legales
             $stmt->send_long_data(1, $nuevoDocumento);
         } elseif ($nuevaPortada !== null) {
             $stmt = $this->con->prepare("UPDATE legales SET  portada = ?, titulo = ?, descripcion = ?, fecha = NOW() WHERE id_legal = ?");
-            $stmt->bind_param("sssi", $nuevaPortada,$titulo, $descripcion, $id_legal);
+            $stmt->bind_param("sssi", $nuevaPortada, $titulo, $descripcion, $id_legal);
             $stmt->send_long_data(2, $nuevaPortada);
         } else {
             $stmt = $this->con->prepare("UPDATE legales SET titulo = ?, descripcion = ?, fecha = NOW() WHERE id_legal = ?");
@@ -106,5 +106,30 @@ class Legales
         } else {
             return false;
         }
+    }
+    
+     // NUEVA FUNCIÓN para búsqueda con filtro LIKE
+    public function buscar($termino)
+    {
+        $this->conectarBD();
+        $busquedaSQL = "%" . $this->con->real_escape_string($termino) . "%";
+
+        $sql = "SELECT id_legal, portada, titulo, descripcion, fecha 
+                FROM legales 
+                WHERE titulo LIKE ? OR descripcion LIKE ? 
+                ORDER BY fecha DESC";
+
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param("ss", $busquedaSQL, $busquedaSQL);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $resultados = [];
+        while ($row = $result->fetch_assoc()) {
+            $resultados[] = $row;
+        }
+
+        $stmt->close();
+        return $resultados;
     }
 }

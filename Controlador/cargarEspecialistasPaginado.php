@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/especialistaModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/especialistaModelo.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -33,15 +33,14 @@ foreach ($especialistas as $row) {
                 <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $id . '">
                     <i class="bi bi-eye-fill"></i> Ver perfil
                 </button>
-                <button type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $id . '">
-                    <i class="bi bi-envelope-paper-heart"></i> Mensaje
-                </button>
+                <a href="/Vista/chat.php" class="btn btn-outline-primary mt-2">
+                <i class="bi bi-envelope-paper-heart"></i> Mensaje</a>
             </div>
         </div>
     </div>';
 
     ob_start();
-    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/especialistas.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/Vista/modales/especialistas.php';
     $cards .= ob_get_clean();
 }
 
