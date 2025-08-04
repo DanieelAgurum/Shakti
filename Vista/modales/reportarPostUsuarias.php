@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/Shakti/Modelo/conexion.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/shakti/Modelo/conexion.php";
 $db = new ConectarDB();
 $conn = $db->open();
 $sql = "SELECT * FROM tipo_reporte WHERE tipo_objetivo IN (3)";
@@ -21,7 +21,7 @@ $consulta = $conn->query($sql);
                     <input type="hidden" id="id_usuaria" name="id_usuaria" value="<?= $_SESSION['id_usuaria'] ?>">
                     <input type="hidden" name="opcion" value="1">
                     <input type="hidden" id="publicacion" name="publicacion">
-                    <input type="hidden" name="tipo_de_reporte" value="">
+                    <input type="hidden" name="tipo_de_reporte" value="3">
                     <?php foreach ($consulta as $registro): ?>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="reporte<?= $registro['id_tipo_reporte'] ?>">

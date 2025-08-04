@@ -3,7 +3,7 @@ $(document).ready(function () {
         var especialista = $(this).val();
 
         $.ajax({
-            url: '../../modelo/buscar_especialistas.php',
+            url: '../../Modelo/buscar_especialistas.php',
             type: 'GET',
             data: {
                 especialista: especialista

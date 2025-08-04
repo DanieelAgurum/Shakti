@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/Shakti/Modelo/conexion.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/shakti/Modelo/conexion.php";
 $db = new ConectarDB();
 $conn = $db->open();
 $sql = "SELECT * FROM tipo_reporte WHERE tipo_objetivo IN (1)";

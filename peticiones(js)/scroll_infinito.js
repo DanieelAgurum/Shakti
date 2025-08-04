@@ -26,7 +26,7 @@ async function cargarMasPublicaciones(pagina) {
     .value.trim();
 
   const url = new URL(
-    "/shakti/controlador/buscadorForoCtrl.php",
+    "/shakti/Controlador/buscadorForoCtrl.php",
     window.location.origin
   );
   url.searchParams.append("limit", limite);

@@ -1,6 +1,6 @@
 function cargarEspecialistas(pagina = 1) {
     $("#loaderInicio").show();
-    $.post("../../controlador/cargarEspecialistasPaginado.php", {
+    $.post("../../Controlador/cargarEspecialistasPaginado.php", {
         pagina: pagina
     }, function (data) {
         $("#resultados").html(data.cards);

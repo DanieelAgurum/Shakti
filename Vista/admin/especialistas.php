@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -23,11 +23,11 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 
 <body class="sb-nav-fixed">
     <?php
-    include  $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/navbar.php';
+    include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/navbar.php';
     ?>
     <div id="layoutSidenav">
         <?php
-        include  $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/lateral.php';
+        include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/lateral.php';
         ?>
         <div id="layoutSidenav_content">
             <main>
@@ -59,7 +59,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Foto</th>
                                         <th>Nombre completo</th>
                                         <th>Correo</th>
                                         <th>Teléfono</th>
@@ -76,20 +75,13 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                     $db = $database->open();
 
                                     try {
-                                        $sql = "SELECT u.id, u.foto, u.nombre, u.apellidos, u.nickname, u.correo, u.telefono, u.direccion, u.estatus,
+                                        $sql = "SELECT u.id, u.nombre, u.apellidos, u.nickname, u.correo, u.telefono, u.direccion, u.estatus,
                                         d.id_documento, d.id_oficial, d.documento1, d.documento2, d.documento3, d.documento4 
                                         FROM usuarias u INNER JOIN documentos d ON u.id = d.id_usuaria WHERE u.id_rol = 2";
                                         foreach ($db->query($sql) as $row) {
                                     ?>
                                             <tr>
                                                 <td><?php echo $row['id']; ?></td>
-                                                <td>
-                                                    <?php if (!empty($row['foto'])): ?>
-                                                        <img src="data:image/*;base64,<?php echo base64_encode($row['foto']); ?>" width="60px" height="60px" alt="">
-                                                    <?php else: ?>
-                                                        <img src="https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png" width="60px" height="60px" alt="">
-                                                    <?php endif; ?>
-                                                </td>
                                                 <td><?php echo $row['nombre'] . ' ' . $row['apellidos']; ?></td>
                                                 <td><?php echo $row['correo']; ?></td>
                                                 <td><?php echo $row['telefono']; ?></td>
@@ -110,7 +102,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                     <?php endfor; ?>
                                                 </td>
                                                 <td>
-                                                    <a href="#cambiarEstado_<?php echo $row['id']; ?>" class="btn btn-sm <?php echo $row['estatus'] == 1 ? 'btn-danger' : 'btn-success'; ?> d-block" data-toggle="modal">
+                                                    <a href="#cambiarEstado_<?php echo $row['id']; ?>" class="btn btn-sm <?php echo $row['estatus'] == 1 ? 'btn-warning' : 'btn-success'; ?> d-block" data-toggle="modal">
                                                         <i class="fa-sharp fa-solid fa-pen-to-square"></i>
                                                         <?php echo $row['estatus'] == 1 ? 'Desactivar' : 'Activar'; ?>
                                                     </a><br>

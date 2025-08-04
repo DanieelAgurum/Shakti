@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -22,12 +22,12 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 
 <body class="sb-nav-fixed">
     <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/navbar.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/components/admin/navbar.php';
     ?>
     <div id="layoutSidenav">
         <?php
-        include  $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/lateral.php';
-        include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/admin/modales/organizaciones.php';
+        include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/lateral.php';
+        include $_SERVER['DOCUMENT_ROOT'] . '/Vista/admin/modales/organizaciones.php';
         ?>
         <div id="layoutSidenav_content">
             <main>
@@ -78,7 +78,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/organizacionesCtrl.php';
+                                        require_once $_SERVER['DOCUMENT_ROOT'] . '/Controlador/organizacionesCtrl.php';
                                         $tabla = new organizacionesModelo();
                                         $tabla->conectarBD();
                                         $tabla->mostrarTodos();
