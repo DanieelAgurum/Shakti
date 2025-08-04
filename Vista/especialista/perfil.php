@@ -1,7 +1,8 @@
 <?php
-include '../../Modelo/completarPerfil.php';
-require_once '../../Modelo/ServiciosMdl.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/completarPerfil.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/serviciosMdl.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -24,7 +25,7 @@ if (isset($_SESSION['correo']) || isset($_SESSION['id_rol'])) {
 $idUsuaria = $_SESSION['id'] ?? null;
 
 if (!$idUsuaria) {
-  header("Location: ../../index.php");
+  header("Location: {$urlBase}");
   exit;
 }
 
@@ -42,7 +43,7 @@ $idUsuaria = $_SESSION['id_usuaria'];
 $serviciosRegistrados = $serviciosMdl->obtenerServiciosPorUsuaria($idUsuaria);
 
 if (!empty($serviciosRegistrados) && is_string($serviciosRegistrados[0])) {
-    $serviciosRegistrados = array_map('trim', explode(',', $serviciosRegistrados[0]));
+  $serviciosRegistrados = array_map('trim', explode(',', $serviciosRegistrados[0]));
 }
 
 ?>
@@ -54,13 +55,20 @@ if (!empty($serviciosRegistrados) && is_string($serviciosRegistrados[0])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Perfil - Shakti</title>
-  <link rel="stylesheet" href="../../css/estilos.css" />
-  <link rel="stylesheet" href="../../css/registro.css" />
-  <link rel="stylesheet" href="../../css/perfil.css" />
-  <link rel="stylesheet" href="../../css/footer.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>css/registro.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>css/perfil.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>css/footer.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-  <?php include '../../components/usuaria/navbar.php'; ?>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
+  <style>
+    .scrollable-modal-body {
+      max-height: 70vh;
+      overflow-y: auto;
+
+    }
+  </style>
 </head>
 
 <body>

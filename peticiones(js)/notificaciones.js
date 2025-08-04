@@ -1,5 +1,5 @@
 import { ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
-import { db } from "/Shakti/peticiones(js)/firebaseInit.js";
+import { db } from "/peticiones(js)/firebaseInit.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const usuario = window.usuarioActual;
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function obtenerDatosUsuarios(ids) {
     if (!ids || ids.length === 0) return {};
     try {
-      const res = await fetch('/Shakti/api/usuariasPorIds.php', {
+      const res = await fetch('/api/usuariasPorIds.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids })

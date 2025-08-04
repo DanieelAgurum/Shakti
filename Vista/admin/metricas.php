@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -11,7 +11,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     exit;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/mostrarMetricasMdl.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/mostrarMetricasMdl.php';
 
 $modelo = new mostrarMetricasMdl();
 $datos = $modelo->mostrar();
@@ -66,11 +66,11 @@ $topComentarios = $modelo->obtenerTopComentarios();
 
 <body class="sb-nav-fixed">
     <?php
-    include  $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/navbar.php';
+    include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/navbar.php';
     ?>
     <div id="layoutSidenav">
         <?php
-        include  $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/lateral.php';
+        include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/lateral.php';
         ?>
         <div id="layoutSidenav_content">
             <main>

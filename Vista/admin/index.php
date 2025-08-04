@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -24,11 +24,11 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 
 <body class="sb-nav-fixed">
     <?php
-    include  $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/navbar.php';
+    include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/navbar.php';
     ?>
     <div id="layoutSidenav">
         <?php
-        include  $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/lateral.php';
+        include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/lateral.php';
         ?>
         <div id="layoutSidenav_content">
             <main>
@@ -41,7 +41,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Usuarias</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="Usuarias.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="usuarias.php">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -57,18 +57,9 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                         </div>
                         <div class="col-xl-3 col-md-6">
                             <div class="card text-dark mb-4">
-                                <div class="card-body">Publicaciones</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="">Ver detalles</a>
-                                    <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card text-dark mb-4">
                                 <div class="card-body">Contenido</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="contenido.php">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -96,15 +87,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                 <div class="card-body">Reportes</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
                                     <a class="small text-dark stretched-link" href="<?php echo $urlBase ?>Vista/admin/reportes.php">Ver detalles</a>
-                                    <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card text-dark mb-4">
-                                <div class="card-body">Comentarios</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>

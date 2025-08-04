@@ -1,6 +1,12 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/conexion.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
+<?php
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti//obtenerLink/obtenerLink.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti//Modelo/conexion.php';
 
 $conexion = new ConectarDB();
 $con = $conexion->open();
@@ -10,7 +16,7 @@ $urlBase = getBaseUrl();
 
 try {
     if (!$token) {
-        header("Location: {$urlBase}/Vista/registro.php");
+        header("Location: {$urlBase}Vista/registro.php");
         exit;
     }
 
@@ -26,12 +32,12 @@ try {
     $stmt->execute();
 
     if ($stmt->rowCount() == 0) {
-        header("Location: {$urlBase}/Vista/registro.php");
+        header("Location: {$urlBase}Vista/registro.php");
         exit;
     }
 } catch (\Throwable $th) {
     error_log("Error en validación de token: " . $th->getMessage());
-    header("Location: {$urlBase}/Vista/registro.php");
+    header("Location: {$urlBase}Vista/registro.php");
     exit;
 }
 ?>
@@ -45,7 +51,7 @@ try {
     <title>Recuperar Contraseña - Shakti</title>
     <link rel="stylesheet" href="<?php echo $urlBase ?>css/styles.css" />
     <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/shakti//components/usuaria/navbar.php';
     ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -66,7 +72,6 @@ try {
                         </button>
                         <input type="hidden" name="token" value="<?php echo isset($token) ? htmlspecialchars($token) : "" ?>">
                     </div>
-                    <small class="error" id="errorContraseña"></small>
                 </div>
 
                 <div class="d-grid">
