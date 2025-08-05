@@ -72,10 +72,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="../../peticiones(js)/cargaEspecialistas.js"></script>
-    <script src="../../peticiones(js)/especialistas.js"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/cargaEspecialistas.js"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/especialistas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-    <?php include '../../components/usuaria/footer.php'; ?>
+    <?php $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
 
 </body>
 
