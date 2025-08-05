@@ -40,7 +40,6 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <meta name="google-adsense-account" content="ca-pub-6265821190577353">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6265821190577353" crossorigin="anonymous"></script>
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
-
 </head>
 
 <body class="bg-white text-black">
