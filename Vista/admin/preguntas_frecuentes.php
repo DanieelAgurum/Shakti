@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -24,12 +24,12 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 
 <body class="sb-nav-fixed">
     <?php
-    include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/navbar.php';
+    include  $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/navbar.php';
     ?>
     <div id="layoutSidenav">
         <?php
-        include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/lateral.php';
-        include $_SERVER['DOCUMENT_ROOT'] . '/Vista/admin/modales/preguntas_frecuentes.php';
+        include  $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/lateral.php';
+        include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/admin/modales/preguntas_frecuentes.php';
         ?>
         <div id="layoutSidenav_content">
             <main>
@@ -78,7 +78,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        require_once $_SERVER['DOCUMENT_ROOT'] . '/Controlador/preguntasFrecuentesCtrl.php';
+                                        require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/preguntasFrecuentesCtrl.php';
                                         $tabla = new preguntasFrecuentesMdl();
                                         $tabla->conectarBD();
                                         $tabla->verTodos();

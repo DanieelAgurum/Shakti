@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/javascript');
 $vista = $_GET['vista'] ?? 'desconocida';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/shati/obtenerLink/obtenerLink.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 ?>
 

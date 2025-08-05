@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 session_start();
@@ -21,12 +21,12 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 </head>
 
 <body class="sb-nav-fixed">
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/components/admin/navbar.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/navbar.php'; ?>
 
     <div id="layoutSidenav">
         <?php
-        include $_SERVER['DOCUMENT_ROOT'] . '/components/admin/lateral.php';
-        include $_SERVER['DOCUMENT_ROOT'] . '/Vista/admin/modales/tipo_reporte.php';
+        include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/lateral.php';
+        include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/admin/modales/tipo_reporte.php';
         ?>
 
         <div id="layoutSidenav_content">
@@ -80,7 +80,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    require_once $_SERVER['DOCUMENT_ROOT'] . '/Controlador/tipo_reporteCtrl.php';
+                                    require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/tipo_reporteCtrl.php';
                                     $tabla = new TipoReporteMdl();
                                     $tabla->conectarBD();
                                     $tabla->verTipos();

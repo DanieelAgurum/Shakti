@@ -1,6 +1,6 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/contenidoMdl.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/contenidoMdl.php';
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -29,10 +29,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 </head>
 <body class="sb-nav-fixed">
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/components/admin/navbar.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/navbar.php'; ?>
 
 <div id="layoutSidenav">
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/components/admin/lateral.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/lateral.php'; ?>
   <div id="layoutSidenav_content">
     <main>
       <div class="container-fluid px-4 mb-5">

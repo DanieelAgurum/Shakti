@@ -18,7 +18,7 @@ class reportesMdl
 
     public function conectarBD()
     {
-        $this->con = new mysqli("localhost", "u165621799_kaizen", "Kaizen5.", "u165621799_shakti");
+        $this->con = new mysqli("localhost", "root", "", "shakti");
 
         if ($this->con->connect_error) {
             echo json_encode([
