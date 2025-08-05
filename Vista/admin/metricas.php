@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -11,7 +11,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     exit;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/mostrarMetricasMdl.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/mostrarMetricasMdl.php';
 
 $modelo = new mostrarMetricasMdl();
 $datos = $modelo->mostrar();
@@ -41,24 +41,19 @@ $topComentarios = $modelo->obtenerTopComentarios();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Métricas - Shakti</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 1rem;
-        }
 
         .chart-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 2rem;
+            gap: 3rem;
         }
 
         #pieChart,
         #barChart,
         #likes,
         #comentarios {
-            height: 450px;
+            height: 500px;
             border: 1px solid #ccc;
         }
     </style>
@@ -66,23 +61,23 @@ $topComentarios = $modelo->obtenerTopComentarios();
 
 <body class="sb-nav-fixed">
     <?php
-    include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/navbar.php';
+    include  $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/navbar.php';
     ?>
     <div id="layoutSidenav">
         <?php
-        include  $_SERVER['DOCUMENT_ROOT'] . '/components/admin/lateral.php';
+        include  $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/lateral.php';
         ?>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4 mb-5">
+                <div class="container-fluid px-4 mb-5 mt-5">
                     <h1 class="mt-4 text-center solid"><strong>Métricas</strong></h1>
                     <div class="chart-container mt-4 row">
-                        <div id="pieChart" class="chart-box col-12 col-xl-5"></div>
-                        <div id="barChart" class="chart-box col-12 col-xl-5"></div>
+                        <div id="pieChart" class="chart-box col-10"></div>
+                        <div id="barChart" class="chart-box col-10"></div>
                     </div>
-                    <div class="chart-container mt-4 row">
-                        <div id="likes" class="chart-box col-12 col-xl-5"></div>
-                        <div id="comentarios" class="chart-box col-12 col-xl-5"></div>
+                    <div class="chart-container px-4 mt-4 row">
+                        <div id="likes" class="chart-box col-10"></div>
+                        <div id="comentarios" class="chart-box col-10"></div>
                     </div>
                 </div>
             </main>
@@ -114,7 +109,7 @@ $topComentarios = $modelo->obtenerTopComentarios();
                 });
                 pieChart.title()
                     .enabled(true)
-                    .text("Vistas por página")
+                    .text("Vistas por Página")
                     .fontSize(26)
                     .fontWeight("bold")
                     .fontColor("#333")
@@ -127,7 +122,7 @@ $topComentarios = $modelo->obtenerTopComentarios();
                 barChart.labels().enabled(true).format('{%value}');
                 barChart.title()
                     .enabled(true)
-                    .text("Tiempo total por página (segundos)")
+                    .text("Tiempo Total por Página (Segundos)")
                     .fontSize(26)
                     .fontWeight("bold")
                     .fontColor("#333")

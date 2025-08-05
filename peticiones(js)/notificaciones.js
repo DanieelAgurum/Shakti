@@ -1,5 +1,5 @@
 import { ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
-import { db } from "/peticiones(js)/firebaseInit.js";
+import { db } from "/shakti/peticiones(js)/firebaseInit.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const usuario = window.usuarioActual;
