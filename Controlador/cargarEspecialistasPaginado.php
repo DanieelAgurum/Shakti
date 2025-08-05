@@ -40,7 +40,7 @@ foreach ($especialistas as $row) {
     </div>';
 
     ob_start();
-    include $_SERVER['DOCUMENT_ROOT'] . '/Vista/modales/especialistas.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/modales/especialistas.php';
     $cards .= ob_get_clean();
 }
 
