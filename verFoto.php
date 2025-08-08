@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
 
 $id = $_GET['id'] ?? $_GET['id2'] ?? null;
 
@@ -16,7 +16,7 @@ try {
 
     if (!$row || empty($row['foto'])) {
         // Redirigir a imagen por defecto si no hay foto
-        header("Location: /Shakti/img/usuario.jpg");
+        header("Location: /img/usuario.jpg");
         exit;
     }
 
@@ -29,7 +29,7 @@ try {
     // Asegurarnos que el MIME sea tipo imagen
     if (!str_starts_with($mime, 'image/')) {
         // Si no es imagen, redirigir a default
-        header("Location: /Shakti/assets/img/default.png");
+        header("Location: /assets/img/default.png");
         exit;
     }
 

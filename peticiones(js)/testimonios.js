@@ -39,7 +39,7 @@ document.getElementById("formCalificacion").addEventListener("submit", function 
         body: formData,
     })
         .then(response => response.json())
-        .then(data => {
+                .then(data => {
             if (data.status === "no-session") {
                 Swal.fire({
                     icon: 'info',
@@ -49,7 +49,7 @@ document.getElementById("formCalificacion").addEventListener("submit", function 
                     confirmButtonColor: '#3085d6'
                 }).then(result => {
                     if (result.isConfirmed) {
-                        window.location.href = '/Shakti/Vista/login.php';
+                        window.location.href = '/Vista/login.php';
                     }
                 });
                 return;
@@ -76,8 +76,8 @@ document.getElementById("formCalificacion").addEventListener("submit", function 
                 });
             } else {
                 Swal.fire({
-                    icon: "error",
-                    title: "Error",
+                    icon: "warning",
+                    title: "Lenguaje inapropiado",
                     text: data.message,
                     timer: 3000,
                     timerProgressBar: true,
@@ -85,8 +85,6 @@ document.getElementById("formCalificacion").addEventListener("submit", function 
                 });
             }
         })
-
-        
         .catch(error => {
             Swal.fire({
                 icon: "error",

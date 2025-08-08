@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/alzalaVozModelo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti//Modelo/alzalaVozModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti//Modelo/conexion.php';
 
 $id_usuaria = $_SESSION['id_usuaria'] ?? null;
 

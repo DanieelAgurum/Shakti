@@ -1,3 +1,9 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -7,7 +13,7 @@
     <title>Suscripción - Shakti</title>
 
     <link rel="stylesheet" href="../css/planes.css">
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/components/usuaria/navbar.php'; ?>
 </head>
 
 <body>
@@ -39,7 +45,7 @@
                     <li>✅ Alza la voz</li>
                     <li>✅ Foro</li>
                 </ul>
-                 <button class="plan-button" disabled>Plan Actual</button>
+                <button class="plan-button" disabled>Plan Actual</button>
             </div>
         </div>
     </div>

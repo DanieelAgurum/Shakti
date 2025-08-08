@@ -1,7 +1,7 @@
 <?php
 class ConectarDB
 {
-    private $server = "mysql:host=localhost;dbname=shakti";
+    private $server = "mysql:host=localhost;dbname=shakti;charset=utf8mb4";
     private $user = "root";
     private $pass = "";
     private $options = array(
@@ -14,7 +14,6 @@ class ConectarDB
     {
         try {
             $this->conn = new PDO($this->server, $this->user, $this->pass, $this->options);
-           
             return $this->conn;
         } catch (PDOException $e) {
             echo "❌ Error de conexión: " . $e->getMessage();

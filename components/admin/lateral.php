@@ -29,12 +29,10 @@
                              <nav class="sb-sidenav-menu-nested nav">
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/usuarias.php">Usuarias</a>
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/especialistas.php">Especialistas</a>
-                                 <a class="nav-link text-dark" href="#">Publicaciones</a>
-                                 <a class="nav-link text-dark" href="#">Contenido</a>
-                                 <a class="nav-link text-dark" href="#">Documentos</a>
+                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/contenido.php">Contenido</a>
+                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/libre_segura.php">Documentos Legales</a>
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/organizaciones.php">Organizaciones</a>
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/preguntas_frecuentes.php">Preguntas Frecuentes</a>
-                                 <a class="nav-link text-dark" href="#">Comentarios</a>
                              </nav>
                          </div>
 
@@ -49,7 +47,6 @@
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/reportes.php">Reportes</a>
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/tipos_reportes.php">Tipo de Reportes</a>
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/metricas.php">Métricas</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/publicaciones.php">CRUD Publicaciones</a>
                                  <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/glosario.php">Glosario</a>
                              </nav>
                          </div>

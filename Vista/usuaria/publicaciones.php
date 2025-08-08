@@ -1,10 +1,17 @@
 <?php
-session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/publicacionModelo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/likeModelo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/comentariosModelo.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-$urlBase = '/Shakti/';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/publicacionModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/likeModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/comentariosModelo.php';
+$urlBase = getBaseUrl();
+
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
 $likeModelo = new likeModelo();
 $comentarioModelo = new Comentario();
@@ -33,7 +40,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/components/usuaria/navbar.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
   <style>
     .respuestas {
       margin-left: 1rem;
@@ -59,7 +66,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
     <div class="card mb-4 shadow-sm">
       <div class="card-body">
         <h5 class="card-title">Crear publicación</h5>
-        <form method="POST" action="<?= $urlBase ?>Controlador/PublicacionControlador.php" onsubmit="return validarFormulario();">
+        <form method="POST" action="<?= $urlBase ?>Controlador/publicacionControlador.php" onsubmit="return validarFormulario();">
           <div class="mb-3">
             <input type="text" class="form-control mb-2" name="titulo" placeholder="Título de tu publicación" minlength="3" required>
             <textarea class="form-control" name="contenido" rows="3" placeholder="¿Qué estás pensando?" minlength="5" required></textarea>
@@ -104,7 +111,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               <?= nl2br(htmlspecialchars($pub['contenido'])) ?>
             </p>
 
-            <form class="edit-form d-none" id="edit-form-<?= $pub['id_publicacion'] ?>" method="POST" action="<?= $urlBase ?>Controlador/PublicacionControlador.php" onsubmit="return validarEdicion(<?= $pub['id_publicacion'] ?>)">
+            <form class="edit-form d-none" id="edit-form-<?= $pub['id_publicacion'] ?>" method="POST" action="<?= $urlBase ?>Controlador/publicacionControlador.php" onsubmit="return validarEdicion(<?= $pub['id_publicacion'] ?>)">
               <input type="hidden" name="editar_publicacion" value="1" />
               <input type="hidden" name="id_publicacion" value="<?= $pub['id_publicacion'] ?>" />
               <input type="text" class="form-control mb-2" name="titulo" id="titulo-<?= $pub['id_publicacion'] ?>" value="<?= htmlspecialchars($pub['titulo']) ?>" minlength="3" required>
@@ -140,7 +147,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             <div>
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn btn-sm btn-outline-success btn-toggle-edit" data-id="<?= $pub['id_publicacion'] ?>"><i class="bi bi-pencil-square"></i> Editar</button>
-                <a href="<?= $urlBase ?>Controlador/PublicacionControlador.php?borrar_id=<?= $pub['id_publicacion'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar esta publicación?');"><i class="bi bi-trash3"></i> Eliminar</a>
+                <a href="<?= $urlBase ?>Controlador/publicacionControlador.php?borrar_id=<?= $pub['id_publicacion'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar esta publicación?');"><i class="bi bi-trash3"></i> Eliminar</a>
               </div>
             </div>
           </div>
@@ -149,40 +156,67 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             <div class="existing-comments mb-3">
               <?php if ($comRaiz): ?>
                 <?php foreach ($comRaiz as $comentario):
-                  $idComentario = $comentario['id_comentario'];
+                  $id_comentario = $comentario['id_comentario'];
                   $nombre = htmlspecialchars($comentario['nombre'] ?? 'Anónimo');
-                  $contenido = nl2br(htmlspecialchars($comentario['comentario']));
+                  $contenidoTexto = nl2br(htmlspecialchars($comentario['comentario']));
+                  $contenidoPlano = htmlspecialchars($comentario['comentario']);
                   $fecha = !empty($comentario['fecha_comentario']) ? date('d M Y H:i', strtotime($comentario['fecha_comentario'])) : 'Sin fecha';
                   $tiempoComentario = strtotime($comentario['fecha_comentario']);
-                  $puedeEditar = (time() - $tiempoComentario) <= 300;
-                  $respuestasCount = $comentarioModelo->contarRespuestasPorPadre($idComentario);
-
+                  $esAutoraComentario = isset($comentario['id_usuaria']) && $comentario['id_usuaria'] == $id_usuaria;
+                  $puedeEditar = $esAutoraComentario && (time() - $tiempoComentario) <= 300;
+                  $respuestasCount = $comentarioModelo->contarRespuestasPorPadre($id_comentario);
                 ?>
-                  <div class="comentario-raiz mb-2 p-2 bg-light rounded" id="comentario-<?= $idComentario ?>">
-                    <strong><?= $nombre ?>:</strong> <?= $contenido ?><br>
+                  <div class="comentario-raiz mb-2 p-2 bg-light rounded position-relative border" id="comentario-<?= $id_comentario ?>">
+                    <strong><?= $nombre ?>:</strong> <?= $contenidoTexto ?><br>
                     <small class="text-muted"><?= $fecha ?></small>
 
-                    <button class="btn btn-outline-primary btn-sm btn-responder" data-id="<?= $idComentario ?>">Responder</button>
-                    <div class="ms-4 d-none" id="respuestas-<?= $idComentario ?>"></div>
+                    <button class="btn btn-outline-primary btn-sm btn-responder" data-id="<?= $id_comentario ?>">Responder</button>
+                    <div class="ms-4 d-none" id="respuestas-<?= $id_comentario ?>"></div>
 
                     <?php if ($puedeEditar): ?>
-                      <button class="btn btn-outline-success btn-sm btn-edit-comentario" data-id="<?= $idComentario ?>"><i class="bi bi-pencil-square"></i> Editar</button>
-                      <button class="btn btn-outline-danger btn-sm btn-eliminar-comentario" data-id="<?= $idComentario ?>"><i class="bi bi-trash3"></i> Eliminar</button>
+                      <div class="dropdown position-absolute top-0 end-0 mt-2 me-2">
+                        <button class="btn btn-sm btn-link p-0 text-dark" type="button" data-bs-toggle="dropdown" title="Opciones">
+                          <i class="bi bi-three-dots-vertical fs-5"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <button class="dropdown-item btn btn-outline-success btn-sm btn-edit-comentario" data-id="<?= $id_comentario ?>">
+                              <i class="bi bi-pencil-square text-success"></i> Editar
+                            </button>
+                          </li>
+                          <li>
+                            <button class="dropdown-item btn btn-outline-danger btn-sm btn-eliminar-comentario" data-id="<?= $id_comentario ?>">
+                              <i class="bi bi-trash3 text-danger"></i> Eliminar
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
 
+                      <form class="edit-comentario-form d-none mt-2" id="edit-form-<?= $id_comentario ?>">
+                        <input type="hidden" name="id_comentario" value="<?= $id_comentario ?>">
+                        <div class="input-group">
+                          <input type="text" class="form-control form-control-sm" name="nuevo_comentario" value="<?= $contenidoPlano ?>" required>
+                          <button type="submit" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-check2-circle"></i> Guardar
+                          </button>
+                        </div>
+                      </form>
                     <?php endif; ?>
+
                     <?php if ($respuestasCount > 0): ?>
-                      <button class="btn btn-sm btn-outline-secondary ver-respuestas" data-id="<?= $idComentario ?>" data-count="<?= $respuestasCount ?>">
+                      <button class="btn btn-sm btn-outline-secondary ver-respuestas" data-id="<?= $id_comentario ?>" data-count="<?= $respuestasCount ?>">
                         Ver respuestas (<?= $respuestasCount ?>)
                       </button>
                     <?php endif; ?>
                   </div>
-                  <div class="ms-4 mt-2" id="form-responder-<?= $idComentario ?>"></div>
+                  <div class="ms-4 mt-2" id="form-responder-<?= $id_comentario ?>"></div>
                 <?php endforeach; ?>
+
               <?php else: ?>
                 <p class="text-muted">Aún no hay comentarios.</p>
               <?php endif; ?>
             </div>
-            <form class="comment-form" data-id-publicacion="<?= $pub['id_publicacion'] ?>">
+            <form class="comment-form" data-id-publicacion="<?= $pub['id_publicacion'] ?>" method="post">
               <input type="hidden" name="opcion" value="1">
               <input type="hidden" name="id_publicacion" value="<?= $pub['id_publicacion'] ?>">
               <input type="hidden" name="id_padre" value="">
@@ -191,6 +225,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
                 <button type="submit" class="btn btn-sm btn-outline-primary">Enviar <i class="bi bi-arrow-right-circle"></i></button>
               </div>
             </form>
+
           </div>
         </div>
       <?php endforeach; ?>
@@ -199,9 +234,26 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
     <?php endif; ?>
 
   </div>
-  <script src="../../peticiones(js)/likesContar.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/likesContar.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-  <script src="../../validacionRegistro/abrirComentarios.js"></script>
+  <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
+  <script>
+    $(document).ready(function() {
+      $(document).on('click', '.btn-toggle-comments', function() {
+        const id = $(this).data('id');
+        const $commentsSection = $('#comments-' + id);
+
+        if ($commentsSection.is(':visible')) {
+          $commentsSection.slideUp(200, function() {
+            $commentsSection.addClass('d-none');
+          });
+        } else {
+          $commentsSection.removeClass('d-none').hide().slideDown(200);
+        }
+      });
+    });
+  </script>
   <script>
     document.querySelectorAll('.btn-toggle-edit').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -221,7 +273,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
       });
     });
   </script>
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
 
 </body>
 

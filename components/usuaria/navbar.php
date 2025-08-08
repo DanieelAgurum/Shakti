@@ -1,6 +1,6 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/notificacionesModelo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notificacionesModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 $notificaciones = [];
@@ -20,24 +20,21 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Panel - Shakti</title>
-  <!-- Toastify CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
-
-  <!-- Toastify JS -->
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-  <!-- CSS personalizado -->
+  <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <style>
     @media (max-width: 576px) {
       .animacion {
         animation: none !important;
       }
+    }
+
+    .navbar {
+      z-index: 1040;
     }
   </style>
 </head>
@@ -225,7 +222,7 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- Script módulo notificaciones -->
-  <script type="module" src="/shakti/peticiones(js)/notificaciones.js"></script>
+  <script type="module" src="<?= $urlBase ?>peticiones(js)/notificaciones.js"></script>
 </body>
 
 </html>

@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 ?>
 
@@ -16,9 +16,9 @@ $urlBase = getBaseUrl();
     <title>Contacto - Shakti</title>
 
     <!-- Estilos -->
-    <link rel="stylesheet" href="../css/contacto.css">
-    <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
-    <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>/css/contacto.css">
+    <link rel="stylesheet" href="<?= $urlBase ?>/css/estilos.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>/css/animacionCarga.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -37,7 +37,7 @@ $urlBase = getBaseUrl();
 
 <body>
     <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     ?>
 
     <div class="container mt-3 mb-3 animate__animated animate__delay-0.5s animate__fadeInDown">

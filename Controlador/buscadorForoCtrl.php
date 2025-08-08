@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/buscadorForoMdl.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/buscadorForoMdl.php';
 
 $buscar = new buscadorForoMdl();
 $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;

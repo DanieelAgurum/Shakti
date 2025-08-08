@@ -25,7 +25,7 @@ class cambiarContraCorreo
     public function inicializar($correo, $urlBase)
     {
         $this->correo = $correo;
-        $this->urlBase = rtrim($urlBase, '/'); // eliminar posible barra final
+        $this->urlBase = rtrim($urlBase, '/');
     }
 
     private function guardarTokenEnBD($userId, $token)
@@ -34,7 +34,6 @@ class cambiarContraCorreo
         date_default_timezone_set('America/Mexico_City');
         $fecha = date('Y-m-d H:i:s');
 
-        // Primero verificamos si ya existe token para ese usuario
         $sqlCheck = "SELECT COUNT(*) FROM tokens_contrasena WHERE id_usuaria = ?";
         $stmtCheck = mysqli_prepare($con, $sqlCheck);
         mysqli_stmt_bind_param($stmtCheck, "i", $userId);
@@ -44,14 +43,12 @@ class cambiarContraCorreo
         mysqli_stmt_close($stmtCheck);
 
         if ($count > 0) {
-            // Hacer UPDATE con fecha desde PHP
             $sqlUpdate = "UPDATE tokens_contrasena SET token = ?, fecha = ? WHERE id_usuaria = ?";
             $stmt = mysqli_prepare($con, $sqlUpdate);
             mysqli_stmt_bind_param($stmt, "ssi", $token, $fecha, $userId);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
         } else {
-            // Hacer INSERT con fecha desde PHP
             $sqlInsert = "INSERT INTO tokens_contrasena (id_usuaria, token, fecha) VALUES (?, ?, ?)";
             $stmt = mysqli_prepare($con, $sqlInsert);
             mysqli_stmt_bind_param($stmt, "iss", $userId, $token, $fecha);
@@ -84,7 +81,6 @@ class cambiarContraCorreo
         $mail = new PHPMailer(true);
 
         try {
-            // Configuración del servidor SMTP
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
@@ -93,11 +89,9 @@ class cambiarContraCorreo
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
-            // Remitente y destinatario
             $mail->CharSet = 'UTF-8';
             $mail->setFrom('cristo045millanperez@gmail.com', 'Shakti');
 
-            // Si existe usuario, generamos token y link con token
             if ($existeUsuario) {
                 $mail->addAddress($correo, $nickname);
                 $token = bin2hex(random_bytes(60) . hash("sha512", $correo));
@@ -181,16 +175,16 @@ class cambiarContraCorreo
                 ";
 
                 $mail->isHTML(true);
-                $mail->Subject = 'Reegistrate en Shakti';
+                $mail->Subject = 'Registrate en Shakti';
                 $mail->Body = $bodyHTML;
                 $mail->AltBody = "Parece que no hay una cuenta asociada a este correo. Puedes intentar registrarte en: {$linkSimple}";
                 $mail->send();
 
-                echo json_encode(["success" => true]);
+                 echo json_encode(["success" => true]);
                 exit;
             }
         } catch (Exception $e) {
-            echo json_encode(["success" => false, "error" => "No se pudo enviar el correo."]);
+           echo json_encode(["success" => false, "error" => "No se pudo enviar el correo."]);
             exit;
         }
     }

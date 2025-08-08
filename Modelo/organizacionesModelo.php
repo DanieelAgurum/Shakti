@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
 
 class organizacionesModelo {
     private $nombre;
@@ -39,6 +39,7 @@ class organizacionesModelo {
             if ($check !== false && in_array($check['mime'], $allowedMimeTypes)) {
                 $this->imagen = file_get_contents($imagen['tmp_name']);
             } else {
+                // Devuelve un error si el formato no es válido
                 return json_encode(['opcion' => 0, 'mensaje' => 'Formato de imagen no válido.']);
             }
         }
@@ -48,6 +49,10 @@ class organizacionesModelo {
     {
         if (empty($this->nombre) || empty($this->descripcion) || empty($this->numero)) {
             return json_encode(['opcion' => 0, 'mensaje' => 'Los campos no pueden estar vacíos.']);
+        }
+
+        if ($this->imagen === null) {
+            return json_encode(['opcion' => 0, 'mensaje' => 'La imagen es requerida.']);
         }
 
         $this->conectarBD();
@@ -69,15 +74,16 @@ class organizacionesModelo {
         $agregar->bindParam(':numero', $this->numero);
         $agregar->bindParam(':imagen', $this->imagen, PDO::PARAM_LOB);
 
+        // CORRECCIÓN: Se eliminó la redirección con header() y se retorna una respuesta JSON.
+        // Esto es necesario para que la llamada AJAX funcione correctamente.
         if ($agregar->execute()) {
-            header("Location: " . $this->urlBase . "/Vista/admin/organizaciones.php?estado=agregado");
-            exit;
+            return json_encode(['opcion' => 1, 'mensaje' => 'Organización agregada con éxito']);
         } else {
-            header("Location: " . $this->urlBase . "/Vista/admin/organizaciones.php?estado=error");
-            exit;
+            return json_encode(['opcion' => 0, 'mensaje' => 'Error al guardar en la base de datos.']);
         }
     }
-
+    
+    // La función modificarOrganizacion ya estaba bien para AJAX, no necesita cambios.
     public function modificarOrganizacion($id, $nombre, $descripcion, $numero){
         if (empty($nombre) || empty($descripcion) || empty($numero)){
             return json_encode([
@@ -121,6 +127,7 @@ class organizacionesModelo {
         }
     }
 
+    // La función eliminarOrganizacion usa una redirección simple, lo cual está bien para su implementación actual.
     public function eliminarOrganizacion($id){
         $this->conectarBD();
 
@@ -137,6 +144,7 @@ class organizacionesModelo {
         }
     }
 
+    // La función mostrarTodos no necesita cambios.
     public function mostrarTodos()
     {
         $this->conectarBD();
@@ -189,5 +197,4 @@ class organizacionesModelo {
             $num++;
         }
     }
-
 }

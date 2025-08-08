@@ -1,7 +1,10 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/conexion.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
 
 $database = new ConectarDB();
 $db = $database->open();
@@ -20,7 +23,6 @@ try {
 <head>
   <meta charset="UTF-8">
   <title>Contenido Público - SHAKTI</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
@@ -60,7 +62,7 @@ try {
 </head>
 <body>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 
 <div class="container">
   <h1 class="titulo-seccion">Contenido Informativo</h1>
@@ -94,6 +96,5 @@ try {
   <?php endif; ?>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

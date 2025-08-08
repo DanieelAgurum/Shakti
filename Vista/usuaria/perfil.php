@@ -1,6 +1,6 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/notasModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notasModelo.php';
 $urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -48,7 +48,7 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Perfil - Shakti</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <?php include '../../components/usuaria/navbar.php'; ?>
+    <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 </head>
 
 <body>

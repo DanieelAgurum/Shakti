@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/EspecialistaModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/especialistaModelo.php';
 
 class EspecialistaControlador {
     private $modelo;

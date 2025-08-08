@@ -1,5 +1,8 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/Shakti/Modelo/reportesMdl.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/shakti/Modelo/reportesMdl.php";
+
+header('Content-Type: application/json');
+
 $rep = new reportesMdl();
 $rep->conectarBD();
 
