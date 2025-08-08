@@ -11,10 +11,14 @@ class Completar
     public function conectarBD()
     {
         $this->con = mysqli_connect("localhost", "root", "", "shakti");
+
         if (!$this->con) {
-            die("Problemas con la conexión a la base de datos: " . mysqli_connect_error());
+            die("❌ Problemas con la conexión a la base de datos: " . mysqli_connect_error());
         }
+        
+        mysqli_set_charset($this->con, "utf8mb4");
     }
+
 
     public function inicializar($id_oficial, $d1 = null, $d2 = null, $d3 = null, $d4 = null)
     {

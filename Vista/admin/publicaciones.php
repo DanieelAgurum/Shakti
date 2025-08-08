@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/PublicacionModelo.php';
 
 $urlBase = '/Shakti/';
 
@@ -29,10 +29,10 @@ unset($_SESSION['mensaje']);
 
 <body class="sb-nav-fixed">
 
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/navbar.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/navbar.php'; ?>
 
   <div id="layoutSidenav">
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/admin/lateral.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/lateral.php'; ?>
 
     <div id="layoutSidenav_content">
       <main class="container mt-5">

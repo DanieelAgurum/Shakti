@@ -1,6 +1,7 @@
 <?php
-require_once 'Conexion.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
 
 class GlosarioMdl extends ConectarDB
 {

@@ -3,8 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/NotificacionesModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/publicacionModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notificacionesModelo.php';
 
 $publicacionModelo = new PublicacionModelo();
 $id_usuaria = $_SESSION['id_usuaria'] ?? null;

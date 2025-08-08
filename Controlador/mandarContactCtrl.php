@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/contactMdl.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/contactMdl.php';
 
 $contacto = new contactMdl();
 if (isset($_REQUEST['opcion'])) {

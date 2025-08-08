@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/likeModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/likeModelo.php';
 
 if (!isset($_SESSION['id'])) {
     echo json_encode(['error' => 'Debes iniciar sesión para dar like.']);

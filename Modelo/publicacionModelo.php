@@ -1,8 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-require_once __DIR__ . '/NotificacionesModelo.php'; 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notificacionesModelo.php';
 class PublicacionModelo
 {
     private $conn;
@@ -203,12 +200,23 @@ class PublicacionModelo
     public function borrar(int $id, int $id_usuaria): bool
     {
         $this->conectar();
+
         try {
-            $sql = "DELETE FROM publicacion WHERE id_publicacion = :id AND id_usuarias = :id_usuaria";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':id_usuaria', $id_usuaria);
-            return $stmt->execute();
+            $sqlLikes = "DELETE FROM likes_publicaciones WHERE id_publicacion = ?";
+            $stmtLikes = $this->conn->prepare($sqlLikes);
+            $stmtLikes->bindParam("i", $id);
+            $stmtLikes->execute();
+
+            $sqlComentarios = "DELETE FROM comentarios WHERE id_publicacion = ?";
+            $stmtComentarios = $this->conn->prepare($sqlComentarios);
+            $stmtComentarios->bindParam("i", $id);
+            $stmtComentarios->execute();
+
+            $sqlPublicacion = "DELETE FROM publicacion WHERE id_publicacion = ? AND id_usuarias = ?";
+            $stmtPublicacion = $this->conn->prepare($sqlPublicacion);
+            $stmtPublicacion->bindParam("ii", $id, $id_usuaria);
+
+            return $stmtPublicacion->execute();
         } catch (PDOException $e) {
             error_log("Error al borrar publicación con verificación: " . $e->getMessage());
             return false;
@@ -217,14 +225,26 @@ class PublicacionModelo
 
     public function borrarSinVerificar(int $id_publicacion): bool
     {
-        $this->conectar();
+          $this->conectar();
+
         try {
-            $sql = "DELETE FROM publicacion WHERE id_publicacion = :id";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':id', $id_publicacion);
-            return $stmt->execute();
+            $sqlLikes = "DELETE FROM likes_publicaciones WHERE id_publicacion = ?";
+            $stmtLikes = $this->conn->prepare($sqlLikes);
+            $stmtLikes->bindParam("i", $id_publicacion);
+            $stmtLikes->execute();
+
+            $sqlComentarios = "DELETE FROM comentarios WHERE id_publicacion = ?";
+            $stmtComentarios = $this->conn->prepare($sqlComentarios);
+            $stmtComentarios->bindParam("i", $id_publicacion);
+            $stmtComentarios->execute();
+
+            $sqlPublicacion = "DELETE FROM publicacion WHERE id_publicacion = ?";
+            $stmtPublicacion = $this->conn->prepare($sqlPublicacion);
+            $stmtPublicacion->bindParam("i", $id_publicacion);
+
+            return $stmtPublicacion->execute();
         } catch (PDOException $e) {
-            error_log("Error al borrar publicación sin verificación: " . $e->getMessage());
+            error_log("Error al borrar publicación con verificación: " . $e->getMessage());
             return false;
         }
     }

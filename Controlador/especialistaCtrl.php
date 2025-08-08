@@ -1,5 +1,5 @@
 <?php
-include("../modelo/completarPerfil.php");
+include("../Modelo/completarPerfil.php");
 
 $e = new Completar();
 $e->conectarBD();

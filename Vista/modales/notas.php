@@ -1,3 +1,37 @@
+
+<!-- Modal para agregar una nueva nota -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva nota</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="../../Controlador/notasCtrl.php" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Título:</label>
+                        <input type="text" name="titulo" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nota" class="col-form-label">Mensaje:</label>
+                        <textarea class="form-control" name="nota" id="nota"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i> Cancelar
+                    </button>
+                    <input type="hidden" name="opcion" value="1">
+                    <button type="submit" class="btn btn-outline-success">
+                        <i class="bi bi-check2-circle"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Modal para mostrar la nota -->
 <div class="modal fade" id="notaModal<?= $index ?>" tabindex="-1" aria-labelledby="notaModalLabel<?= $index ?>" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
@@ -70,39 +104,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancelar</button>
                     <button type="submit" class="btn btn-outline-danger"><i class="bi bi-eraser-fill"></i> Confirmar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para agregar una nueva nota -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva nota</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="../../Controlador/notasCtrl.php" method="post">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Título:</label>
-                        <input type="text" name="titulo" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="nota" class="col-form-label">Mensaje:</label>
-                        <textarea class="form-control" name="nota" id="nota"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i> Cancelar
-                    </button>
-                    <input type="hidden" name="opcion" value="1">
-                    <button type="submit" class="btn btn-outline-success">
-                        <i class="bi bi-check2-circle"></i> Guardar
-                    </button>
                 </div>
             </form>
         </div>

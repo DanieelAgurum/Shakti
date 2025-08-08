@@ -1,30 +1,54 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/controlador/EspecialistaControlador.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/especialistaControlador.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 
+$urlBase = getBaseUrl();
+
+if (!isset($_SESSION['id_rol']) || !isset($_SESSION['correo'])) {
+  header("Location: {$urlBase}index.php");
+  exit;
+}
+
+$rolUsuario = $_SESSION['id_rol'];
+$idUsuario = $_SESSION['id'];
+
+if ($rolUsuario != 1 && $rolUsuario != 2) {
+  header("Location: {$urlBase}");
+  exit;
+}
+
+if ($rolUsuario == 3) {
+  header("Location: {$urlBase}Vista/admin");
+  exit;
+}
+
+$especialistaControlador = new EspecialistaControlador();
+$tituloLista = isset($tituloLista) ? $tituloLista : 'Conversaciones';
 $rolUsuario = $_SESSION['id_rol'];
 $idUsuario = $_SESSION['id'];
 
 $especialistaControlador = new EspecialistaControlador();
 
 if ($rolUsuario == 2) {
-    $usuariosChat = []; // Se llena desde Firebase dinámicamente
-    $tituloLista = "Usuarias con chat activo";
+  $usuariosChat = [];
 } else {
-    $usuariosChat = $especialistaControlador->listarEspecialistas();
-    $tituloLista = "Especialistas";
+  $usuariosChat = $especialistaControlador->listarEspecialistas();
 }
 
-include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <title>Chat - <?= htmlspecialchars($tituloLista) ?></title>
-  <link rel="stylesheet" href="/Shakti/css/chat.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>css/chat.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -70,6 +94,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
     }
 
     @media (max-width: 768px) {
+
       #lista-especialistas,
       #chat-area {
         margin-bottom: 2rem;
@@ -96,17 +121,16 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
 
         <?php if ($rolUsuario != 2 && !empty($usuariosChat)) : ?>
           <?php foreach ($usuariosChat as $usuario) : ?>
-            <div class="card mb-3 card-chat-item" 
-                 id="usuario-<?= (int)$usuario['id'] ?>" 
-                 onclick="seleccionarUsuario(<?= (int)$usuario['id'] ?>)">
+            <div class="card mb-3 card-chat-item"
+              id="usuario-<?= (int)$usuario['id'] ?>"
+              onclick="seleccionarUsuario(<?= (int)$usuario['id'] ?>)">
               <div class="row g-0 h-100 align-items-center">
                 <div class="col-4 d-flex align-items-center justify-content-center">
-                  <img 
-                    src="/Shakti/verFoto.php?id=<?= (int)$usuario['id'] ?>" 
+                  <img
+                    src="/verFoto.php?id=<?= (int)$usuario['id'] ?>"
                     class="img-thumbnail perfil-img"
-                    alt="<?= htmlspecialchars($usuario['nombre']) ?>" 
-                    onerror="this.onerror=null;this.src='/Shakti/assets/img/default.png';"
-                  />
+                    alt="<?= htmlspecialchars($usuario['nombre']) ?>"
+                    onerror="this.onerror=null;this.src='/assets/img/default.png';" />
                 </div>
                 <div class="col-8">
                   <div class="card-body py-2">
@@ -150,8 +174,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
       id: "<?= (int)$_SESSION['id'] ?>",
       rol: "<?= (int)$_SESSION['id_rol'] ?>",
       nombre: "<?= addslashes($_SESSION['nombre']) ?>"
-
-      
     };
 
     function seleccionarUsuario(id) {
@@ -170,12 +192,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
         seleccionado.classList.add('active');
       }
 
-      // Mostrar formulario de mensaje sin limpiar mensajes (chat.js manejará la carga)
+      // Mostrar formulario y limpiar el área de mensajes
       document.getElementById('form-chat').style.display = 'block';
+      document.getElementById('mensajes').innerHTML = "<p class='text-muted'>Cargando mensajes...</p>";
     }
   </script>
 
-  <script type="module" src="/shakti/peticiones(js)/firebaseInit.js"></script>
-  <script type="module" src="/Shakti/assets/chat.js"></script>
+  <script type="module" src="<?= $urlBase ?>peticiones(js)/firebaseInit.js"></script>
+  <script type="module" src="<?= $urlBase ?>assets/chat.js"></script>
 </body>
+
 </html>

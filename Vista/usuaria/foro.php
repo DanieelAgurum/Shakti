@@ -2,7 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 ?>
@@ -15,12 +16,11 @@ $urlBase = getBaseUrl();
     <title>Foro - Shakti</title>
 
     <!-- Estilos CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
+    <link rel="stylesheet" href="<?= $urlBase ?>css/foro.css" />
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -30,89 +30,27 @@ $urlBase = getBaseUrl();
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <script src="<?= $urlBase ?>peticiones(js)/likesContar.js"></script>
     <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/compartirPost.js"></script>
+    <meta name="google-adsense-account" content="ca-pub-6265821190577353">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6265821190577353" crossorigin="anonymous"></script>
     <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
-    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/reportarPostUsuarias.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/modales/reportarPostUsuarias.php';
     ?>
-    <script>
-        $(document).on('click', '.btn-toggle-comments', function() {
-            const id = $(this).data('id');
-            $('#comments-' + id).toggleClass('d-none');
-        });
-    </script>
 </head>
-<script>
-    let idPublicacionCompartir = null;
 
-    function setIdCompartir(id) {
-        idPublicacionCompartir = id;
-    }
-
-    async function generarLinkSeguro(idPublicacion) {
-        const datos = `${idPublicacion}`;
-        const hash = await sha256(datos);
-        return `${window.location.origin}/Shakti/Vista/usuaria/foro.php?publicacion=${hash}`;
-    }
-
-    async function sha256(mensaje) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(mensaje);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    async function compartirWhatsapp() {
-        if (!idPublicacionCompartir) return;
-        const url = await generarLinkSeguro(idPublicacionCompartir);
-        const texto = encodeURIComponent(
-            "¡Mira esta publicación!\n\n " + url
-        );
-        window.open(`https://wa.me/?text=${texto}`, '_blank');
-
-    }
-
-    async function compartirFacebook() {
-        if (!idPublicacionCompartir) return;
-        const url = await generarLinkSeguro(idPublicacionCompartir);
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-    }
-
-    async function compartirTwitter() {
-        if (!idPublicacionCompartir) return;
-        const url = await generarLinkSeguro(idPublicacionCompartir);
-        const texto = encodeURIComponent("Revisa esta publicación que encontré en Shakti:");
-        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${texto}`, '_blank');
-    }
-</script>
-
-
-
-
-<body class="bg-white text-black">
-    <div class="search-wrapper w-100">
-        <div class="search-box w-100">
-            <form method="GET">
-                <i class="bi bi-search search-icon"></i>
-                <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ..."
-                    value="<?= htmlspecialchars($_GET['buscador'] ?? '') ?>">
-            </form>
+<body class="foro_main text-black">
+    <div class="contenedor-buscador">
+        <div class="search-wrapper buscador-fijo mx-auto">
+            <div class="search-box w-100">
+                <form method="GET" class="w-100">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ..."
+                        value="<?= htmlspecialchars($_GET['buscador'] ?? '') ?>">
+                </form>
+            </div>
         </div>
     </div>
-
-    <script>
-        function compartirPublicacion(idPublicacion) {
-            const enlace = `${window.location.origin}/Shakti/Vista/usuaria/foro.php?id=${idPublicacion}`;
-
-            navigator.clipboard.writeText(enlace).then(() => {
-                alert("¡Enlace copiado al portapapeles!");
-            }).catch(err => {
-                console.error("Error al copiar el enlace:", err);
-                alert("Hubo un error al copiar el enlace.");
-            });
-        }
-    </script>
-
     <div class="foro">
         <div id="loaderInicio" class="loader-container d-none">
             <div class="orbit">
@@ -147,7 +85,22 @@ $urlBase = getBaseUrl();
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.btn-toggle-comments', function() {
+                const id = $(this).data('id');
+                const $commentsSection = $('#comments-' + id);
 
+                if ($commentsSection.is(':visible')) {
+                    $commentsSection.slideUp(200, function() {
+                        $commentsSection.addClass('d-none');
+                    });
+                } else {
+                    $commentsSection.removeClass('d-none').hide().slideDown(200);
+                }
+            });
+        });
+    </script>
     <script src="<?= $urlBase ?>peticiones(js)/scroll_infinito.js"></script>
 </body>
 

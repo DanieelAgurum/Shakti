@@ -1,6 +1,6 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/conexion.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -32,8 +32,8 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     <script src="https://kit.fontawesome.com/fbc3385146.js" crossorigin="anonymous"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarReporte.js"></script>
     <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php';
-    include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Vista/modales/reportarEspecialista.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/modales/reportarEspecialista.php';
     ?>
 </head>
 
@@ -72,10 +72,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="../../peticiones(js)/cargaEspecialistas.js"></script>
-    <script src="../../peticiones(js)/especialistas.js"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/cargaEspecialistas.js"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/especialistas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-    <?php include '../../components/usuaria/footer.php'; ?>
+    <?php $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
 
 </body>
 

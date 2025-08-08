@@ -93,21 +93,19 @@ body {
 
 /* Contenedor general para publicaciones */
 .container-publicaciones {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 20px auto;
   padding: 0 15px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  /* centra las publicaciones en pantalla */
 }
 
-/* Cada publicación tipo Instagram */
+/* Cada publicación estilo Instagram */
 .instagram-post {
-  flex: 1 1 480px;
-  /* ocupa al menos 480px y se adapta */
-  max-width: 480px;
+  flex: 1 1 calc(50% - 20px); /* dos por fila con gap incluido */
+  max-width: calc(50% - 20px);
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -115,11 +113,24 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
 }
+
+/* Para pantallas pequeñas (menos de 768px), que ocupe 100% */
+@media (max-width: 767px) {
+  .instagram-post {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
 
 .post-destacado {
   flex: 1 1 100%;
-  max-width: 88%;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -127,7 +138,17 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
 }
+
+@media (min-width: 768px) {
+  .post-destacado {
+        max-width: 100%; /* o 90%, según lo que prefieras */
+  }
+}
+
+
+
 
 /* Header publicación */
 .post-header {

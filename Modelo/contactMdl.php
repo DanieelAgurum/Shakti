@@ -43,7 +43,6 @@ class contactMdl
 
             $mail->addReplyTo($this->correo, $nickname);
 
-            // Crear cuerpo del mensaje
             $mail->isHTML(true);
             $mail->Subject = 'Nuevo mensaje de contacto desde el formulario';
             $mail->Body = "

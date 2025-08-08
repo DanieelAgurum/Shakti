@@ -93,6 +93,7 @@ if (isset($_SESSION['id_rol'])) {
       <div class="auth-header text-center mb-4">
         <h1 class="h3 fw-bold text-secondary">Bienvenido</h1>
       </div>
+
       <form class="needs-validation" id="iniciarSesion" method="post" novalidate>
         <small class="error text-center text-danger" id="mensaje-error" style="display: none;"></small>
 
@@ -105,7 +106,7 @@ if (isset($_SESSION['id_rol'])) {
           </div>
         </div>
 
-        <div class="mb-4 position-relative">
+         <div class="mb-4 position-relative">
           <label for="password" class="form-label">Contraseña</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
@@ -127,9 +128,8 @@ if (isset($_SESSION['id_rol'])) {
       </div>
     </div>
   </main>
-
-
-  <!-- Modal -->
+  
+  
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="border-radius: 1rem; background-color: #fefcf7; box-shadow: 0 8px 16px rgba(90, 42, 131, 0.25);">
@@ -147,7 +147,7 @@ if (isset($_SESSION['id_rol'])) {
       </div>
     </div>
   </div>
-
+  
   <script src="<?= $urlBase ?>peticiones(js)/deshabilitarModalCambiarContra.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/verContra.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>

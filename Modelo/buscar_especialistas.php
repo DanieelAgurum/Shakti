@@ -7,10 +7,11 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $database = "shakti";
+
 $conn = new mysqli($servername, $username, $password, $database);
 
 if ($conn->connect_error) {
-    die("Error en la conexión: " . $conn->connect_error);
+    die("❌ Error en la conexión: " . $conn->connect_error);
 }
 
 $especialista = isset($_GET['especialista']) ? $conn->real_escape_string($_GET['especialista']) : "";
@@ -62,7 +63,7 @@ if ($result->num_rows > 0) {
                 </div>
             </div>
         </div>';
-        include '../vista/modales/especialistas.php';
+        include '../Vista/modales/especialistas.php';
     }
 } else {
     echo '<div class="w-100 m-auto"><h3 class="text-center">No se encontraron resultados</h3></div>';

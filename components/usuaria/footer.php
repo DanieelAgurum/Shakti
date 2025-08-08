@@ -4,7 +4,7 @@
 
       <!-- Marca -->
       <div class="col-12 col-md-4 mb-3 mb-md-0">
-        <a href="/ShaktiN/index.php" class="text-decoration-none fw-bold text-secondary d-block">
+        <a href="<?= $urlBase ?>index.php" class="text-decoration-none fw-bold text-secondary d-block">
           © 2025 Shakti
         </a>
       </div>

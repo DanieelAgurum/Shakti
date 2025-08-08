@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
 
 class TipoReporteMdl
 {
@@ -46,7 +46,7 @@ class TipoReporteMdl
                 "mensaje" => "Faltan parámetros: nombre o tipo"
             ]);
         }
-
+        
         // Validar existencia nombre y tipo_objetivo específico
         $query = "SELECT 1 FROM tipo_reporte WHERE nombre_reporte = ? AND tipo_objetivo = ?";
         $stmt = $this->con->prepare($query);
@@ -136,7 +136,7 @@ class TipoReporteMdl
         $nombre = trim($nombre);
         $tipo = intval($tipo);
 
-        if (in_array($tipo, [1, 2, 3, 4])) {
+        if (in_array($tipo, [1, 2, 3])) {
             // Validar nombre + tipo_objetivo
             $sql = "SELECT 1 FROM tipo_reporte WHERE nombre_reporte = ? AND tipo_objetivo = ? AND id_tipo_reporte != ?";
             $stmt = $this->con->prepare($sql);
@@ -149,22 +149,6 @@ class TipoReporteMdl
                 return json_encode([
                     'opcion' => 1,
                     'mensaje' => 'Ya existe este tipo en ese objetivo específico'
-                ]);
-            }
-            $stmt->close();
-
-            // Validar que no exista como tipo 4 con mismo nombre
-            $sql = "SELECT 1 FROM tipo_reporte WHERE nombre_reporte = ? AND tipo_objetivo = 4 AND id_tipo_reporte != ?";
-            $stmt = $this->con->prepare($sql);
-            $stmt->bind_param("si", $nombre, $id);
-            $stmt->execute();
-            $stmt->store_result();
-            if ($stmt->num_rows > 0) {
-                $stmt->close();
-                $this->cerrarBD();
-                return json_encode([
-                    'opcion' => 1,
-                    'mensaje' => 'Este tipo ya existe como "Todos" y no puede duplicarse'
                 ]);
             }
             $stmt->close();
@@ -247,4 +231,3 @@ class TipoReporteMdl
         $this->cerrarBD();
     }
 }
-?>
