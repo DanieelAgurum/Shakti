@@ -1,0 +1,24 @@
+.scrollable-modal-body {
+  max-height: 40vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(235, 57, 146, 0.317) transparent; /* Firefox (rosa claro) */
+}
+
+/* WebKit */
+.scrollable-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 105, 180, 0.3); /* rosa claro */
+  border-radius: 10px;
+}
+
+.scrollable-modal-body:hover::-webkit-scrollbar-thumb {
+  background: rgba(222, 153, 187, 0.619); /* rosa intenso en hover */
+}
