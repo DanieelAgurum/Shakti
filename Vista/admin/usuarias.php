@@ -21,6 +21,7 @@ include 'modales/usuarias.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
     <title>Usuarias - Shakti</title>
 </head>
 
@@ -92,7 +93,7 @@ include 'modales/usuarias.php';
                                                 </td>
                                             </tr>
                                     <?php
-                                    $num++;
+                                            $num++;
                                         }
                                     } catch (PDOException $e) {
                                         echo 'Hay problemas con la conexión : ' . $e->getMessage();
@@ -140,7 +141,7 @@ include 'modales/usuarias.php';
             });
         });
     </script>
-    
+
     <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center justify-content-between small">

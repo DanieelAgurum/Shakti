@@ -22,6 +22,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     <script src="https://cdn.tiny.cloud/1/bnw4wazqztadr4il1bfgdflo063pyw0wvki8x1q8d9xx0akz/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="js/tinyMC.js"></script>
     <script src="js/glosario.js"></script>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
 </head>
 
 <body class="sb-nav-fixed">

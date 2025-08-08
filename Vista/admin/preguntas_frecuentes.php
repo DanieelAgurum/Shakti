@@ -15,10 +15,12 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preguntas Frecuentes - Shakti</title>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
     <script src="js/preguntasFrec.js"></script>
 </head>
 
