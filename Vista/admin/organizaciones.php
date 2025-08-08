@@ -13,11 +13,13 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizaciones - Shakti</title>
     <script src="js/organizaciones.js"></script>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
 </head>
 
 <body class="sb-nav-fixed">
@@ -46,9 +48,9 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                         'agregado' => 'La organización fue agregada correctamente.',
                                         'modificado' => 'La organización fue modificada correctamente.', // Nuevo mensaje
                                         'eliminado' => 'La organización fue eliminada correctamente.',
-                                        'error' => 'Intentelo mas tarde.',  
+                                        'error' => 'Intentelo mas tarde.',
                                     ];
-                                
+
                                     $clases = [
                                         'agregado' => 'success',
                                         'modificado' => 'primary',

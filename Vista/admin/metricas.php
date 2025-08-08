@@ -40,8 +40,8 @@ $topComentarios = $modelo->obtenerTopComentarios();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Métricas - Shakti</title>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>◊
     <style>
-
         .chart-container {
             display: flex;
             flex-wrap: wrap;

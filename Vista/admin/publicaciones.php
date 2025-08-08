@@ -25,6 +25,7 @@ unset($_SESSION['mensaje']);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin - Publicaciones</title>
+  <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
 </head>
 
 <body class="sb-nav-fixed">
