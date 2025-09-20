@@ -14,30 +14,20 @@ $urlBase = getBaseUrl();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contacto - Shakti</title>
-
-    <!-- Estilos -->
+    <!-- Estilos específicos -->
     <link rel="stylesheet" href="<?= $urlBase ?>/css/contacto.css">
     <link rel="stylesheet" href="<?= $urlBase ?>/css/estilos.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>/css/animacionCarga.css" />
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Tipografía adicional (solo aquí si se requiere en Contacto) -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <!-- Scripts -->
+    <!-- Scripts específicos de la página -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 </head>
 
 
-
 <body>
-    <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
-    ?>
-
     <div class="container mt-3 mb-3 animate__animated animate__delay-0.5s animate__fadeInDown">
         <div class="form m-auto">
             <div class="contact-info">
@@ -71,7 +61,7 @@ $urlBase = getBaseUrl();
                 <span class="circle one"></span>
                 <span class="circle two"></span>
 
-                <form id="contactForm" class="colortext">
+                <form id="contactForm" class="contactForm">
                     <div class="social-input-containers">
                         <input type="email" name="correo" class="input" placeholder="Correo electrónico"
                             value="<?php echo isset($_SESSION['correo']) ? strtolower($_SESSION['correo']) : ''; ?>">
