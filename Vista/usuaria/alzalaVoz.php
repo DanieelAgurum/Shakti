@@ -19,10 +19,8 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
     <title>Test Violentómetro</title>
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="<?= htmlspecialchars($urlBase) ?>/css/alzalaVoz.css" />
-    <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
-
 </head>
 
 <body>
@@ -80,8 +78,9 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
             </form>
         </div>
     </div>
-    <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
+    <script src="<?= $urlBase ?>peticiones(js)/return.js"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
 </body>
 
 </html>

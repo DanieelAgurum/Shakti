@@ -1,4 +1,4 @@
-/* Importar fuentes */
+/* Importar fuentes
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap");
 
 * {
@@ -15,18 +15,15 @@
 
 .custom-navbar .container {
   max-width: 1140px;
-  /* o el max-width de Bootstrap para desktop */
   width: 100%;
 }
 
-/* Fuentes para títulos */
 h1,
 h2,
 h3 {
   font-family: "Merriweather", serif;
 }
 
-/* Variables de colores lila/morado */
 :root {
   --morado-base: #5a2a83;
   --fondo-suave: #fefcf7;
@@ -36,7 +33,6 @@ body {
   background-color: #f8f0ff;
 }
 
-/* Botón principal - morado fuerte fondo y texto blanco */
 .btn-purple {
   background-color: #b288eb;
   color: white;
@@ -52,7 +48,6 @@ body {
   outline: none;
 }
 
-/* Formulario registro */
 .auth-container {
   backdrop-filter: blur(10px);
   padding: 2rem;
@@ -65,7 +60,6 @@ body {
   color: var(--morado-claro);
 }
 
-/* Mensaje de error para el login */
 .error {
   color: red;
   font-size: 0.85em;
@@ -76,4 +70,4 @@ body {
 
 .invalid {
   border-color: white;
-}
+} */

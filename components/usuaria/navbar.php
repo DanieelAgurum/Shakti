@@ -40,7 +40,7 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm bg-white">
+  <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="<?= $urlBase ?>index.php">SHAKTI</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
@@ -208,6 +208,10 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
       </div>
     </div>
   </div>
+
+  <button id="btn-top" title="Ir al inicio" class="btn-top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
 
   <!-- Script para pasar info del usuario a JS -->
   <script>

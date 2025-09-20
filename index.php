@@ -91,7 +91,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
     <div class="container">
       <div class="row gy-5 gy-lg-0 align-items-lg-center">
         <div class="col-12 col-lg-6">
-          <img class="img-fluid rounded animate__animated animate__fadeInLeft  animate__delay-1s animate__slow animacion" loading="lazy" src="img/Woman thinking-amico.svg" alt="How can we help you?">
+          <img class="img-fluid rounded animate__animated animate__fadeInLeft  animate__delay-1s animate__slow animacion" loading="lazy" src="img/question-41.svg" alt="How can we help you?">
         </div>
         <div class="col-12 col-lg-6 animate__animated animate__fadeInRight  animate__delay-1s animate__slow animacion">
           <div class="row justify-content-xl-end">
@@ -221,6 +221,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   ?>
 
   <!-- Scripts -->
+  <script src="peticiones(js)/return.js"></script>
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
