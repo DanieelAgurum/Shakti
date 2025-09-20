@@ -14,15 +14,15 @@ $urlBase = getBaseUrl();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contacto - Shakti</title>
-    <!-- Estilos específicos -->
+    <!-- Estilos específicos de Contacto -->
     <link rel="stylesheet" href="<?= $urlBase ?>/css/contacto.css">
-    <link rel="stylesheet" href="<?= $urlBase ?>/css/estilos.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>/css/animacionCarga.css" />
-    <!-- Tipografía adicional (solo aquí si se requiere en Contacto) -->
+    <!-- Tipografías adicionales (solo aquí si se requieren) -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
     <!-- Scripts específicos de la página -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Navbar -->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 </head>
 

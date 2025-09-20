@@ -34,6 +34,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   <!-- Estilos y librerías -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
   <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
