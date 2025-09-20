@@ -1,0 +1,17 @@
+# Activar reescritura de URLs
+RewriteEngine On
+
+# Evitar que afecte a archivos o carpetas existentes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rutas válidas (ejemplo: home, about, contact)
+RewriteRule ^(home|about|contact)/?$ index.php?page=$1 [L,QSA]
+
+# Bloquear acceso directo a Vista, Vista/usuaria y Vista/admin -> enviar a 404
+RewriteRule ^Vista(/)?$ Vista/404.php [L,QSA]
+RewriteRule ^Vista/usuaria(/)?$ Vista/404.php [L,QSA]
+RewriteRule ^Vista/admin(/)?$ Vista/404.php [L,QSA]
+
+# Página 404 personalizada (si acceden a algo inexistente)
+ErrorDocument 404 /shakti/Vista/404.php
