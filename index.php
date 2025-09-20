@@ -31,9 +31,8 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <!-- Scripts únicos -->
-  <script src="peticiones(js)/testimonios.js"></script>
-  <script src="peticiones(js)/return.js"></script>
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <!-- Navbar -->
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
@@ -193,14 +192,12 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
     </div>
   </div>
 
-
-  <script src="peticiones(js)/testimonios.js"></script>
-
   <?php
   include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php';
   ?>
 
   <!-- Scripts -->
+  <script src="peticiones(js)/testimonios.js"></script>
   <script src="peticiones(js)/return.js"></script>
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 </body>
