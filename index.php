@@ -26,9 +26,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shakti</title>
-
   <link rel="stylesheet" href="<?= $urlBase ?>/css/estilos.css" />
-  <link rel="stylesheet" href="<?= $urlBase ?>/css/estiloscarrucel.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
@@ -44,32 +42,48 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
 
 <body class="bg-white text-black">
 
-
   <!-- Carrusel de imágenes -->
-  <div class="swiper mySwiper hero-carousel mb-5">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <img src="<?= $urlBase ?>/img/1carr.jpg" alt="Yoga" class="img-fluid w-100 h-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+  <div id="mainCarousel" class="carousel slide carousel-fade main-carousel" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-inner">
+
+      <!-- Slide 1 -->
+      <div class="carousel-item active" style="background-image: url('https://picsum.photos/id/1018/1920/1080');">
+        <div class="carousel-caption">
+          <h1>Título del Slide 1</h1>
+          <p>Este es un texto de ejemplo para el primer apartado del carrusel.</p>
+          <a href="#" class="btn btn-primary btn-main-carousel">Acción 1</a>
+        </div>
       </div>
-      <div class="swiper-slide">
-        <img src="<?= $urlBase ?>/img/2carr.jpg" alt="Marcha" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+
+      <!-- Slide 2 -->
+      <div class="carousel-item" style="background-image: url('https://picsum.photos/id/1015/1920/1080');">
+        <div class="carousel-caption">
+          <h1>Título del Slide 2</h1>
+          <p>Aquí puedes colocar otra descripción o contenido principal.</p>
+          <a href="#" class="btn btn-danger btn-main-carousel">Acción 2</a>
+        </div>
       </div>
-      <div class="swiper-slide">
-        <img src="<?= $urlBase ?>/img/3carr.png" alt="Meditación" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
+
+      <!-- Slide 3 -->
+      <div class="carousel-item" style="background-image: url('https://picsum.photos/id/1019/1920/1080');">
+        <div class="carousel-caption">
+          <h1>Título del Slide 3</h1>
+          <p>Texto para destacar algún servicio o producto importante.</p>
+          <a href="#" class="btn btn-success btn-main-carousel">Acción 3</a>
+        </div>
       </div>
-      <div class="swiper-slide">
-        <img src="<?= $urlBase ?>/img/4carr.jpeg" alt="Unidas" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
-      </div>
-      <div class="swiper-slide">
-        <img src="<?= $urlBase ?>/img/5carr.png" alt="Multiculturales" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
-      </div>
-      <div class="swiper-slide">
-        <img src="<?= $urlBase ?>/img/6carr.png" alt="Comunidad" class="img-fluid w-100 h-100 rounded shadow-sm" style="height: 300px; object-fit: cover;">
-      </div>
+
     </div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
+
+    <!-- Controles (opcionales, puedes quitarlos si quieres que sea solo automático) -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
   </div>
 
   <!-- Bienvenida -->
@@ -129,7 +143,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   </section>
 
   <!-- Testimonios -->
-  <div class="w-75">
+  <div class="justify-content-center">
     <div class="container py-5">
       <h2 class="text-center mb-4">Ellas ya vivieron la experiencia</h2>
       <div class="row justify-content-center">
@@ -223,61 +237,6 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <!-- Scripts -->
   <script src="peticiones(js)/return.js"></script>
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const swiper = new Swiper('.mySwiper', {
-        effect: 'fade',
-        loop: true,
-        autoplay: {
-          delay: 4000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      });
-
-      document.querySelectorAll('.btn-like').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const badge = btn.querySelector('.likes-count');
-          let count = parseInt(badge.textContent) || 0;
-          badge.textContent = ++count;
-          btn.classList.add('btn-primary');
-          btn.classList.remove('btn-outline-primary');
-          btn.disabled = true;
-        });
-      });
-
-      document.querySelectorAll('.btn-toggle-comments').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const pubId = btn.dataset.id;
-          const comments = document.getElementById('comments-' + pubId);
-          comments.classList.toggle('d-none');
-        });
-      });
-
-      document.querySelectorAll('.comment-form').forEach(form => {
-        form.addEventListener('submit', e => {
-          e.preventDefault();
-          const input = form.querySelector('input[type="text"]');
-          const comment = input.value.trim();
-          if (!comment) return;
-
-          const container = form.previousElementSibling;
-          const p = document.createElement('p');
-          p.textContent = comment;
-          p.classList.add('comment');
-          container.appendChild(p);
-          input.value = '';
-        });
-      });
-    });
-  </script>
 </body>
 
 </html>
