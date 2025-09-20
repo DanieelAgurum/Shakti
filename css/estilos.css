@@ -43,6 +43,30 @@ body {
   padding-top: 56px;
 }
 
+/* NAVBAR Personalizado */
+.custom-navbar {
+  background-color: #4682B4;
+  color: white;
+}
+
+/* Enlaces y marca del navbar */
+.custom-navbar .nav-link,
+.custom-navbar .navbar-brand,
+.dropdown-toggle {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link:focus,
+.custom-navbar .navbar-brand:hover,
+.custom-navbar .navbar-brand:focus,
+.dropdown-menu a:hover {
+  color: white;
+  background-color: #4b0082;
+  text-decoration: none;
+}
+
 /* Estilo para el menú desplegable del usuario */
 .dropdown-menu {
   border-radius: 0.5rem;
@@ -886,7 +910,8 @@ label.star:before {
 
 .testimonial-container {
   width: 75%;
-  margin: 0 auto; /* esto centra horizontalmente */
+  margin: 0 auto;
+  /* esto centra horizontalmente */
   overflow: hidden;
   position: relative;
 }
