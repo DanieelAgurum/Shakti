@@ -32,6 +32,8 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
   <script src="<?= $urlBase ?>/peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="<?= $urlBase ?>/peticiones(js)/likesContar.js"></script>
@@ -40,50 +42,15 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 </head>
 
-<body class="bg-white text-black">
+<body class="text-black">
 
-  <!-- Carrusel de imágenes -->
-  <div id="mainCarousel" class="carousel slide carousel-fade main-carousel" data-bs-ride="carousel" data-bs-interval="4000">
-    <div class="carousel-inner">
-
-      <!-- Slide 1 -->
-      <div class="carousel-item active" style="background-image: url('img/adrianna-geo-Z5ZdkWjMTCY-unsplash.jpg');">
-        <div class="carousel-caption">
-          <h1>Título del Slide 1</h1>
-          <p>Este es un texto de ejemplo para el primer apartado del carrusel.</p>
-          <a href="#" class="btn btn-primary btn-main-carousel">Acción 1</a>
-        </div>
-      </div>
-
-      <!-- Slide 2 -->
-      <div class="carousel-item" style="background-image: url('img/helena-lopes-PGnqT0rXWLs-unsplash.jpg');">
-        <div class="carousel-caption">
-          <h1>Título del Slide 2</h1>
-          <p>Aquí puedes colocar otra descripción o contenido principal.</p>
-          <a href="#" class="btn btn-danger btn-main-carousel">Acción 2</a>
-        </div>
-      </div>
-
-      <!-- Slide 3 -->
-      <div class="carousel-item" style="background-image: url('img/jack-sharp-ShCVvQbQBDk-unsplash.jpg');">
-        <div class="carousel-caption">
-          <h1>Título del Slide 3</h1>
-          <p>Texto para destacar algún servicio o producto importante.</p>
-          <a href="#" class="btn btn-success btn-main-carousel">Acción 3</a>
-        </div>
-      </div>
-
+  <!-- Banner principal -->
+  <div class="main-banner">
+    <div class="banner-caption">
+      <h1>Título principal</h1>
+      <p>Este es un texto de ejemplo para tu banner inicial, ideal para destacar tu contenido.</p>
+      <a href="#" class="btn-banner">Explorar más</a>
     </div>
-
-    <!-- Controles (opcionales, puedes quitarlos si quieres que sea solo automático) -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Anterior</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Siguiente</span>
-    </button>
   </div>
 
   <!-- Bienvenida -->
@@ -101,7 +68,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   </main>
 
   <!-- FAQ 1 - Bootstrap Brain Component -->
-  <section class="py-3 py-md-5 mb-3">
+  <section class="py-3 py-md-5">
     <div class="container">
       <div class="row gy-5 gy-lg-0 align-items-lg-center">
         <div class="col-12 col-lg-6">
@@ -142,58 +109,59 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
     </div>
   </section>
 
-  <!-- Testimonios -->
-  <div class="justify-content-center">
-    <div class="container py-5">
-      <h2 class="text-center mb-4">Ellas ya vivieron la experiencia</h2>
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-              <?php foreach ($testimonios as $index => $item): ?>
-                <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                  <div class="opiniones p-4 p-md-5">
-                    <i class="bi bi-quote quote-icon position-absolute top-0 start-0 mt-3 ms-3"></i>
-                    <div class="text-center mb-4">
-                      <?php
-                      $foto = $item['foto'];
-                      $src = $foto ? 'data:image/jpeg;base64,' . base64_encode($foto) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
-                      ?>
-                      <img src="<?= $src ?>" class="fotoOpinion mb-3" alt="Especialista">
-                      <h5 class="cust-name"><?= htmlspecialchars($item['nombre'] ?? 'Usuaria') ?></h5>
-                    </div>
-                    <p class="mb-2"><?= htmlspecialchars($item['opinion']) ?></p>
-                    <div class="d-flex flex-column align-items-center">
-                      <span class="custom-rating mt-2">Calificación: <?= $item['calificacion'] ?> <i class="bi bi-star-fill text-warning"></i></span>
-                    </div>
-                  </div>
-                </div>
-              <?php endforeach; ?>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-            <div class="carousel-indicators">
-              <?php foreach ($testimonios as $index => $item): ?>
-                <button type="button"
-                  data-bs-target="#testimonialCarousel"
-                  data-bs-slide-to="<?= $index ?>"
-                  class="<?= $index === 0 ? 'active' : '' ?>"
-                  aria-current="<?= $index === 0 ? 'true' : 'false' ?>"
-                  aria-label="Slide <?= $index + 1 ?>">
-                </button>
-              <?php endforeach; ?>
-            </div>
+  <section class="w-100 p-4 rounded-3 mb-4">
+    <div class="testimonial-container">
+      <div class="testimonial-track">
+        <?php foreach ($testimonios as $item): ?>
+          <?php
+          // Foto: si no tiene, usar imagen por defecto
+          $foto = $item['foto'];
+          $src = $foto
+            ? 'data:image/jpeg;base64,' . base64_encode($foto)
+            : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+
+          // Nombre
+          $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
+
+          $opinion = htmlspecialchars($item['opinion']);
+
+          $calificacion = (int)$item['calificacion'];
+          $estrellas = str_repeat("★", $calificacion) . str_repeat("☆", 5 - $calificacion);
+          ?>
+
+          <div class="testimonial-card">
+            <img src="<?= $src ?>" alt="Foto de <?= $nombre ?>">
+            <h3><?= $nombre ?></h3>
+            <p><?= $opinion ?></p>
+            <div class="testimonial-stars"><?= $estrellas ?></div>
           </div>
-        </div>
+        <?php endforeach; ?>
+
+        <!-- Duplicamos para simular el loop infinito -->
+        <?php foreach ($testimonios as $item): ?>
+          <?php
+          $foto = $item['foto'];
+          $src = $foto
+            ? 'data:image/jpeg;base64,' . base64_encode($foto)
+            : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+
+          $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
+          $opinion = htmlspecialchars($item['opinion']);
+          $calificacion = (int)$item['calificacion'];
+          $estrellas = str_repeat("★", $calificacion) . str_repeat("☆", 5 - $calificacion);
+          ?>
+
+          <div class="testimonial-card">
+            <img src="<?= $src ?>" alt="Foto de <?= $nombre ?>">
+            <h3><?= $nombre ?></h3>
+            <p><?= $opinion ?></p>
+            <div class="testimonial-stars"><?= $estrellas ?></div>
+          </div>
+        <?php endforeach; ?>
       </div>
     </div>
-  </div>
+  </section>
+
 
   <!-- Formulario calificación al sistema -->
   <div class="container">
@@ -227,6 +195,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       </form>
     </div>
   </div>
+
 
   <script src="peticiones(js)/testimonios.js"></script>
 
