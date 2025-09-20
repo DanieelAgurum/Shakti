@@ -38,30 +38,6 @@
   transform: scale(0.95);
 }
 
-/* NAVBAR Personalizado */
-.custom-navbar {
-  background-color: #4682B4;
-  color: white;
-}
-
-/* Enlaces y marca del navbar */
-.custom-navbar .nav-link,
-.custom-navbar .navbar-brand,
-.dropdown-toggle {
-  color: white;
-  transition: color 0.3s ease;
-}
-
-.custom-navbar .nav-link:hover,
-.custom-navbar .nav-link:focus,
-.custom-navbar .navbar-brand:hover,
-.custom-navbar .navbar-brand:focus,
-.dropdown-menu a:hover {
-  color: white;
-  background-color: #4b0082;
-  text-decoration: none;
-}
-
 /* Para evitar que el contenido quede oculto debajo de la navbar */
 body {
   padding-top: 56px;
@@ -324,7 +300,7 @@ footer {
   z-index: 100;
 }
 
-.search-wrapper {
+.search-foro {
   max-width: 600px;
   margin: 20px auto;
   border: 1px solid #e0e0e0;
