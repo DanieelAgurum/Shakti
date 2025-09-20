@@ -19,6 +19,7 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
     <title>Test Violentómetro</title>
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="<?= htmlspecialchars($urlBase) ?>/css/alzalaVoz.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css" />
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
 
@@ -74,6 +75,7 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
                     echo '</div>';
                 }
                 ?>
+
                 <button type="submit" name="enviar_test" class="btn btn-outline-primary w-100 mt-3 alzalaVoz-btn">Enviar Test</button>
             </form>
         </div>
