@@ -25,12 +25,10 @@ $urlBase = getBaseUrl();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-
 </head>
 
 
@@ -82,8 +80,8 @@ $urlBase = getBaseUrl();
                         <textarea name="comentario" class="input" placeholder="Déjanos tu mensaje"></textarea>
                     </div>
                     <div class="float-end">
-                        <button id="btnEnviar" class="btn btn-outline-dark" type="submit">
-                            <i class="bi bi-send-fill" id="icono" ></i>
+                        <button id="btnEnviar" class="btn btn-outline-light" type="submit">
+                            <i class="bi bi-send-fill" id="icono"></i>
                             <div id="loaderInicioBtn" class="heart-spinner d-none" role="status"
                                 aria-label="Cargando..."></div>
                             <span>Enviar</span>
@@ -97,6 +95,7 @@ $urlBase = getBaseUrl();
     <?php include '../components/usuaria/footer.php'; ?>
 
     <!-- Scripts adicionales -->
+    <script src="<?= $urlBase ?>peticiones(js)/return.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarFormContact.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
 </body>
