@@ -51,14 +51,14 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   </style>
 </head>
 
-<nav class="navbar navbar-expand-lg main-nav px-0" id="mainMenu">
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
   <div class="container">
-    <a class="navbar-brand app-name" href="<?= $urlBase ?>index.php">SHAKTI</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuHamburguesaNavbar">
+    <a class="navbar-brand" href="<?= $urlBase ?>index.php">SHAKTI</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
+      aria-controls="navbarEspecialista" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse" id="menuHamburguesaNavbar">
+    <div class="collapse navbar-collapse" id="navbarEspecialista">
       <ul class="navbar-nav ms-auto align-items-center">
         <?php
         // Mapa de rutas
@@ -78,14 +78,11 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 
         <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a></li>
 
-        <!-- Buscador navbar -->
-        <div class="search-wrapper align-items-center" id="searchWrapper">
-          <form class="search-wrapper align-items-center ms-auto me-3" role="search">
-            <i class="bi bi-search search-icon" id="search-icon-navbar"></i>
-            <input class="search-input" id="searchInputNavbar" type="search" placeholder="Buscar...">
-            <button type="submit" style="display:none;"></button>
-          </form>
-        </div>
+        <li class="nav-item ms-3 d-flex align-items-center custom-search-wrapper">
+          <i class="bi bi-search custom-search-icon"></i>
+          <input type="text" class="custom-search-input" placeholder="Buscar..." />
+        </li>
+
 
         <!-- Menú usuario -->
         <li class="dropdown ms-3">
@@ -128,6 +125,10 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
     </div>
   </div>
 </nav>
+
+<button id="btn-top" title="Ir al inicio" class="btn-top">
+  <i class="fas fa-arrow-up"></i>
+</button>
 
 <!-- Modal Notificaciones -->
 <div class="modal fade" id="modalNotificaciones">
