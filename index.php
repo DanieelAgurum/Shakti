@@ -47,7 +47,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
     <div class="carousel-inner">
 
       <!-- Slide 1 -->
-      <div class="carousel-item active" style="background-image: url('https://picsum.photos/id/1018/1920/1080');">
+      <div class="carousel-item active" style="background-image: url('img/adrianna-geo-Z5ZdkWjMTCY-unsplash.jpg');">
         <div class="carousel-caption">
           <h1>Título del Slide 1</h1>
           <p>Este es un texto de ejemplo para el primer apartado del carrusel.</p>
@@ -56,7 +56,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       </div>
 
       <!-- Slide 2 -->
-      <div class="carousel-item" style="background-image: url('https://picsum.photos/id/1015/1920/1080');">
+      <div class="carousel-item" style="background-image: url('img/helena-lopes-PGnqT0rXWLs-unsplash.jpg');">
         <div class="carousel-caption">
           <h1>Título del Slide 2</h1>
           <p>Aquí puedes colocar otra descripción o contenido principal.</p>
@@ -65,7 +65,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       </div>
 
       <!-- Slide 3 -->
-      <div class="carousel-item" style="background-image: url('https://picsum.photos/id/1019/1920/1080');">
+      <div class="carousel-item" style="background-image: url('img/jack-sharp-ShCVvQbQBDk-unsplash.jpg');">
         <div class="carousel-caption">
           <h1>Título del Slide 3</h1>
           <p>Texto para destacar algún servicio o producto importante.</p>
