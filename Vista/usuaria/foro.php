@@ -42,7 +42,7 @@ $urlBase = getBaseUrl();
 
 <body class="foro_main text-black">
     <div class="contenedor-buscador">
-        <div class="search-wrapper buscador-fijo mx-auto">
+        <div class="search-foro buscador-fijo mx-auto">
             <div class="search-box w-100">
                 <form method="GET" class="w-100">
                     <i class="bi bi-search search-icon"></i>
