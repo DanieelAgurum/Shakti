@@ -3,15 +3,26 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notificacionesModelo.ph
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
+$usuario = [
+  'id' => $_SESSION['id'] ?? 0,
+  'rol' => $_SESSION['id_rol'] ?? 0,
+  'nickname' => $_SESSION['nickname'] ?? 'Invitado',
+  'correo' => $_SESSION['correo'] ?? null
+];
+
+// Notificaciones
 $notificaciones = [];
 $notificacionesNoLeidas = 0;
-
-if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
-  $idUsuaria = $_SESSION['id'];
-  $notificaciones = Notificacion::obtenerParaUsuaria($idUsuaria);
+if ($usuario['id'] && $usuario['rol'] == 1) {
+  $notificaciones = Notificacion::obtenerParaUsuaria($usuario['id']);
   $notificacionesNoLeidas = count(array_filter($notificaciones, fn($n) => $n['leida'] == 0));
 }
 
+// Función para generar rutas según rol
+function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
+{
+  return $mapa[$rol] ?? $default;
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,13 +31,12 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-  <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
+  <!-- Estilos y librerías -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
+  <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
   <style>
     @media (max-width: 576px) {
       .animacion {
@@ -39,113 +49,60 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
     }
   </style>
 </head>
+
 <nav class="navbar navbar-expand-lg main-nav px-0" id="mainMenu">
   <div class="container">
-    <a class="navbar-brand app-namenavbar-brand app-name" href="<?= $urlBase ?>index.php">SHAKTI</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
-      aria-controls="navbarEspecialista" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand app-name" href="<?= $urlBase ?>index.php">SHAKTI</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuHamburguesaNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse">
+
+    <div class="collapse navbar-collapse" id="menuHamburguesaNavbar">
       <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item">
-          <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-                                                          switch ($_SESSION['id_rol'] ?? 0) {
-                                                            case 1:
-                                                            case 2:
-                                                              echo 'usuaria/libreYSegura.php';
-                                                              break;
-                                                            case 3:
-                                                              echo 'admin/';
-                                                              break;
-                                                            default:
-                                                              echo 'login.php';
-                                                              break;
-                                                          }
-                                                          ?>">Libre y Segura</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a>
-        </li>
-        <?php if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] == 1): ?>
-          <li class="nav-item">
-            <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-                                                            switch ($_SESSION['id_rol'] ?? 0) {
-                                                              case 1:
-                                                                echo 'usuaria/alzalaVoz.php';
-                                                                break;
-                                                              default:
-                                                                echo 'login.php';
-                                                                break;
-                                                            }
-                                                            ?>">Alza la voz</a>
-          </li>
+        <?php
+        // Mapa de rutas
+        $rutas = [
+          'libreYSegura' => [1 => 'usuaria/libreYSegura.php', 2 => 'usuaria/libreYSegura.php', 3 => 'admin/'],
+          'alzalaVoz' => [1 => 'usuaria/alzalaVoz.php'],
+          'publicaciones' => [1 => 'usuaria/publicaciones.php', 2 => 'usuaria/publicaciones.php', 3 => 'admin/']
+        ];
+        ?>
+        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['libreYSegura'], $usuario['rol']) ?>">Libre y Segura</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a></li>
+
+        <?php if ($usuario['rol'] <= 1): ?>
+          <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['alzalaVoz'], $usuario['rol']) ?>">Test</a></li>
         <?php endif; ?>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= $urlBase ?>Vista/<?php
-                                                          switch ($_SESSION['id_rol'] ?? 0) {
-                                                            case 1:
-                                                            case 2:
-                                                              echo 'usuaria/publicaciones.php';
-                                                              break;
-                                                            case 3:
-                                                              echo 'admin/';
-                                                              break;
-                                                            default:
-                                                              echo 'login.php';
-                                                              break;
-                                                          }
-                                                          ?>">Publicaciones</a>
-        </li>
-        <div class="search-wrapper d-none d-lg-flex align-items-center ms-3">
-          <form class="search-wrapper d-none d-lg-flex align-items-center ms-auto me-3" role="search">
-            <i class="fas fa-search search-icon"></i>
-            <input class="search-input" type="search" placeholder="Buscar...">
-            <button type="submit" style="display:none;"></button> <!-- opcional, Enter envía -->
+
+        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a></li>
+
+        <!-- Buscador navbar -->
+        <div class="search-wrapper align-items-center" id="searchWrapper">
+          <form class="search-wrapper align-items-center ms-auto me-3" role="search">
+            <i class="bi bi-search search-icon" id="search-icon-navbar"></i>
+            <input class="search-input" id="searchInputNavbar" type="search" placeholder="Buscar...">
+            <button type="submit" style="display:none;"></button>
           </form>
         </div>
 
-        <form class="d-flex d-lg-none mt-3 search-form-mobile" role="search">
-          <input class="form-control" type="search" placeholder="Buscar...">
-          <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
-        </form>
-        <!-- Menú desplegable de usuario -->
+        <!-- Menú usuario -->
         <li class="dropdown ms-3">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-person-circle me-1"></i>
-            <?= isset($_SESSION['nickname']) ? ucwords(strtolower($_SESSION['nickname'])) : '' ?>
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle me-1"></i> <?= ucwords(strtolower($usuario['nickname'])) ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
-            <?php if (isset($_SESSION['correo'])): ?>
-              <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/<?php
-                                                                    switch ($_SESSION['id_rol'] ?? 0) {
-                                                                      case 1:
-                                                                        echo 'usuaria/perfil.php';
-                                                                        break;
-                                                                      case 2:
-                                                                        echo 'especialista/perfil.php';
-                                                                        break;
-                                                                      default:
-                                                                        echo 'login.php';
-                                                                        break;
-                                                                    }
-                                                                    ?>">
-                  Mi perfil <i class="bi bi-person-circle me-1"></i>
-                </a>
-              </li>
+            <?php if ($usuario['correo']): ?>
+              <li><a class="dropdown-item" href="<?= $urlBase ?>Vista/<?= rutaSegura([1 => 'usuaria/perfil.php', 2 => 'especialista/perfil.php'], $usuario['rol']) ?>">Mi perfil <i class="bi bi-person-circle me-1"></i></a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
               <li>
                 <a class="dropdown-item d-flex justify-content-between align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
                   Notificaciones <i class="bi bi-bell-fill"></i>
-                  <span id="contadorNotificaciones" class="badge bg-danger rounded-pill ms-2" <?= $notificacionesNoLeidas > 0 ? '' : 'style="display:none;"' ?>>
-                    <?= $notificacionesNoLeidas ?>
-                  </span>
+                  <?php if ($notificacionesNoLeidas): ?>
+                    <span id="contadorNotificaciones" class="badge bg-danger rounded-pill ms-2"><?= $notificacionesNoLeidas ?></span>
+                  <?php endif; ?>
                 </a>
               </li>
               <li>
@@ -158,17 +115,11 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
               <li>
                 <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
                   <input type="hidden" name="opcion" value="2" />
-                  <button type="submit" class="dropdown-item cerrar">
-                    Cerrar sesión <i class="bi bi-door-open-fill"></i>
-                  </button>
+                  <button type="submit" class="dropdown-item cerrar">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
                 </form>
               </li>
             <?php else: ?>
-              <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">
-                  Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
-                </a>
-              </li>
+              <li><a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">Iniciar sesión <i class="bi bi-box-arrow-in-right"></i></a></li>
             <?php endif; ?>
           </ul>
         </li>
@@ -178,27 +129,20 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
 </nav>
 
 <!-- Modal Notificaciones -->
-<div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
+<div class="modal fade" id="modalNotificaciones">
   <div class="modal-dialog modal-dialog-scrollable modal-md">
     <div class="modal-content">
       <div class="modal-header bg-warning text-white">
-        <h5 class="modal-title" id="modalNotificacionesLabel">
-          <i class="bi bi-bell"></i> Notificaciones
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <h5 class="modal-title"><i class="bi bi-bell"></i> Notificaciones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body" id="listaNotificaciones">
-        <?php if (!empty($notificaciones)): ?>
+      <div class="modal-body">
+        <?php if ($notificaciones): ?>
           <ul class="list-group">
-            <?php foreach ($notificaciones as $notificacion): ?>
-              <li class="list-group-item d-flex justify-content-between align-items-start <?= $notificacion['leida'] == 0 ? 'fw-bold bg-light' : '' ?>">
-                <div class="ms-2 me-auto">
-                  <?= htmlspecialchars($notificacion['mensaje']) ?><br />
-                  <small class="text-muted"><?= date('d/m/Y H:i', strtotime($notificacion['fecha_creacion'])) ?></small>
-                </div>
-                <?php if ($notificacion['leida'] == 0): ?>
-                  <span class="badge bg-danger rounded-pill">Nuevo</span>
-                <?php endif; ?>
+            <?php foreach ($notificaciones as $n): ?>
+              <li class="list-group-item d-flex justify-content-between align-items-start <?= $n['leida'] == 0 ? 'fw-bold bg-light' : '' ?>">
+                <div class="ms-2 me-auto"><?= htmlspecialchars($n['mensaje']) ?><br><small class="text-muted"><?= date('d/m/Y H:i', strtotime($n['fecha_creacion'])) ?></small></div>
+                <?= $n['leida'] == 0 ? '<span class="badge bg-danger rounded-pill">Nuevo</span>' : '' ?>
               </li>
             <?php endforeach; ?>
           </ul>
@@ -206,28 +150,15 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
           <p class="text-muted">No tienes notificaciones.</p>
         <?php endif; ?>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div>
     </div>
   </div>
 </div>
 
-<button id="btn-top" title="Ir al inicio" class="btn-top">
-  <i class="fas fa-arrow-up"></i>
-</button>
-
-<!-- Script para pasar info del usuario a JS -->
 <script>
-  window.usuarioActual = {
-    id: "<?= (int)($_SESSION['id'] ?? 0) ?>",
-    rol: "<?= (int)($_SESSION['id_rol'] ?? 0) ?>",
-    nombre: "<?= addslashes($_SESSION['nickname'] ?? 'Invitado') ?>"
-  };
+  window.usuarioActual = <?= json_encode($usuario) ?>;
 </script>
 
-<!-- Bootstrap Bundle JS (incluye Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Script módulo notificaciones -->
+<script src="<?= $urlBase ?>peticiones(js)/navbar.js"></script>
 <script type="module" src="<?= $urlBase ?>peticiones(js)/notificaciones.js"></script>
