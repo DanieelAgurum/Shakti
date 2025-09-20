@@ -102,12 +102,6 @@ if (isset($_SESSION['id']) && $_SESSION['id_rol'] == 1) {
                                                             ?>">Publicaciones</a>
           </li>
 
-          <?php if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1): ?>
-            <li class="nav-item">
-              <a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/especialistas.php">Especialistas</a>
-            </li>
-          <?php endif; ?>
-
           <!-- Menú desplegable de usuario -->
           <li class="nav-item dropdown ms-3">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
