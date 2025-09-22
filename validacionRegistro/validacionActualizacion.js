@@ -13,11 +13,6 @@ const validators = {
         if (!/^[a-zA-Z0-9_]{4,20}$/.test(value)) return 'Debe tener entre 4 y 20 caracteres (letras, números, guion bajo)';
         return true;
     },
-    contraseñaN: value => {
-        if (value.trim() !== '' && !/^[a-zA-Z0-9._]{8,}$/.test(value))
-            return 'Debe tener al menos 8 caracteres y solo puede contener letras, números, puntos y guiones bajos';
-        return true;
-    },
     telefono: value => {
         if (value.trim() !== '' && !/^\d{7,15}$/.test(value.trim()))
             return 'Solo se permiten números (mínimo 7 dígitos)';

@@ -1045,6 +1045,47 @@ label.star:before {
   }
 }
 
+.profile-pic-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.profile-pic {
+  border: 3px solid #444;
+  object-fit: cover;
+}
+
+.edit-icon {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.edit-icon:hover {
+  background: #0056b3;
+}
+
+
+/* Foto de perfil dentro del modal */
+#imagenPreview {
+  max-width: 50%;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto 1rem auto;
+}
+
+
 /* Header */
 .custom-config-modal .modal-header {
   background: #292943;

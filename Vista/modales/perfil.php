@@ -40,7 +40,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="telefono" class="form-label">Teléfono:</label>
-                                    <input type="number" id="telefono" class="form-control" name="telefono"
+                                    <input type="tel" id="telefono" class="form-control" name="telefono"
                                         value="<?= htmlspecialchars($_SESSION['telefono'] ?? '') ?>">
                                     <small class="error" id="errorTelefono"></small>
                                 </div>
@@ -85,7 +85,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Modal Completar perfil -->
 <div class="modal fade custom-config-modal" id="completarPerfilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -145,7 +144,6 @@
     </div>
 </div>
 
-
 <!-- Modal para activar/desactivar cuenta -->
 <div class="modal fade" id="cambiarEstado_<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -176,7 +174,6 @@
     </div>
 </div>
 
-
 <!--Eliminar cuenta-->
 <div class="modal fade" id="eliminarE_<?php echo $row['id']; ?>" tabindex=" -1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -200,6 +197,39 @@
                 </form>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar foto -->
+<div class="modal fade custom-config-modal" id="editarFotoModal" tabindex="-1" aria-labelledby="editarFotoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="fotoForm" action="../../Controlador/UsuariasControlador.php" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarFotoLabel">Cambiar foto de perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <!-- Previsualización de la imagen -->
+                    <img id="imagenPreview" src="<?php echo $fotoSrc; ?>" alt="Foto actual" class="rounded mb-3" style="max-width:50%;">
+
+                    <input type="file" id="fotoInput" name="nuevaFoto" accept="image/*" class="d-none">
+                    <label for="fotoInput" class="btn btn-outline-light">
+                        <i class="bi bi-upload"></i> Seleccionar nueva foto
+                    </label>
+
+                    <input type="hidden" name="opcion" value="4">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-banner">
+                        <i class="bi bi-check2-circle"></i> Guardar cambios
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
