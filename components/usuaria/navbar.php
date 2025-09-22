@@ -35,20 +35,9 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
-  <style>
-    @media (max-width: 576px) {
-      .animacion {
-        animation: none !important;
-      }
-    }
-
-    .navbar {
-      z-index: 1040;
-    }
-  </style>
 </head>
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
@@ -106,7 +95,11 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="dropdown-item" href="#">Configuración <i class="bi bi-gear-fill"></i></a></li>
+              <li>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#configModal">
+                  Configuración <i class="bi bi-gear-fill"></i>
+                </a>
+              </li>
               <li>
                 <hr class="dropdown-divider">
               </li>
@@ -129,6 +122,108 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 <button id="btn-top" title="Ir al inicio" class="btn-top">
   <i class="fas fa-arrow-up"></i>
 </button>
+
+<!-- Modal de configuración -->
+<div class="modal fade custom-config-modal" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="configModalLabel">Configuración</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="configTabs" role="tablist">
+          <li class="nav-item">
+            <button class="nav-link active" id="cuenta-tab" data-bs-toggle="tab" data-bs-target="#cuenta" type="button" role="tab">Cuenta</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="privacidad-tab" data-bs-toggle="tab" data-bs-target="#privacidad" type="button" role="tab">Privacidad</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="notificaciones-tab" data-bs-toggle="tab" data-bs-target="#notificaciones" type="button" role="tab">Notificaciones</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="accesibilidad-tab" data-bs-toggle="tab" data-bs-target="#accesibilidad" type="button" role="tab">Accesibilidad</button>
+          </li>
+        </ul>
+
+        <!-- Contenido Tabs -->
+        <div class="tab-content mt-3" id="configTabsContent">
+
+          <!-- Cuenta -->
+          <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
+            <form>
+              <div class="form-floating mt-4">
+                <input type="password" class="form-control custom-input" id="newPassword" placeholder="Nueva contraseña">
+                <label for="newPassword">Nueva contraseña</label>
+              </div>
+              <div class="form-floating mt-4">
+                <input type="email" class="form-control custom-input" id="email" placeholder="Correo electrónico" value="">
+                <label for="email">Correo electrónico</label>
+              </div>
+            </form>
+          </div>
+
+
+          <!-- Privacidad -->
+          <div class="tab-pane fade" id="privacidad" role="tabpanel">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="addFriendOption" checked>
+              <label class="form-check-label" for="addFriendOption">Permitir que me agreguen como amiga</label>
+            </div>
+            <div class="form-check form-switch mt-2">
+              <input class="form-check-input" type="checkbox" id="privateProfile">
+              <label class="form-check-label" for="privateProfile">Perfil privado</label>
+            </div>
+          </div>
+
+          <!-- Notificaciones -->
+          <div class="tab-pane fade" id="notificaciones" role="tabpanel">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="notifyMessages" checked>
+              <label class="form-check-label" for="notifyMessages">Notificarme de nuevos mensajes</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="notifyComments">
+              <label class="form-check-label" for="notifyComments">Notificarme de comentarios y respuestas</label>
+            </div>
+          </div>
+
+          <!-- Accesibilidad -->
+          <div class="tab-pane fade" id="accesibilidad" role="tabpanel">
+            <div class="mb-3">
+              <label for="fontSize" class="form-label">Tamaño de fuente</label>
+              <select class="form-select" id="fontSize">
+                <option value="small">Pequeño</option>
+                <option value="medium" selected>Medio</option>
+                <option value="large">Grande</option>
+              </select>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="darkMode">
+              <label class="form-check-label" for="darkMode">Activar modo oscuro</label>
+            </div>
+            <div class="form-check form-switch mt-2">
+              <input class="form-check-input" type="checkbox" id="highContrast">
+              <label class="form-check-label" for="highContrast">Activar alto contraste</label>
+            </div>
+          </div>
+        </div><!-- Fin tab-content -->
+      </div>
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-banner">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal Notificaciones -->
 <div class="modal fade" id="modalNotificaciones">

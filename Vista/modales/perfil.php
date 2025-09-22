@@ -1,135 +1,94 @@
 <!-- Modal Editar perfil -->
-<div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade custom-config-modal" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog perfilmodal" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title text-center" id="addNewLabel"><strong>Editar perfil</strong></h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div id="formErrorAlert" class="alert alert-danger d-none" role="alert"></div>
-                    <form method="post" id="actualizarForm" action="../../Controlador/UsuariasControlador.php" enctype="multipart/form-data">
-
-                        <!-- Foto -->
-                        <div class="row form-group mb-2">
-                            <div class="col-sm-2">
-                                <label class="control-label">Foto:</label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="file" class="form-control" name="foto" accept="image/*"
-                                    value="<?= htmlspecialchars($_SESSION['foto'] ?? '') ?>">
-                            </div>
-                        </div>
-
-                        <!-- Nombre -->
-                        <div class="row form-group mb-2">
-                            <div class="col-sm-2">
-                                <label class="control-label">Nombre:</label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="text" id="nombreN" class="form-control" name="nombreN"
-                                    value="<?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>">
-                                <small class="error" id="errorNombreN"></small>
-                            </div>
-                        </div>
-
-                        <!-- Apellidos -->
-                        <div class="row form-group mb-2">
-                            <div class="col-sm-2">
-                                <label class="control-label">Apellidos:</label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="text" id="apellidosN" class="form-control" name="apellidosN"
-                                    value="<?= htmlspecialchars($_SESSION['apellidos'] ?? '') ?>">
-                                <small class="error" id="errorApellidosN"></small>
-                            </div>
-                        </div>
-
-                        <!-- Nickname -->
-                        <div class="row form-group mb-2">
-                            <div class="col-sm-2">
-                                <label class="control-label">Nombre de usuaria:</label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="text" id="nicknameN" class="form-control" name="nicknameN"
-                                    value="<?= htmlspecialchars($_SESSION['nickname'] ?? '') ?>">
-                                <small class="error" id="errorNicknameN"></small>
-                            </div>
-                        </div>
-
-                        <!-- Contraseña -->
-                        <div class="row form-group mb-2">
-                            <div class="col-sm-2">
-                                <label class="control-label">Nueva contraseña:</label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="password" id="contraseñaN" class="form-control" name="contraseñaN">
-                                <small class="error" id="errorContraseñaN"></small>
-                            </div>
-                        </div>
-
-                        <!-- Teléfono -->
-                        <div class="row form-group mb-2">
-                            <div class="col-sm-2">
-                                <label class="control-label">Teléfono:</label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="number" id="telefono" class="form-control" name="telefono"
-                                    value="<?= htmlspecialchars($_SESSION['telefono'] ?? '') ?>">
-                                <small class="error" id="errorTelefono"></small>
-                            </div>
-                        </div>
-
-                        <!-- Dirección -->
-                        <div class="row form-group mb-2">
-                            <div class="col-sm-2">
-                                <label class="control-label">Dirección:</label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="text" id="direccion" class="form-control" name="direccion"
-                                    value="<?= htmlspecialchars($_SESSION['direccion'] ?? '') ?>">
-                                <small class="error" id="errorDireccion"></small>
-                            </div>
-                        </div>
-
-                        <!-- Fecha de nacimiento -->
-                        <div class="row form-group mb-2">
-                            <div class="col-sm-2">
-                                <label for="fecha_nac" class="form-label me-2">Fecha de nacimiento</label>
-                            </div>
-                            <div class="col-sm-10">
-                                <input type="date" class="form-control" id="fecha_nac" name="fecha_nac"
-                                    value="<?= htmlspecialchars($_SESSION['fecha_nacimiento'] ?? '') ?>">
-                                <small class="error" id="errorFecha_nac"></small>
-                            </div>
-                        </div>
-
-                        <!-- Descripción -->
-                        <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción</label>
-                            <textarea class="form-control" name="descripcion" id="descripcion" rows="3"><?= htmlspecialchars($_SESSION['descripcion'] ?? '') ?></textarea>
-                            <small class="error" id="errorDescripcion"></small>
-                        </div>
-
-                        <!-- Botones -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancelar</button>
-                            <input type="hidden" value="2" name="opcion">
-                            <button type="submit" name="completar" value="actualizarDatos" class="btn btn-outline-success">
-                                <i class="bi bi-check2-circle"></i> Guardar
-                            </button>
-                        </div>
-                    </form>
+            <form method="post" id="actualizarForm" action="../../Controlador/UsuariasControlador.php" enctype="multipart/form-data" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" id="editarPerfilLabel"><strong>Editar perfil</strong></h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-            </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div id="formErrorAlert" class="alert alert-danger d-none" role="alert"></div>
+
+                        <div class="row">
+                            <!-- Columna izquierda -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nombreN" class="form-label">Nombre:</label>
+                                    <input type="text" id="nombreN" class="form-control" name="nombreN"
+                                        value="<?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>">
+                                    <small class="error" id="errorNombreN"></small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="apellidosN" class="form-label">Apellidos:</label>
+                                    <input type="text" id="apellidosN" class="form-control" name="apellidosN"
+                                        value="<?= htmlspecialchars($_SESSION['apellidos'] ?? '') ?>">
+                                    <small class="error" id="errorApellidosN"></small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="nicknameN" class="form-label">Nombre de usuaria:</label>
+                                    <input type="text" id="nicknameN" class="form-control" name="nicknameN"
+                                        value="<?= htmlspecialchars($_SESSION['nickname'] ?? '') ?>">
+                                    <small class="error" id="errorNicknameN"></small>
+                                </div>
+                            </div>
+
+                            <!-- Columna derecha -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="telefono" class="form-label">Teléfono:</label>
+                                    <input type="number" id="telefono" class="form-control" name="telefono"
+                                        value="<?= htmlspecialchars($_SESSION['telefono'] ?? '') ?>">
+                                    <small class="error" id="errorTelefono"></small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="direccion" class="form-label">Dirección:</label>
+                                    <input type="text" id="direccion" class="form-control" name="direccion"
+                                        value="<?= htmlspecialchars($_SESSION['direccion'] ?? '') ?>">
+                                    <small class="error" id="errorDireccion"></small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fecha_nac" class="form-label">Fecha de nacimiento:</label>
+                                    <input type="date" id="fecha_nac" class="form-control" name="fecha_nac"
+                                        value="<?= htmlspecialchars($_SESSION['fecha_nacimiento'] ?? '') ?>">
+                                    <small class="error" id="errorFecha_nac"></small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripción</label>
+                                    <textarea class="form-control" name="descripcion" id="descripcion" rows="5"><?= htmlspecialchars($_SESSION['descripcion'] ?? '') ?></textarea>
+                                    <small class="error" id="errorDescripcion"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancelar</button>
+                    <input type="hidden" value="2" name="opcion">
+                    <button type="submit" name="completar" value="actualizarDatos" class="btn btn-banner">
+                        <i class="bi bi-check2-circle"></i> Guardar
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 
 <!-- Modal Completar perfil -->
-<div class="modal fade" id="completarPerfilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="completarPerfilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

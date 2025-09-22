@@ -144,19 +144,19 @@ class Usuarias
         exit;
     }
 
-    public function actualizarDatos($foto, $nomN, $apeN, $nickN, $corN, $contN, $fec, $tel, $dir, $desc, $idUsuaria)
+    public function actualizarDatos($nomN, $apeN, $nickN, $corN, $contN, $fec, $tel, $dir, $desc, $idUsuaria)
     {
         $con = $this->conectarBD();
 
+        // Verificar si el nickname ya está en uso
         $nickNuevo = mysqli_real_escape_string($con, $nickN);
         $nickQuery = "SELECT id FROM usuarias WHERE nickname = '$nickNuevo' AND id != $idUsuaria LIMIT 1";
         $nickResult = mysqli_query($con, $nickQuery);
 
         if ($nickResult && mysqli_num_rows($nickResult) > 0) {
-
             session_start();
+            $msg = "El nombre de usuaria ya está en uso, por favor elige otro.";
             if (isset($_SESSION['id_rol'])) {
-                $msg = "El nombre de usuaria ya está en uso, por favor elige otro.";
                 if ($_SESSION['id_rol'] == 1) {
                     header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode($msg));
                 } else if ($_SESSION['id_rol'] == 2) {
@@ -170,6 +170,7 @@ class Usuarias
             exit;
         }
 
+        // Obtener datos actuales
         $result = mysqli_query($con, "SELECT * FROM usuarias WHERE id = $idUsuaria");
         if (!$result || mysqli_num_rows($result) == 0) {
             die("Error: no se encontró la usuaria.");
@@ -188,63 +189,29 @@ class Usuarias
         if ($dir !== $actual['direccion']) $campos[] = "direccion = '" . mysqli_real_escape_string($con, $dir) . "'";
         if ($desc !== $actual['descripcion']) $campos[] = "descripcion = '" . mysqli_real_escape_string($con, $desc) . "'";
 
-
         if (!empty($contN)) {
             $hash = password_hash($contN, PASSWORD_DEFAULT);
             $campos[] = "contraseña = '" . mysqli_real_escape_string($con, $hash) . "'";
         }
 
-        if ($foto && isset($foto['error']) && $foto['error'] === 0) {
-            $check = getimagesize($foto['tmp_name']);
-            if ($check !== false) {
-                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg', 'image/pjpeg'];
-                if (in_array($check['mime'], $allowedMimeTypes)) {
-                    $fotoBin = file_get_contents($foto['tmp_name']);
-                    $fotoBinEscaped = mysqli_real_escape_string($con, $fotoBin);
-                    $campos[] = "foto = '$fotoBinEscaped'";
-                    $_SESSION['foto'] = $fotoBin;
+        if (empty($campos)) {
+            if (isset($_SESSION['id_rol'])) {
+                if ($_SESSION['id_rol'] == 1) {
+                    header("Location: ../Vista/usuaria/perfil.php");
+                } else if ($_SESSION['id_rol'] == 2) {
+                    header("Location: ../Vista/especialista/perfil.php");
                 } else {
-                    // Imagen inválida: redirigir según rol
-                    $msg = "Ingrese una imagen válida";
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
-                    if (isset($_SESSION['id_rol'])) {
-                        if ($_SESSION['id_rol'] == 1) {
-                            header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode($msg));
-                        } else if ($_SESSION['id_rol'] == 2) {
-                            header("Location: ../Vista/especialista/perfil.php?status=error&message=" . urlencode($msg));
-                        } else {
-                            header("Location: ../Vista/login.php?status=error&message=" . urlencode("Rol no reconocido"));
-                        }
-                    } else {
-                        header("Location: ../Vista/login.php?status=error&message=" . urlencode("Sesión no iniciada"));
-                    }
-                    exit;
+                    header("Location: ../Vista/login.php?status=error&message=Rol+no+reconocido");
                 }
             } else {
-                // No es imagen válida
-                header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode("El archivo no es una imagen válida"));
-                exit;
-            }
-        }
-
-        if (empty($campos)) {
-            if ($_SESSION['id_rol'] == 1) {
-                header("Location: ../Vista/usuaria/perfil.php");
-            } else if ($_SESSION['id_rol'] == 2) {
-                header("Location: ../Vista/especialista/perfil.php");
-            } else {
-                header("Location: ../Vista/login.php?status=error&message=Rol+no+reconocido");
+                header("Location: ../Vista/login.php?status=error&message=Sesión+no+iniciada");
             }
             exit;
         }
 
         $setClause = implode(', ', $campos);
         $query = "UPDATE usuarias SET $setClause WHERE id = $idUsuaria";
-
         $consulta = mysqli_query($con, $query) or die("Error al actualizar: " . mysqli_error($con));
-
 
         // Actualizar variables de sesión
         if ($consulta) {
@@ -261,6 +228,7 @@ class Usuarias
             $_SESSION['descripcion'] = $actual['descripcion'];
         }
 
+        // Redirigir según rol
         if (isset($_SESSION['id_rol'])) {
             if ($_SESSION['id_rol'] == 1) {
                 header("Location: ../Vista/usuaria/perfil.php?status=success&message=" . urlencode("Datos actualizados correctamente"));
@@ -274,6 +242,7 @@ class Usuarias
         }
         exit;
     }
+
 
     public function eliminarUsuaria($id)
     {

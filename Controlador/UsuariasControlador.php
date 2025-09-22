@@ -25,7 +25,6 @@ switch ($_REQUEST['opcion']) {
             exit;
         }
         $u->actualizarDatos(
-            $_FILES['foto'] ?? null,
             $_REQUEST['nombreN'],
             $_REQUEST['apellidosN'],
             $_REQUEST['nicknameN'],
