@@ -61,7 +61,14 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-column align-items-center text-center">
-                                <img src="<?php echo $fotoSrc; ?>" alt="<?php echo isset($_SESSION['nombre_rol']) ? ucwords(strtolower($_SESSION['nombre_rol'])) : " " ?>" class="rounded-circle" width="150" height="150">
+                                <div class="profile-pic-wrapper position-relative">
+                                    <img src="<?php echo $fotoSrc; ?>" alt="Foto de perfil" class="rounded-circle" width="150" height="150">
+
+                                    <button id="editFotoBtn" class="edit-icon">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                </div>
+
                                 <div class="mt-3">
                                     <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
                                     <p class="text-secondary mb-1"><?php echo isset($_SESSION['descripcion']) ? ucwords(strtolower($_SESSION['descripcion'])) : " " ?></p>
@@ -69,9 +76,6 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                                         <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
                                     </button>
 
-                                    </a>
-
-                                    </button>
                                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">
                                         <i class="bi bi-book-fill"></i> Notas
                                     </button>
@@ -195,6 +199,7 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
     <script src="../../validacionRegistro/notas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     <?php include '../modales/perfil.php'; ?>
+    <script src="../../peticiones(js)/actualizarFoto.js"></script>
     <script src="../../validacionRegistro/validacionActualizacion.js"></script>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>

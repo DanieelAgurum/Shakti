@@ -243,6 +243,40 @@ class Usuarias
         exit;
     }
 
+    public function cambiarFotoPerfil($idUsuaria, $foto)
+    {
+        $con = $this->conectarBD();
+
+        if (!$foto || $foto['error'] !== 0) {
+            return ['status' => 'error', 'message' => 'No se recibió ninguna imagen o hubo un error al subirla'];
+        }
+
+        $fotoBin = file_get_contents($foto['tmp_name']);
+        if ($fotoBin === false) {
+            return ['status' => 'error', 'message' => 'No se pudo leer el archivo'];
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->buffer($fotoBin);
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg', 'image/pjpeg'];
+
+        if (!in_array($mime, $allowedMimeTypes)) {
+            return ['status' => 'error', 'message' => 'Tipo de imagen no permitido'];
+        }
+
+        $fotoBinEscaped = mysqli_real_escape_string($con, $fotoBin);
+        $query = "UPDATE usuarias SET foto = '$fotoBinEscaped' WHERE id = $idUsuaria";
+
+        if (!mysqli_query($con, $query)) {
+            return ['status' => 'error', 'message' => 'Error al actualizar la foto en la base de datos: ' . mysqli_error($con)];
+        }
+
+        session_start();
+        $_SESSION['foto'] = $fotoBin;
+        return ['status' => 'success', 'message' => 'Foto de perfil actualizada correctamente'];
+    }
+
+
 
     public function eliminarUsuaria($id)
     {
