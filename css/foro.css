@@ -24,26 +24,18 @@
 
 /* Main foro */
 .contenedor-buscador {
-    z-index: 1030;
-    position: fixed;
-    top: 3.9rem ;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-}
-
-.buscador-fijo {
-    top: 70px;
-    max-width: 600px;
-    margin: 0 auto;
-    margin: 30px 0px; 
+  z-index: 1030;
+  position: fixed;
+  top: 3.5rem;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
 }
 
 .search-box {
-    position: relative;
-    
+  position: relative;
 }
 
 .foro_main {
-    padding-top: 160px;
+  padding-top: 160px;
 }

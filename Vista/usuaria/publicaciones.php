@@ -58,9 +58,8 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
 <body>
 
   <div class="container mt-5">
-    <?php if ($mensaje): ?>
-      <div class="alert alert-info"><?= htmlspecialchars($mensaje) ?></div>
-    <?php endif; ?>
+
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/usuaria/lenguaje.php'; ?>
 
     <!-- Formulario de publicación -->
     <div class="card mb-4 shadow-sm">
