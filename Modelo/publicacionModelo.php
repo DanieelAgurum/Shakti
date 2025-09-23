@@ -1,5 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notificacionesModelo.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
+
 class PublicacionModelo
 {
     private $conn;
@@ -14,28 +16,97 @@ class PublicacionModelo
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                 ]);
             } catch (PDOException $e) {
-                die("❌ Error de conexión: " . $e->getMessage());
+                die("Error de conexión: " . $e->getMessage());
             }
         }
     }
 
+    private function moderarContenidoIA(string $contenido): bool
+    {
+        $apiKey = OPENAI_API_KEY;
+
+        $prompt = "Eres un moderador de contenido en una red social. Analiza el siguiente texto y responde solo 'true' si es apropiado
+        o 'false' si contiene lenguaje ofensivo, violencia, discriminación o spam:
+        \"$contenido\"";
+
+        $data = [
+            "model" => "gpt-5-nano",
+            "messages" => [
+                ["role" => "system", "content" => "Eres un moderador de contenido."],
+                ["role" => "user", "content" => $prompt]
+            ],
+            "temperature" => 0
+        ];
+
+        $ch = curl_init("https://api.openai.com/v1/chat/completions");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "Authorization: Bearer $apiKey"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        if (!$result) {
+            error_log("Error en la petición a OpenAI");
+            return false;
+        }
+
+        $response = json_decode($result, true);
+        $respuesta = strtolower(trim($response['choices'][0]['message']['content'] ?? 'false'));
+
+        return $respuesta === 'true';
+    }
+
+
     public function guardar(string $titulo, string $contenido, int $anonima, int $id_usuaria): bool
     {
         $this->conectar();
+
+        // Moderación IA
+        if (!$this->moderarContenidoIA($contenido)) {
+            $_SESSION['sweet_alert'] = [
+                'icon' => 'warning',
+                'title' => 'Lenguaje inapropiado',
+                'text' => 'Evitemos palabras ofensivas. Gracias.'
+            ];
+            return false;
+        }
+
         try {
             $sql = "INSERT INTO publicacion (titulo, contenido, fecha_publicacion, anonima, id_usuarias)
-                    VALUES (:titulo, :contenido, NOW(), :anonima, :id_usuaria)";
+                VALUES (:titulo, :contenido, NOW(), :anonima, :id_usuaria)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':titulo', $titulo);
             $stmt->bindParam(':contenido', $contenido);
             $stmt->bindParam(':anonima', $anonima);
             $stmt->bindParam(':id_usuaria', $id_usuaria);
-            return $stmt->execute();
+
+            $exito = $stmt->execute();
+
+            if ($exito) {
+                $_SESSION['sweet_alert'] = [
+                    'icon' => 'success',
+                    'title' => 'Publicación guardada',
+                    'text' => 'Tu publicación se ha guardado correctamente.'
+                ];
+            }
+
+            return $exito;
         } catch (PDOException $e) {
             error_log("Error al guardar publicación: " . $e->getMessage());
+            $_SESSION['sweet_alert'] = [
+                'icon' => 'error',
+                'title' => 'Error',
+                'text' => 'Ocurrió un error al guardar la publicación.'
+            ];
             return false;
         }
     }
+
 
     public function obtenerTodasConNickname(): array
     {
@@ -92,7 +163,6 @@ class PublicacionModelo
             $this->todos();
         }
     }
-
 
     public function todos()
     {
@@ -184,15 +254,43 @@ class PublicacionModelo
     public function actualizar(int $id, string $titulo, string $contenido): bool
     {
         $this->conectar();
+
+        // Validación con IA antes de actualizar
+        if (!$this->moderarContenidoIA($contenido)) {
+            $_SESSION['sweet_alert'] = [
+                'icon' => 'warning',
+                'title' => 'Lenguaje inapropiado',
+                'text' => 'Evitemos palabras ofensivas. Gracias.'
+            ];
+            return false;
+        }
+
+        // Intentar actualizar en la base de datos
         try {
             $sql = "UPDATE publicacion SET titulo = :titulo, contenido = :contenido WHERE id_publicacion = :id";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':titulo', $titulo);
             $stmt->bindParam(':contenido', $contenido);
             $stmt->bindParam(':id', $id);
-            return $stmt->execute();
+
+            $exito = $stmt->execute();
+
+            if ($exito) {
+                $_SESSION['sweet_alert'] = [
+                    'icon' => 'success',
+                    'title' => 'Publicación actualizada',
+                    'text' => 'La publicación se ha actualizado correctamente.'
+                ];
+            }
+
+            return $exito;
         } catch (PDOException $e) {
             error_log("Error al actualizar publicación: " . $e->getMessage());
+            $_SESSION['sweet_alert'] = [
+                'icon' => 'error',
+                'title' => 'Error',
+                'text' => 'Ocurrió un error al actualizar la publicación.'
+            ];
             return false;
         }
     }
@@ -225,7 +323,7 @@ class PublicacionModelo
 
     public function borrarSinVerificar(int $id_publicacion): bool
     {
-          $this->conectar();
+        $this->conectar();
 
         try {
             $sqlLikes = "DELETE FROM likes_publicaciones WHERE id_publicacion = ?";

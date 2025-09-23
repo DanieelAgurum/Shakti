@@ -21,7 +21,6 @@ $urlBase = getBaseUrl();
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
-    <link rel="stylesheet" href="<?= $urlBase ?>css/foro.css" />
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -38,6 +37,7 @@ $urlBase = getBaseUrl();
     include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/modales/reportarPostUsuarias.php';
     ?>
+    <link rel="stylesheet" href="<?= $urlBase ?>css/foro.css" />
 </head>
 
 <body class="foro_main text-black">
@@ -65,9 +65,7 @@ $urlBase = getBaseUrl();
 
     <div class="foro">
         <div id="scrollLoader" class="loader-container">
-            <div class="orbit">
-
-            </div>
+            <div class="orbit"></div>
         </div>
     </div>
     <script>
