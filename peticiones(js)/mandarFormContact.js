@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         icon: "warning",
         title: "Campos requeridos",
         text: "Por favor completa todos los campos antes de enviar.",
-        confirmButtonText: "Aceptar"
+        confirmButtonText: "Aceptar",
       });
       return;
     }
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
       success: function (respuesta) {
         form.reset();
         scrollLoader.classList.add("d-none");
-        icono.classList.remove("d-none")
+        icono.classList.remove("d-none");
         btnEnviar.disabled = false;
 
         if (respuesta.trim() === "Enviado") {
@@ -42,14 +42,14 @@ document.addEventListener("DOMContentLoaded", () => {
             icon: "success",
             title: "¡Gracias!",
             text: "Tu mensaje fue enviado correctamente.",
-            confirmButtonText: "Aceptar"
+            confirmButtonText: "Aceptar",
           });
-        } else {
+        } else if (respuesta.trim() === "No Apto") {
           Swal.fire({
             icon: "info",
-            title: "Respuesta del servidor",
-            text: respuesta,
-            confirmButtonText: "Aceptar"
+            title: "Mal Lenguaje",
+            text: "No se pudo enviar tu mensaje debido al uso de lenguaje inapropiado.",
+            confirmButtonText: "Aceptar",
           });
         }
       },
@@ -62,9 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
           icon: "error",
           title: "Error",
           text: "Ocurrió un problema al enviar el mensaje. Inténtalo de nuevo.",
-          confirmButtonText: "Aceptar"
+          confirmButtonText: "Aceptar",
         });
-      }
+      },
     });
   });
 });
