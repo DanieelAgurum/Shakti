@@ -1,5 +1,6 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/vendor/autoload.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -13,11 +14,9 @@ class contactMdl
     private $correo;
     private $comentario;
 
-
-
     function validarMensajeConIA($comentario)
     {
-        $apiKey = "TU_API_KEY_AQUI";
+        $apiKey = OPENAI_API_KEY;  
         $modeloTexto = "gpt-4.1-mini";
 
         $promptBase = <<<EOT
@@ -55,7 +54,6 @@ EOT;
 
         return trim($respuesta);
     }
-
 
     function inicializar($correo, $comentario)
     {

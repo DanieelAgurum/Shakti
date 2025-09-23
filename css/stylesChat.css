@@ -335,3 +335,27 @@ form#formulario button {
 form#formulario button:hover {
     background-color: #357ABD;
 }
+
+/* Loader dentro del chat */
+.loader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-style: italic;
+    color: #555;
+}
+
+.loader .emoji {
+    display: inline-block;
+    animation: girar 1s linear infinite;
+}
+
+@keyframes girar {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
