@@ -20,3 +20,10 @@ if (isset($_GET['aceptarSolicitud'])) {
     $soli->aceptarSolicitud();
     return;
 }
+
+
+if (isset($_GET['agregarAmigo'])) {
+    $soli->inicializar($_REQUEST['nickname']);
+    $soli->agregarAmigo();
+    return;
+}
