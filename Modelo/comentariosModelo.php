@@ -570,7 +570,9 @@ EOT;
 
     public function editarComentario($idComentario, $nuevoContenido)
     {
-        if ($this->contieneMalasPalabrasPersonalizado($nuevoContenido)) {
+
+        $resultadoModeracion = $this->moderarContenidoIA($nuevoContenido);
+        if ($resultadoModeracion === 'malas_palabras') {
             return 'malas_palabras';
         }
 
