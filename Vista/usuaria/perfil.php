@@ -64,8 +64,14 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                                 <div class="profile-pic-wrapper position-relative">
                                     <img src="<?php echo $fotoSrc; ?>" alt="Foto de perfil" class="rounded-circle" width="150" height="150">
 
+                                    <!-- Botón editar -->
                                     <button id="editFotoBtn" class="edit-icon">
                                         <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    <!-- Botón eliminar -->
+                                    <button id="deleteFotoBtn" class="delete-icon" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                        <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </div>
 

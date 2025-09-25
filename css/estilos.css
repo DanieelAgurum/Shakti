@@ -1076,6 +1076,26 @@ label.star:before {
   background: #0056b3;
 }
 
+.delete-icon {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.delete-icon:hover {
+  background: #a71d2a;
+}
 
 /* Foto de perfil dentro del modal */
 #imagenPreview {
