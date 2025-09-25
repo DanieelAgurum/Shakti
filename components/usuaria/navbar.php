@@ -53,7 +53,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
         // Mapa de rutas
         $rutas = [
           'libreYSegura' => [1 => 'usuaria/libreYSegura.php', 2 => 'usuaria/libreYSegura.php', 3 => 'admin/'],
-          'alzalaVoz' => [1 => 'usuaria/alzalaVoz.php'],
+          'alzalaVoz' => [1 => 'usuaria/alzalaVoz.php', 3 => 'admin/'],
           'publicaciones' => [1 => 'usuaria/publicaciones.php', 2 => 'usuaria/publicaciones.php', 3 => 'admin/']
         ];
         ?>
@@ -80,12 +80,22 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <?php if ($usuario['correo']): ?>
-              <li><a class="dropdown-item" href="<?= $urlBase ?>Vista/<?= rutaSegura([1 => 'usuaria/perfil.php', 2 => 'especialista/perfil.php'], $usuario['rol']) ?>">Mi perfil <i class="bi bi-person-circle me-1"></i></a></li>
+              <li>
+                <a class="dropdown-item" href="<?= $urlBase ?>Vista/<?= rutaSegura([1 => 'usuaria/perfil.php', 2 => 'especialista/perfil.php'], $usuario['rol']) ?>">Mi perfil <i class="bi bi-person-circle me-1"></i></a>
+              </li>
               <li>
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <a class="dropdown-item d-flex justify-content-between align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
+                <a class="dropdown-item" href="<?= $urlBase ?>Vista/usuaria/usuarios.php">
+                  Solicitudes <i class="bi bi-person-fill-add"></i>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
                   Notificaciones <i class="bi bi-bell-fill"></i>
                   <?php if ($notificacionesNoLeidas): ?>
                     <span id="contadorNotificaciones" class="badge bg-danger rounded-pill ms-2"><?= $notificacionesNoLeidas ?></span>
