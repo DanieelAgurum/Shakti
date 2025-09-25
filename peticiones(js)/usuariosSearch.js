@@ -18,10 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(url, { method: "GET" });
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       return await response.text();
-    } catch (error) {
-      console.error("Fetch fallido:", error);
-      return "<p>Error cargando contenido</p>";
-    }
+    } catch (error) {}
   }
 
   // Cargar solicitudes
@@ -145,14 +142,27 @@ document.addEventListener("DOMContentLoaded", () => {
       `div[data-soli-nickname="${nickname}"]`
     );
 
-    // 1. Agregar amigo → pasa a Cancelar
     if (e.target.classList.contains("btn-agregar")) {
-      usuarioDiv.innerHTML = `
-      <button type="button" class="btn btn-warning btn-cancelar" data-nickname="${nickname}">
-        Cancelar Solicitud <i class="bi bi-x-circle"></i>
-      </button>
-    `;
-      console.log("✅ Solicitud enviada:", nickname);
+      const usuarioCard = e.target.closest(".usuario-card");
+      const accionesDiv = usuarioCard.querySelector(
+        "[data-soli-usuario-nickname]"
+      ); // solo las acciones
+
+      $.ajax({
+        url: "/shakti/Controlador/solicitudesCtrl.php?agregarAmigo",
+        type: "POST",
+        data: { nickname: nickname },
+        success: function (data) {
+          if (data == "enviada") {
+            if (accionesDiv) {
+              accionesDiv.innerHTML = `
+            <button type="button" class="btn btn-warning btn-cancelar" data-nickname="${nickname}">
+              Cancelar Solicitud <i class="bi bi-x-circle"></i>
+            </button>`;
+            }
+          }
+        },
+      });
       return;
     }
 
