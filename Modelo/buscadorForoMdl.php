@@ -1,5 +1,9 @@
 <?php
-session_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 class buscadorForoMdl
 {
     private $con;
@@ -25,10 +29,6 @@ class buscadorForoMdl
 
     public function buscardor($limit = 10, $offset = 0)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         $this->conectarBD();
         $idUsuaria = $_SESSION['id_usuaria'] ?? null;
 
@@ -174,7 +174,7 @@ class buscadorForoMdl
         $comentariosTotales = $comentarioModelo->contarComentariosPorPublicacion($idPublicacion);
         $clasesContenedores = $destacada ? "post-destacado" : "instagram-post";
 
-        echo '<article class="card ' . $clasesContenedores .' animate__animated animate__fadeInLeft">
+        echo '<article class="card ' . $clasesContenedores . ' animate__animated animate__fadeInLeft">
     <header class="post-header">
         <div class="profile-info">
             <img src="' . $fotoMostrar . '" alt="Foto" class="profile-pic" />

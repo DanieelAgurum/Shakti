@@ -124,7 +124,6 @@
     background-color: white;
     color: #000;
     align-self: flex-start;
-    /* importante para alinear a la izquierda */
     border-bottom-left-radius: 4px;
 }
 
@@ -286,10 +285,6 @@ form#formulario input[type="text"] {
     transition: border-color 0.2s, background-color 0.2s;
 }
 
-form#formulario input[type="text"]:focus {
-    border-color: #4a90e2;
-    background: white;
-}
 
 /* Ocultar input file real */
 form#formulario input[type="file"] {
@@ -357,5 +352,254 @@ form#formulario button:hover {
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+/* === Layout general === */
+.layout {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: #f5f6fa;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Contenedor de cada solicitud */
+.solicitud {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 280px;
+    max-height: 85vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #f5f6fa;
+    position: f;
+}
+
+/* Estilo para scroll en navegadores Webkit (Chrome, Edge, Safari) */
+.solicitud::-webkit-scrollbar {
+    width: 6px;
+}
+
+.solicitud::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.solicitud::-webkit-scrollbar-track {
+    background: #f5f6fa;
+}
+
+/* === Contenedor de cada solicitud === */
+.solicitud-card {
+    margin-bottom: 15px;
+}
+
+.solicitud-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Imagen */
+.solicitud-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+
+/* === Estado vacío (sin solicitudes) === */
+.solicitud-vacia {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Foto y nombre juntos */
+.solicitud-info {
+    display: flex;
+    align-items: center;
+    /* foto y nombre al mismo nivel */
+    gap: 12px;
+}
+
+.solicitud-detalle {
+    display: flex;
+    flex-direction: column;
+    /* nombre arriba, botones debajo */
+    gap: 6px;
+}
+
+.solicitud-acciones {
+    display: flex;
+    gap: 8px;
+}
+
+.solicitud-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+/* Imagen */
+.solicitud-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+
+/* Nombre */
+.solicitud-nombre {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+/* Sidebar de solicitudes */
+.sidebar-solicitudes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Responsive: móvil */
+@media (max-width: 768px) {
+    .sidebar-solicitudes {
+        width: 100% !important;
+        max-width: 100%;
+        flex-direction: column;
+        /* una solicitud debajo de otra */
+    }
+
+    .solicitud {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        /* se ajusta al contenido */
+    }
+}
+
+
+/* === Sección principal === */
+.contenido-principal {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.usuarios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* exactamente 3 */
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.usuario-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.usuario-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.usuario-nombre {
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.usuario-acciones {
+    display: flex;
+    gap: 8px;
+}
+
+/* ==== Botones del apartado agregar usuarios ==== */
+.btn-banner-azul {
+    display: inline-block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff !important;
+    background: linear-gradient(135deg, #007bff, #00b4d8);
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-banner-azul:hover {
+    background: linear-gradient(135deg, #00b4d8, #007bff);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+
+.btn-banner-rojo {
+    display: inline-block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff !important;
+    background: linear-gradient(135deg, #ff0000, #d80044);
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-banner-rojo:hover {
+    background: linear-gradient(135deg, #d80044, #ff0000);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* === Responsive === */
+@media (max-width: 900px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .margin-boton-botones {
+        margin-bottom: 0.5rem;
+    }
+
+    .usuarios-grid {
+        max-height: 75vh;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sidebar-solicitudes {
+        width: 100%;
+        max-height: 25vh;
     }
 }

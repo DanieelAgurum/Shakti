@@ -31,8 +31,6 @@ $urlBase = getBaseUrl();
     <script src="<?= $urlBase ?>peticiones(js)/likesContar.js"></script>
     <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/compartirPost.js"></script>
-    <meta name="google-adsense-account" content="ca-pub-6265821190577353">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6265821190577353" crossorigin="anonymous"></script>
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/modales/reportarPostUsuarias.php';
@@ -55,7 +53,6 @@ $urlBase = getBaseUrl();
     <div class="foro">
         <div id="loaderInicio" class="loader-container d-none">
             <div class="orbit">
-
             </div>
         </div>
     </div>
