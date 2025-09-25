@@ -146,7 +146,10 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             <div>
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn btn-sm btn-outline-success btn-toggle-edit" data-id="<?= $pub['id_publicacion'] ?>"><i class="bi bi-pencil-square"></i> Editar</button>
-                <a href="<?= $urlBase ?>Controlador/publicacionControlador.php?borrar_id=<?= $pub['id_publicacion'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar esta publicación?');"><i class="bi bi-trash3"></i> Eliminar</a>
+                <button class="btn btn-sm btn-outline-danger btn-eliminar-publicacion"
+                  data-id="<?= $pub['id_publicacion'] ?>">
+                  <i class="bi bi-trash3"></i> Eliminar
+                </button>
               </div>
             </div>
           </div>
@@ -231,12 +234,24 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
     <?php else: ?>
       <p class="text-center text-muted">No has creado publicaciones aún.</p>
     <?php endif; ?>
-
   </div>
+  <?php if (isset($_SESSION['sweet_alert'])): ?>
+    <script>
+      Swal.fire({
+        icon: '<?= $_SESSION['sweet_alert']['icon'] ?>',
+        title: '<?= $_SESSION['sweet_alert']['title'] ?>',
+        text: '<?= $_SESSION['sweet_alert']['text'] ?>',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    </script>
+    <?php unset($_SESSION['sweet_alert']); ?>
+  <?php endif; ?>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/likesContar.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
+  <script src="../../peticiones(js)/borrarPublicacion.js"></script>
   <script>
     $(document).ready(function() {
       $(document).on('click', '.btn-toggle-comments', function() {
