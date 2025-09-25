@@ -233,3 +233,26 @@
         </div>
     </div>
 </div>
+
+<!-- Modal eliminar foto-->
+<div class="modal fade custom-config-modal" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form action="../../Controlador/UsuariasControlador.php" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel"><i class="bi bi-exclamation-triangle-fill"></i> Confirmar eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center text-white">
+                    <p>¿Estás seguro de que quieres <strong>eliminar tu foto de perfil</strong>?</p>
+                    <p class="text-muted"><small class="text-white">Esta acción no se puede deshacer.</small></p>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancelar</button>
+                    <input type="hidden" name="opcion" value="5">
+                    <button type="submit" class="btn btn-banner-eliminar"><i class="bi bi-eraser-fill"></i> Eliminar foto</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

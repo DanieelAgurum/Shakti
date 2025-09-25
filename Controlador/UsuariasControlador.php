@@ -53,4 +53,17 @@ switch ($_REQUEST['opcion']) {
         $message = urlencode($resultado['message']);
         header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
         exit;
+    case 5:
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            header("Location: ../Vista/login.php");
+            exit;
+        }
+
+        $resultado = $u->eliminarFotoPerfil($_SESSION['id']);
+        $status = $resultado['status'];
+        $message = urlencode($resultado['message']);
+
+        header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
+        exit;
 }

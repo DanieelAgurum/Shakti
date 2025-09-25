@@ -276,7 +276,44 @@ class Usuarias
         return ['status' => 'success', 'message' => 'Foto de perfil actualizada correctamente'];
     }
 
+    public function eliminarFotoPerfil($idUsuaria)
+    {
+        $con = $this->conectarBD();
 
+        // Preparar la consulta para poner la foto en NULL
+        $query = "UPDATE usuarias SET foto = NULL WHERE id = ?";
+        $stmt = mysqli_prepare($con, $query);
+
+        if (!$stmt) {
+            mysqli_close($con);
+            return ['status' => 'error', 'message' => 'Error en la preparación de la consulta: ' . mysqli_error($con)];
+        }
+
+        mysqli_stmt_bind_param($stmt, "i", $idUsuaria);
+
+        $resultado = [];
+        if (mysqli_stmt_execute($stmt)) {
+            session_start();
+
+            // Reemplazar la foto eliminada por la foto por defecto
+            $rutaFotoDefault = $_SERVER['DOCUMENT_ROOT'] . '/Shakti/img/fondo3.jpg';
+            if (file_exists($rutaFotoDefault)) {
+                $_SESSION['foto'] = file_get_contents($rutaFotoDefault);
+            } else {
+                $_SESSION['foto'] = null; // Por si no existe la foto por defecto
+            }
+
+            $resultado = ['status' => 'success', 'message' => 'Foto de perfil eliminada correctamente'];
+        } else {
+            $resultado = ['status' => 'error', 'message' => 'Error al eliminar la foto: ' . mysqli_error($con)];
+        }
+
+        // Cerrar statement y conexión
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+
+        return $resultado;
+    }
 
     public function eliminarUsuaria($id)
     {
