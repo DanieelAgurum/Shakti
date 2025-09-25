@@ -112,7 +112,7 @@
 
 /* Mensajes tuyos alineados a la derecha */
 .mensaje-yo {
-    background-color: #dcf8c6;
+    background-color: #78ebff;
     color: #000;
     align-self: flex-end;
     /* importante para alinear a la derecha */
@@ -361,7 +361,7 @@ form#formulario button:hover {
     gap: 20px;
     padding: 20px;
     background: #f5f6fa;
-    min-height: 100vh;
+    min-height: 95vh;
     box-sizing: border-box;
 }
 
@@ -514,6 +514,7 @@ form#formulario button:hover {
     /* exactamente 3 */
     gap: 20px;
     overflow-y: auto;
+    max-height: 70vh;
 }
 
 .usuario-card {

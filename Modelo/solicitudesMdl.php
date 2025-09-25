@@ -25,10 +25,38 @@ class SolicitudesMdl
         $this->nickname = $nickname;
     }
 
+    public function agregarAmigo()
+    {
+        $nickname_yo = $_SESSION['nickname'];
+        $nickname_amigo = $this->nickname;
 
-    public function aceptarSolicitud() {
+        $sql = "SELECT * FROM usuarias WHERE nickname = ?";
+        $stmt = $this->conectarBD()->prepare($sql);
+        $stmt->bind_param("s", $this->nickname);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        if ($resultado && $resultado->num_rows > 0) {
+            $sql = "INSERT INTO amigos (nickname_enviado, nickname_amigo, estado, enviado) 
+                VALUES (?, ?, 'pendiente', current_timestamp())";
+            $stmt = $this->conectarBD()->prepare($sql);
+            $stmt->bind_param("ss", $nickname_yo, $nickname_amigo);
+
+            if ($stmt->execute()) {
+                echo "enviada";
+            } else {
+                echo "no_enviada";
+            }
+        } else {
+            echo "no_existe";
+        }
+    }
+
+    public function aceptarSolicitud()
+    {
         echo $this->nickname;
     }
+
     public function obtenerSolicitudes()
     {
         $usuarioPrincipal = $_SESSION['nickname'] ?? null;
@@ -93,24 +121,31 @@ class SolicitudesMdl
 
         if ($buscador !== '') {
             $sql = "
-                SELECT u.nickname, u.nombre, u.foto, a.estado
-                FROM usuarias u
-                LEFT JOIN amigos a 
-                  ON (a.nickname_enviado = u.nickname AND a.nickname_amigo = ?)
-                WHERE u.nickname LIKE ? OR u.nombre LIKE ?
-                LIMIT 25";
+        SELECT u.nickname, u.nombre, u.foto, a.estado, a.nickname_enviado, a.nickname_amigo
+        FROM usuarias u
+        LEFT JOIN amigos a 
+          ON (
+               (a.nickname_enviado = u.nickname AND a.nickname_amigo = ?) 
+            OR (a.nickname_amigo = u.nickname AND a.nickname_enviado = ?)
+          )
+        WHERE (u.nickname LIKE ? OR u.nombre LIKE ?)
+        LIMIT 25";
             $stmt = $this->conectarBD()->prepare($sql);
             $like = "%{$buscador}%";
-            $stmt->bind_param("sss", $usuarioPrincipal, $like, $like);
+            $stmt->bind_param("ssss", $usuarioPrincipal, $usuarioPrincipal, $like, $like);
         } else {
             $sql = "
-                SELECT u.nickname, u.nombre, u.foto, a.estado
-                FROM usuarias u
-                LEFT JOIN amigos a 
-                  ON (a.nickname_enviado = u.nickname AND a.nickname_amigo = ?)
-                LIMIT 25";
+        SELECT u.nickname, u.nombre, u.foto, a.estado, a.nickname_enviado, a.nickname_amigo
+        FROM usuarias u
+        LEFT JOIN amigos a 
+          ON (
+               (a.nickname_enviado = u.nickname AND a.nickname_amigo = ?) 
+            OR (a.nickname_amigo = u.nickname AND a.nickname_enviado = ?)
+          )
+        WHERE u.nickname != ?
+        LIMIT 25";
             $stmt = $this->conectarBD()->prepare($sql);
-            $stmt->bind_param("s", $usuarioPrincipal);
+            $stmt->bind_param("sss", $usuarioPrincipal, $usuarioPrincipal, $usuarioPrincipal);
         }
 
         $stmt->execute();
@@ -123,35 +158,41 @@ class SolicitudesMdl
                     : "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png";
 
                 $usuarios .= '
-        <div class="usuario-card">
-            <img src="' . htmlspecialchars($fotoUrl) . '" alt="Foto usuario" class="usuario-img" loading="lazy">
-            <p class="usuario-nombre">' . htmlspecialchars($fila['nickname']) . '</p>';
+<div class="usuario-card">
+    <img src="' . htmlspecialchars($fotoUrl) . '" alt="Foto usuario" class="usuario-img" loading="lazy">
+    <p class="usuario-nombre">' . htmlspecialchars($fila['nickname']) . '</p>';
 
-                // Contenedor de acciones con atributo data-soli-usuario-nickname siempre presente
+                // Contenedor de acciones
                 $usuarios .= '<div data-soli-usuario-nickname="' . htmlspecialchars($fila['nickname']) . '">';
 
-                if ($fila['estado'] === "pendiente") {
-                    // Si es solicitud pendiente → mostrar aceptar/rechazar
+                if ($fila['nickname'] === $usuarioPrincipal) {
+                    // Es el mismo usuario
+                    $usuarios .= '<p class="text-muted small">Este eres tú</p>';
+                } elseif ($fila['nickname_enviado'] === $usuarioPrincipal && $fila['estado'] === "pendiente") {
+                    // Yo envié la solicitud → mostrar cancelar
                     $usuarios .= '
-                <button class="btn btn-banner-rojo margin-boton-botones" data-nickname="' . htmlspecialchars($fila['nickname']) . '">Rechazar</button>
-                <button class="btn btn-banner-azul btn-agregado" data-nickname="' . htmlspecialchars($fila['nickname']) . '">Aceptar</button>
-            ';
+        <button type="button" class="btn btn-warning btn-cancelar" data-nickname="' . htmlspecialchars($fila['nickname']) . '">
+            Cancelar Solicitud <i class="bi bi-x-circle"></i>
+        </button>';
+                } elseif ($fila['nickname_amigo'] === $usuarioPrincipal && $fila['estado'] === "pendiente") {
+                    // El otro me envió → mostrar aceptar/rechazar
+                    $usuarios .= '
+        <button class="btn btn-banner-rojo margin-boton-botones" data-nickname="' . htmlspecialchars($fila['nickname']) . '">Rechazar</button>
+        <button class="btn btn-banner-azul btn-agregado" data-nickname="' . htmlspecialchars($fila['nickname']) . '">Aceptar</button>';
                 } else {
-                    // Si no es solicitud pendiente → mostrar agregar amigo
+                    // No hay solicitud → mostrar agregar
                     $usuarios .= '
-                <button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="' . htmlspecialchars($fila['nickname']) . '">
-                    Agregar Amigo <i class="bi bi-person-add"></i>
-                </button>
-            ';
+        <button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="' . htmlspecialchars($fila['nickname']) . '">
+            Agregar Amigo <i class="bi bi-person-add"></i>
+        </button>';
                 }
 
                 $usuarios .= '</div>'; // cerrar div de acciones
                 $usuarios .= '</div>'; // cerrar usuario-card
             }
         } else {
-            $usuarios = '<div class="usuario-vacio"><p>Sin usuarios</p></div>';
+            $usuarios = '<div class="solicitud-vacia"><p>Sin usuarios</p></div>';
         }
-
 
         echo $usuarios;
     }
