@@ -1,4 +1,5 @@
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
 date_default_timezone_set('America/Mexico_City');
 class Comentario
 {
@@ -14,7 +15,7 @@ class Comentario
             ]);
             exit;
         }
-        
+
         mysqli_set_charset($con, "utf8mb4");
 
         return $con;
@@ -396,9 +397,52 @@ class Comentario
         return false;
     }
 
+    public function moderarContenidoIA(string $contenido): string
+    {
+        $apiKey = OPENAI_API_KEY;
+        $modeloTexto = "gpt-4.1-mini";
+
+        $promptBase = <<<EOT
+Eres un filtro de seguridad de mensajes. 
+Valida si el siguiente texto es malas_palabras o false para enviarse.  
+
+Criterios:  
+- malas_palabras si contiene lenguaje sexual explícito, agravios, insultos u odio hacia la persona receptora.  
+- false si es un mensaje respetuoso, neutro o emocional sin ofensas.  
+
+Responde SOLO con una palabra:  
+"malas_palabras" o "false".  
+
+Texto del usuario: 
+$contenido
+EOT;
+
+        $ch = curl_init("https://api.openai.com/v1/responses");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer $apiKey",
+            "Content-Type: application/json"
+        ]);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            "model" => $modeloTexto,
+            "input" => $promptBase
+        ]));
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($result, true);
+        $respuesta = $data['output'][0]['content'][0]['text'] ?? "false";
+
+        return strtolower(trim($respuesta));
+    }
+
     public function agregarComentario($contenido, $idPublicacion, $idUsuaria, $idPadre = null)
     {
-        if ($this->contieneMalasPalabrasPersonalizado($contenido)) {
+        // Validar contenido con IA antes de insertar
+        $resultadoModeracion = $this->moderarContenidoIA($contenido);
+        if ($resultadoModeracion === 'malas_palabras') {
             return 'malas_palabras';
         }
 
