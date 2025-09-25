@@ -58,7 +58,7 @@ $(document).ready(function () {
         });
     });
 
-    // ✅ Mostrar/Ocultar respuestas
+    // Mostrar/Ocultar respuestas
     $(document).on("click", ".ver-respuestas", function () {
         const btn = $(this);
         const idComentario = btn.data("id");
@@ -145,7 +145,7 @@ $(document).ready(function () {
                     form.remove();
                     $(`#respuestas-${idPadre}`).addClass("d-none").empty();
 
-                    // 🔁 Recargar todos los comentarios para reflejar el nuevo estado
+                    // Recargar todos los comentarios para reflejar el nuevo estado
                     cargarComentarios(idPublicacion);
                 } else if (data.message === "malas_palabras") {
                     Swal.fire({

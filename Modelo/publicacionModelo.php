@@ -21,53 +21,56 @@ class PublicacionModelo
         }
     }
 
-    private function moderarContenidoIA(string $contenido): bool
+    public function moderarContenidoIA(string $contenido): string
     {
         $apiKey = OPENAI_API_KEY;
+        $modeloTexto = "gpt-4.1-mini";
 
-        $prompt = "Eres un moderador de contenido en una red social. Analiza el siguiente texto y responde solo 'true' si es apropiado
-        o 'false' si contiene lenguaje ofensivo, violencia, discriminación o spam:
-        \"$contenido\"";
+        $promptBase = <<<EOT
+Eres un filtro de seguridad de mensajes. 
+Valida si el siguiente texto es true o false para enviarse.  
 
-        $data = [
-            "model" => "gpt-5-nano",
-            "messages" => [
-                ["role" => "system", "content" => "Eres un moderador de contenido."],
-                ["role" => "user", "content" => $prompt]
-            ],
-            "temperature" => 0
-        ];
+Criterios:  
+- true si contiene lenguaje sexual explícito, agravios, insultos u odio hacia la persona receptora.  
+- false si es un mensaje respetuoso, neutro o emocional sin ofensas.  
 
-        $ch = curl_init("https://api.openai.com/v1/chat/completions");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Content-Type: application/json",
-            "Authorization: Bearer $apiKey"
-        ]);
+Responde SOLO con una palabra:  
+"true" o "false".  
+
+Texto del usuario: 
+$contenido
+EOT;
+
+        $ch = curl_init("https://api.openai.com/v1/responses");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer $apiKey",
+            "Content-Type: application/json"
+        ]);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            "model" => $modeloTexto,
+            "input" => $promptBase
+        ]));
 
         $result = curl_exec($ch);
         curl_close($ch);
 
-        if (!$result) {
-            error_log("Error en la petición a OpenAI");
-            return false;
-        }
+        $data = json_decode($result, true);
+        $respuesta = $data['output'][0]['content'][0]['text'] ?? "false";
 
-        $response = json_decode($result, true);
-        $respuesta = strtolower(trim($response['choices'][0]['message']['content'] ?? 'false'));
-
-        return $respuesta === 'true';
+        return strtolower(trim($respuesta));
     }
-
 
     public function guardar(string $titulo, string $contenido, int $anonima, int $id_usuaria): bool
     {
         $this->conectar();
 
-        // Moderación IA
-        if (!$this->moderarContenidoIA($contenido)) {
+        $validarTitulo = $this->moderarContenidoIA($titulo);
+        $validarContenido = $this->moderarContenidoIA($contenido);
+
+        if ($validarTitulo === "true" || $validarContenido === "true") {
+            // Detenemos el guardado y mostramos alerta
             $_SESSION['sweet_alert'] = [
                 'icon' => 'warning',
                 'title' => 'Lenguaje inapropiado',
@@ -76,6 +79,7 @@ class PublicacionModelo
             return false;
         }
 
+        // Guardar publicación
         try {
             $sql = "INSERT INTO publicacion (titulo, contenido, fecha_publicacion, anonima, id_usuarias)
                 VALUES (:titulo, :contenido, NOW(), :anonima, :id_usuaria)";
@@ -163,7 +167,6 @@ class PublicacionModelo
             $this->todos();
         }
     }
-
     public function todos()
     {
         $this->conectar();
@@ -185,7 +188,6 @@ class PublicacionModelo
             echo "<p>No hay publicaciones.</p>";
         }
     }
-
     private function imprimirPublicacion($publicacion)
     {
 
@@ -234,7 +236,6 @@ class PublicacionModelo
             return [];
         }
     }
-
     public function obtenerPorId(int $id_publicacion): ?array
     {
         $this->conectar();
@@ -250,13 +251,15 @@ class PublicacionModelo
             return null;
         }
     }
-
     public function actualizar(int $id, string $titulo, string $contenido): bool
     {
         $this->conectar();
 
-        // Validación con IA antes de actualizar
-        if (!$this->moderarContenidoIA($contenido)) {
+        $validarTitulo = $this->moderarContenidoIA($titulo);
+        $validarContenido = $this->moderarContenidoIA($contenido);
+
+        if ($validarTitulo === "true" || $validarContenido === "true") {
+            // Detenemos el guardado y mostramos alerta
             $_SESSION['sweet_alert'] = [
                 'icon' => 'warning',
                 'title' => 'Lenguaje inapropiado',
@@ -265,9 +268,10 @@ class PublicacionModelo
             return false;
         }
 
-        // Intentar actualizar en la base de datos
         try {
-            $sql = "UPDATE publicacion SET titulo = :titulo, contenido = :contenido WHERE id_publicacion = :id";
+            $sql = "UPDATE publicacion 
+                SET titulo = :titulo, contenido = :contenido 
+                WHERE id_publicacion = :id";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':titulo', $titulo);
             $stmt->bindParam(':contenido', $contenido);
@@ -302,43 +306,18 @@ class PublicacionModelo
         try {
             $sqlLikes = "DELETE FROM likes_publicaciones WHERE id_publicacion = ?";
             $stmtLikes = $this->conn->prepare($sqlLikes);
-            $stmtLikes->bindParam("i", $id);
+            $stmtLikes->bindParam(1, $id, PDO::PARAM_INT);
             $stmtLikes->execute();
 
             $sqlComentarios = "DELETE FROM comentarios WHERE id_publicacion = ?";
             $stmtComentarios = $this->conn->prepare($sqlComentarios);
-            $stmtComentarios->bindParam("i", $id);
+            $stmtComentarios->bindParam(1, $id, PDO::PARAM_INT);
             $stmtComentarios->execute();
 
             $sqlPublicacion = "DELETE FROM publicacion WHERE id_publicacion = ? AND id_usuarias = ?";
             $stmtPublicacion = $this->conn->prepare($sqlPublicacion);
-            $stmtPublicacion->bindParam("ii", $id, $id_usuaria);
-
-            return $stmtPublicacion->execute();
-        } catch (PDOException $e) {
-            error_log("Error al borrar publicación con verificación: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function borrarSinVerificar(int $id_publicacion): bool
-    {
-        $this->conectar();
-
-        try {
-            $sqlLikes = "DELETE FROM likes_publicaciones WHERE id_publicacion = ?";
-            $stmtLikes = $this->conn->prepare($sqlLikes);
-            $stmtLikes->bindParam("i", $id_publicacion);
-            $stmtLikes->execute();
-
-            $sqlComentarios = "DELETE FROM comentarios WHERE id_publicacion = ?";
-            $stmtComentarios = $this->conn->prepare($sqlComentarios);
-            $stmtComentarios->bindParam("i", $id_publicacion);
-            $stmtComentarios->execute();
-
-            $sqlPublicacion = "DELETE FROM publicacion WHERE id_publicacion = ?";
-            $stmtPublicacion = $this->conn->prepare($sqlPublicacion);
-            $stmtPublicacion->bindParam("i", $id_publicacion);
+            $stmtPublicacion->bindParam(1, $id, PDO::PARAM_INT);
+            $stmtPublicacion->bindParam(2, $id_usuaria, PDO::PARAM_INT);
 
             return $stmtPublicacion->execute();
         } catch (PDOException $e) {

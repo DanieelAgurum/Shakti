@@ -17,7 +17,7 @@ if ($requiereSesion && !$id_usuaria) {
     exit;
 }
 
-// 🟣 GUARDAR PUBLICACIÓN
+// GUARDAR PUBLICACIÓN
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion'])) {
     $titulo = trim($_POST['titulo'] ?? '');
     $contenido = trim($_POST['contenido'] ?? '');
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion']
         $guardado = $publicacionModelo->guardar($titulo, $contenido, $anonima, $id_usuaria);
 
         if ($guardado) {
-            // 🔔 Crear notificaciones para otras usuarias
+            // Crear notificaciones para otras usuarias
             Notificacion::crearDesdePublicacion($id_usuaria);
             $_SESSION['mensaje'] = "Publicación guardada con éxito.";
         } else {
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion']
     exit;
 }
 
-// 🧹 MARCAR NOTIFICACIÓN COMO LEÍDA
+// MARCAR NOTIFICACIÓN COMO LEÍDA
 if (isset($_GET['leida_id'])) {
     $id_notificacion = intval($_GET['leida_id']);
     Notificacion::marcarComoLeida($id_notificacion);
@@ -51,23 +51,25 @@ if (isset($_GET['leida_id'])) {
     exit;
 }
 
-// 🔴 ELIMINAR PUBLICACIÓN
-if (isset($_GET['borrar_id'])) {
-    $id = intval($_GET['borrar_id']);
+// ELIMINAR PUBLICACIÓN (AJAX)
+if (isset($_POST['borrar_id'])) {
+    $id = intval($_POST['borrar_id']);
 
     $publicacion = $publicacionModelo->obtenerPorId($id);
     if ($publicacion && $publicacion['id_usuarias'] == $id_usuaria) {
         $borrado = $publicacionModelo->borrar($id, $id_usuaria);
-        $_SESSION['mensaje'] = $borrado ? "Publicación eliminada." : "Error al eliminar la publicación.";
+        if ($borrado) {
+            echo json_encode(["status" => "ok", "message" => "Publicación eliminada."]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error al eliminar la publicación."]);
+        }
     } else {
-        $_SESSION['mensaje'] = "No tienes permiso para eliminar esta publicación.";
+        echo json_encode(["status" => "error", "message" => "No tienes permiso para eliminar esta publicación."]);
     }
-
-    header("Location: ../Vista/usuaria/publicaciones.php");
     exit;
 }
 
-// ✏️ EDITAR PUBLICACIÓN
+// EDITAR PUBLICACIÓN
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_publicacion'])) {
     $id = intval($_POST['id_publicacion']);
     $titulo = trim($_POST['titulo'] ?? '');
@@ -89,11 +91,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_publicacion'])
     exit;
 }
 
-// 🔍 CONSULTA DE PUBLICACIONES
-if (isset($_GET['buscador'])) {
-    $buscar = $_GET['buscador'];
-    $publicacionModelo->inicializar($buscar);
-    $publicacionModelo->buscar($id_usuaria);
-} else {
-    $publicacionModelo->todos($id_usuaria);
-}
+// CONSULTA DE PUBLICACIONES
+// if (isset($_GET['buscador'])) {
+//     $buscar = $_GET['buscador'];
+//     $publicacionModelo->inicializar($buscar);
+//     $publicacionModelo->buscar($id_usuaria);
+// } else {
+//     $publicacionModelo->todos($id_usuaria);
+// }
