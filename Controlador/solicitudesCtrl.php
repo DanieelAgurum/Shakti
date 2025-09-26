@@ -1,6 +1,4 @@
 <?php
-header("Cache-Control: max-age=3600");
-
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/solicitudesMdl.php';
 
 $soli = new SolicitudesMdl();
@@ -24,6 +22,11 @@ if (isset($_GET['aceptarSolicitud'])) {
 
 if (isset($_GET['agregarAmigo'])) {
     $soli->inicializar($_REQUEST['nickname']);
-    $soli->agregarAmigo();
+    $soli->enviarSolicitud();
+    return;
+}
+
+if (isset($_GET['cancelarSolicitud'])) {
+    $soli->cancelarSolicitud($_REQUEST['nickname']);
     return;
 }
