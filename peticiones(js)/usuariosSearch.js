@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const usuariosList = document.getElementById("usuariosGrid");
   const searchForm = document.querySelector(".search-box form");
   const searchInput = searchForm.querySelector("input[name='buscador']");
-
+  
   // Mostrar loader en un contenedor
   function showLoader(target) {
     target.innerHTML = `
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Cargar ambos al inicio
-  Promise.all([cargarSolicitudes(), cargarUsuarios()]).catch((error));
+  Promise.all([cargarSolicitudes(), cargarUsuarios()]);
 
   // Buscar usuarios
   searchForm.addEventListener("submit", async (e) => {
