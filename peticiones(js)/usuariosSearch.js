@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchForm = document.querySelector(".search-box form");
   const searchInput = searchForm.querySelector("input[name='buscador']");
 
-  // Función para mostrar loader en un contenedor específico
+  // Mostrar loader en un contenedor
   function showLoader(target) {
     target.innerHTML = `
       <div class="loader-container">
@@ -12,12 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>`;
   }
 
-  // Función para ocultar loader (puede dejar contenido vacío o conservar contenido previo)
-  function hideLoader(target) {
-    target.innerHTML = "";
-  }
-
-  // Función para obtener HTML desde el backend
+  // Obtener HTML desde el backend
   async function fetchHTML(url) {
     try {
       const response = await fetch(url, { method: "GET" });
@@ -41,8 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
       `<div class="solicitud-vacia"><p>Sin solicitudes</p></div>`;
   }
 
-  // Cargar usuarios con buscador opcional
+  // Cargar usuarios
   async function cargarUsuarios(query = "") {
+    usuariosList.classList.add("usuario-flex");
+
     showLoader(usuariosList);
 
     const url =
@@ -51,15 +48,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const htmlUsuarios = await fetchHTML(url);
 
-    if (htmlUsuarios && htmlUsuarios.trim().length > 0) {
+    if (htmlUsuarios) {
+      usuariosList.classList.remove("usuario-flex");
+      usuariosList.classList.add("usuarios-grid");
+
       usuariosList.innerHTML = htmlUsuarios;
     } else {
-      usuariosList.innerHTML = `<p>No hay usuarios disponibles</p>`;
+      usuariosList.innerHTML = `<div class="usuarios-vacio"><p>No se encontraron usuarios</p></div>`;
     }
   }
 
-  // Cargar ambos al inicio
-  Promise.all([cargarSolicitudes(), cargarUsuarios()]);
+  // Cargar ambos al inicio y reemplazar el loader cuando terminen
+  Promise.all([cargarSolicitudes(), cargarUsuarios()])
+    .then(() => {})
+    .catch((error) => {});
 
   // Buscar usuarios
   searchForm.addEventListener("submit", async (e) => {
@@ -77,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `div[data-soli-usuario-nickname="${nickname}"]`
     );
 
+    // Aceptar Solicitud
     if (e.target.classList.contains("btn-banner-azul")) {
       const solicitudDiv = document.querySelector(
         `div[data-soli-nickname="${nickname}"]`
@@ -95,27 +98,34 @@ document.addEventListener("DOMContentLoaded", () => {
               </button>`;
           }
         },
-        error: function (xhr, status, error) {
-          console.error("❌ Error en la petición:", status, error);
-        },
+        error: function (xhr, status, error) {},
       });
       return;
     }
 
+    // Rechazar solicitud
     if (e.target.classList.contains("btn-banner-rojo")) {
       const solicitudDiv = document.querySelector(
         `div[data-soli-nickname="${nickname}"]`
       );
-      if (solicitudDiv) solicitudDiv.remove();
-
-      if (usuarioDiv) {
-        usuarioDiv.innerHTML = `
-          <button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
-            Agregar Amigo <i class="bi bi-person-add"></i>
-          </button>`;
-      }
-
-      console.log("❌ Solicitud rechazada desde slider:", nickname);
+      $.ajax({
+        url: "/shakti/Controlador/solicitudesCtrl.php?rechazarAmigo",
+        type: "POST",
+        data: { nickname },
+        success: function (data) {
+          try {
+            if (data == "rechazo" && usuarioDiv) {
+              if (solicitudDiv) solicitudDiv.remove();
+              if (usuarioDiv) {
+                usuarioDiv.innerHTML = `
+                  <button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
+                    Agregar Amigo <i class="bi bi-person-add"></i>
+                  </button>`;
+              }
+            }
+          } catch (error) {}
+        },
+      });
       return;
     }
   });
@@ -134,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `div[data-soli-nickname="${nickname}"]`
     );
 
+    // Mandar solicitud
     if (e.target.classList.contains("btn-agregar")) {
       $.ajax({
         url: "/shakti/Controlador/solicitudesCtrl.php?agregarAmigo",
@@ -153,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Cancelar solicitud
     if (e.target.classList.contains("btn-cancelar")) {
       $.ajax({
         url: "/shakti/Controlador/solicitudesCtrl.php?cancelarSolicitud",
@@ -172,6 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Elimiar Amigo
     if (
       e.target.classList.contains("btn-banner-azul") &&
       e.target.textContent.includes("Aceptar")
@@ -181,26 +194,39 @@ document.addEventListener("DOMContentLoaded", () => {
         Agregado <i class="bi bi-person-check"></i>
       </button>`;
       if (solicitudDiv) solicitudDiv.remove();
-      console.log("✅ Solicitud aceptada desde usuarios:", nickname);
       return;
     }
 
+    // Rechazar solicitud desde los usuarios
     if (e.target.classList.contains("btn-banner-rojo")) {
-      usuarioDiv.innerHTML = `
-      <button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
-        Agregar Amigo <i class="bi bi-person-add"></i>
-      </button>`;
-      if (solicitudDiv) solicitudDiv.remove();
-      console.log("❌ Solicitud rechazada desde usuarios:", nickname);
+      $.ajax({
+        url: "/shakti/Controlador/solicitudesCtrl.php?rechazarAmigo",
+        type: "POST",
+        data: { nickname },
+        success: function (data) {
+          try {
+            if (data == "rechazo" && usuarioDiv) {
+              if (solicitudDiv) solicitudDiv.remove();
+              if (usuarioDiv) {
+                if (solicitudDiv) solicitudDiv.remove();
+                usuarioDiv.innerHTML = `
+                  <button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
+                    Agregar Amigo <i class="bi bi-person-add"></i>
+                  </button>`;
+              }
+            }
+          } catch (error) {}
+        },
+      });
       return;
     }
 
+    // Eliminar Amigo
     if (e.target.classList.contains("btn-agregado")) {
       usuarioDiv.innerHTML = `
       <button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
         Agregar Amigo <i class="bi bi-person-add"></i>
       </button>`;
-      console.log("🔄 Amigo eliminado:", nickname);
       return;
     }
   });

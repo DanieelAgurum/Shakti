@@ -30,3 +30,8 @@ if (isset($_GET['cancelarSolicitud'])) {
     $soli->cancelarSolicitud($_REQUEST['nickname']);
     return;
 }
+
+if (isset($_GET['rechazarAmigo'])) {
+    $soli->rechazarSolicitud($_REQUEST['nickname']);
+    return;
+}
