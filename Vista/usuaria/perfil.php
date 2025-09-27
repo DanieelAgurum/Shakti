@@ -23,7 +23,7 @@ if (!empty($_SESSION['foto'])) {
     $fotoSrc = 'data:image/*;base64,' . base64_encode($_SESSION['foto']);
     $tieneFoto = true;
 } else {
-    $fotoSrc = $urlBase.'img/avatar.png';
+    $fotoSrc = $urlBase . 'img/avatar.png';
     $tieneFoto = false;
 }
 
@@ -67,13 +67,15 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                                     <img src="<?php echo $fotoSrc; ?>" alt="Foto de perfil" class="rounded-circle" width="150" height="150">
 
                                     <!-- Botón editar -->
-                                    <button id="editFotoBtn" class="edit-icon">
+                                    <button id="editFotoBtn" class="edit-icon" data-bs-placement="top"
+                                        title="Cambiar foto">
                                         <i class="bi bi-pencil-fill"></i>
                                     </button>
 
                                     <!-- Botón eliminar solo si tiene foto en base -->
                                     <?php if ($tieneFoto): ?>
-                                        <button id="deleteFotoBtn" class="delete-icon" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                        <button id="deleteFotoBtn" class="delete-icon" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-bs-placement="top"
+                                            title="Eliminar foto">
                                             <i class="bi bi-trash-fill"></i>
                                         </button>
                                     <?php endif; ?>
@@ -105,7 +107,8 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                                     <h6 class="mb-0">
                                         <i class="bi bi-journal"></i> <?= htmlspecialchars($nota['titulo']) ?>
                                     </h6>
-                                    <span class="text-secondary">
+                                    <span class="text-secondary" data-bs-placement="top"
+                                        title="Ver nota">
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#notaModal<?= $index ?>">
                                             <i class="bi bi-eye"></i>
                                         </a>
@@ -204,6 +207,8 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
             });
         </script>
     <?php endif; ?>
+
+    <script src="<?= $urlBase ?>peticiones(js)/tooltip.js"></script>
 
     <script src="../../validacionRegistro/notas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
