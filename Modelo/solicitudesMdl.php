@@ -22,23 +22,42 @@ class SolicitudesMdl
 
     public function inicializar($nickname)
     {
-        $this->nickname = $nickname;
+        $this->nickname = trim($nickname);
+    }
+
+    private function prepararYEjecutar($sql, $params = [], $types = "")
+    {
+        $conn = $this->conectarBD();
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        if (!empty($params) && $types) {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        return $stmt;
     }
 
     public function enviarSolicitud()
     {
-        $nickname_yo = $_SESSION['nickname'];
+        $nickname_yo = $_SESSION['nickname'] ?? null;
         $nickname_amigo = $this->nickname;
 
-        $conn = $this->conectarBD();
+        if (!$nickname_yo || !$nickname_amigo) {
+            echo "error";
+            return;
+        }
 
         // 1. Revisar si existe usuaria
         $sql = "SELECT 1 FROM usuarias WHERE nickname = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $nickname_amigo);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
+        $stmt = $this->prepararYEjecutar($sql, [$nickname_amigo], "s");
+        if (!$stmt) {
+            echo "error";
+            return;
+        }
 
+        $resultado = $stmt->get_result();
         if (!$resultado || $resultado->num_rows === 0) {
             echo "no_existe";
             $stmt->close();
@@ -48,11 +67,8 @@ class SolicitudesMdl
 
         // 2. Revisar si ya existe solicitud/amigos
         $sql = "SELECT 1 FROM amigos WHERE nickname_enviado = ? AND nickname_amigo = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $nickname_yo, $nickname_amigo);
-        $stmt->execute();
+        $stmt = $this->prepararYEjecutar($sql, [$nickname_yo, $nickname_amigo], "ss");
         $resultado = $stmt->get_result();
-
         if ($resultado && $resultado->num_rows > 0) {
             echo "ya_existe";
             $stmt->close();
@@ -61,67 +77,124 @@ class SolicitudesMdl
         $stmt->close();
 
         // 3. Insertar solicitud
-        $sql = "INSERT INTO amigos (nickname_enviado, nickname_amigo, estado, enviado) 
-            VALUES (?, ?, 'pendiente', current_timestamp())";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $nickname_yo, $nickname_amigo);
-
-        if ($stmt->execute()) {
+        $sql = "INSERT INTO amigos (nickname_enviado, nickname_amigo, estado, enviado) VALUES (?, ?, 'pendiente', current_timestamp())";
+        $stmt = $this->prepararYEjecutar($sql, [$nickname_yo, $nickname_amigo], "ss");
+        if ($stmt && $stmt->affected_rows > 0) {
             echo "enviada";
         } else {
             echo "no_enviada";
         }
-
         $stmt->close();
     }
 
-    public function aceptarSolicitud()
+    public function aceptarSolicitud($nickname)
     {
-        echo $this->nickname;
+        $conn = $this->conectarBD();
+
+        // 1. Verificar si existe solicitud pendiente
+        $sqlVerificar = "SELECT 1 FROM amigos 
+                     WHERE nickname_enviado = ? 
+                       AND nickname_amigo = ? 
+                       AND estado = 'pendiente'";
+        $stmtVerificar = $conn->prepare($sqlVerificar);
+        $stmtVerificar->bind_param("ss", $nickname, $_SESSION['nickname']);
+        $stmtVerificar->execute();
+        $resultado = $stmtVerificar->get_result();
+
+        if ($resultado && $resultado->num_rows > 0) {
+            $stmtVerificar->close();
+
+            // 2. Si existe, actualizar el estado
+            $sqlActualizar = "UPDATE amigos SET estado = 'aceptado' 
+                          WHERE nickname_enviado = ? 
+                            AND nickname_amigo = ? 
+                            AND estado = 'pendiente'";
+            $stmtActualizar = $this->prepararYEjecutar($sqlActualizar, [$nickname, $_SESSION['nickname']], "ss");
+
+            if ($stmtActualizar && $stmtActualizar->affected_rows > 0) {
+                echo "aceptado";
+            } else {
+                echo "error_actualizar";
+            }
+            if ($stmtActualizar) $stmtActualizar->close();
+        } else {
+            echo "no_existe";
+            $stmtVerificar->close();
+        }
+    }
+
+    public function rechazarSolicitud($nickname)
+    {
+        $conn = $this->conectarBD();
+
+        // 1. Verificar si existe solicitud pendiente
+        $sqlVerificar = "SELECT 1 FROM amigos 
+                     WHERE nickname_enviado = ? 
+                       AND nickname_amigo = ? 
+                       AND estado = 'pendiente'";
+        $stmtVerificar = $conn->prepare($sqlVerificar);
+        $stmtVerificar->bind_param("ss", $nickname, $_SESSION['nickname']);
+        $stmtVerificar->execute();
+        $resultado = $stmtVerificar->get_result();
+
+        if ($resultado && $resultado->num_rows > 0) {
+            $stmtVerificar->close();
+
+            // 2. Si existe, eliminar
+            $sqlEliminar = "DELETE FROM amigos 
+                        WHERE nickname_enviado = ? 
+                          AND nickname_amigo = ? 
+                          AND estado = 'pendiente'";
+            $stmtEliminar = $this->prepararYEjecutar($sqlEliminar, [$nickname, $_SESSION['nickname']], "ss");
+
+            if ($stmtEliminar && $stmtEliminar->affected_rows > 0) {
+                echo "rechazo";
+            } else {
+                echo "error_eliminar";
+            }
+            if ($stmtEliminar) $stmtEliminar->close();
+        } else {
+            echo "no_existe";
+            $stmtVerificar->close();
+        }
     }
 
     public function obtenerSolicitudes()
     {
         $usuarioPrincipal = $_SESSION['nickname'] ?? null;
-
         if (!$usuarioPrincipal) {
             echo '<div class="solicitud-vacia"><p>No hay usuario en sesión</p></div>';
             return;
         }
 
         $sql = "SELECT u.nickname, u.nombre, u.foto
-            FROM amigos a
-            JOIN usuarias u ON a.nickname_enviado = u.nickname
-            WHERE a.nickname_amigo = ?
-              AND a.estado = 'pendiente'
-            ORDER BY a.enviado DESC
-            LIMIT 25";
+                FROM amigos a
+                JOIN usuarias u ON a.nickname_enviado = u.nickname
+                WHERE a.nickname_amigo = ? AND a.estado = 'pendiente'
+                ORDER BY a.enviado DESC
+                LIMIT 25";
 
-        $stmt = $this->conectarBD()->prepare($sql);
+        $stmt = $this->prepararYEjecutar($sql, [$usuarioPrincipal], "s");
         if (!$stmt) {
             echo '<div class="solicitud-vacia"><p>Error en la consulta</p></div>';
             return;
         }
 
-        $stmt->bind_param("s", $usuarioPrincipal);
-        $stmt->execute();
         $resultado = $stmt->get_result();
-
         if (!$resultado || $resultado->num_rows === 0) {
             echo '<div class="solicitud-vacia"><p>Sin solicitudes</p></div>';
-        } else {
-            while ($fila = $resultado->fetch_assoc()) {
-                $fotoUrl = !empty($fila['foto'])
-                    ? 'data:image/jpeg;base64,' . base64_encode($fila['foto'])
-                    : "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png";
+            return;
+        }
 
-                echo '
+        while ($fila = $resultado->fetch_assoc()) {
+            $fotoUrl = !empty($fila['foto'])
+                ? 'data:image/jpeg;base64,' . base64_encode($fila['foto'])
+                : "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png";
+
+            echo '
             <div class="solicitud-card">
                 <div class="solicitud-info" data-soli-nickname="' . htmlspecialchars($fila['nickname']) . '">
-                    <img src="' . htmlspecialchars($fotoUrl) . '" 
-                         alt="Foto usuario" 
-                         class="solicitud-img" 
-                         loading="lazy">
+                    <img src="' . htmlspecialchars($fotoUrl) . '" alt="Foto usuario" class="solicitud-img" loading="lazy">
                     <div class="solicitud-detalle">
                         <p class="solicitud-nombre">' . htmlspecialchars($fila['nickname']) . '</p>
                         <div class="solicitud-acciones">  
@@ -131,128 +204,116 @@ class SolicitudesMdl
                     </div>
                 </div>
             </div>';
-            }
         }
-
         $stmt->close();
-        $this->conectarBD()->close();
     }
-
 
     public function obtenerUsuarios()
     {
         $usuarios = '';
         $usuarioPrincipal = $_SESSION['nickname'] ?? null;
-        $buscador = $_GET['buscador'] ?? '';
-        $buscador = trim($buscador);
+        $buscador = trim($_GET['buscador'] ?? '');
 
-        if ($buscador !== '') {
-            // 🔹 Cuando hay búsqueda
-            $sql = "SELECT u.nickname, u.nombre, u.foto, a.estado, a.nickname_enviado, a.nickname_amigo
-        FROM usuarias u
-        LEFT JOIN amigos a 
-          ON (
-               (a.nickname_enviado = u.nickname AND a.nickname_amigo = ?) 
-            OR (a.nickname_amigo = u.nickname AND a.nickname_enviado = ?)
-          )
-        WHERE (u.nickname LIKE ? OR u.nombre LIKE ?)
-        LIMIT 25";
-            $stmt = $this->conectarBD()->prepare($sql);
-            $like = "%{$buscador}%";
-            $stmt->bind_param("ssss", $usuarioPrincipal, $usuarioPrincipal, $like, $like);
-        } else {
-            // 🔹 Cuando NO hay búsqueda → listar todos los usuarios excepto yo
-            $sql = "SELECT u.nickname, u.nombre, u.foto,
-        MAX(a.estado) AS estado, 
-        MAX(a.nickname_enviado) AS nickname_enviado, 
-        MAX(a.nickname_amigo) AS nickname_amigo
-    FROM usuarias u
-    LEFT JOIN amigos a 
-        ON (
-            (a.nickname_enviado = u.nickname AND a.nickname_amigo = ?) 
-         OR (a.nickname_amigo = u.nickname AND a.nickname_enviado = ?)
-        )
-    WHERE u.nickname <> ?
-    GROUP BY u.nickname, u.nombre, u.foto
-    LIMIT 50
-";
-            $stmt = $this->conectarBD()->prepare($sql);
-            $stmt->bind_param("sss", $usuarioPrincipal, $usuarioPrincipal, $usuarioPrincipal);
-
-            $stmt = $this->conectarBD()->prepare($sql);
-            $stmt->bind_param("sss", $usuarioPrincipal, $usuarioPrincipal, $usuarioPrincipal);
+        if (!$usuarioPrincipal) {
+            echo '<div class="solicitud-vacia"><p>No hay usuario en sesión</p></div>';
+            return;
         }
 
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-
-        if ($resultado && $resultado->num_rows > 0) {
-            while ($fila = $resultado->fetch_assoc()) {
-                $fotoUrl = !empty($fila['foto'])
-                    ? 'data:image/jpeg;base64,' . base64_encode($fila['foto'])
-                    : "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png";
-
-                $usuarios .= '
-<div class="usuario-card">
-    <img src="' . htmlspecialchars($fotoUrl) . '" alt="Foto usuario" class="usuario-img" loading="lazy">
-    <p class="usuario-nombre">' . htmlspecialchars($fila['nickname']) . '</p>';
-
-                // Contenedor de acciones
-                $usuarios .= '<div data-soli-usuario-nickname="' . htmlspecialchars($fila['nickname']) . '">';
-
-                if ($fila['nickname'] === $usuarioPrincipal) {
-                    $usuarios .= '<p class="text-muted small">Este eres tú</p>';
-                } elseif ($fila['nickname_enviado'] === $usuarioPrincipal && $fila['estado'] === "pendiente") {
-                    $usuarios .= '
-        <button type="button" class="btn btn-warning btn-cancelar" data-nickname="' . htmlspecialchars($fila['nickname']) . '">
-            Cancelar Solicitud <i class="bi bi-x-circle"></i>
-        </button>';
-                } elseif ($fila['nickname_amigo'] === $usuarioPrincipal && $fila['estado'] === "pendiente") {
-                    $usuarios .= '
-        <button class="btn btn-banner-rojo margin-boton-botones" data-nickname="' . htmlspecialchars($fila['nickname']) . '">Rechazar</button>
-        <button class="btn btn-banner-azul btn-agregado" data-nickname="' . htmlspecialchars($fila['nickname']) . '">Aceptar</button>';
-                } else {
-                    $usuarios .= '
-        <button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="' . htmlspecialchars($fila['nickname']) . '">
-            Agregar Amigo <i class="bi bi-person-add"></i>
-        </button>';
-                }
-
-                $usuarios .= '</div>';
-                $usuarios .= '</div>';
-            }
+        if ($buscador !== '') {
+            $sql = "SELECT u.nickname, u.nombre, u.foto, a.estado, a.nickname_enviado, a.nickname_amigo
+                FROM usuarias u
+                LEFT JOIN amigos a ON (
+                    (a.nickname_enviado = u.nickname AND a.nickname_amigo = ?) 
+                    OR (a.nickname_amigo = u.nickname AND a.nickname_enviado = ?)
+                )
+                WHERE (u.nickname LIKE ? OR u.nombre LIKE ?)
+                LIMIT 25";
+            $like = "%{$buscador}%";
+            $stmt = $this->prepararYEjecutar($sql, [$usuarioPrincipal, $usuarioPrincipal, $like, $like], "ssss");
         } else {
-            $usuarios = '<div class="solicitud-vacia"><p>Sin usuarios</p></div>';
+            $sql = "SELECT u.nickname, u.nombre, u.foto,
+                       MAX(a.estado) AS estado, 
+                       MAX(a.nickname_enviado) AS nickname_enviado, 
+                       MAX(a.nickname_amigo) AS nickname_amigo
+                FROM usuarias u
+                LEFT JOIN amigos a ON (
+                    (a.nickname_enviado = u.nickname AND a.nickname_amigo = ?) 
+                    OR (a.nickname_amigo = u.nickname AND a.nickname_enviado = ?)
+                )
+                WHERE u.nickname <> ?
+                GROUP BY u.nickname, u.nombre, u.foto
+                LIMIT 50";
+            $stmt = $this->prepararYEjecutar($sql, [$usuarioPrincipal, $usuarioPrincipal, $usuarioPrincipal], "sss");
+        }
+
+        if (!$stmt) {
+            echo '<div class="solicitud-vacia"><p>No se pudo obtener registro alguno</p></div>';
+            return;
+        }
+
+        $resultado = $stmt->get_result();
+        if (!$resultado || $resultado->num_rows === 0) {
+            echo '<div class="solicitud-vacia"><p>Sin usuarios</p></div>';
+            return;
+        }
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $fotoUrl = !empty($fila['foto'])
+                ? 'data:image/jpeg;base64,' . base64_encode($fila['foto'])
+                : "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png";
+
+            $usuarios .= '<div class="usuario-card">
+            <img src="' . htmlspecialchars($fotoUrl) . '" alt="Foto usuario" class="usuario-img" loading="lazy">
+            <p class="usuario-nombre">' . htmlspecialchars($fila['nickname']) . '</p>
+            <div data-soli-usuario-nickname="' . htmlspecialchars($fila['nickname']) . '">';
+
+            if ($fila['nickname'] === $usuarioPrincipal) {
+                // Es el mismo usuario
+                $usuarios .= '<p class="text-muted small">Este eres tú</p>';
+            } elseif ($fila['estado'] === "aceptado") {
+                // Ya son amigos
+                $usuarios .= '<button type="button" class="btn btn-secondary btn-agregado" data-nickname="' . htmlspecialchars($fila['nickname']) . '">
+                            Agregado <i class="bi bi-person-check"></i>
+                          </button>';
+            } elseif ($fila['nickname_enviado'] === $usuarioPrincipal && $fila['estado'] === "pendiente") {
+                // Yo envié solicitud
+                $usuarios .= '<button type="button" class="btn btn-warning btn-cancelar" data-nickname="' . htmlspecialchars($fila['nickname']) . '">
+                            Cancelar Solicitud <i class="bi bi-x-circle"></i>
+                          </button>';
+            } elseif ($fila['nickname_amigo'] === $usuarioPrincipal && $fila['estado'] === "pendiente") {
+                // Me enviaron solicitud
+                $usuarios .= '<button class="btn btn-banner-rojo margin-boton-botones" data-nickname="' . htmlspecialchars($fila['nickname']) . '">Rechazar</button>
+                          <button class="btn btn-banner-azul" data-nickname="' . htmlspecialchars($fila['nickname']) . '">Aceptar</button>';
+            } else {
+                // No hay relación
+                $usuarios .= '<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="' . htmlspecialchars($fila['nickname']) . '">
+                            Agregar Amigo <i class="bi bi-person-add"></i>
+                          </button>';
+            }
+
+            $usuarios .= '</div></div>';
         }
 
         echo $usuarios;
+        $stmt->close();
     }
-
 
     public function cancelarSolicitud($nicknameAmigo)
     {
-        $miNickname = $_SESSION['nickname'];
-        $sql = "SELECT * 
-            FROM amigos 
-            WHERE nickname_enviado = ? 
-              AND nickname_amigo = ? 
-              AND estado = 'pendiente'";
+        $miNickname = $_SESSION['nickname'] ?? null;
+        if (!$miNickname) {
+            echo "error";
+            return;
+        }
 
-        $stmt = $this->conectarBD()->prepare($sql);
-        $stmt->bind_param('ss', $miNickname, $nicknameAmigo);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
+        $sql = "DELETE FROM amigos WHERE nickname_enviado = ? AND nickname_amigo = ? AND estado = 'pendiente'";
+        $stmt = $this->prepararYEjecutar($sql, [$miNickname, $nicknameAmigo], "ss");
 
-        if ($resultado->num_rows > 0) {
-            // Aquí puedes decidir: borrar o actualizar
-            // Ejemplo borrar:
-            $delete = "DELETE FROM amigos WHERE nickname_enviado = ? AND nickname_amigo = ? AND estado = 'pendiente'";
-            $stmtDelete = $this->conectarBD()->prepare($delete);
-            $stmtDelete->bind_param('ss', $miNickname, $nicknameAmigo);
-            $stmtDelete->execute();
+        if ($stmt && $stmt->affected_rows > 0) {
             echo "cancelado";
         } else {
-            echo "No existe solicitud pendiente para cancelar.";
+            echo "no_existe";
         }
+        if ($stmt) $stmt->close();
     }
 }

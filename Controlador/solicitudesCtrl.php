@@ -13,13 +13,6 @@ if (isset($_GET['usuarios'])) {
     return;
 }
 
-if (isset($_GET['aceptarSolicitud'])) {
-    $soli->inicializar($_REQUEST['nickname']);
-    $soli->aceptarSolicitud();
-    return;
-}
-
-
 if (isset($_GET['agregarAmigo'])) {
     $soli->inicializar($_REQUEST['nickname']);
     $soli->enviarSolicitud();
@@ -28,5 +21,15 @@ if (isset($_GET['agregarAmigo'])) {
 
 if (isset($_GET['cancelarSolicitud'])) {
     $soli->cancelarSolicitud($_REQUEST['nickname']);
+    return;
+}
+
+if (isset($_GET['aceptarSolicitud'])) {
+    $soli->aceptarSolicitud($_REQUEST['nickname']);
+    return;
+}
+
+if (isset($_GET['rechazarAmigo'])) {
+    $soli->rechazarSolicitud($_REQUEST['nickname']);
     return;
 }

@@ -380,7 +380,6 @@ form#formulario button:hover {
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #ccc #f5f6fa;
-    position: f;
 }
 
 /* Estilo para scroll en navegadores Webkit (Chrome, Edge, Safari) */
@@ -475,27 +474,11 @@ form#formulario button:hover {
     margin: 0;
 }
 
-/* Sidebar de solicitudes */
-.sidebar-solicitudes {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
 /* Responsive: móvil */
 @media (max-width: 768px) {
-    .sidebar-solicitudes {
-        width: 100% !important;
-        max-width: 100%;
-        flex-direction: column;
-        /* una solicitud debajo de otra */
-    }
-
     .solicitud {
         width: 100%;
-        max-width: 100%;
-        height: auto;
-        /* se ajusta al contenido */
+        max-height: 40vh;
     }
 }
 
@@ -515,6 +498,13 @@ form#formulario button:hover {
     gap: 20px;
     overflow-y: auto;
     max-height: 70vh;
+}
+
+.usuario-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 55vh;
 }
 
 .usuario-card {
