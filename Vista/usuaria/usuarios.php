@@ -50,11 +50,9 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
             <div class="contenedor-buscador">
                 <div class="search-foro buscador-fijo mx-auto">
                     <div class="search-box w-100">
-                        <form method="GET" class="w-100">
+                        <form class="w-100" onsubmit="return false;">
                             <i class="bi bi-search search-icon"></i>
-                            <input type="text" name="buscador" class="form-control search-input"
-                                placeholder="Buscar ..."
-                                value="<?= htmlspecialchars($_GET['buscador'] ?? '') ?>">
+                            <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ...">
                         </form>
                     </div>
                 </div>
