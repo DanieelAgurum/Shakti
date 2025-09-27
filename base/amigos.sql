@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 26-09-2025 a las 07:55:15
+-- Tiempo de generación: 27-09-2025 a las 12:03:14
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -28,6 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `amigos` (
+  `id_amigos` int(11) NOT NULL,
   `nickname_enviado` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nickname_amigo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `estado` varchar(50) NOT NULL,
@@ -35,11 +36,20 @@ CREATE TABLE `amigos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `amigos`
+-- Disparadores `amigos`
 --
-
-INSERT INTO `amigos` (`nickname_enviado`, `nickname_amigo`, `estado`, `enviado`) VALUES
-('Daniela', 'Luzma', 'pendiente', '2025-09-25 07:23:21');
+DELIMITER $$
+CREATE TRIGGER `tr_amigos_no_duplicados` BEFORE INSERT ON `amigos` FOR EACH ROW BEGIN
+    IF EXISTS (
+        SELECT 1 FROM amigos
+        WHERE (nickname_enviado = NEW.nickname_amigo AND nickname_amigo = NEW.nickname_enviado)
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Ya existe la amistad en sentido inverso';
+    END IF;
+END
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas
@@ -49,7 +59,30 @@ INSERT INTO `amigos` (`nickname_enviado`, `nickname_amigo`, `estado`, `enviado`)
 -- Indices de la tabla `amigos`
 --
 ALTER TABLE `amigos`
-  ADD KEY `nickname` (`nickname_enviado`,`nickname_amigo`);
+  ADD PRIMARY KEY (`id_amigos`),
+  ADD UNIQUE KEY `uq_amigos` (`nickname_enviado`,`nickname_amigo`),
+  ADD KEY `fk_amigo` (`nickname_amigo`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `amigos`
+--
+ALTER TABLE `amigos`
+  MODIFY `id_amigos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `amigos`
+--
+ALTER TABLE `amigos`
+  ADD CONSTRAINT `fk_amigo` FOREIGN KEY (`nickname_amigo`) REFERENCES `usuarias` (`nickname`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_enviado` FOREIGN KEY (`nickname_enviado`) REFERENCES `usuarias` (`nickname`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
