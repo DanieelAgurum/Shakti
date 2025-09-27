@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/solicitudesMdl.php';
 
 $soli = new SolicitudesMdl();
@@ -30,6 +33,12 @@ if (isset($_GET['aceptarSolicitud'])) {
 }
 
 if (isset($_GET['rechazarAmigo'])) {
+    $soli->rechazarSolicitud($_REQUEST['nickname']);
+    return;
+}
+
+
+if (isset($_GET['eliminarAmigo'])) {
     $soli->rechazarSolicitud($_REQUEST['nickname']);
     return;
 }

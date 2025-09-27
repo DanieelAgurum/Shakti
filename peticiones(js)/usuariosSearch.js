@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const usuariosList = document.getElementById("usuariosGrid");
   const searchForm = document.querySelector(".search-box form");
   const searchInput = searchForm.querySelector("input[name='buscador']");
-
+  
   // Mostrar loader en un contenedor
   function showLoader(target) {
     target.innerHTML = `
@@ -58,10 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Cargar ambos al inicio y reemplazar el loader cuando terminen
-  Promise.all([cargarSolicitudes(), cargarUsuarios()])
-    .then(() => {})
-    .catch((error) => {});
+  // Cargar ambos al inicio
+  Promise.all([cargarSolicitudes(), cargarUsuarios()]);
 
   // Buscar usuarios
   searchForm.addEventListener("submit", async (e) => {
@@ -70,32 +68,30 @@ document.addEventListener("DOMContentLoaded", () => {
     await cargarUsuarios(query);
   });
 
-  // Función para ejecutar AJAX
+  // Función AJAX
   function ajaxPost(url, data, onSuccess, onError) {
     $.ajax({
       url: url,
       type: "POST",
       data: data,
       success: onSuccess,
-      error:
-        onError ||
-        function (xhr, status, error) {
-          console.error("❌ Error AJAX:", status, error);
-        },
+      error: onError || function (xhr, status, error) {},
     });
   }
 
-  // Función para actualizar botón del usuario
+  // Actualizar botón del usuario
   function actualizarBotonUsuario(usuarioDiv, html) {
     if (usuarioDiv) usuarioDiv.innerHTML = html;
   }
 
-  // Función para eliminar solicitud
+  // Eliminar solicitud
   function eliminarSolicitud(nickname) {
-    const solicitudDiv = document.querySelector(
-      `div[data-soli-nickname="${nickname}"]`
-    );
-    if (solicitudDiv) solicitudDiv.remove();
+    // Buscar el contenedor card completo
+    const solicitudCard = document
+      .querySelector(`.solicitud-card div[data-soli-nickname="${nickname}"]`)
+      ?.closest(".solicitud-card");
+
+    if (solicitudCard) solicitudCard.remove();
 
     // Si ya no hay solicitudes, mostrar mensaje vacío
     const sidebar = document.getElementById("solicitudSidebar");
@@ -104,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Manejo común de clics
+  // Manejar clicks
   function manejarClick(e, tipo) {
     const nickname = e.target.getAttribute("data-nickname");
     if (!nickname) return;
@@ -112,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const usuarioDiv = document.querySelector(
       `div[data-soli-usuario-nickname="${nickname}"]`
     );
-
     if (!usuarioDiv) return;
 
     switch (tipo) {
@@ -124,8 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
             actualizarBotonUsuario(
               usuarioDiv,
               `<button type="button" class="btn btn-secondary btn-agregado" data-nickname="${nickname}">
-            Agregado <i class="bi bi-person-check"></i>
-          </button>`
+                Agregado <i class="bi bi-person-check"></i>
+              </button>`
             );
             eliminarSolicitud(nickname);
           }
@@ -137,12 +132,12 @@ document.addEventListener("DOMContentLoaded", () => {
           "/shakti/Controlador/solicitudesCtrl.php?rechazarAmigo",
           { nickname },
           function (data) {
-            if (data === "rechazo") {
+            if (data === "rechazo" || data === "no_existe") {
               actualizarBotonUsuario(
                 usuarioDiv,
                 `<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
-              Agregar Amigo <i class="bi bi-person-add"></i>
-            </button>`
+                  Agregar Amigo <i class="bi bi-person-add"></i>
+                </button>`
               );
               eliminarSolicitud(nickname);
             }
@@ -159,8 +154,8 @@ document.addEventListener("DOMContentLoaded", () => {
               actualizarBotonUsuario(
                 usuarioDiv,
                 `<button type="button" class="btn btn-warning btn-cancelar" data-nickname="${nickname}">
-              Cancelar Solicitud <i class="bi bi-x-circle"></i>
-            </button>`
+                  Cancelar Solicitud <i class="bi bi-x-circle"></i>
+                </button>`
               );
             }
           }
@@ -176,8 +171,8 @@ document.addEventListener("DOMContentLoaded", () => {
               actualizarBotonUsuario(
                 usuarioDiv,
                 `<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
-              Agregar Amigo <i class="bi bi-person-add"></i>
-            </button>`
+                  Agregar Amigo <i class="bi bi-person-add"></i>
+                </button>`
               );
             }
           }
@@ -188,15 +183,15 @@ document.addEventListener("DOMContentLoaded", () => {
         actualizarBotonUsuario(
           usuarioDiv,
           `<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
-          Agregar Amigo <i class="bi bi-person-add"></i>
-        </button>`
+            Agregar Amigo <i class="bi bi-person-add"></i>
+          </button>`
         );
         eliminarSolicitud(nickname);
         break;
     }
   }
 
-  // Evento clic en sidebar
+  // Eventos en sidebar
   solicitudSidebar.addEventListener("click", (e) => {
     if (
       e.target.classList.contains("btn-banner-azul") &&
@@ -209,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Evento clic en usuarios
+  // Eventos en usuarios
   usuariosList.addEventListener("click", (e) => {
     if (e.target.classList.contains("btn-agregar")) manejarClick(e, "agregar");
     if (e.target.classList.contains("btn-cancelar"))
@@ -222,5 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (e.target.classList.contains("btn-agregado"))
       manejarClick(e, "eliminar");
+    if (e.target.classList.contains("btn-banner-rojo"))
+      manejarClick(e, "rechazar");
   });
 });
