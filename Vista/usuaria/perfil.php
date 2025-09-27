@@ -21,8 +21,10 @@ if (isset($_SESSION['correo']) || isset($_SESSION['id_rol'])) {
 
 if (!empty($_SESSION['foto'])) {
     $fotoSrc = 'data:image/*;base64,' . base64_encode($_SESSION['foto']);
+    $tieneFoto = true;
 } else {
-    $fotoSrc = 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+    $fotoSrc = $urlBase.'img/avatar.png';
+    $tieneFoto = false;
 }
 
 $notasObj = new Notas();
@@ -69,10 +71,12 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                                         <i class="bi bi-pencil-fill"></i>
                                     </button>
 
-                                    <!-- Botón eliminar -->
-                                    <button id="deleteFotoBtn" class="delete-icon" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
+                                    <!-- Botón eliminar solo si tiene foto en base -->
+                                    <?php if ($tieneFoto): ?>
+                                        <button id="deleteFotoBtn" class="delete-icon" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
 
                                 <div class="mt-3">
@@ -127,7 +131,6 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                 <div class="col-md-8">
                     <div class="card mb-3">
                         <div class="card-body">
-
                             <div class="row">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">Nombre completo</h6>
