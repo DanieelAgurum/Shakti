@@ -22,7 +22,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
 
     <!-- CSS crítico -->
     <link rel="stylesheet" href="<?= $urlBase ?>css/stylesChat.css">
-
+    <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
     <!-- Librerías externas -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" defer>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" defer>
@@ -32,20 +32,17 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
 
     <!-- Scripts JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="<?= $urlBase ?>/peticiones(js)/usuariosSearch.js" defer></script>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
+    <script src="<?= $urlBase ?>/peticiones(js)/usuariosSearch.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 </head>
 
+
 <body>
     <main class="layout">
         <!-- Sidebar de solicitudes -->
-        <aside class="solicitud sidebar-solicitudes" id="solicitudSidebar">
-            <!-- Loader inicial -->
-            <div class="loader-container">
-                <div class="orbit"></div>
-            </div>
+        <aside class="solicitud" id="solicitudSidebar">
         </aside>
 
         <!-- Sección principal -->
@@ -64,11 +61,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
             </div>
 
             <!-- Cards de usuarios -->
-            <div class="usuarios-grid" id="usuariosGrid">
-                <!-- Loader inicial -->
-                <div class="loader-container">
-                    <div class="orbit"></div>
-                </div>
+            <div id="usuariosGrid">
             </div>
         </section>
     </main>
