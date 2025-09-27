@@ -80,6 +80,33 @@ class SolicitudesMdl
         echo $this->nickname;
     }
 
+    public function rechazarSolicitud($nickname)
+    {
+        $sql = "SELECT * 
+            FROM amigos 
+            WHERE nickname_enviado = ?
+              AND nickname_amigo = ? 
+              AND estado = 'pendiente'";
+
+        $stmt = $this->conectarBD()->prepare($sql);
+        $stmt->bind_param('ss', $nickname, $_SESSION['nickname']);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        if ($resultado->num_rows > 0) {
+            // Aquí puedes decidir: borrar o actualizar
+            // Ejemplo borrar:
+            $delete = "DELETE FROM amigos WHERE nickname_enviado = ? AND nickname_amigo = ? AND estado = 'pendiente'";
+            $stmtDelete = $this->conectarBD()->prepare($delete);
+            $stmtDelete->bind_param('ss', $nickname, $_SESSION['nickname']);
+            $stmtDelete->execute();
+            echo "rechazo";
+        } else {
+            echo "No existe solicitud pendiente para cancelar.";
+        }
+    }
+
+
     public function obtenerSolicitudes()
     {
         $usuarioPrincipal = $_SESSION['nickname'] ?? null;
@@ -137,7 +164,6 @@ class SolicitudesMdl
         $stmt->close();
         $this->conectarBD()->close();
     }
-
 
     public function obtenerUsuarios()
     {
@@ -227,7 +253,6 @@ class SolicitudesMdl
 
         echo $usuarios;
     }
-
 
     public function cancelarSolicitud($nicknameAmigo)
     {
