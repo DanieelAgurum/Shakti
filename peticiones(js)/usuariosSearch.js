@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const usuariosList = document.getElementById("usuariosGrid");
   const searchForm = document.querySelector(".search-box form");
   const searchInput = searchForm.querySelector("input[name='buscador']");
-  
+
   // Mostrar loader en un contenedor
   function showLoader(target) {
     target.innerHTML = `
@@ -180,13 +180,20 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
 
       case "eliminar":
-        actualizarBotonUsuario(
-          usuarioDiv,
-          `<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
+        ajaxPost(
+          "/shakti/Controlador/solicitudesCtrl.php?eliminarAmigo",
+          { nickname },
+          function (data) {
+            if (data === "eliminado") {
+              actualizarBotonUsuario(
+                usuarioDiv,
+                `<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
             Agregar Amigo <i class="bi bi-person-add"></i>
           </button>`
+              );
+            }
+          }
         );
-        eliminarSolicitud(nickname);
         break;
     }
   }
@@ -220,4 +227,5 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.classList.contains("btn-banner-rojo"))
       manejarClick(e, "rechazar");
   });
+
 });

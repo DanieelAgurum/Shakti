@@ -40,6 +40,8 @@ echo json_encode([
     'id_receptor' => $receptor,
     'mensaje' => $mensaje,
     'contenido' => $contenidoBase64,
+    'tipo' => $tipoMime ?? "texto", 
     'creado_en' => $creado_en,
 ]);
 exit;
+

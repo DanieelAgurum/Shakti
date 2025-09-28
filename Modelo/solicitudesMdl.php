@@ -316,4 +316,49 @@ class SolicitudesMdl
         }
         if ($stmt) $stmt->close();
     }
+
+    public function eliminarAmigo($nickname)
+    {
+        $conn = $this->conectarBD();
+
+        // 1. Verificar si existe amistad aceptada
+        $sqlVerificar = "SELECT 1 FROM amigos 
+                     WHERE (
+                         (nickname_enviado = ? AND nickname_amigo = ?) 
+                         OR 
+                         (nickname_enviado = ? AND nickname_amigo = ?)
+                     )
+                     AND estado = 'aceptado'";
+        $stmtVerificar = $conn->prepare($sqlVerificar);
+        $stmtVerificar->bind_param("ssss", $nickname, $_SESSION['nickname'], $_SESSION['nickname'], $nickname);
+        $stmtVerificar->execute();
+        $resultado = $stmtVerificar->get_result();
+
+        if ($resultado && $resultado->num_rows > 0) {
+            $stmtVerificar->close();
+
+            // 2. Eliminar si está aceptado
+            $sqlEliminar = "DELETE FROM amigos 
+                        WHERE (
+                            (nickname_enviado = ? AND nickname_amigo = ?) 
+                            OR 
+                            (nickname_enviado = ? AND nickname_amigo = ?)
+                        )
+                        AND estado = 'aceptado'";
+            $stmtEliminar = $conn->prepare($sqlEliminar);
+            $stmtEliminar->bind_param("ssss", $nickname, $_SESSION['nickname'], $_SESSION['nickname'], $nickname);
+            $stmtEliminar->execute();
+
+            if ($stmtEliminar && $stmtEliminar->affected_rows > 0) {
+                echo "eliminado";
+            } else {
+                echo "error_eliminar";
+            }
+
+            if ($stmtEliminar) $stmtEliminar->close();
+        } else {
+            echo "no_existe";
+            $stmtVerificar->close();
+        }
+    }
 }

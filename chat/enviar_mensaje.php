@@ -1,7 +1,5 @@
 <?php
 session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 header('Content-Type: application/json; charset=utf-8');
 
 require 'conexion.php';
@@ -25,23 +23,10 @@ if (
 }
 
 $archivoBlob = null;
-$tipoMensaje = "";
-$nombreArchivo = null;
-$tipoMime = null;
-
 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
     $fileTmpPath = $_FILES['imagen']['tmp_name'];
+    $tipoMime = "imagen";
     $archivoBlob = file_get_contents($fileTmpPath);
-    $nombreArchivo = $_FILES['imagen']['name'];
-
-    $tipoMime = mime_content_type($fileTmpPath);
-    if (substr($tipoMime, 0, 6) === 'image/') {
-        $tipoMensaje = '[Archivo o imagen]';
-    } else {
-        $tipoMensaje = '[Archivo o imagen]';
-    }
-} else {
-    $tipoMensaje = $mensaje;
 }
 
 $sqlInsert = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, archivo, creado_en) VALUES (?, ?, ?, ?, NOW())";
@@ -66,29 +51,17 @@ if (!$stmtInsert->execute()) {
 
 $id_mensaje = $stmtInsert->insert_id;
 
-// Obtener contenido base64 para devolver en la respuesta si hay archivo
-$contenidoBase64 = null;
-if ($archivoBlob !== null) {
-    $contenidoBase64 = 'data:' . $tipoMime . ';base64,' . base64_encode($archivoBlob);
-}
-
-// Enviar solo datos mínimos a Pusher para optimizar
-$dataPusher = [
+// 🔹 Datos mínimos
+$respuesta = [
     'id_mensaje'  => $id_mensaje,
     'id_emisor'   => $id_emisor,
     'id_receptor' => $id_receptor,
 ];
 
+// 📡 Notificar a Pusher
 $canal = 'chat-' . min($id_emisor, $id_receptor) . '-' . max($id_emisor, $id_receptor);
-$pusher->trigger($canal, 'nuevo-mensaje', $dataPusher);
+$pusher->trigger($canal, 'nuevo-mensaje', $respuesta);
 
-// Respuesta para emisor con datos completos para mostrar inmediatamente
-echo json_encode([
-    'id_mensaje'    => $id_mensaje,
-    'id_emisor'     => $id_emisor,
-    'id_receptor'   => $id_receptor,
-    'tipo_mensaje' => $tipoMensaje,
-    'es_mensaje_yo' => true,
-    'creado_en'     => date('Y-m-d H:i:s'),
-]);
+// 📡 Devolver al emisor lo mismo
+echo json_encode($respuesta);
 exit;

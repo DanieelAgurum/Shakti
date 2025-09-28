@@ -71,3 +71,77 @@ body {
 .invalid {
   border-color: white;
 } */
+ /*----------------estilos inicio---------------->*/
+
+/* Modal general */
+
+
+.modal-content {
+    border-radius: 1.5rem;
+    background: #f9f9f9;
+    box-shadow: 8px 8px 20px rgba(0,0,0,0.05), -8px -8px 20px rgba(255,255,255,0.8);
+    padding: 2rem;
+    border: none;
+}
+
+/* Tabs estilo suave */
+.nav-pills .nav-link {
+    border-radius: 50px;
+    background: #e0e0e0;
+    color: #5a2a83;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.nav-pills .nav-link.active {
+    background: #5a2a83;
+    color: #fff;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Inputs y selects */
+input.form-control, select.form-select {
+    border-radius: 50px;
+    border: none;
+    padding: 0.7rem 1rem;
+    background: #f0f0f0;
+    box-shadow: inset 5px 5px 10px rgba(0,0,0,0.05), inset -5px -5px 10px rgba(255,255,255,0.7);
+    transition: all 0.3s ease;
+}
+input.form-control:focus, select.form-select:focus {
+    outline: none;
+    box-shadow: inset 5px 5px 12px rgba(0,0,0,0.1), inset -5px -5px 12px rgba(255,255,255,0.8);
+}
+
+/* Botones */
+.btn-purple {
+    border-radius: 50px;
+    background: #5a2a83;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.7rem 1.5rem;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.1), -5px -5px 15px rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+.btn-purple:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.15), -5px -5px 20px rgba(255,255,255,0.25);
+}
+
+/* Iconos en input */
+.input-group-text {
+    background: #f0f0f0;
+    border-radius: 50px 0 0 50px;
+    border: none;
+    color: #5a2a83;
+}
+
+/* Labels */
+.form-label {
+    font-weight: 500;
+    color: #5a2a83;
+}
+
+/* Modal tamaño máximo */
+.modal-dialog {
+    max-width: 460px;
+}
