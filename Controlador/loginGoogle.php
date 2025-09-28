@@ -9,6 +9,7 @@ $client = new Google\Client();
 $client->setClientId($clientID);
 $client->setClientSecret($clientSecret);
 
+// URL de redirección (debe coincidir exactamente con la de Google Console)
 $client->setRedirectUri("http://localhost/Shakti/Controlador/loginGoogle.php");
 
 $client->addScope('email');
@@ -33,6 +34,7 @@ $userInfo = $google_oauth->userinfo->get();
 $email = $userInfo->email;
 $nombre = $userInfo->name;
 
+// Buscar usuaria en la BD
 $u = new Usuarias();
 $con = $u->conectarBD();
 
@@ -42,17 +44,16 @@ $stmt->execute();
 $usuario = $stmt->get_result()->fetch_assoc();
 
 if (!$usuario) {
- 
+    // Usuario no registrado → guardar temporal y redirigir
     $_SESSION['correo_temp'] = $email;
     $_SESSION['nombre_temp'] = $nombre;
     $_SESSION['msg'] = "No estás registrado. Por favor, completa tu registro.";
 
-   
     header("Location: ../Vista/index.php");
     exit;
 }
 
-
+// Usuario registrado → iniciar sesión normal
 $_SESSION['id_rol'] = $usuario['id_rol'];
 $_SESSION['id_usuario'] = $usuario['id_usuario'];
 $_SESSION['correo'] = $email;
