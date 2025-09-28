@@ -35,10 +35,9 @@ document.addEventListener("DOMContentLoaded", function() {
         btnGoogle.addEventListener("click", function(e){
             e.preventDefault();
 
-            // Abrir ventana emergente de Google OAuth
-            const authWindow = window.open(urlBase + "Controlador/loginGoogle.php", "GoogleLogin", "width=500,height=600");
-
-            // Escuchar respuesta si usas postMessage en loginGoogle.php
+            
+           
+         
             window.addEventListener("message", function(event){
                 if(event.origin !== urlBase) return;
                 const data = event.data;

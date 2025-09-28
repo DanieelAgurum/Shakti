@@ -12,7 +12,6 @@ if (isset($_SESSION['id_rol'])) {
 }
 ?>
 
-<!-- Modal de autenticación -->
 <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content p-4">
@@ -26,9 +25,7 @@ if (isset($_SESSION['id_rol'])) {
           <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-register">Registrarse</button>
         </li>
       </ul>
-
       <div class="tab-content">
-        <!-- LOGIN NORMAL -->
         <div class="tab-pane fade show active" id="pills-login">
           <form id="formLogin" action="<?= $urlBase ?>Controlador/loginCtrl.php" method="POST">
             <input type="hidden" name="opcion" value="1">
@@ -48,14 +45,10 @@ if (isset($_SESSION['id_rol'])) {
             </div>
             <button type="submit" class="btn btn-purple w-100">Ingresar</button>
           </form>
-
           <hr>
-          <!-- LOGIN GOOGLE -->
         <a href="#" id="btnGoogleLogin" class="btn btn-google w-100 mt-2">
         <i class="bi bi-google"></i> Iniciar sesión con Google
-                    </a>
-
-        <!-- REGISTRO (vacío por ahora) -->
+</a>
         <div class="tab-pane fade" id="pills-register">
           <form id="formRegistro" action="<?= $urlBase ?>Controlador/UsuariasControlador.php" method="POST">
           </form>
@@ -67,14 +60,17 @@ if (isset($_SESSION['id_rol'])) {
 </div>
 
 <!-- Google Client -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-<!-- Definir urlBase antes de cargar auth.js -->
+
 <script>
     const urlBase = "<?= $urlBase ?>";
 </script>
 
 <script src="<?= $urlBase ?>peticiones(js)/auth.js"></script>
+
+
+
+
 
 <style>
   /*STYLYSSSSSSSS*/
