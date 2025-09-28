@@ -30,6 +30,8 @@ if(!$usuario){
 }
 
 // Sesión
+
+
 session_start();
 $_SESSION['id_rol'] = $usuario['id_rol'];
 $_SESSION['id_usuario'] = $usuario['id_usuario'];
