@@ -1,39 +1,62 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/Shakti/Modelo/Usuarias.php';
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../Modelo/configuracionG.php';
+require_once __DIR__ . '/../Modelo/Usuarias.php';
+
+session_start();
+
+$client = new Google\Client();
+$client->setClientId($clientID);
+$client->setClientSecret($clientSecret);
+
+$client->setRedirectUri("http://localhost/Shakti/Controlador/loginGoogle.php");
+
+$client->addScope('email');
+$client->addScope('profile');
+
+// Si no hay 'code', redirige al login de Google
+if (!isset($_GET['code'])) {
+    header("Location: " . $client->createAuthUrl());
+    exit;
+}
+
+// Intercambiar 'code' por token
+$token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+if (isset($token['error'])) {
+    die("Error al obtener token: " . $token['error']);
+}
+$client->setAccessToken($token);
+
+// Obtener información del usuario
+$google_oauth = new Google\Service\Oauth2($client);
+$userInfo = $google_oauth->userinfo->get();
+$email = $userInfo->email;
+$nombre = $userInfo->name;
 
 $u = new Usuarias();
 $con = $u->conectarBD();
 
-$token = $_POST['credential'] ?? '';
-if(!$token){
-    echo json_encode(['success'=>false, 'msg'=>'No se recibió token']);
+$stmt = $con->prepare("SELECT * FROM usuarias WHERE correo=? LIMIT 1");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$usuario = $stmt->get_result()->fetch_assoc();
+
+if (!$usuario) {
+ 
+    $_SESSION['correo_temp'] = $email;
+    $_SESSION['nombre_temp'] = $nombre;
+    $_SESSION['msg'] = "No estás registrado. Por favor, completa tu registro.";
+
+   
+    header("Location: ../Vista/index.php");
     exit;
 }
 
-// Validar token con Google
-$response = file_get_contents("https://oauth2.googleapis.com/tokeninfo?id_token=$token");
-$data = json_decode($response, true);
 
-if(!isset($data['email'])){
-    echo json_encode(['success'=>false,'msg'=>'Token inválido']);
-    exit;
-}
-
-$email = $data['email'];
-$query = mysqli_query($con, "SELECT * FROM usuarias WHERE correo='$email'");
-$usuario = mysqli_fetch_assoc($query);
-
-if(!$usuario){
-    echo json_encode(['success'=>false,'msg'=>'Usuario no registrado']);
-    exit;
-}
-
-// Sesión
-
-
-session_start();
 $_SESSION['id_rol'] = $usuario['id_rol'];
 $_SESSION['id_usuario'] = $usuario['id_usuario'];
+$_SESSION['correo'] = $email;
+$_SESSION['nombre'] = $nombre;
 
-echo json_encode(['success'=>true,'id_rol'=>$usuario['id_rol']]);
+header("Location: ../Vista/index.php");
+exit;
