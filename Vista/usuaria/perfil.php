@@ -23,7 +23,7 @@ if (!empty($_SESSION['foto'])) {
     $fotoSrc = 'data:image/*;base64,' . base64_encode($_SESSION['foto']);
     $tieneFoto = true;
 } else {
-    $fotoSrc = $urlBase . 'img/avatar.png';
+    $fotoSrc = $urlBase . 'img/undraw_chill-guy-avatar_tqsm.svg';
     $tieneFoto = false;
 }
 

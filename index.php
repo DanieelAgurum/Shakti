@@ -31,23 +31,117 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <!-- Scripts únicos -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <!-- Navbar -->
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 </head>
 
-<body class="text-black">
+<body>
 
   <!-- Banner principal -->
-  <div class="main-banner">
-    <div class="banner-caption">
-      <h1>Título principal</h1>
-      <p>Este es un texto de ejemplo para tu banner inicial, ideal para destacar tu contenido.</p>
-      <a href="#" class="btn-banner">Explorar más</a>
+  <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="mask d-flex align-items-center">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-md-7 col-12 order-md-1 order-2">
+                <h4>Misión</h4>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto ut perferendis aliquid eum eaque reprehenderit iste aspernatur tempora?
+                  Quos, fugit. Nostrum sed temporibus quam cumque perferendis, laudantium amet tempora culpa!</p>
+              </div>
+              <div class="col-md-5 col-12 order-md-2 order-1">
+                <img src="img/undraw_online-community_3o0l.svg" class="d-block mx-auto img-fluid" alt="slide">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="mask d-flex align-items-center">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-md-7 col-12 order-md-1 order-2">
+                <h4>Visión</h4>
+                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos, error voluptate.
+                  Maiores tempore et excepturi optio reiciendis commodi ipsam eos nam, nesciunt quae officiis facere, eum ab, incidunt esse numquam.</p>
+              </div>
+              <div class="col-md-5 col-12 order-md-2 order-1">
+                <img src="img/Mind map-bro.svg" class="d-block mx-auto img-fluid" alt="slide">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="mask d-flex align-items-center">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-md-7 col-12 order-md-1 order-2">
+                <h4>Nuestros valores</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit perferendis, doloremque, itaque reprehenderit,
+                  dolorum rerum hic fugit dicta aliquid sunt eius deserunt sint corrupti odio consectetur mollitia modi reiciendis officiis!</p>
+              </div>
+              <div class="col-md-5 col-12 order-md-2 order-1">
+                <img src="img/undraw_chat-bot_c8iw.svg" class="d-block mx-auto img-fluid" alt="slide">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Controles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
+
+  <!-- Contenedor inicial de información del sitio web -->
+  <section id="about" class="py-5 bg-light">
+    <div class="container">
+      <!-- Título de la sección -->
+      <div class="row mb-4">
+        <div class="col text-center">
+          <h2 class="display-5 fw-bold">Acerca de Nuestro Sitio Web</h2>
+          <p class="lead text-muted">Conoce lo que hacemos y cómo podemos ayudarte</p>
+        </div>
+      </div>
+
+      <!-- Contenido principal -->
+      <div class="row align-items-center">
+        <!-- Imagen o ilustración -->
+        <div class="col-md-6 mb-4 mb-md-0">
+          <img src="img/undraw_chat-bot_c8iw.svg" class="img-fluid rounded shadow" alt="Imagen representativa del sitio">
+        </div>
+
+        <!-- Texto informativo -->
+        <div class="col-md-6">
+          <p>
+            Bienvenido a nuestro sitio web, diseñado para ofrecerte una experiencia intuitiva y segura.
+            Aquí encontrarás recursos, información y herramientas que te permitirán explorar y aprender
+            de manera eficiente.
+          </p>
+          <p>
+            Nuestro objetivo es proporcionarte contenido de calidad, servicios confiables y soporte
+            continuo, adaptado a tus necesidades y al ritmo de tu aprendizaje o uso diario.
+          </p>
+          <div class="d-flex justify-content-center mt-3">
+            <a href="#" class="btn btn-banner">Contáctanos</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Bienvenida -->
   <main class="hero p-5 text-center">
@@ -64,11 +158,11 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   </main>
 
   <!-- FAQ 1 - Bootstrap Brain Component -->
-  <section class="py-3 py-md-5">
+  <section class="py-3 py-md-5 bg-light">
     <div class="container">
       <div class="row gy-5 gy-lg-0 align-items-lg-center">
         <div class="col-12 col-lg-6">
-          <img class="img-fluid rounded animate__animated animate__fadeInLeft  animate__delay-1s animate__slow animacion" loading="lazy" src="img/question-41.svg" alt="How can we help you?">
+          <img class="img-fluid rounded animate__animated animate__fadeInLeft  animate__delay-1s animate__slow animacion" loading="lazy" src="img/Shrug-bro.svg" alt="¿Comó podemos ayudarte?">
         </div>
         <div class="col-12 col-lg-6 animate__animated animate__fadeInRight  animate__delay-1s animate__slow animacion">
           <div class="row justify-content-xl-end">
@@ -110,17 +204,13 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       <div class="testimonial-track">
         <?php foreach ($testimonios as $item): ?>
           <?php
-          // Foto: si no tiene, usar imagen por defecto
           $foto = $item['foto'];
           $src = $foto
             ? 'data:image/jpeg;base64,' . base64_encode($foto)
             : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
 
-          // Nombre
           $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
-
           $opinion = htmlspecialchars($item['opinion']);
-
           $calificacion = (int)$item['calificacion'];
           $estrellas = str_repeat("★", $calificacion) . str_repeat("☆", 5 - $calificacion);
           ?>
@@ -133,7 +223,6 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
           </div>
         <?php endforeach; ?>
 
-        <!-- Duplicamos para simular el loop infinito -->
         <?php foreach ($testimonios as $item): ?>
           <?php
           $foto = $item['foto'];
@@ -157,7 +246,6 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       </div>
     </div>
   </section>
-
 
   <!-- Formulario calificación al sistema -->
   <div class="container">
