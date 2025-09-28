@@ -39,6 +39,6 @@ if (isset($_GET['rechazarAmigo'])) {
 
 
 if (isset($_GET['eliminarAmigo'])) {
-    $soli->rechazarSolicitud($_REQUEST['nickname']);
+    $soli->eliminarAmigo($_REQUEST['nickname']); 
     return;
 }
