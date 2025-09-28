@@ -1,9 +1,7 @@
 <?php
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
 
 if (isset($_SESSION['id_rol'])) {
     switch ($_SESSION['id_rol']) {
@@ -12,9 +10,9 @@ if (isset($_SESSION['id_rol'])) {
         case 3: header("Location: " . $urlBase . "admin/"); exit;
     }
 }
-
 ?>
 
+<!-- Modal de autenticación -->
 <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content p-4">
@@ -30,7 +28,7 @@ if (isset($_SESSION['id_rol'])) {
       </ul>
 
       <div class="tab-content">
-        <!-- LOGIN -->
+        <!-- LOGIN NORMAL -->
         <div class="tab-pane fade show active" id="pills-login">
           <form id="formLogin" action="<?= $urlBase ?>Controlador/loginCtrl.php" method="POST">
             <input type="hidden" name="opcion" value="1">
@@ -52,16 +50,14 @@ if (isset($_SESSION['id_rol'])) {
           </form>
 
           <hr>
+          <!-- LOGIN GOOGLE -->
+        <a href="#" id="btnGoogleLogin" class="btn btn-google w-100 mt-2">
+        <i class="bi bi-google"></i> Iniciar sesión con Google
+                    </a>
 
-          <!-- Botón clásico Google -->
-          <a href="<?= $urlBase ?>Controlador/loginGoogle.php" class="btn btn-google w-100 mt-2">
-            <i class="bi bi-google"></i> Iniciar sesión con Google
-          </a>
-        </div>
-
+        <!-- REGISTRO (vacío por ahora) -->
         <div class="tab-pane fade" id="pills-register">
           <form id="formRegistro" action="<?= $urlBase ?>Controlador/UsuariasControlador.php" method="POST">
-        
           </form>
         </div>
       </div>
@@ -70,8 +66,15 @@ if (isset($_SESSION['id_rol'])) {
   </div>
 </div>
 
+<!-- Google Client -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
+<!-- Definir urlBase antes de cargar auth.js -->
+<script>
+    const urlBase = "<?= $urlBase ?>";
+</script>
 
+<script src="<?= $urlBase ?>peticiones(js)/auth.js"></script>
 
 <style>
   /*STYLYSSSSSSSS*/
