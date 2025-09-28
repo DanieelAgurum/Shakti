@@ -14,6 +14,7 @@ if (isset($_SESSION['id_rol'])) {
 }
 ?>
 
+
 <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content p-4">
@@ -106,7 +107,6 @@ if (isset($_SESSION['id_rol'])) {
           </form>
         </div>
       </div>
-
       <!-- Google Sign-In -->
     <div id="g_id_onload"
              data-client_id="149987150313-s4k1pr3ggbi12phgsfspsbf6mnukocc8.apps.googleusercontent.com"
@@ -127,147 +127,16 @@ if (isset($_SESSION['id_rol'])) {
     </div>
   </div>
 </div>
-
-
-<div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-md modal-dialog-centered">
-    <div class="modal-content p-4">
-
-    
-      <ul class="nav nav-pills nav-justified mb-3">
-        <li class="nav-item">
-          <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pills-login">Iniciar sesión</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-register">Registrarse</button>
-        </li>
-      </ul>
-
-      <div class="tab-content">
-        <!-- LOGIN -->
-        <div class="tab-pane fade show active" id="pills-login">
-          <form id="formLogin" action="<?= $urlBase ?>Controlador/loginCtrl.php" method="POST">
-            <input type="hidden" name="opcion" value="1">
-
-            <div class="mb-3">
-              <label class="form-label">Correo electrónico</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                <input type="email" name="correo" class="form-control" required>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Contraseña</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                <input type="password" name="contraseña" class="form-control" required>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-purple w-100">Ingresar</button>
-          </form>
-        </div>
-
-        <!-- REGISTRO -->
-        <div class="tab-pane fade" id="pills-register">
-          <form id="formRegistro" action="<?= $urlBase ?>Controlador/UsuariasControlador.php" method="POST">
-            <input type="hidden" name="opcion" value="1">
-
-            <div class="mb-3">
-              <label class="form-label">Nombre</label>
-              <input type="text" name="nombre" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Apellidos</label>
-              <input type="text" name="apellidos" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Usuario</label>
-              <input type="text" name="nickname" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Correo electrónico</label>
-              <input type="email" name="correo" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Contraseña</label>
-              <input type="password" name="contraseña" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Confirmar contraseña</label>
-              <input type="password" name="conContraseña" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Fecha de nacimiento</label>
-              <input type="date" name="fecha_nac" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Rol</label>
-              <select name="rol" class="form-select" required>
-                <option value="1">Usuaria</option>
-                <option value="2">Especialista</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn btn-purple w-100">Registrarse</button>
-          </form>
-        </div>
-      </div>
-<!-- Google Sign-In -->
-<div id="g_id_onload"
-     data-client_id="149987150313-s4k1pr3ggbi12phgsfspsbf6mnukocc8.apps.googleusercontent.com"
-     data-callback="handleCredentialResponse"
-     data-auto_prompt="false">
-</div>
-
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="pill"
-     data-theme="outline"
-     data-text="sign_in_with"
-     data-size="large"
-     data-logo_alignment="left">
-</div>
-
-<script>
-function handleCredentialResponse(response) {
-    console.log("Token recibido:", response.credential); 
-    fetch("<?= $urlBase ?>Controlador/loginGoogle.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "credential=" + encodeURIComponent(response.credential)
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log("Respuesta del backend:", data); 
-        if(data.success){
-            var authModal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
-            if(authModal) authModal.hide();
-            switch(String(data.id_rol)){
-                case "1": window.location.href = "<?= $urlBase ?>usuaria/perfil.php"; break;
-                case "2": window.location.href = "<?= $urlBase ?>especialista/perfil.php"; break;
-                case "3": window.location.href = "<?= $urlBase ?>admin/"; break;
-            }
-        } else {
-            alert(data.msg || "No se pudo iniciar sesión con Google");
-        }
-    })
-    .catch(err => console.error(err));
-}
-</script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+  const urlBase = "<?= $urlBase ?>"; // define urlBase globalmente para auth.js
+</script>
+<script src="peticiones(js)/auth.js"></script>
+
 
 
 <style>
-/* Modal general */
+  /*STYLYSSSSSSSS*/
 .modal-content {
     border-radius: 1.5rem;
     background: #f9f9f9;
@@ -338,35 +207,3 @@ input.form-control:focus, select.form-select:focus {
     max-width: 460px;
 }
 </style>
-<script>
-document.getElementById("formLogin").addEventListener("submit", function(e){
-    e.preventDefault(); 
-    const form = e.target;
-    const formData = new FormData(form);
-
-    fetch(form.action, {
-        method: form.method,
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success){
-           
-            switch(data.id_rol){
-                case "1":
-                    window.location.href = "<?= $urlBase ?>usuaria/perfil.php";
-                    break;
-                case "2":
-                    window.location.href = "<?= $urlBase ?>especialista/perfil.php";
-                    break;
-                case "3":
-                    window.location.href = "<?= $urlBase ?>admin/";
-                    break;
-            }
-        } else {
-            alert("Usuario o contraseña incorrectos");
-        }
-    })
-    .catch(err => console.error(err));
-});
-</script>
