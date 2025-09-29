@@ -48,7 +48,12 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/config.css">
   <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
-  <script src="<?= $urlBase ?>peticiones(js)/accesibilidad.js.php"></script>
+  <script>
+    window.usuarioActual = <?= json_encode($usuario) ?>;
+    window.configActual = <?= json_encode($configActual ?? []) ?>;
+    window.urlBase = "<?= $urlBase ?>";
+  </script>
+  <script src="<?= $urlBase ?>peticiones(js)/accesibilidad.js"></script>
 </head>
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
