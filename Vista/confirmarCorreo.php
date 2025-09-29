@@ -42,10 +42,12 @@ $message = isset($_GET['message']) ? $_GET['message'] : '';
                     setTimeout(() => {
                         window.location.href = "<?= $urlBase ?>/Vista/login.php";
                     }, 3000);
+                    //mama huevoo
                 </script>
             <?php endif; ?>
-        <?php endif; ?>
         
+        <?php endif; ?>
+    
         <form action="<?= $urlBase ?>/Controlador/confirmarCorreo.php?opcion=1" method="POST">
             <div class="mb-3 text-start">
                 <label for="correo" class="form-label">Correo Electrónico</label>
