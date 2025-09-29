@@ -35,7 +35,8 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <!-- Scripts únicos -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <!-- Navbar -->
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
+  include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/chatBot.php'; ?>
 </head>
 
 <body>
@@ -289,7 +290,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <!-- Scripts -->
   <script src="peticiones(js)/testimonios.js"></script>
   <script src="peticiones(js)/return.js"></script>
-  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
 </body>
 
 </html>
