@@ -54,6 +54,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
     window.urlBase = "<?= $urlBase ?>";
   </script>
   <script src="<?= $urlBase ?>peticiones(js)/accesibilidad.js"></script>
+
 </head>
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
@@ -142,7 +143,6 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
                 </a>
               </li>
             <?php endif; ?>
-
           </ul>
         </li>
       </ul>
@@ -151,16 +151,17 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 </nav>
 
 <!-- Botón del chatbot siempre visible -->
-<div id="shakti-chatbot-circle" class="shakti-btn-chatbot">
-  <i class="bi bi-robot" data-bs-placement="top"
-    title="Eliminar foto"></i>
+<div id="shakti-chatbot-circle" data-bs-placement="top" title="Chatbot" class="shakti-btn-chatbot">
+  <i class="bi bi-robot"></i>
 </div>
 
 <!-- Botón de regresar al inicio (emerge desde el chatbot) -->
-<button id="shakti-btn-top" class="shakti-btn-top" title="Ir al inicio">
-  <i class="fas fa-arrow-up" data-bs-placement="top"
-    title="Eliminar foto"></i>
+<button id="shakti-btn-top" class="shakti-btn-top" data-bs-placement="top" title="Regresar al inicio">
+  <i class="fas fa-arrow-up"></i>
 </button>
+
+<?php include 'chatBot.php'; ?>
+
 
 <!-- Modal de configuración -->
 <div class="modal fade custom-config-modal" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
@@ -332,7 +333,77 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
     </div>
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+  $(function() {
+    let index = 0;
+
+    // Abrir chatbot
+    $("#shakti-chatbot-circle").on("click", function() {
+      $(this).hide();
+      $("#shakti-chatbot-box").addClass("active");
+    });
+
+    // Cerrar chatbot
+    $(".shakti-chatbot-box-toggle").on("click", function() {
+      $("#shakti-chatbot-box").removeClass("active");
+      $("#shakti-chatbot-circle").fadeIn();
+    });
+
+    // Enviar mensaje
+    $("#shakti-chatbot-form").on("submit", function(e) {
+      e.preventDefault();
+      let msg = $("#shakti-chatbot-input").val().trim();
+      if (!msg) return;
+
+      generateMsg(msg, "self");
+
+      // Simular "typing..."
+      showTyping();
+
+      setTimeout(() => {
+        removeTyping();
+        generateMsg("Respuesta automática a: " + msg, "user");
+      }, 2000);
+    });
+
+    function generateMsg(msg, type) {
+      index++;
+      let html = `
+      <div id="shakti-cm-msg-${index}" class="shakti-chatbot-msg ${type}">
+        <div class="shakti-cm-msg-text">${msg}</div>
+      </div>
+    `;
+      $(".shakti-chatbot-logs").append(html);
+      $("#shakti-chatbot-input").val("");
+      $(".shakti-chatbot-logs").scrollTop($(".shakti-chatbot-logs")[0].scrollHeight);
+    }
+
+    function showTyping() {
+      index++;
+      let html = `
+      <div id="typing-indicator" class="shakti-chatbot-msg typing">
+        <div class="shakti-cm-msg-text">
+          escribiendo
+          <span class="typing-dots">
+            <span></span><span></span><span></span>
+          </span>
+        </div>
+      </div>
+    `;
+      $(".shakti-chatbot-logs").append(html);
+      $(".shakti-chatbot-logs").scrollTop($(".shakti-chatbot-logs")[0].scrollHeight);
+    }
+
+    function removeTyping() {
+      $("#typing-indicator").remove();
+    }
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= $urlBase ?>peticiones(js)/navbar.js"></script>
+<script src="<?= $urlBase ?>peticiones(js)/tooltip.js"></script>
 <script type="module" src="<?= $urlBase ?>peticiones(js)/notificaciones.js"></script>
