@@ -6,6 +6,7 @@ class loginMdln
     private $correo;
     private $contraseña;
 
+    // Conectar a la base de datos
     public function conectarBD()
     {
         $con = mysqli_connect("localhost", "root", "", "shakti");
@@ -19,12 +20,14 @@ class loginMdln
         return $con;
     }
 
+    // Inicializar correo y contraseña
     public function inicializar($correo, $contraseña)
     {
         $this->correo = $correo;
         $this->contraseña = $contraseña;
     }
 
+    // Iniciar sesión (login AJAX)
     public function iniciarSesion()
     {
         header('Content-Type: application/json');
@@ -41,12 +44,12 @@ class loginMdln
         $con = $this->conectarBD();
         $correo = mysqli_real_escape_string($con, $this->correo);
 
-        // Consulta con campos explícitos para evitar confusiones
+        // Consulta explícita para evitar confusiones
         $query = "
             SELECT 
                 u.id, u.nombre, u.apellidos, u.fecha_nac, u.contraseña, u.nickname, u.correo, u.id_rol,
                 u.documentos, u.descripcion, u.direccion, u.telefono, u.foto, u.estatus,
-                r.id_rol AS rol_id, r.nombre_rol
+                r.nombre_rol
             FROM usuarias u
             JOIN roles r ON u.id_rol = r.id_rol
             WHERE u.correo = '$correo'
@@ -59,13 +62,6 @@ class loginMdln
 
             if ($reg && password_verify($this->contraseña, $reg["contraseña"])) {
                 // Guardar datos en sesión
-                $_SESSION['id'] = $reg['id'];
-
-                $sql = "SELECT foto FROM usuarias WHERE id = {$_SESSION['id']}";
-                $result = mysqli_query($con, $sql);
-                if ($row = mysqli_fetch_assoc($result)) {
-                    $_SESSION['foto'] = $row['foto'];
-                }
                 $_SESSION['id'] = $reg['id'];
                 $_SESSION['id_usuaria'] = $reg['id'];
                 $_SESSION['id_rol'] = $reg['id_rol'];
@@ -80,21 +76,27 @@ class loginMdln
                 $_SESSION['direccion'] = $reg['direccion'];
                 $_SESSION['documentos'] = $reg['documentos'];
                 $_SESSION['estatus'] = $reg['estatus'];
+                $_SESSION['foto'] = $reg['foto'];
+
+                // Cerrar sesión correctamente antes de responder
+                session_write_close();
 
                 echo json_encode([
                     'success' => true,
-                    'message' => 'éxito',
+                    'message' => 'Login exitoso',
                     'id_rol' => $reg['id_rol']
                 ]);
                 exit;
             }
         }
 
+        // Login fallido
         session_write_close();
         echo json_encode($response);
         exit;
     }
 
+    // Cerrar sesión
     public function cerrarSesion()
     {
         if (session_status() === PHP_SESSION_NONE) {
