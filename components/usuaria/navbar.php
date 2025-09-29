@@ -187,6 +187,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
                 <input type="password" class="form-control custom-input" name="newPassword" id="newPassword" placeholder="Nueva contraseña">
                 <label for="newPassword">Nueva contraseña</label>
               </div>
+              <small id="passwordMessage" class="text-danger"></small>
 
               <!-- Botón para generar/enviar token -->
               <div class="mt-4">
@@ -211,7 +212,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
                   name="permitir_amigos"
                   id="addFriendOption"
                   <?= !empty($configActual['permitir_amigos']) && $configActual['permitir_amigos'] == 1 ? 'checked' : '' ?>>
-                <label class="form-check-label" for="addFriendOption">Permitir que me agreguen como amiga</label>
+                <label class="form-check-label" for="addFriendOption">Permitir que me agreguen como amigo</label>
               </div>
               <div class="form-check form-switch mt-2">
                 <input
@@ -290,7 +291,6 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   </div>
 </div>
 
-
 <!-- Modal Notificaciones -->
 <div class="modal fade" id="modalNotificaciones">
   <div class="modal-dialog modal-dialog-scrollable modal-md">
@@ -324,36 +324,81 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    const inputPassword = document.getElementById("newPassword");
     const btnGenerarToken = document.getElementById("btnGenerarToken");
     const tokenContainer = document.getElementById("tokenContainer");
-    const inputToken = document.getElementById("token");
-    const inputPassword = document.getElementById("newPassword");
     const formConfig = document.getElementById("formConfig");
+    const passwordMessage = document.getElementById("passwordMessage");
+
+    btnGenerarToken.disabled = true; 
+    const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*?()_+\-=\[\]{};:'",.<>\/\\|~])[A-Za-z0-9!@#$%^&*?()_+\-=\[\]{};:'",.<>\/\\|~]{8,}$/;
+
+    inputPassword.addEventListener("input", function() {
+      const password = inputPassword.value.trim();
+
+      if (password === "") {
+        inputPassword.classList.remove("is-valid", "is-invalid");
+        passwordMessage.textContent = "";
+        btnGenerarToken.disabled = true;
+        return;
+      }
+
+      if (regexPassword.test(password)) {
+        inputPassword.classList.add("is-valid");
+        inputPassword.classList.remove("is-invalid");
+        passwordMessage.textContent = "";
+        btnGenerarToken.disabled = false;
+      } else {
+        inputPassword.classList.add("is-invalid");
+        inputPassword.classList.remove("is-valid");
+        passwordMessage.textContent = "Mínimo 8 caracteres, un número y un carácter especial.";
+        btnGenerarToken.disabled = true;
+      }
+    });
 
     btnGenerarToken.addEventListener("click", function() {
+      const password = inputPassword.value.trim();
+      if (!regexPassword.test(password)) return;
+
+      btnGenerarToken.disabled = true;
+      btnGenerarToken.textContent = "Enviando...";
+
       fetch("<?= $urlBase ?>Controlador/configuracionCtrl.php", {
           method: "POST",
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/x-www-form-urlencoded"
           },
-          body: "accion=generar_token",
+          body: "accion=generar_token"
         })
-        .then((res) => res.json())
-        .then((data) => {
+        .then(res => res.json())
+        .then(data => {
           if (data.status === "ok") {
             tokenContainer.classList.remove("d-none");
-            btnGenerarToken.disabled = true;
-            btnGenerarToken.textContent = "Token enviado";
 
             Swal.fire({
               icon: "success",
               title: "Token enviado",
               text: data.msg,
-              timer: 2000,
+              timer: 2500,
               timerProgressBar: true,
               showConfirmButton: false,
             });
+
+            let tiempo = 60;
+            btnGenerarToken.textContent = `Reintentar en ${tiempo}s`;
+            const interval = setInterval(() => {
+              tiempo--;
+              btnGenerarToken.textContent = `Reintentar en ${tiempo}s`;
+              if (tiempo <= 0) {
+                clearInterval(interval);
+                btnGenerarToken.textContent = "Generar / Enviar token";
+                btnGenerarToken.disabled = false;
+              }
+            }, 1000);
+
           } else {
+            btnGenerarToken.disabled = false;
+            btnGenerarToken.textContent = "Generar / Enviar token";
             Swal.fire({
               icon: "error",
               title: "Error",
@@ -364,8 +409,10 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err);
+          btnGenerarToken.disabled = false;
+          btnGenerarToken.textContent = "Generar / Enviar token";
           Swal.fire({
             icon: "error",
             title: "Error",
@@ -376,79 +423,11 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           });
         });
     });
-
-    formConfig.addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const password = inputPassword.value.trim();
-      const token = inputToken.value.trim();
-
-      if (password !== "" && token === "") {
-        Swal.fire({
-          icon: "warning",
-          title: "Token requerido",
-          text: "Debes ingresar el token si deseas cambiar la contraseña",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-        return;
-      }
-
-      const formData = new FormData(formConfig);
-      formData.set("accion", "guardar_configuracion");
-
-      fetch("<?= $urlBase ?>Controlador/configuracionCtrl.php", {
-          method: "POST",
-          body: formData,
-        })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status === "ok") {
-            Swal.fire({
-              icon: "success",
-              title: "¡Éxito!",
-              text: data.msg,
-              timer: 2000,
-              timerProgressBar: true,
-              showConfirmButton: false,
-            }).then(() => {
-              inputToken.value = "";
-              inputPassword.value = "";
-              tokenContainer.classList.add("d-none");
-              btnGenerarToken.disabled = false;
-              btnGenerarToken.textContent = "Generar / Enviar token";
-
-              const modalEl = document.getElementById("configModal");
-              const modal = bootstrap.Modal.getInstance(modalEl);
-              if (modal) modal.hide();
-
-              // window.location.reload();
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: data.msg,
-              timer: 2500,
-              timerProgressBar: true,
-              showConfirmButton: false,
-            });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Ocurrió un error inesperado al guardar cambios",
-            timer: 2500,
-            timerProgressBar: true,
-            showConfirmButton: false,
-          });
-        });
-    });
   });
 </script>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= $urlBase ?>peticiones(js)/navbar.js"></script>
