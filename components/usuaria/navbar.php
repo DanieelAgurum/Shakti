@@ -46,7 +46,62 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
+  <link rel="stylesheet" href="<?= $urlBase ?>css/config.css" >
   <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const selectFont = document.getElementById("fontSize");
+      const checkboxDarkMode = document.getElementById("darkMode");
+      const checkboxHighContrast = document.getElementById("highContrast");
+
+      function aplicarTamanoFuente(tamano) {
+        document.documentElement.classList.remove("font-small", "font-medium", "font-large");
+        switch (tamano) {
+          case "small":
+            document.documentElement.classList.add("font-small");
+            break;
+          case "medium":
+            document.documentElement.classList.add("font-medium");
+            break;
+          case "large":
+            document.documentElement.classList.add("font-large");
+            break;
+        }
+      }
+
+      function aplicarModoOscuro(estado) {
+        if (estado) {
+          document.documentElement.classList.add("dark-mode");
+        } else {
+          document.documentElement.classList.remove("dark-mode");
+        }
+      }
+
+      function aplicarAltoContraste(estado) {
+        if (estado) {
+          document.documentElement.classList.add("high-contrast");
+        } else {
+          document.documentElement.classList.remove("high-contrast");
+        }
+      }
+
+      aplicarTamanoFuente("<?= $configActual['tamano_fuente'] ?? 'medium' ?>");
+      aplicarModoOscuro(<?= !empty($configActual['modo_oscuro']) ? 'true' : 'false' ?>);
+      aplicarAltoContraste(<?= !empty($configActual['alto_contraste']) ? 'true' : 'false' ?>);
+
+      selectFont.addEventListener("change", function() {
+        aplicarTamanoFuente(this.value);
+      });
+
+      checkboxDarkMode.addEventListener("change", function() {
+        aplicarModoOscuro(this.checked);
+      });
+
+      checkboxHighContrast.addEventListener("change", function() {
+        aplicarAltoContraste(this.checked);
+      });
+    });
+  </script>
 </head>
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
@@ -330,7 +385,8 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
     const formConfig = document.getElementById("formConfig");
     const passwordMessage = document.getElementById("passwordMessage");
 
-    btnGenerarToken.disabled = true; 
+    btnGenerarToken.disabled = true;
+
     const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*?()_+\-=\[\]{};:'",.<>\/\\|~])[A-Za-z0-9!@#$%^&*?()_+\-=\[\]{};:'",.<>\/\\|~]{8,}$/;
 
     inputPassword.addEventListener("input", function() {
@@ -368,7 +424,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
           },
-          body: "accion=generar_token"
+          body: "accion=generar_token&newPassword=" + encodeURIComponent(password)
         })
         .then(res => res.json())
         .then(data => {
@@ -405,7 +461,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
               text: data.msg,
               timer: 2500,
               timerProgressBar: true,
-              showConfirmButton: false,
+              showConfirmButton: false
             });
           }
         })
@@ -419,14 +475,70 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
             text: "Ocurrió un error inesperado al generar el token",
             timer: 2500,
             timerProgressBar: true,
-            showConfirmButton: false,
+            showConfirmButton: false
+          });
+        });
+    });
+
+    formConfig.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(formConfig);
+      formData.append("accion", "guardar_configuracion");
+
+      fetch("<?= $urlBase ?>Controlador/configuracionCtrl.php", {
+          method: "POST",
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "ok") {
+            Swal.fire({
+              icon: "success",
+              title: "Configuración guardada",
+              text: data.msg,
+              timer: 2000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            });
+
+            const tamano = formData.get("tamano_fuente") || "medium";
+            const modoOscuro = formData.get("modo_oscuro") === "on";
+            const altoContraste = formData.get("alto_contraste") === "on";
+
+            document.documentElement.classList.remove("font-small", "font-medium", "font-large");
+            document.documentElement.classList.add(`font-${tamano}`);
+            document.documentElement.classList.toggle("dark-mode", modoOscuro);
+            document.documentElement.classList.toggle("high-contrast", altoContraste);
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('configModal'));
+            modal.hide();
+
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: data.msg,
+              timer: 2000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Ocurrió un error al guardar la configuración",
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false
           });
         });
     });
   });
 </script>
-
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

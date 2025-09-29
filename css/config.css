@@ -1,0 +1,37 @@
+/* Tamaño de fuente */
+html.font-small {
+    font-size: 14px;
+}
+
+html.font-medium {
+    font-size: 16px;
+}
+
+html.font-large {
+    font-size: 18px;
+}
+
+/* Modo oscuro */
+html.dark-mode {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+html.dark-mode a {
+    color: #bb86fc;
+}
+
+/* Alto contraste */
+html.high-contrast {
+    background-color: #000;
+    color: #fff;
+}
+
+html.high-contrast a {
+    color: #00ff00;
+}
+
+html.high-contrast .btn {
+    background-color: #fff;
+    color: #000;
+}
