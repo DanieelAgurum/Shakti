@@ -40,14 +40,33 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Estilos y librerías -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <!-- Bootstrap Bundle JS (incluye Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- CSS personalizados -->
   <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
-  <link rel="stylesheet" href="<?= $urlBase ?>css/config.css" >
-  <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
+  <link rel="stylesheet" href="<?= $urlBase ?>css/config.css">
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const selectFont = document.getElementById("fontSize");
@@ -70,39 +89,38 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
       }
 
       function aplicarModoOscuro(estado) {
-        if (estado) {
-          document.documentElement.classList.add("dark-mode");
-        } else {
-          document.documentElement.classList.remove("dark-mode");
-        }
+        document.documentElement.classList.toggle("dark-mode", estado);
       }
 
       function aplicarAltoContraste(estado) {
-        if (estado) {
-          document.documentElement.classList.add("high-contrast");
-        } else {
-          document.documentElement.classList.remove("high-contrast");
-        }
+        document.documentElement.classList.toggle("high-contrast", estado);
       }
 
       aplicarTamanoFuente("<?= $configActual['tamano_fuente'] ?? 'medium' ?>");
       aplicarModoOscuro(<?= !empty($configActual['modo_oscuro']) ? 'true' : 'false' ?>);
       aplicarAltoContraste(<?= !empty($configActual['alto_contraste']) ? 'true' : 'false' ?>);
 
-      selectFont.addEventListener("change", function() {
-        aplicarTamanoFuente(this.value);
-      });
+      if (selectFont) {
+        selectFont.addEventListener("change", function() {
+          aplicarTamanoFuente(this.value);
+        });
+      }
 
-      checkboxDarkMode.addEventListener("change", function() {
-        aplicarModoOscuro(this.checked);
-      });
+      if (checkboxDarkMode) {
+        checkboxDarkMode.addEventListener("change", function() {
+          aplicarModoOscuro(this.checked);
+        });
+      }
 
-      checkboxHighContrast.addEventListener("change", function() {
-        aplicarAltoContraste(this.checked);
-      });
+      if (checkboxHighContrast) {
+        checkboxHighContrast.addEventListener("change", function() {
+          aplicarAltoContraste(this.checked);
+        });
+      }
     });
   </script>
 </head>
+
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
   <div class="container">
@@ -185,9 +203,9 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
               </li>
             <?php else: ?>
               <li>
-              <a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">
-                Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
-              </a>
+                <a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">
+                  Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
+                </a>
               </li>
             <?php endif; ?>
 
