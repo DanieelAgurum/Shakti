@@ -284,8 +284,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php';
   ?>
 
-  <!-- Modal de login -->
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/login.php'; ?>
+
 
   <!-- Scripts -->
   <script src="peticiones(js)/testimonios.js"></script>
