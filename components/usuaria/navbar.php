@@ -40,87 +40,16 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Favicon -->
-  <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Google Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-  <!-- SweetAlert2 -->
+  <!-- Estilos y librerías -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- jQuery -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-  <!-- Bootstrap Bundle JS (incluye Popper) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- CSS personalizados -->
   <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/config.css">
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const selectFont = document.getElementById("fontSize");
-      const checkboxDarkMode = document.getElementById("darkMode");
-      const checkboxHighContrast = document.getElementById("highContrast");
-
-      function aplicarTamanoFuente(tamano) {
-        document.documentElement.classList.remove("font-small", "font-medium", "font-large");
-        switch (tamano) {
-          case "small":
-            document.documentElement.classList.add("font-small");
-            break;
-          case "medium":
-            document.documentElement.classList.add("font-medium");
-            break;
-          case "large":
-            document.documentElement.classList.add("font-large");
-            break;
-        }
-      }
-
-      function aplicarModoOscuro(estado) {
-        document.documentElement.classList.toggle("dark-mode", estado);
-      }
-
-      function aplicarAltoContraste(estado) {
-        document.documentElement.classList.toggle("high-contrast", estado);
-      }
-
-      aplicarTamanoFuente("<?= $configActual['tamano_fuente'] ?? 'medium' ?>");
-      aplicarModoOscuro(<?= !empty($configActual['modo_oscuro']) ? 'true' : 'false' ?>);
-      aplicarAltoContraste(<?= !empty($configActual['alto_contraste']) ? 'true' : 'false' ?>);
-
-      if (selectFont) {
-        selectFont.addEventListener("change", function() {
-          aplicarTamanoFuente(this.value);
-        });
-      }
-
-      if (checkboxDarkMode) {
-        checkboxDarkMode.addEventListener("change", function() {
-          aplicarModoOscuro(this.checked);
-        });
-      }
-
-      if (checkboxHighContrast) {
-        checkboxHighContrast.addEventListener("change", function() {
-          aplicarAltoContraste(this.checked);
-        });
-      }
-    });
-  </script>
+  <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
+  <script src="<?= $urlBase ?>peticiones(js)/accesibilidad.js.php"></script>
 </head>
-
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
   <div class="container">
@@ -203,7 +132,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
               </li>
             <?php else: ?>
               <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#authModal">
                   Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
                 </a>
               </li>
@@ -390,174 +319,6 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
     </div>
   </div>
 </div>
-
-<script>
-  window.usuarioActual = <?= json_encode($usuario) ?>;
-</script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const inputPassword = document.getElementById("newPassword");
-    const btnGenerarToken = document.getElementById("btnGenerarToken");
-    const tokenContainer = document.getElementById("tokenContainer");
-    const formConfig = document.getElementById("formConfig");
-    const passwordMessage = document.getElementById("passwordMessage");
-
-    btnGenerarToken.disabled = true;
-
-    const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*?()_+\-=\[\]{};:'",.<>\/\\|~])[A-Za-z0-9!@#$%^&*?()_+\-=\[\]{};:'",.<>\/\\|~]{8,}$/;
-
-    inputPassword.addEventListener("input", function() {
-      const password = inputPassword.value.trim();
-
-      if (password === "") {
-        inputPassword.classList.remove("is-valid", "is-invalid");
-        passwordMessage.textContent = "";
-        btnGenerarToken.disabled = true;
-        return;
-      }
-
-      if (regexPassword.test(password)) {
-        inputPassword.classList.add("is-valid");
-        inputPassword.classList.remove("is-invalid");
-        passwordMessage.textContent = "";
-        btnGenerarToken.disabled = false;
-      } else {
-        inputPassword.classList.add("is-invalid");
-        inputPassword.classList.remove("is-valid");
-        passwordMessage.textContent = "Mínimo 8 caracteres, un número y un carácter especial.";
-        btnGenerarToken.disabled = true;
-      }
-    });
-
-    btnGenerarToken.addEventListener("click", function() {
-      const password = inputPassword.value.trim();
-      if (!regexPassword.test(password)) return;
-
-      btnGenerarToken.disabled = true;
-      btnGenerarToken.textContent = "Enviando...";
-
-      fetch("<?= $urlBase ?>Controlador/configuracionCtrl.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: "accion=generar_token&newPassword=" + encodeURIComponent(password)
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === "ok") {
-            tokenContainer.classList.remove("d-none");
-
-            Swal.fire({
-              icon: "success",
-              title: "Token enviado",
-              text: data.msg,
-              timer: 2500,
-              timerProgressBar: true,
-              showConfirmButton: false,
-            });
-
-            let tiempo = 60;
-            btnGenerarToken.textContent = `Reintentar en ${tiempo}s`;
-            const interval = setInterval(() => {
-              tiempo--;
-              btnGenerarToken.textContent = `Reintentar en ${tiempo}s`;
-              if (tiempo <= 0) {
-                clearInterval(interval);
-                btnGenerarToken.textContent = "Generar / Enviar token";
-                btnGenerarToken.disabled = false;
-              }
-            }, 1000);
-
-          } else {
-            btnGenerarToken.disabled = false;
-            btnGenerarToken.textContent = "Generar / Enviar token";
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: data.msg,
-              timer: 2500,
-              timerProgressBar: true,
-              showConfirmButton: false
-            });
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          btnGenerarToken.disabled = false;
-          btnGenerarToken.textContent = "Generar / Enviar token";
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Ocurrió un error inesperado al generar el token",
-            timer: 2500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          });
-        });
-    });
-
-    formConfig.addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const formData = new FormData(formConfig);
-      formData.append("accion", "guardar_configuracion");
-
-      fetch("<?= $urlBase ?>Controlador/configuracionCtrl.php", {
-          method: "POST",
-          body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === "ok") {
-            Swal.fire({
-              icon: "success",
-              title: "Configuración guardada",
-              text: data.msg,
-              timer: 2000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            });
-
-            const tamano = formData.get("tamano_fuente") || "medium";
-            const modoOscuro = formData.get("modo_oscuro") === "on";
-            const altoContraste = formData.get("alto_contraste") === "on";
-
-            document.documentElement.classList.remove("font-small", "font-medium", "font-large");
-            document.documentElement.classList.add(`font-${tamano}`);
-            document.documentElement.classList.toggle("dark-mode", modoOscuro);
-            document.documentElement.classList.toggle("high-contrast", altoContraste);
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('configModal'));
-            modal.hide();
-
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: data.msg,
-              timer: 2000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            });
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Ocurrió un error al guardar la configuración",
-            timer: 2000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          });
-        });
-    });
-  });
-</script>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= $urlBase ?>peticiones(js)/navbar.js"></script>
