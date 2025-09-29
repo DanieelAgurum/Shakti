@@ -11,13 +11,9 @@ $usuario = [
   'correo' => $_SESSION['correo'] ?? null
 ];
 
-$config = null;
-$configActual = null;
-if (isset($_SESSION['id_usuaria'])) {
-  $idUsuaria = $_SESSION['id_usuaria'];
-  $config = new ConfiguracionMdl();
-  $configActual = $config->obtenerConfiguracion($idUsuaria);
-}
+$idUsuaria = $_SESSION['id_usuaria'];
+$config = new ConfiguracionMdl();
+$configActual = $config->obtenerConfiguracion($idUsuaria);
 
 // Notificaciones
 $notificaciones = [];
