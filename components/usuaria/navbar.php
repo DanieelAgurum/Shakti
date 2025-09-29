@@ -145,8 +145,16 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   </div>
 </nav>
 
-<button id="btn-top" title="Ir al inicio" class="btn-top">
-  <i class="fas fa-arrow-up"></i>
+<!-- Botón del chatbot siempre visible -->
+<div id="shakti-chatbot-circle" class="shakti-btn-chatbot">
+  <i class="bi bi-robot" data-bs-placement="top"
+    title="Eliminar foto"></i>
+</div>
+
+<!-- Botón de regresar al inicio (emerge desde el chatbot) -->
+<button id="shakti-btn-top" class="shakti-btn-top" title="Ir al inicio">
+  <i class="fas fa-arrow-up" data-bs-placement="top"
+    title="Eliminar foto"></i>
 </button>
 
 <!-- Modal de configuración -->
