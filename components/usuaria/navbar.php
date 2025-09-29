@@ -185,9 +185,9 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
               </li>
             <?php else: ?>
               <li>
-                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#authModal">
-                  Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
-                </a>
+              <a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">
+                Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
+              </a>
               </li>
             <?php endif; ?>
 
