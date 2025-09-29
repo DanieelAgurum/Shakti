@@ -8,6 +8,7 @@ $message = isset($_GET['message']) ? $_GET['message'] : '';
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    
     <title>Confirmar Correo - Shakti</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <style>
