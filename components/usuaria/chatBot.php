@@ -7,23 +7,6 @@
         height: 100%;
     }
 
-    #shakti-chatbot-circle {
-        position: fixed;
-        z-index: 9999;
-        bottom: 20%;
-        bottom: 50px;
-        right: 50px;
-        background: #5A5EB9;
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-    }
-
     .shakti-chatbot-box {
         display: none;
         background: #efefef;
