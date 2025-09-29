@@ -144,6 +144,8 @@ class Usuarias
         exit;
     }
 
+    // actualizar datos -------------------------------------------
+
     public function actualizarDatos($nomN, $apeN, $nickN, $corN, $contN, $fec, $tel, $dir, $desc, $idUsuaria)
     {
         $con = $this->conectarBD();
