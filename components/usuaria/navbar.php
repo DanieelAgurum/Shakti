@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notificacionesModelo.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/configuracionMdl.php';
 $urlBase = getBaseUrl();
 
 $usuario = [
@@ -9,6 +10,11 @@ $usuario = [
   'nickname' => $_SESSION['nickname'] ?? 'Invitado',
   'correo' => $_SESSION['correo'] ?? null
 ];
+
+if (!isset($_SESSION['id_usuaria'])) die("Acceso denegado");
+$idUsuaria = $_SESSION['id_usuaria'];
+$config = new ConfiguracionMdl();
+$configActual = $config->obtenerConfiguracion($idUsuaria);
 
 // Notificaciones
 $notificaciones = [];
@@ -119,13 +125,13 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
                   <button type="submit" class="dropdown-item cerrar">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
                 </form>
               </li>
-<?php else: ?>
-  <li>
-    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#authModal">
-      Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
-    </a>
-  </li>
-<?php endif; ?>
+            <?php else: ?>
+              <li>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#authModal">
+                  Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
+                </a>
+              </li>
+            <?php endif; ?>
 
           </ul>
         </li>
@@ -150,7 +156,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
       </div>
 
       <!-- Body -->
-      <form id="formConfig" method="POST" action="<?= $urlBase ?>Controlador/configuracionCtrl.php">
+      <form id="formConfig" method="post" action="">
         <div class="modal-body">
 
           <!-- Tabs -->
@@ -174,38 +180,65 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 
             <!-- Cuenta -->
             <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
-
               <div class="form-floating mt-4">
-                <input type="password" class="form-control custom-input" id="newPassword" placeholder="Nueva contraseña">
+                <input type="password" class="form-control custom-input" name="newPassword" id="newPassword" placeholder="Nueva contraseña">
                 <label for="newPassword">Nueva contraseña</label>
               </div>
-              <div class="form-floating mt-4">
-                <input type="email" class="form-control custom-input" id="email" placeholder="Correo electrónico" value="">
-                <label for="email">Correo electrónico</label>
+
+              <!-- Botón para generar/enviar token -->
+              <div class="mt-4">
+                <button type="button" id="btnGenerarToken" class="btn btn-outline-light w-100">
+                  Generar / Enviar token
+                </button>
+              </div>
+
+              <!-- Input para ingresar token (oculto al inicio) -->
+              <div class="form-floating mt-4 d-none" id="tokenContainer">
+                <input type="text" class="form-control custom-input" name="token" id="token" placeholder="Ingresa el token">
+                <label for="token">Token</label>
               </div>
             </div>
 
-
             <!-- Privacidad -->
             <div class="tab-pane fade" id="privacidad" role="tabpanel">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="addFriendOption" checked>
+              <div class="form-check form-switch mt-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="permitir_amigos"
+                  id="addFriendOption"
+                  <?= !empty($configActual['permitir_amigos']) && $configActual['permitir_amigos'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="addFriendOption">Permitir que me agreguen como amiga</label>
               </div>
               <div class="form-check form-switch mt-2">
-                <input class="form-check-input" type="checkbox" id="privateProfile">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="perfil_privado"
+                  id="privateProfile"
+                  <?= !empty($configActual['perfil_privado']) && $configActual['perfil_privado'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="privateProfile">Perfil privado</label>
               </div>
             </div>
 
             <!-- Notificaciones -->
             <div class="tab-pane fade" id="notificaciones" role="tabpanel">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="notifyMessages" checked>
+              <div class="form-check mt-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="notificar_mensajes"
+                  id="notifyMessages"
+                  <?= !empty($configActual['notificar_mensajes']) && $configActual['notificar_mensajes'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="notifyMessages">Notificarme de nuevos mensajes</label>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="notifyComments">
+              <div class="form-check mt-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="notificar_comentarios"
+                  id="notifyComments"
+                  <?= !empty($configActual['notificar_comentarios']) && $configActual['notificar_comentarios'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="notifyComments">Notificarme de comentarios y respuestas</label>
               </div>
             </div>
@@ -214,25 +247,38 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
             <div class="tab-pane fade" id="accesibilidad" role="tabpanel">
               <div class="mb-3">
                 <label for="fontSize" class="form-label">Tamaño de fuente</label>
-                <select class="form-select" id="fontSize">
-                  <option value="small">Pequeño</option>
-                  <option value="medium" selected>Medio</option>
-                  <option value="large">Grande</option>
+                <select class="form-select" name="tamano_fuente" id="fontSize">
+                  <option value="small" <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'small' ? 'selected' : '' ?>>Pequeño</option>
+                  <option value="medium" <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'medium' ? 'selected' : '' ?>>Medio</option>
+                  <option value="large" <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'large' ? 'selected' : '' ?>>Grande</option>
                 </select>
               </div>
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="darkMode">
+              <div class="form-check form-switch mt-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="modo_oscuro"
+                  id="darkMode"
+                  <?= !empty($configActual['modo_oscuro']) && $configActual['modo_oscuro'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="darkMode">Activar modo oscuro</label>
               </div>
               <div class="form-check form-switch mt-2">
-                <input class="form-check-input" type="checkbox" id="highContrast">
+                <input
+                  class="form-check-input"
+                  name="alto_contraste"
+                  type="checkbox"
+                  id="highContrast"
+                  <?= !empty($configActual['alto_contraste']) && $configActual['alto_contraste'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="highContrast">Activar alto contraste</label>
               </div>
             </div>
+
           </div><!-- Fin tab-content -->
         </div>
+
         <!-- Footer -->
         <div class="modal-footer">
+          <input type="hidden" name="accion" id="accion" value="guardar_configuracion">
           <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           <button type="submit" class="btn btn-banner">Guardar cambios</button>
         </div>
@@ -240,6 +286,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
     </div>
   </div>
 </div>
+
 
 <!-- Modal Notificaciones -->
 <div class="modal fade" id="modalNotificaciones">
@@ -270,6 +317,134 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 
 <script>
   window.usuarioActual = <?= json_encode($usuario) ?>;
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const btnGenerarToken = document.getElementById("btnGenerarToken");
+    const tokenContainer = document.getElementById("tokenContainer");
+    const inputToken = document.getElementById("token");
+    const inputPassword = document.getElementById("newPassword");
+    const formConfig = document.getElementById("formConfig");
+
+    btnGenerarToken.addEventListener("click", function() {
+      fetch("<?= $urlBase ?>Controlador/configuracionCtrl.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: "accion=generar_token",
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === "ok") {
+            tokenContainer.classList.remove("d-none");
+            btnGenerarToken.disabled = true;
+            btnGenerarToken.textContent = "Token enviado";
+
+            Swal.fire({
+              icon: "success",
+              title: "Token enviado",
+              text: data.msg,
+              timer: 2000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: data.msg,
+              timer: 2500,
+              timerProgressBar: true,
+              showConfirmButton: false,
+            });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Ocurrió un error inesperado al generar el token",
+            timer: 2500,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
+        });
+    });
+
+    formConfig.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const password = inputPassword.value.trim();
+      const token = inputToken.value.trim();
+
+      if (password !== "" && token === "") {
+        Swal.fire({
+          icon: "warning",
+          title: "Token requerido",
+          text: "Debes ingresar el token si deseas cambiar la contraseña",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        return;
+      }
+
+      const formData = new FormData(formConfig);
+      formData.set("accion", "guardar_configuracion");
+
+      fetch("<?= $urlBase ?>Controlador/configuracionCtrl.php", {
+          method: "POST",
+          body: formData,
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === "ok") {
+            Swal.fire({
+              icon: "success",
+              title: "¡Éxito!",
+              text: data.msg,
+              timer: 2000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+            }).then(() => {
+              inputToken.value = "";
+              inputPassword.value = "";
+              tokenContainer.classList.add("d-none");
+              btnGenerarToken.disabled = false;
+              btnGenerarToken.textContent = "Generar / Enviar token";
+
+              const modalEl = document.getElementById("configModal");
+              const modal = bootstrap.Modal.getInstance(modalEl);
+              if (modal) modal.hide();
+
+              // window.location.reload();
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: data.msg,
+              timer: 2500,
+              timerProgressBar: true,
+              showConfirmButton: false,
+            });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Ocurrió un error inesperado al guardar cambios",
+            timer: 2500,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
+        });
+    });
+  });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
