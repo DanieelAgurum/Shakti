@@ -54,7 +54,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
     window.urlBase = "<?= $urlBase ?>";
   </script>
   <script src="<?= $urlBase ?>peticiones(js)/accesibilidad.js"></script>
-
+  <script src="<?= $urlBase ?>peticiones(js)/chatBotFlotante.js"></script>
 </head>
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
@@ -334,74 +334,6 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-<script>
-  $(function() {
-    let index = 0;
-
-    // Abrir chatbot
-    $("#shakti-chatbot-circle").on("click", function() {
-      $(this).hide();
-      $("#shakti-chatbot-box").addClass("active");
-    });
-
-    // Cerrar chatbot
-    $(".shakti-chatbot-box-toggle").on("click", function() {
-      $("#shakti-chatbot-box").removeClass("active");
-      $("#shakti-chatbot-circle").fadeIn();
-    });
-
-    // Enviar mensaje
-    $("#shakti-chatbot-form").on("submit", function(e) {
-      e.preventDefault();
-      let msg = $("#shakti-chatbot-input").val().trim();
-      if (!msg) return;
-
-      generateMsg(msg, "self");
-
-      // Simular "typing..."
-      showTyping();
-
-      setTimeout(() => {
-        removeTyping();
-        generateMsg("Respuesta automática a: " + msg, "user");
-      }, 2000);
-    });
-
-    function generateMsg(msg, type) {
-      index++;
-      let html = `
-      <div id="shakti-cm-msg-${index}" class="shakti-chatbot-msg ${type}">
-        <div class="shakti-cm-msg-text">${msg}</div>
-      </div>
-    `;
-      $(".shakti-chatbot-logs").append(html);
-      $("#shakti-chatbot-input").val("");
-      $(".shakti-chatbot-logs").scrollTop($(".shakti-chatbot-logs")[0].scrollHeight);
-    }
-
-    function showTyping() {
-      index++;
-      let html = `
-      <div id="typing-indicator" class="shakti-chatbot-msg typing">
-        <div class="shakti-cm-msg-text">
-          escribiendo
-          <span class="typing-dots">
-            <span></span><span></span><span></span>
-          </span>
-        </div>
-      </div>
-    `;
-      $(".shakti-chatbot-logs").append(html);
-      $(".shakti-chatbot-logs").scrollTop($(".shakti-chatbot-logs")[0].scrollHeight);
-    }
-
-    function removeTyping() {
-      $("#typing-indicator").remove();
-    }
-  });
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= $urlBase ?>peticiones(js)/navbar.js"></script>
