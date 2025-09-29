@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
     #shakti-chatbot-center-text {
         display: flex;
         flex-direction: column;
@@ -180,4 +180,4 @@
             $(".shakti-chatbot-box").toggle('scale');
         });
     });
-</script>
+</script> -->
