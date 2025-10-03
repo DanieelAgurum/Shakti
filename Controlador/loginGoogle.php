@@ -40,7 +40,7 @@ $apellidos = $userInfo->familyName ?? "";
 $nickname = explode("@", $email)[0]; // nickname por default
 $fotoGoogle = $userInfo->picture ?? null; // URL de la foto de Google
 
-// 1️⃣ Validar si el correo ya existe
+// Verificar si el usuario ya existe en la base de datos
 $stmt = $con->prepare("SELECT * FROM usuarias WHERE correo=? LIMIT 1");
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -55,12 +55,11 @@ if ($usuario) {
     $_SESSION['apellidos'] = $usuario['apellidos'] ?? $apellidos;
     $_SESSION['nickname'] = $usuario['nickname'] ?: explode("@", $usuario['correo'])[0];
     
-    // Foto: si no hay en BD, usamos la de Google
+    
     $_SESSION['foto'] = $usuario['foto'] ?? $fotoGoogle;
 
 } else {
-    // Usuario no registrado → registro provisional sin contraseña
-    $rol = 1; // solo usuarias
+    $rol = 1; 
     $fecha = date("Y-m-d");
 
     $insert = $con->prepare("INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, foto)
