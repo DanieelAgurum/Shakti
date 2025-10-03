@@ -1,8 +1,7 @@
-<?php
+<?php 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../Modelo/configuracionG.php';
 require_once __DIR__ . '/../Modelo/Usuarias.php';
-require_once __DIR__ . '/../Modelo/confirmarCorreo.php'; // Este modelo solo envía confirmación
 
 session_start();
 
@@ -11,6 +10,7 @@ $client->setClientId($clientID);
 $client->setClientSecret($clientSecret);
 $client->setRedirectUri("http://localhost/Shakti/Controlador/loginGoogle.php");
 
+// Scopes básicos
 $client->addScope('email');
 $client->addScope('profile');
 
@@ -33,10 +33,12 @@ $client->setAccessToken($token);
 // Obtener datos del usuario de Google
 $google_oauth = new Google\Service\Oauth2($client);
 $userInfo = $google_oauth->userinfo->get();
+
 $email = $userInfo->email;
 $nombre = $userInfo->givenName;
 $apellidos = $userInfo->familyName ?? "";
 $nickname = explode("@", $email)[0]; // nickname por default
+$fotoGoogle = $userInfo->picture ?? null; // URL de la foto de Google
 
 // 1️⃣ Validar si el correo ya existe
 $stmt = $con->prepare("SELECT * FROM usuarias WHERE correo=? LIMIT 1");
@@ -46,41 +48,40 @@ $usuario = $stmt->get_result()->fetch_assoc();
 
 if ($usuario) {
     // Usuario ya registrado → login directo
+    $_SESSION['id_usuaria'] = $usuario['id'];
     $_SESSION['id_rol'] = $usuario['id_rol'];
-    $_SESSION['id_usuaria'] = $usuario['id']; // ahora sí existe
     $_SESSION['correo'] = $usuario['correo'];
     $_SESSION['nombre'] = $usuario['nombre'];
+    $_SESSION['apellidos'] = $usuario['apellidos'] ?? $apellidos;
+    $_SESSION['nickname'] = $usuario['nickname'] ?: explode("@", $usuario['correo'])[0];
+    
+    // Foto: si no hay en BD, usamos la de Google
+    $_SESSION['foto'] = $usuario['foto'] ?? $fotoGoogle;
 
-    header("Location: ../Vista/usuaria/perfil.php");
-    exit;
 } else {
     // Usuario no registrado → registro provisional sin contraseña
     $rol = 1; // solo usuarias
     $fecha = date("Y-m-d");
 
-    $insert = $con->prepare("INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol) 
-        VALUES (?, ?, ?, ?, '', ?, ?)");
-    $insert->bind_param("sssssi", $nombre, $apellidos, $nickname, $email, $fecha, $rol);
+    $insert = $con->prepare("INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, foto)
+        VALUES (?, ?, ?, ?, '', ?, ?, ?)");
+    $insert->bind_param("sssssis", $nombre, $apellidos, $nickname, $email, $fecha, $rol, $fotoGoogle);
 
     if ($insert->execute()) {
+        // Guardar sesión automáticamente
         $id_nueva = $insert->insert_id;
-
-        // 2️⃣ Enviar correo de confirmación
-        $confirmObj = new confirmarCorreo();
-        $confirmObj->inicializar($email, getBaseUrl());
-        $correoEnviado = $confirmObj->enviarCorreoConfirmacion();
-
-        // 3️⃣ Guardar mensaje en sesión según resultado
-        if ($correoEnviado['success']) {
-            $_SESSION['alerta'] = "Hemos enviado un correo de confirmación. Revisa tu bandeja y completa el registro.";
-        } else {
-            $_SESSION['alerta'] = "Error al enviar correo de confirmación: " . $correoEnviado['error'];
-        }
-
-        // Redirigir al login
-        header("Location: ../Vista/login.php");
-        exit;
+        $_SESSION['id_usuaria'] = $id_nueva;
+        $_SESSION['id_rol'] = $rol;
+        $_SESSION['correo'] = $email;
+        $_SESSION['nombre'] = $nombre;
+        $_SESSION['apellidos'] = $apellidos;
+        $_SESSION['nickname'] = $nickname;
+        $_SESSION['foto'] = $fotoGoogle;
     } else {
         die("Error al registrar la usuaria: " . $con->error);
     }
 }
+
+// Redirigir al perfil en cualquier caso
+header("Location: ../Vista/usuaria/perfil.php");
+exit;

@@ -54,47 +54,47 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
 </head>
 
 <body>
+<div class="container mt-5">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <!-- Columna izquierda con la foto y botones -->
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <div class="profile-pic-wrapper position-relative">
+                                <!-- Imagen de perfil -->
+                                <img src="<?php echo !empty($_SESSION['foto']) ? $_SESSION['foto'] : $urlBase . 'img/undraw_chill-guy-avatar_tqsm.svg'; ?>" 
+                                     alt="Foto de perfil" class="rounded-circle" width="150" height="150">
 
-    <div class="container mt-5">
-        <div class="main-body">
-            <div class="row gutters-sm">
-                <!-- Columna izquierda con la foto y botones -->
-                <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex flex-column align-items-center text-center">
-                                <div class="profile-pic-wrapper position-relative">
-                                    <img src="<?php echo $fotoSrc; ?>" alt="Foto de perfil" class="rounded-circle" width="150" height="150">
+                                <!-- Botón editar -->
+                                <button id="editFotoBtn" class="edit-icon" data-bs-placement="top" title="Cambiar foto">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
 
-                                    <!-- Botón editar -->
-                                    <button id="editFotoBtn" class="edit-icon" data-bs-placement="top"
-                                        title="Cambiar foto">
-                                        <i class="bi bi-pencil-fill"></i>
+                                <!-- Botón eliminar solo si tiene foto (Google o subida) -->
+                                <?php if (!empty($_SESSION['foto'])): ?>
+                                    <button id="deleteFotoBtn" class="delete-icon" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-bs-placement="top" title="Eliminar foto">
+                                        <i class="bi bi-trash-fill"></i>
                                     </button>
+                                <?php endif; ?>
+                            </div>
 
-                                    <!-- Botón eliminar solo si tiene foto en base -->
-                                    <?php if ($tieneFoto): ?>
-                                        <button id="deleteFotoBtn" class="delete-icon" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-bs-placement="top"
-                                            title="Eliminar foto">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
-                                    <?php endif; ?>
-                                </div>
+                            <div class="mt-3">
+                                <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " "; ?></h4>
+                                <p class="text-secondary mb-1"><?php echo isset($_SESSION['descripcion']) ? ucwords(strtolower($_SESSION['descripcion'])) : " "; ?></p>
+                                <button class="btn btn-outline-primary" onclick="window.location.href='<?php echo '../chat.php'; ?>'">
+                                    <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
+                                </button>
 
-                                <div class="mt-3">
-                                    <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " " ?></h4>
-                                    <p class="text-secondary mb-1"><?php echo isset($_SESSION['descripcion']) ? ucwords(strtolower($_SESSION['descripcion'])) : " " ?></p>
-                                    <button class="btn btn-outline-primary" onclick="window.location.href='<?php echo '../chat.php'; ?>'">
-                                        <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
-                                    </button>
-
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">
-                                        <i class="bi bi-book-fill"></i> Notas
-                                    </button>
-                                </div>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">
+                                    <i class="bi bi-book-fill"></i> Notas
+                                </button>
                             </div>
                         </div>
                     </div>
+                </div>
+
                     <!-- Notas -->
                     <div class="card mt-3">
                         <ul class="list-group list-group-flush">
@@ -215,6 +215,10 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
     <?php include '../modales/perfil.php'; ?>
     <script src="../../peticiones(js)/actualizarFoto.js"></script>
     <script src="../../validacionRegistro/validacionActualizacion.js"></script>
+    <br>
+    <br>
+    <br>
+    <br>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>
 
