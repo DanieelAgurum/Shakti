@@ -14,27 +14,7 @@ if (isset($_SESSION['id_rol'])) {
         case 3: header("Location: " . $urlBase . "admin/"); exit;
     }
 }
-// alerta validacion google
-if (isset($_SESSION['alerta'])) {
-    $mensaje = $_SESSION['alerta'];
-    unset($_SESSION['alerta']); 
-    echo "
-    <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        Swal.fire({
-            title: '¡Correo enviado!',
-            text: '$mensaje',
-            icon: 'success',
-            confirmButtonColor: '#5a2a83',
-            confirmButtonText: 'Aceptar',
-            background: '#f9f9f9',
-            color: '#5a2a83',
-            iconColor: '#5a2a83'
-        });
-    });
-    </script>
-    ";
-}
+
 ?>
 
 <!DOCTYPE html>
