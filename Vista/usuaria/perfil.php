@@ -54,6 +54,8 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
 </head>
 
 <body>
+
+
 <div class="container mt-5">
     <div class="main-body">
         <div class="row gutters-sm">
@@ -64,37 +66,52 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                         <div class="d-flex flex-column align-items-center text-center">
                             <div class="profile-pic-wrapper position-relative">
                                 <!-- Imagen de perfil -->
-                                <img src="<?php echo !empty($_SESSION['foto']) ? $_SESSION['foto'] : $urlBase . 'img/undraw_chill-guy-avatar_tqsm.svg'; ?>" 
-                                     alt="Foto de perfil" class="rounded-circle" width="150" height="150">
+                                <img src="<?php echo $fotoSrc; ?>" 
+                                     alt="Foto de perfil" 
+                                     class="rounded-circle" width="150" height="150">
 
                                 <!-- Botón editar -->
-                                <button id="editFotoBtn" class="edit-icon" data-bs-placement="top" title="Cambiar foto">
+                                <button id="editFotoBtn" class="edit-icon" 
+                                        data-bs-placement="top" title="Cambiar foto">
                                     <i class="bi bi-pencil-fill"></i>
                                 </button>
 
-                                <!-- Botón eliminar solo si tiene foto (Google o subida) -->
-                                <?php if (!empty($_SESSION['foto'])): ?>
-                                    <button id="deleteFotoBtn" class="delete-icon" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-bs-placement="top" title="Eliminar foto">
+                                <!-- Botón eliminar solo si tiene foto -->
+                                <?php if ($tieneFoto): ?>
+                                    <button id="deleteFotoBtn" class="delete-icon" 
+                                            data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" 
+                                            data-bs-placement="top" title="Eliminar foto">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 <?php endif; ?>
                             </div>
 
                             <div class="mt-3">
-                                <h4><?php echo isset($_SESSION['nombre']) ? ucwords(strtolower($_SESSION['nombre'])) : " "; ?></h4>
-                                <p class="text-secondary mb-1"><?php echo isset($_SESSION['descripcion']) ? ucwords(strtolower($_SESSION['descripcion'])) : " "; ?></p>
-                                <button class="btn btn-outline-primary" onclick="window.location.href='<?php echo '../chat.php'; ?>'">
+                                <h4>
+                                    <?php echo isset($_SESSION['nombre']) 
+                                        ? ucwords(strtolower($_SESSION['nombre'])) 
+                                        : " "; ?>
+                                </h4>
+                                <p class="text-secondary mb-1">
+                                    <?php echo isset($_SESSION['descripcion']) 
+                                        ? ucwords(strtolower($_SESSION['descripcion'])) 
+                                        : " "; ?>
+                                </p>
+
+                                <button class="btn btn-outline-primary" 
+                                        onclick="window.location.href='<?php echo '../chat.php'; ?>'">
                                     <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
                                 </button>
 
-                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">
+                                <button type="button" class="btn btn-outline-secondary" 
+                                        data-bs-toggle="modal" data-bs-target="#exampleModal" 
+                                        data-bs-whatever="@fat">
                                     <i class="bi bi-book-fill"></i> Notas
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-
                     <!-- Notas -->
                     <div class="card mt-3">
                         <ul class="list-group list-group-flush">
