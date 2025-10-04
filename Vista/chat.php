@@ -31,7 +31,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
 
   <!-- Scripts -->
   <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-  <script src="<?= $urlBase ?>peticiones(js)/chatIa.js"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/chat.js"></script>
 </head>
 
 <body>
