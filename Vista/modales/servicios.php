@@ -1,27 +1,47 @@
 <!-- Modal para registrar servicios -->
-<div class="modal fade" id="agregarServicios" tabindex="-1" aria-labelledby="agregarServiciosLabel" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="agregarServicios" tabindex="-1" aria-labelledby="agregarServiciosLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg"> <!-- modal más ancho -->
         <form id="formServicios" method="post" action="../../Controlador/serviciosCtrl.php" class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Seleccionar Servicios</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            
+
             <div class="modal-body scrollable-modal-body">
                 <div class="row">
                     <?php
                     $serviciosDisponibles = [
-                        "Cita médica", "Terapia", "Consulta psicológica", "Asesoría legal",
-                        "Terapia ocupacional", "Nutrición", "Fisioterapia", "Psicopedagogía",
-                        "Terapia de lenguaje", "Coaching personal", "Orientación vocacional",
-                        "Terapia familiar", "Terapia de pareja", "Terapia infantil", "Terapia grupal",
-                        "Acompañamiento emocional", "Intervención en crisis", "Talleres de autoestima",
-                        "Educación sexual y reproductiva", "Capacitación laboral",
-                        "Asesoría en proyectos productivos", "Orientación en violencia digital",
-                        "Educación financiera para mujeres", "Mediación de conflictos", "Atención a adicciones",
-                        "Apoyo en procesos legales de denuncia", "Orientación en refugios o casas de transición",
-                        "Asesoría migratoria para mujeres en riesgo", "Apoyo para madres solteras",
-                        "Reinserción social y comunitaria", "Otros"
+                        "Cita médica",
+                        "Terapia",
+                        "Consulta psicológica",
+                        "Asesoría legal",
+                        "Terapia ocupacional",
+                        "Nutrición",
+                        "Fisioterapia",
+                        "Psicopedagogía",
+                        "Terapia de lenguaje",
+                        "Coaching personal",
+                        "Orientación vocacional",
+                        "Terapia familiar",
+                        "Terapia de pareja",
+                        "Terapia infantil",
+                        "Terapia grupal",
+                        "Acompañamiento emocional",
+                        "Intervención en crisis",
+                        "Talleres de autoestima",
+                        "Educación sexual y reproductiva",
+                        "Capacitación laboral",
+                        "Asesoría en proyectos productivos",
+                        "Orientación en violencia digital",
+                        "Educación financiera para mujeres",
+                        "Mediación de conflictos",
+                        "Atención a adicciones",
+                        "Apoyo en procesos legales de denuncia",
+                        "Orientación en refugios o casas de transición",
+                        "Asesoría migratoria para mujeres en riesgo",
+                        "Apoyo para madres solteras",
+                        "Reinserción social y comunitaria",
+                        "Otros"
                     ];
 
                     $serviciosRegistrados = isset($serviciosRegistrados) ? $serviciosRegistrados : [];
@@ -52,10 +72,10 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal">
                     <i class="bi bi-x-lg"></i> Cancelar
                 </button>
-                <button type="submit" class="btn btn-outline-success">
+                <button type="submit" class="btn btn-banner">
                     <i class="bi bi-check2-circle"></i> Guardar
                 </button>
             </div>

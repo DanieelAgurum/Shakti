@@ -30,10 +30,11 @@ if (!$idUsuaria) {
 }
 
 if (!empty($_SESSION['foto'])) {
-  $fotoBase64 = base64_encode($_SESSION['foto']);
-  $fotoSrc = 'data:image/png;base64,' . $fotoBase64;
+  $fotoSrc = 'data:image/*;base64,' . base64_encode($_SESSION['foto']);
+  $tieneFoto = true;
 } else {
-  $fotoSrc = 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+  $fotoSrc = $urlBase . 'img/undraw_chill-guy-avatar_tqsm.svg';
+  $tieneFoto = false;
 }
 
 $cp = new Completar();
@@ -80,7 +81,25 @@ if (!empty($serviciosRegistrados) && is_string($serviciosRegistrados[0])) {
           <div class="card">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
-                <img src="<?php echo $fotoSrc; ?>" alt="Especialista" class="rounded-circle" width="150" height="150">
+                <div class="profile-pic-wrapper position-relative">
+                  <img src="<?php echo $fotoSrc; ?>" alt="Especialista" class="rounded-circle" width="150" height="150">
+
+                  <!-- Botón editar -->
+                  <button id="editFotoBtn" class="edit-icon"
+                    data-bs-placement="top" title="Cambiar foto">
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+
+                  <!-- Botón eliminar solo si tiene foto -->
+                  <?php if ($tieneFoto): ?>
+                    <button id="deleteFotoBtn" class="delete-icon"
+                      data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                      data-bs-placement="top" title="Eliminar foto">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  <?php endif; ?>
+                </div>
+
                 <div class="mt-3">
                   <h4><?php echo ucwords(strtolower($_SESSION['nombre'] ?? '')) ?></h4>
                   <p class="text-secondary mb-1"><?php echo ucwords(strtolower($_SESSION['descripcion'] ?? '')); ?></p>
@@ -178,10 +197,12 @@ if (!empty($serviciosRegistrados) && is_string($serviciosRegistrados[0])) {
     </script>
   <?php endif; ?>
 
+
   <?php include '../modales/perfil.php'; ?>
   <?php include '../modales/servicios.php'; ?>
 
-
+  <script src="<?= $urlBase ?>peticiones(js)/tooltip.js"></script>
+  <script src="../../peticiones(js)/actualizarFoto.js"></script>
   <script src="../../validacionRegistro/validacionActualizacion.js"></script>
   <?php include '../../components/usuaria/footer.php'; ?>
 
