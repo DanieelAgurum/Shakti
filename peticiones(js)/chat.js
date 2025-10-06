@@ -142,20 +142,53 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typing) typing.remove();
   }
 
-  function seleccionarChatIA() {
-    inputReceptor.value = 0;
-    chatMensajes.innerHTML = "";
-    mostrarMensaje(
-      "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear...",
-      "ia"
-    );
-    document
-      .querySelectorAll(".chat-activo")
-      .forEach((el) => el.classList.remove("activo"));
-    chatIa.classList.add("activo");
+  async function seleccionarChatIA() {
+    try {
+      inputReceptor.value = 0;
+      chatMensajes.innerHTML = "";
 
-    // Ocultar botón de imagen
-    btnImg.style.display = "none";
+      const res = await fetch(
+        "/shakti/Controlador/chatsCtrl.php?cargarMensajesIanBot",
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      const data = await res.json();
+
+      // Si hay mensajes previos
+      if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+        mostrarMensaje(
+          "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear...",
+          "ia"
+        );
+
+        data.data.forEach((msg) => {
+          const tipo = msg.es_mensaje_yo ? "yo" : "ia";
+          mostrarMensaje(msg.mensaje, tipo);
+        });
+
+        chatMensajes.scrollTop = chatMensajes.scrollHeight;
+      } else {
+        // Si no hay mensajes previos
+        mostrarMensaje(
+          "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear...",
+          "ia"
+        );
+      }
+
+      // Marcar el chat como activo
+      document
+        .querySelectorAll(".chat-activo")
+        .forEach((el) => el.classList.remove("activo"));
+      chatIa.classList.add("activo");
+
+      // Ocultar botón de imagen
+      btnImg.style.display = "none";
+    } catch (error) {
+      mostrarMensaje("⚠️ Error al conectar con Ian Bot.", "ia");
+    }
   }
 
   async function enviarMensaje(e) {
@@ -184,11 +217,14 @@ document.addEventListener("DOMContentLoaded", () => {
         btnEnviar.disabled = true;
         mostrarAnimacion();
 
-        const res = await fetch(`/shakti/chat/ianbot.php`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mensaje }),
-        });
+        const res = await fetch(
+          "/shakti/Controlador/chatsCtrl.php?enviarMensajeIanBot",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mensaje }),
+          }
+        );
 
         quitarAnimacion();
 
@@ -232,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
           mensajeInput.value = "";
           archivoInput.value = "";
 
-          suscribirCanal(idUsuario, data.id_receptor); // 🔹 Suscripción segura
+          suscribirCanal(idUsuario, data.id_receptor);
         }
       } catch (error) {
       } finally {
@@ -252,7 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (chatIa) {
-    seleccionarChatIA();
     chatIa.addEventListener("click", seleccionarChatIA);
   }
 
