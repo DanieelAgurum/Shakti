@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   $(function () {
     let index = 0;
+    let canSend = true; // control de envío
 
     // Abrir chatbot
     $("#shakti-chatbot-circle").on("click", function () {
@@ -17,8 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Enviar mensaje al backend
     $("#shakti-chatbot-form").on("submit", async function (e) {
       e.preventDefault();
+
+      if (!canSend) {
+        return; // si está bloqueado, no enviar
+      }
+
       let msg = $("#shakti-chatbot-input").val().trim();
       if (!msg) return;
+
+      canSend = false; // bloquear envío
+      $("#shakti-chatbot-input").prop("disabled", true); // bloquear input
 
       // Mostrar mensaje propio
       generateMsg(msg, "self");
@@ -27,11 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
       showTyping();
 
       try {
-        const res = await fetch("/shakti/chat/ianbot.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mensaje: msg })
-        });
+        const res = await fetch(
+          "/shakti/Controlador/chatsCtrl.php?enviarMensajeIanBot",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mensaje: msg }),
+          }
+        );
 
         const data = await res.json();
 
@@ -40,13 +52,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.respuesta) {
           generateMsg(data.respuesta, "user");
         } else {
-          generateMsg("⚠️ No se recibió respuesta del servidor.", "user");
+          generateMsg("⚠️ Error al conectar con Ian Bot.", "ia");
         }
       } catch (error) {
-        console.error(error);
         removeTyping();
-        generateMsg("❌ Error al conectar con el servidor.", "user");
+        generateMsg("⚠️ Error al conectar con Ian Bot.", "ia");
       }
+
+      canSend = true; // desbloquear envío
+      $("#shakti-chatbot-input").prop("disabled", false); // desbloquear input
     });
 
     function generateMsg(msg, type) {

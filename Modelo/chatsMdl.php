@@ -19,7 +19,6 @@ class chatsMdl
         }
         return $this->con;
     }
-
     public function cargarChats()
     {
         $id_usuaria = $_SESSION['id'] ?? null;
@@ -80,7 +79,6 @@ ORDER BY
         $stmt->close();
         $con->close();
     }
-
     public function cargarMensajes($idEmisor, $idReceptor)
     {
         $con = $this->conectarBD();
@@ -115,6 +113,7 @@ ORDER BY
         $stmt->close();
         $con->close();
     }
+
     public function enviarMensaje($id_receptor, $mensaje, $imagen = null)
     {
         try {
@@ -276,8 +275,7 @@ ORDER BY
             ], JSON_UNESCAPED_UNICODE);
         }
     }
-
-    public function enviarMensajeIanBot($mensaje)
+        public function enviarMensajeIanBot($mensaje)
     {
         $id_usuario = $_SESSION['id'] ?? null;
 
@@ -333,7 +331,6 @@ Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo dise�
 - Valida emociones sin exagerar.
 - Alterna entre validar emociones y preguntar de forma suave sobre su vida (edad, ocupación, intereses).
 - Personaliza tus consejos usando lo que el usuario te diga.
-- Usa <ul><li>...</li></ul> para listas de pasos prácticos.
 
 ✅ Meta: Que el usuario se sienta acompañado y comprendido, descubriendo pequeños pasos para cuidar su bienestar.
 EOT;
@@ -402,7 +399,6 @@ EOT;
         if ($enLista) $html .= "</ul>";
         return $html;
     }
-
     private function llamarOpenAI($prompt)
     {
         $apiKey = OPENAI_API_KEY;
@@ -435,7 +431,6 @@ EOT;
         $data = json_decode($respuesta, true);
         return $data['output'][0]['content'][0]['text'] ?? "";
     }
-
     /** Cargar mensajes del usuario y la IA (historial) */
     public function cargarMensajesIanBot()
     {
@@ -469,8 +464,6 @@ EOT;
                 'id_receptor'   => $row['id_receptor'],
                 'creado_en'     => $row['creado_en'],
                 'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
-                'tipo'          => $row['archivo'] ? "imagen" : "texto",
-                'contenido'     => $row['archivo'] ?: null
             ];
         }
 
@@ -479,7 +472,6 @@ EOT;
         $stmt->close();
         $con->close();
     }
-
     /** 🔎 Recuperar historial completo (usuario ↔ IA) */
     private function obtenerHistorialIanBot($con, $id_usuario)
     {
