@@ -30,7 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <h2 class="text-center mb-4 fw-bold">Glosario de Términos</h2>
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <?php
-                require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/glosarioMdl.php';
+                require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/glosarioMdl.php';
                 $glo = new GlosarioMdl();
                 $glo->mostrarGlosario();
                 ?>
@@ -38,7 +38,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </section>
     </main>
 
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
 </body>
 
 </html>
