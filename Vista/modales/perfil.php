@@ -90,12 +90,13 @@
 <div class="modal fade custom-config-modal" id="completarPerfilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title text-center" id="addNewLabel"><strong>Completar perfil</strong></h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="../../Controlador/CompletarPerfilCtrl.php" enctype="multipart/form-data">
+            <form method="post" action="../../Controlador/CompletarPerfilCtrl.php" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" id="addNewLabel"><strong>Completar perfil</strong></h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
                         <label class="form-check-label" for="exampleRadios1">
@@ -103,46 +104,47 @@
                         </label>
                     </div>
                     <hr>
+
                     <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Identificación oficial con fotografía</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="id_oficial" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
-                        </div>
+                        <label class="col-form-label">Identificación oficial con fotografía</label>
+                        <input type="file" class="form-control" name="id_oficial" accept=".pdf">
                     </div>
+
                     <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Título profesional:</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="documento1" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
-                        </div>
+                        <label class="col-form-label">Título profesional:</label>
+                        <input type="file" class="form-control" name="documento1" accept=".pdf">
                     </div>
+
                     <div class="mb-3">
-                        <label for="message-text" class="col-form-label">Cédula profesional o matrícula:</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="documento2" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
-                        </div>
+                        <label class="col-form-label">Cédula profesional o matrícula:</label>
+                        <input type="file" class="form-control" name="documento2" accept=".pdf">
                     </div>
+
                     <div class="mb-3">
-                        <label for="message-text" class="col-form-label">Certificados de diplomados o posgrados:</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="documento3" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
-                        </div>
+                        <label class="col-form-label">Certificados de diplomados o posgrados:</label>
+                        <input type="file" class="form-control" name="documento3" accept=".pdf">
                     </div>
+
                     <div class="mb-3">
-                        <label for="message-text" class="col-form-label">Constancias de práctica o experiencia laboral:</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="documento4" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".pdf">
-                        </div>
+                        <label class="col-form-label">Constancias de práctica o experiencia laboral:</label>
+                        <input type="file" class="form-control" name="documento4" accept=".pdf">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancelar</button>
-                        <input type="hidden" value="1" name="opcion">
-                        <button type="submit" name="completar" value="completarPerfilModal" class="btn btn-outline-success"><i class="bi bi-check2-circle"></i> Guardar</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i> Cancelar
+                    </button>
+                    <input type="hidden" value="1" name="opcion">
+                    <button type="submit" name="completar" value="completarPerfilModal" class="btn btn-banner">
+                        <i class="bi bi-check2-circle"></i> Guardar
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
 
 <!-- Modal para activar/desactivar cuenta -->
 <div class="modal fade" id="cambiarEstado_<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
