@@ -34,8 +34,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <!-- Scripts únicos -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <!-- Navbar -->
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 </head>
 
 <body>
@@ -199,84 +198,74 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
     </div>
   </section>
 
-  <section class="w-100 p-4 rounded-3 mb-4">
-    <div class="testimonial-container">
-      <div class="testimonial-track">
-        <?php foreach ($testimonios as $item): ?>
-          <?php
-          $foto = $item['foto'];
-          $src = $foto
-            ? 'data:image/jpeg;base64,' . base64_encode($foto)
-            : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
-
-          $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
-          $opinion = htmlspecialchars($item['opinion']);
-          $calificacion = (int)$item['calificacion'];
-          $estrellas = str_repeat("★", $calificacion) . str_repeat("☆", 5 - $calificacion);
-          ?>
-
-          <div class="testimonial-card">
-            <img src="<?= $src ?>" alt="Foto de <?= $nombre ?>">
-            <h3><?= $nombre ?></h3>
-            <p><?= $opinion ?></p>
-            <div class="testimonial-stars"><?= $estrellas ?></div>
-          </div>
-        <?php endforeach; ?>
-
-        <?php foreach ($testimonios as $item): ?>
-          <?php
-          $foto = $item['foto'];
-          $src = $foto
-            ? 'data:image/jpeg;base64,' . base64_encode($foto)
-            : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
-
-          $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
-          $opinion = htmlspecialchars($item['opinion']);
-          $calificacion = (int)$item['calificacion'];
-          $estrellas = str_repeat("★", $calificacion) . str_repeat("☆", 5 - $calificacion);
-          ?>
-
-          <div class="testimonial-card">
-            <img src="<?= $src ?>" alt="Foto de <?= $nombre ?>">
-            <h3><?= $nombre ?></h3>
-            <p><?= $opinion ?></p>
-            <div class="testimonial-stars"><?= $estrellas ?></div>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  </section>
-
-  <!-- Formulario calificación al sistema -->
+  <!-- Testimonios -->
   <div class="container">
-    <div class="rating-container text-center">
-      <div class="rating-emoji"><img src="img/2764.svg" class="w-25" alt=""></div>
-      <h3 class="rating-title">¿Cómo fue tu experiencia?</h3>
-      <form id="formCalificacion">
-        <div class="container d-flex justify-content-center">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="stars likes-count">
-                <input class="star star-1" id="star-1" type="radio" value="5" name="calificacion" />
-                <label class="star star-1" for="star-1"></label>
-                <input class="star star-2" id="star-2" type="radio" value="4" name="calificacion" />
-                <label class="star star-2" for="star-2"></label>
-                <input class="star star-3" id="star-3" type="radio" value="3" name="calificacion" />
-                <label class="star star-3" for="star-3"></label>
-                <input class="star star-4" id="star-4" type="radio" value="2" name="calificacion" />
-                <label class="star star-4" for="star-4"></label>
-                <input class="star star-5" id="star-5" type="radio" value="1" name="calificacion" />
-                <label class="star star-5" for="star-5"></label>
+    <div class="row align-items-center" style="min-height: 500px;">
+      <!-- Carrusel vertical personalizado -->
+      <div class="col-md-6 d-flex justify-content-center mt-4">
+        <div class="my-vertical-carousel" id="myVerticalCarousel">
+          <div class="my-carousel-wrapper">
+            <?php foreach ($testimonios as $item): ?>
+              <?php
+              $foto = $item['foto'];
+              $src = $foto
+                ? 'data:image/jpeg;base64,' . base64_encode($foto)
+                : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+              $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
+              $opinion = htmlspecialchars($item['opinion']);
+              $calificacion = (int)$item['calificacion'];
+              $estrellas = str_repeat("★", $calificacion) . str_repeat("☆", 5 - $calificacion);
+              ?>
+              <div class="my-carousel-item">
+                <div class="testimonial-card">
+                  <img src="<?= $src ?>" alt="Foto de <?= $nombre ?>">
+                  <h5><?= $nombre ?></h5>
+                  <div class="testimonial-stars"><?= $estrellas ?></div>
+                  <p class="testimonial-text"><?= $opinion ?></p>
+                  <span class="see-more">Ver más</span>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+          <div class="my-carousel-controls">
+            <button class="my-carousel-btn prev">&uarr;</button>
+            <button class="my-carousel-btn next">&darr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="col-md-6 d-flex justify-content-center">
+        <div class="rating-container text-center">
+          <div class="rating-emoji"><img src="img/emoji-emoticon-happy-svgrepo-com.svg" class="w-25" alt=""></div>
+          <h3 class="rating-title">¿Cómo fue tu experiencia?</h3>
+          <form id="formCalificacion">
+            <div class="container d-flex justify-content-center">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="stars likes-count">
+                    <input class="star star-1" id="star-1" type="radio" value="5" name="calificacion" />
+                    <label class="star star-1" for="star-1"></label>
+                    <input class="star star-2" id="star-2" type="radio" value="4" name="calificacion" />
+                    <label class="star star-2" for="star-2"></label>
+                    <input class="star star-3" id="star-3" type="radio" value="3" name="calificacion" />
+                    <label class="star star-3" for="star-3"></label>
+                    <input class="star star-4" id="star-4" type="radio" value="2" name="calificacion" />
+                    <label class="star star-4" for="star-4"></label>
+                    <input class="star star-5" id="star-5" type="radio" value="1" name="calificacion" />
+                    <label class="star star-5" for="star-5"></label>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+            <div class="rating-feedback mt-3">
+              <textarea class="form-control" rows="3" id="opinion" name="opinion" placeholder="Cuéntanos tu experiencia"></textarea>
+            </div>
+            <input type="hidden" name="opcion" value="1">
+            <button type="submit" class="submit-rating bg-dark mt-3 btn btn-dark likes-count">Enviar calificación</button>
+          </form>
         </div>
-        <div class="rating-feedback mt-3">
-          <textarea class="form-control" rows="3" id="opinion" name="opinion" placeholder="Cuéntanos tu experiencia"></textarea>
-        </div>
-        <input type="hidden" name="opcion" value="1">
-        <button type="submit" class="submit-rating bg-dark mt-3 btn btn-dark likes-count">Enviar calificación</button>
-      </form>
+      </div>
     </div>
   </div>
 
@@ -284,9 +273,8 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php';
   ?>
 
-
-
   <!-- Scripts -->
+  <script src="peticiones(js)/carruselTestimonios.js"></script>
   <script src="peticiones(js)/testimonios.js"></script>
   <script src="peticiones(js)/return.js"></script>
 
