@@ -107,27 +107,27 @@
 
                     <div class="mb-3">
                         <label class="col-form-label">Identificación oficial con fotografía</label>
-                        <input type="file" class="form-control" name="id_oficial" accept=".pdf">
+                        <input type="file" class="form-control archivo_subir" name="id_oficial" accept=".pdf">
                     </div>
 
                     <div class="mb-3">
                         <label class="col-form-label">Título profesional:</label>
-                        <input type="file" class="form-control" name="documento1" accept=".pdf">
+                        <input type="file" class="form-control archivo_subir" name="documento1" accept=".pdf">
                     </div>
 
                     <div class="mb-3">
                         <label class="col-form-label">Cédula profesional o matrícula:</label>
-                        <input type="file" class="form-control" name="documento2" accept=".pdf">
+                        <input type="file" class="form-control archivo_subir" name="documento2" accept=".pdf">
                     </div>
 
                     <div class="mb-3">
                         <label class="col-form-label">Certificados de diplomados o posgrados:</label>
-                        <input type="file" class="form-control" name="documento3" accept=".pdf">
+                        <input type="file" class="form-control archivo_subir" name="documento3" accept=".pdf">
                     </div>
 
                     <div class="mb-3">
                         <label class="col-form-label">Constancias de práctica o experiencia laboral:</label>
-                        <input type="file" class="form-control" name="documento4" accept=".pdf">
+                        <input type="file" class="form-control archivo_subir" name="documento4" accept=".pdf">
                     </div>
                 </div>
 
@@ -144,7 +144,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Modal para activar/desactivar cuenta -->
 <div class="modal fade" id="cambiarEstado_<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
