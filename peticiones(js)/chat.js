@@ -166,7 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         data.data.forEach((msg) => {
           const tipo = msg.es_mensaje_yo ? "yo" : "ia";
-          mostrarMensaje(msg.mensaje, tipo);
+          const esHTML = /<\/?[a-z][\s\S]*>/i.test(msg.mensaje); // detecta si contiene etiquetas HTML
+          mostrarMensaje(msg.mensaje, tipo, null, esHTML);
         });
 
         chatMensajes.scrollTop = chatMensajes.scrollHeight;
