@@ -62,11 +62,14 @@ html.dark-mode .card,
 html.dark-mode aside,
 html.dark-mode .solicitud-card,
 html.dark-mode .solicitud-info,
-html.dark-mode .usuario-card {
+html.dark-mode .usuario-card,
+html.dark-mode .shakti-chatbot-input,
+html.dark-mode .shakti-cm-msg-text {
     background-color: #1e1e1e !important;
 }
 
-html.dark-mode .contenedor-buscador {
+html.dark-mode .contenedor-buscador,
+html.dark-mode .shakti-chatbot-box-body {
     background-color: #121212 !important;
 }
 
