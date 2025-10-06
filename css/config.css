@@ -158,6 +158,10 @@ html.dark-mode label.btn-subir-imagen:hover {
     color: #121212 !important;
 }
 
+html.dark-mode .chat-activo{
+    background-color: #121212 !important;
+}
+
 html.dark-mode .chat-activo:hover {
     background-color: #121212 !important;
 }

@@ -1417,6 +1417,12 @@ label.star:hover {
   /* mismo color de fondo del modal */
 }
 
+.custom-config-modal input[type="file"].archivo_subir::file-selector-button {
+  background-color: transparent !important;
+  color: #f1f1f1;
+  cursor: pointer;
+}
+
 /* --- Fondo del carrusel --- */
 #myCarousel .carousel-item {
   background-image: url('../img/pexels-diva-34062752.jpg');

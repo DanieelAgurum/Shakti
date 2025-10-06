@@ -51,7 +51,12 @@ switch ($_REQUEST['opcion']) {
         $resultado = $u->cambiarFotoPerfil($_SESSION['id'], $_FILES['nuevaFoto']);
         $status = $resultado['status'];
         $message = urlencode($resultado['message']);
-        header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
+
+        if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 2) {
+            header("Location: ../Vista/especialista/perfil.php?status=$status&message=$message");
+        } else {
+            header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
+        }
         exit;
     case 5:
         session_start();
@@ -64,6 +69,10 @@ switch ($_REQUEST['opcion']) {
         $status = $resultado['status'];
         $message = urlencode($resultado['message']);
 
-        header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
+        if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 2) {
+            header("Location: ../Vista/especialista/perfil.php?status=$status&message=$message");
+        } else {
+            header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
+        }
         exit;
 }
