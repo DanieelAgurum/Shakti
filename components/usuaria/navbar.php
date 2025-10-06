@@ -199,9 +199,8 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 
             <!-- Cuenta -->
             <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
-              <div class="form-floating mt-4">
-                <input type="password" class="form-control custom-input" name="newPassword" id="newPassword" placeholder="Nueva contraseña">
-                <label for="newPassword">Nueva contraseña</label>
+              <div class="mt-4">
+                <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="Nueva contraseña">
               </div>
               <small id="passwordMessage" class="text-danger"></small>
 
@@ -213,9 +212,8 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
               </div>
 
               <!-- Input para ingresar token (oculto al inicio) -->
-              <div class="form-floating mt-4 d-none" id="tokenContainer">
-                <input type="text" class="form-control custom-input" name="token" id="token" placeholder="Ingresa el token">
-                <label for="token">Token</label>
+              <div class="mt-4 d-none" id="tokenContainer">
+                <input type="text" class="form-control" name="token" id="token" placeholder="Ingresa el token">
               </div>
             </div>
 
@@ -299,8 +297,8 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
         <!-- Footer -->
         <div class="modal-footer">
           <input type="hidden" name="accion" id="accion" value="guardar_configuracion">
-          <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-banner">Guardar cambios</button>
+          <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cerrar</button>
+          <button type="submit" class="btn btn-banner"><i class="bi bi-check2-circle"></i> Guardar cambios</button>
         </div>
       </form>
     </div>

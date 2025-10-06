@@ -40,7 +40,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     <aside class="chat-list">
       <!-- Chat fijo: Ian Bot -->
       <div class="chat-activo" data-id-amigo="0">
-        <img src="<?= $urlBase ?>img/ianbot.png" alt="Ian Bot">
+        <img src="<?= $urlBase ?>img/emoji-emoticon-happy-svgrepo-com.svg" alt="Ian Bot">
         <div class="info-chat">
           <strong>Ian Bot</strong>
           <small></small>
@@ -48,7 +48,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
       </div>
       <!-- Encabezado -->
       <div class="chat-header">
-        <h3>Chats</h3>
+        <h3 class="text-center m-2">Mis chats</h3>
       </div>
       <!-- Contenedor para chats dinámicos -->
       <div id="chat-list"></div>
@@ -57,11 +57,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     <!-- Caja de mensajes -->
     <section id="chat-box" class="chat-box">
       <div class="chat-mensajes"></div>
-      <form id="formulario" enctype="multipart/form-data" autocomplete="off">
+      <form id="formulario" enctype="multipart/form-data" autocomplete="off" class="mensaje_ia">
         <input type="hidden" id="id_usuaria" name="id_usuaria"
           value="<?= htmlspecialchars($_SESSION['id_usuaria'] ?? '') ?>">
         <input type="hidden" id="id_receptor" name="id_receptor" value="">
-        <input type="text" id="mensaje" name="mensaje" placeholder="Escribe tu mensaje">
+        <input type="text" id="mensaje" class="mensaje_ia" name="mensaje" placeholder="Escribe tu mensaje">
 
         <!-- Botón para subir imagen -->
         <label for="archivo" class="btn-subir-imagen" title="Enviar imagen">

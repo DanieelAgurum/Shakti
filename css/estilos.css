@@ -1404,24 +1404,6 @@ label.star:hover {
   /* más espacio entre inputs */
 }
 
-.custom-config-modal .form-floating .custom-input {
-  background: #2c2c44;
-  border: 1px solid #444;
-  color: #f1f1f1;
-  border-radius: 8px;
-  padding: 1.2rem 0.75rem 0.4rem 0.75rem;
-  /* más espacio arriba para floating */
-  height: 4rem;
-  /* un poco más alto para que no choque con el label */
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.custom-config-modal .form-floating .custom-input:focus {
-  border-color: #5a4fff;
-  box-shadow: 0 0 0 2px rgba(90, 79, 255, 0.4);
-  outline: none;
-}
-
 /* Label flotante */
 .custom-config-modal .form-floating label {
   position: absolute;
@@ -1434,18 +1416,6 @@ label.star:hover {
   pointer-events: none;
   transition: all 0.2s ease-out;
   /* mismo color de fondo del modal */
-}
-
-/* Efecto flotante al focus o cuando tiene valor */
-.custom-config-modal .form-floating .custom-input:focus+label,
-.custom-config-modal .form-floating .custom-input:not(:placeholder-shown)+label {
-  top: -0.7rem;
-  /* sube más y deja espacio */
-  left: 0.6rem;
-  font-size: 1rem;
-  color: #ffffff;
-  /* label blanco */
-  font-weight: 500;
 }
 
 /* --- Fondo del carrusel --- */
