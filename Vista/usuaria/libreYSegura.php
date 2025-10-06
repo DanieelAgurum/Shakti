@@ -37,7 +37,7 @@ $resultados = $legales->buscar($busqueda);
     <div class="container mb-5">
         <h2 class="text-center w-100 mt-3">Libre y Segura</h2>
         <div class="search-wrapper w-100">
-            <div class="search-box">
+            <div class="search-box search-foro">
                 <form method="GET">
                     <i class="bi bi-search search-icon"></i>
                     <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ..." value="<?= htmlspecialchars($_GET['buscador'] ?? '') ?>">

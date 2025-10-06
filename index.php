@@ -180,7 +180,6 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
                   ?>
                 </div>
               </div>
-
               <div class="d-flex justify-content-center mt-4 gap-3">
                 <button class="btn btn-black text-white d-flex align-items-center justify-content-center square-button"
                   type="button" data-bs-target="#carouselAcordeon" data-bs-slide="prev">
@@ -236,7 +235,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
 
       <!-- Formulario -->
       <div class="col-md-6 d-flex justify-content-center">
-        <div class="rating-container text-center">
+        <div class="rating-container text-center bg-light">
           <div class="rating-emoji"><img src="img/emoji-emoticon-happy-svgrepo-com.svg" class="w-25" alt=""></div>
           <h3 class="rating-title">¿Cómo fue tu experiencia?</h3>
           <form id="formCalificacion">
@@ -259,7 +258,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
               </div>
             </div>
             <div class="rating-feedback mt-3">
-              <textarea class="form-control" rows="3" id="opinion" name="opinion" placeholder="Cuéntanos tu experiencia"></textarea>
+              <textarea class="form-control bg-light" rows="3" id="opinion" name="opinion" placeholder="Cuéntanos tu experiencia"></textarea>
             </div>
             <input type="hidden" name="opcion" value="1">
             <button type="submit" class="submit-rating bg-dark mt-3 btn btn-dark likes-count">Enviar calificación</button>

@@ -122,7 +122,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             </form>
           </div>
 
-          <div class="card-footer d-flex justify-content-between align-items-center mb-2">
+          <div class="card-footer d-flex justify-content-between align-items-center">
             <div>
               <?php
               $likes = $likeModelo->contarLikes($pub['id_publicacion']);
@@ -154,7 +154,7 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             </div>
           </div>
 
-          <div class="comments-section mt-3 d-none" id="comments-<?= $pub['id_publicacion'] ?>">
+          <div class="comments-section d-none" id="comments-<?= $pub['id_publicacion'] ?>">
             <div class="existing-comments mb-3">
               <?php if ($comRaiz): ?>
                 <?php foreach ($comRaiz as $comentario):
