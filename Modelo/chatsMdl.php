@@ -275,15 +275,17 @@ ORDER BY
             ], JSON_UNESCAPED_UNICODE);
         }
     }
-        public function enviarMensajeIanBot($mensaje)
+    public function enviarMensajeIanBot($mensaje)
     {
         $id_usuario = $_SESSION['id'] ?? null;
 
+        // ✅ Validar sesión activa
         if (!$id_usuario) {
             echo json_encode(["respuesta" => "⚠️ No hay sesión iniciada."]);
             return;
         }
 
+        // ✅ Validar mensaje recibido
         $mensaje = trim($mensaje ?? '');
         if ($mensaje === '') {
             echo json_encode(["respuesta" => "⚠️ No se recibió ningún mensaje."]);
@@ -293,7 +295,7 @@ ORDER BY
         // === Conexión BD ===
         $con = $this->conectarBD();
 
-        // === Guardar mensaje del usuario ===
+        // ✅ Guardar mensaje del usuario
         $sqlUsuario = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())";
         $stmt = $con->prepare($sqlUsuario);
         $stmt->bind_param("is", $id_usuario, $mensaje);
@@ -316,21 +318,52 @@ Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo dise�
 🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
 - Expresar cómo se sienten sin juicios.
 - Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
-- Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, consejos simples de autocuidado).
+- Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, 
+  consejos simples de autocuidado).
 - Motivar con un tono amigable, empático y claro, solo cuando el contexto lo amerite.
 
 ⚠️ Limitaciones:
 - No eres sustituto de atención psicológica profesional.
 - No das diagnósticos médicos ni psicológicos.
 - No das recetas médicas, tareas escolares, traducciones, ni información técnica o financiera.
-- Si el usuario expresa pensamientos de daño hacia sí mismo u otros, responde con un mensaje breve de contención y redirige hacia ayuda profesional inmediata.
-- Si el usuario pide ayuda en temas ajenos a tu propósito, responde con: “Entiendo lo que me pides, pero no estoy autorizado para eso. Prefiero enfocarme en cómo te sientes tú”.
+- Si el usuario expresa pensamientos de daño hacia sí mismo u otros, responde con un mensaje breve de 
+  contención y redirige hacia ayuda profesional inmediata.
+- Si el usuario pide ayuda en temas de idiomas, tareas escolares, programación, finanzas, recetas, tecnología u 
+  otros fuera de tu propósito, **responde con una frase breve como: ‘Entiendo lo que me pides, pero no 
+  estoy autorizado para eso. Prefiero enfocarme en cómo te sientes tú’. Luego redirige la conversación con una 
+  pregunta cálida hacia su estado emocional.
+- Todo lo que compartas conmigo es confidencial y no será juzgado. Mi propósito es que te sientas en un 
+  espacio seguro para expresarte.
 
 💬 Estilo de comunicación:
-- Usa frases cálidas y comprensibles.
-- Valida emociones sin exagerar.
-- Alterna entre validar emociones y preguntar de forma suave sobre su vida (edad, ocupación, intereses).
-- Personaliza tus consejos usando lo que el usuario te diga.
+- Usa frases cálidas, comprensibles y breves.
+- Valida la emoción del usuario sin exagerar.
+- No repitas constantemente frases de compañía (“siempre estoy aquí para ti”), úsalas solo en momentos clave.
+- Haz preguntas indirectas y suaves para conocer mejor al usuario (nombre, edad, ocupación, intereses), pero de manera 
+  escalonada y natural según el flujo de la conversación. Ejemplos:
+  - “Por cierto, ¿cómo te llamas? Me gusta personalizar las charlas.”
+  - “Me da curiosidad, ¿qué edad tienes? A veces la manera en que manejamos el estrés cambia según la etapa de la vida.”
+  - “¿Y a qué te dedicas normalmente? El trabajo o los estudios suelen influir mucho en cómo nos sentimos.”
+  - “Cuando tienes un rato libre, ¿qué es lo que más disfrutas hacer?”
+- Alterna entre validar emociones y dejar caer alguna de estas preguntas sin forzar el tema.
+- Usa las respuestas del usuario para personalizar consejos posteriores (ejemplo: si estudia → sugerir 
+  pausas de estudio; si trabaja en oficina → recomendar estiramientos).
+- Mantén un tono confidencial y respetuoso.
+- Si el usuario guarda silencio, responde con una frase cálida que invite a expresarse sin presión, como: 
+  “Está bien si no quieres hablar mucho ahora, ¿quieres que te comparta una idea simple para relajarte?”
+
+📌 Reglas de continuidad y personalización:
+- Recuerda la información que el usuario comparta y úsala de forma natural para dar continuidad.
+- Haz que la conversación fluya sin sonar mecánica ni forzar consejos.
+- Las sugerencias deben ser simples y accionables (ejemplo: respirar hondo tres veces, salir a caminar 5 minutos,
+  escribir lo que sientes).
+- Si el usuario responde con cualquier mensaje afirmativo o breve (como “sí”, “claro”, “vale”, “ok”, “smn” o 
+  cualquier abreviatura), interpreta su intención de manera positiva y **retoma inmediatamente la acción o 
+  sugerencia ofrecida** sin preguntar de nuevo.
+- Evita tecnicismos psicológicos complejos.
+- Siempre que ofrezcas pasos prácticos o recomendaciones para manejar emociones (estrés, frustración, ansiedad, 
+  tristeza, enojo).
+- Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, pero sin exagerar ni dar falsas promesas.
 
 ✅ Meta: Que el usuario se sienta acompañado y comprendido, descubriendo pequeños pasos para cuidar su bienestar.
 EOT;
@@ -345,8 +378,19 @@ EOT;
 
         // === Llamada a OpenAI (respuesta del bot) ===
         $respuestaBot = $this->llamarOpenAI($promptFinal);
-        if (empty($respuestaBot)) {
-            $respuestaBot = "⚠️ Lo siento, hubo un error al procesar tu mensaje. ¿Podrías intentarlo de nuevo?";
+
+        // ✅ Validar error en la respuesta del bot
+        if (empty($respuestaBot) || stripos($respuestaBot, 'error') !== false) {
+            echo json_encode(["respuesta" => "⚠️ Hubo un problema al procesar tu mensaje. Intenta nuevamente."]);
+            $con->close();
+            return;
+        }
+
+        // ✅ Evitar guardar respuestas vacías o nulas en la BD
+        if (trim($respuestaBot) === '') {
+            echo json_encode(["respuesta" => "⚠️ No se recibió una respuesta válida del bot."]);
+            $con->close();
+            return;
         }
 
         // === Guardar respuesta en BD ===
@@ -362,9 +406,10 @@ EOT;
 
         $con->close();
 
-        // === Devolver respuesta ===
+        // === Devolver respuesta (HTML limpio, conservando listas) ===
         echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
     }
+
 
     /* ============================
    FUNCIONES AUXILIARES PRIVADAS
@@ -372,7 +417,7 @@ EOT;
 
     private function formatearRespuestaHTML($texto)
     {
-        $lineas = explode("\n", $texto);
+        $lineas = preg_split('/\r\n|\r|\n/', trim($texto));
         $html = "";
         $enLista = false;
 
@@ -380,8 +425,9 @@ EOT;
             $linea = trim($linea);
             if ($linea === "") continue;
 
-            // Detectar listas
-            if (preg_match('/^(?:\d+\.|\-|\*)\s*(.*)/', $linea, $matches)) {
+            // Detectar líneas que parecen elementos de lista:
+            // - Empiezan con número (1., 2), guion, asterisco, o viñeta unicode (•)
+            if (preg_match('/^(?:[\-\*\•]|\d+[\.\)]|\•)\s*(.+)/u', $linea, $matches)) {
                 if (!$enLista) {
                     $html .= "<ul>";
                     $enLista = true;
@@ -397,6 +443,7 @@ EOT;
         }
 
         if ($enLista) $html .= "</ul>";
+
         return $html;
     }
     private function llamarOpenAI($prompt)
@@ -445,10 +492,10 @@ EOT;
         $con = $this->conectarBD();
 
         $sql = "SELECT mensaje, id_emisor, id_receptor, creado_en, archivo
-            FROM mensajes
-            WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
-              AND id_emisor <> id_receptor
-            ORDER BY creado_en ASC";
+        FROM mensajes
+        WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
+          AND id_emisor <> id_receptor
+        ORDER BY creado_en ASC";
 
         $stmt = $con->prepare($sql);
         $stmt->bind_param("iiii", $idEmisor, $idReceptor, $idEmisor, $idReceptor);
@@ -458,8 +505,17 @@ EOT;
         $mensajes = [];
 
         while ($row = $result->fetch_assoc()) {
+            $esBot = ($row['id_emisor'] == 0);
+            $mensaje = html_entity_decode($row['mensaje'], ENT_QUOTES, 'UTF-8');
+
+            if ($esBot) {
+                $mensaje = $this->formatearRespuestaHTML($mensaje);
+            } else {
+                $mensaje = htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8');
+            }
+
             $mensajes[] = [
-                'mensaje'       => $row['mensaje'],
+                'mensaje'       => $mensaje,
                 'id_emisor'     => $row['id_emisor'],
                 'id_receptor'   => $row['id_receptor'],
                 'creado_en'     => $row['creado_en'],
@@ -472,6 +528,7 @@ EOT;
         $stmt->close();
         $con->close();
     }
+
     /** 🔎 Recuperar historial completo (usuario ↔ IA) */
     private function obtenerHistorialIanBot($con, $id_usuario)
     {
@@ -487,9 +544,16 @@ EOT;
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
             $rol = ($row['id_emisor'] == 0) ? "bot" : "usuario";
+            $contenido = $row['mensaje'];
+
+            // ✅ Solo sanitizar mensajes del usuario, no los del bot
+            if ($rol === "usuario") {
+                $contenido = htmlspecialchars($contenido, ENT_QUOTES, 'UTF-8');
+            }
+
             $historial[] = [
                 "rol" => $rol,
-                "contenido" => htmlspecialchars($row['mensaje'], ENT_QUOTES, 'UTF-8')
+                "contenido" => $contenido
             ];
         }
 
