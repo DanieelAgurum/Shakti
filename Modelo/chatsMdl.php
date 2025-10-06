@@ -1,8 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
 require 'pusher_config.php';
 class chatsMdl
 {
@@ -118,7 +115,6 @@ ORDER BY
         $stmt->close();
         $con->close();
     }
-
     public function enviarMensaje($id_receptor, $mensaje, $imagen = null)
     {
         try {
@@ -280,5 +276,232 @@ ORDER BY
             ], JSON_UNESCAPED_UNICODE);
         }
     }
-}
 
+    public function enviarMensajeIanBot($mensaje)
+    {
+        $id_usuario = $_SESSION['id'] ?? null;
+
+        if (!$id_usuario) {
+            echo json_encode(["respuesta" => "⚠️ No hay sesión iniciada."]);
+            return;
+        }
+
+        $mensaje = trim($mensaje ?? '');
+        if ($mensaje === '') {
+            echo json_encode(["respuesta" => "⚠️ No se recibió ningún mensaje."]);
+            return;
+        }
+
+        // === Conexión BD ===
+        $con = $this->conectarBD();
+
+        // === Guardar mensaje del usuario ===
+        $sqlUsuario = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())";
+        $stmt = $con->prepare($sqlUsuario);
+        $stmt->bind_param("is", $id_usuario, $mensaje);
+        $stmt->execute();
+        $stmt->close();
+
+        // === Recuperar historial existente de la BD ===
+        $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
+
+        // Agregar mensaje del usuario al historial
+        $historial[] = [
+            "rol" => "usuario",
+            "contenido" => htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8')
+        ];
+
+        // === Contexto base del bot ===
+        $promptBase = <<<EOT
+Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
+
+🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
+- Expresar cómo se sienten sin juicios.
+- Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
+- Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, consejos simples de autocuidado).
+- Motivar con un tono amigable, empático y claro, solo cuando el contexto lo amerite.
+
+⚠️ Limitaciones:
+- No eres sustituto de atención psicológica profesional.
+- No das diagnósticos médicos ni psicológicos.
+- No das recetas médicas, tareas escolares, traducciones, ni información técnica o financiera.
+- Si el usuario expresa pensamientos de daño hacia sí mismo u otros, responde con un mensaje breve de contención y redirige hacia ayuda profesional inmediata.
+- Si el usuario pide ayuda en temas ajenos a tu propósito, responde con: “Entiendo lo que me pides, pero no estoy autorizado para eso. Prefiero enfocarme en cómo te sientes tú”.
+
+💬 Estilo de comunicación:
+- Usa frases cálidas y comprensibles.
+- Valida emociones sin exagerar.
+- Alterna entre validar emociones y preguntar de forma suave sobre su vida (edad, ocupación, intereses).
+- Personaliza tus consejos usando lo que el usuario te diga.
+- Usa <ul><li>...</li></ul> para listas de pasos prácticos.
+
+✅ Meta: Que el usuario se sienta acompañado y comprendido, descubriendo pequeños pasos para cuidar su bienestar.
+EOT;
+
+        // === Crear prompt unificado ===
+        $historialTexto = "";
+        foreach ($historial as $linea) {
+            $historialTexto .= ucfirst($linea['rol']) . ": " . $linea['contenido'] . "\n";
+        }
+
+        $promptFinal = $promptBase . "\n\n" . $historialTexto . "IAn Bot:";
+
+        // === Llamada a OpenAI (respuesta del bot) ===
+        $respuestaBot = $this->llamarOpenAI($promptFinal);
+        if (empty($respuestaBot)) {
+            $respuestaBot = "⚠️ Lo siento, hubo un error al procesar tu mensaje. ¿Podrías intentarlo de nuevo?";
+        }
+
+        // === Guardar respuesta en BD ===
+        $sqlBot = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())";
+        $stmtBot = $con->prepare($sqlBot);
+        $stmtBot->bind_param("is", $id_usuario, $respuestaBot);
+        $stmtBot->execute();
+        $stmtBot->close();
+
+        // === Actualizar historial en sesión ===
+        $_SESSION['historial'] = $historial;
+        $_SESSION['historial'][] = ["rol" => "bot", "contenido" => $respuestaBot];
+
+        $con->close();
+
+        // === Devolver respuesta ===
+        echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
+    }
+
+    /* ============================
+   FUNCIONES AUXILIARES PRIVADAS
+       =========================== */
+
+    private function formatearRespuestaHTML($texto)
+    {
+        $lineas = explode("\n", $texto);
+        $html = "";
+        $enLista = false;
+
+        foreach ($lineas as $linea) {
+            $linea = trim($linea);
+            if ($linea === "") continue;
+
+            // Detectar listas
+            if (preg_match('/^(?:\d+\.|\-|\*)\s*(.*)/', $linea, $matches)) {
+                if (!$enLista) {
+                    $html .= "<ul>";
+                    $enLista = true;
+                }
+                $html .= "<li>" . htmlspecialchars($matches[1], ENT_QUOTES, 'UTF-8') . "</li>";
+            } else {
+                if ($enLista) {
+                    $html .= "</ul>";
+                    $enLista = false;
+                }
+                $html .= "<p>" . htmlspecialchars($linea, ENT_QUOTES, 'UTF-8') . "</p>";
+            }
+        }
+
+        if ($enLista) $html .= "</ul>";
+        return $html;
+    }
+
+    private function llamarOpenAI($prompt)
+    {
+        $apiKey = OPENAI_API_KEY;
+        $modelo = "gpt-4.1-mini";
+
+        $curl = curl_init("https://api.openai.com/v1/responses");
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer $apiKey",
+                "Content-Type: application/json"
+            ],
+            CURLOPT_POSTFIELDS => json_encode([
+                "model" => $modelo,
+                "input" => $prompt,
+                "max_output_tokens" => 500,
+                "temperature" => 0.6
+            ])
+        ]);
+
+        $respuesta = curl_exec($curl);
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return "⚠️ Error al conectar con OpenAI: $error";
+        }
+        curl_close($curl);
+
+        $data = json_decode($respuesta, true);
+        return $data['output'][0]['content'][0]['text'] ?? "";
+    }
+
+    /** Cargar mensajes del usuario y la IA (historial) */
+    public function cargarMensajesIanBot()
+    {
+        $idEmisor = $_SESSION['id'] ?? null;
+        $idReceptor = 0;
+
+        if (!$idEmisor) {
+            echo json_encode(['data' => []]);
+            return;
+        }
+
+        $con = $this->conectarBD();
+
+        $sql = "SELECT mensaje, id_emisor, id_receptor, creado_en, archivo
+            FROM mensajes
+            WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
+              AND id_emisor <> id_receptor
+            ORDER BY creado_en ASC";
+
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("iiii", $idEmisor, $idReceptor, $idEmisor, $idReceptor);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $mensajes = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $mensajes[] = [
+                'mensaje'       => $row['mensaje'],
+                'id_emisor'     => $row['id_emisor'],
+                'id_receptor'   => $row['id_receptor'],
+                'creado_en'     => $row['creado_en'],
+                'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
+                'tipo'          => $row['archivo'] ? "imagen" : "texto",
+                'contenido'     => $row['archivo'] ?: null
+            ];
+        }
+
+        echo json_encode(['data' => $mensajes], JSON_UNESCAPED_UNICODE);
+
+        $stmt->close();
+        $con->close();
+    }
+
+    /** 🔎 Recuperar historial completo (usuario ↔ IA) */
+    private function obtenerHistorialIanBot($con, $id_usuario)
+    {
+        $historial = [];
+        $sql = "SELECT id_emisor, mensaje FROM mensajes
+            WHERE (id_emisor IN (?, 0) AND id_receptor IN (?, 0))
+            ORDER BY creado_en ASC";
+
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("ii", $id_usuario, $id_usuario);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $rol = ($row['id_emisor'] == 0) ? "bot" : "usuario";
+            $historial[] = [
+                "rol" => $rol,
+                "contenido" => htmlspecialchars($row['mensaje'], ENT_QUOTES, 'UTF-8')
+            ];
+        }
+
+        $stmt->close();
+        return $historial;
+    }
+}
