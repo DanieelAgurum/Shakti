@@ -35,7 +35,11 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php
+                        echo ($configActual['modo_oscuro'] ?? 0) == 1 ? 'dark-mode ' : '';
+                        echo ($configActual['alto_contraste'] ?? 0) == 1 ? 'high-contrast ' : '';
+                        echo 'font-' . ($configActual['tamano_fuente'] ?? 'medium');
+                        ?>">
 
 <head>
   <meta charset="UTF-8" />

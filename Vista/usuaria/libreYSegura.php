@@ -30,6 +30,42 @@ $resultados = $legales->buscar($busqueda);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarReporte.js"></script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
+    <style>
+        /* ====== MODAL PERSONALIZADO DE DOCUMENTOS ====== */
+        .custom-modal-content {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .custom-modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-modal-title {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        .custom-modal-body {
+            height: 80vh;
+            padding: 0;
+        }
+
+        .custom-iframe-documento {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.8rem;
+        }
+
+        .custom-modal-documento .modal-backdrop.show {
+            opacity: 0.7;
+            background-color: #000;
+        }
+    </style>
 </head>
 
 <body class="bg-white text-black">
@@ -70,9 +106,11 @@ $resultados = $legales->buscar($busqueda);
                                     </svg>
                                     Última actualización: <?= date("d/m/Y H:i", strtotime($row['fecha'])) ?>
                                 </div>
-                                <a href="<?= $urlBase ?>Modelo/ver_contenido.php?id_legal=<?= $row['id_legal'] ?>" target="_blank" class="btn btn-outline-light mt-3 read-more-btn">
+                                <button class="btn btn-outline-light mt-3 read-more-btn ver-documento"
+                                    data-id="<?= $row['id_legal'] ?>"
+                                    data-title="<?= htmlspecialchars($row['titulo']) ?>">
                                     Leer más
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -83,6 +121,34 @@ $resultados = $legales->buscar($busqueda);
         </div>
     </div>
 
+    <?php include '../modales/documentoLegal.php' ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const botones = document.querySelectorAll(".ver-documento");
+            const modalEl = document.getElementById("modalDocumento");
+            const iframe = document.getElementById("iframeDocumento");
+            const modal = new bootstrap.Modal(modalEl);
+            const modalTitle = document.getElementById("modalDocumentoLabel");
+
+            botones.forEach(boton => {
+                boton.addEventListener("click", function() {
+                    const id = this.getAttribute("data-id");
+                    const title = this.getAttribute("data-title");
+
+                    iframe.src = "<?= $urlBase ?>Modelo/ver_contenido.php?id_legal=" + id;
+
+                    modalTitle.textContent = title;
+
+                    modal.show();
+                });
+            });
+
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                iframe.src = "";
+            });
+        });
+    </script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>

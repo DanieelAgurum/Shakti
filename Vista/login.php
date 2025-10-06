@@ -34,7 +34,7 @@ if (isset($_SESSION['id_rol'])) {
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 
   <!-- Contenido principal -->
-  <main class="flex-grow-1 d-flex justify-content-center align-items-center">
+  <main class="flex-grow-1 d-flex justify-content-center align-items-center mt-3 mb-3">
     <div class="card p-4" style="max-width:420px; width:100%; border-radius:1.5rem; background:#f9f9f9; box-shadow:8px 8px 20px rgba(0,0,0,0.05), -8px -8px 20px rgba(255,255,255,0.8);">
       <h3 class="text-center mb-4" style="color:#5a2a83;">Iniciar sesión</h3>
 
@@ -46,7 +46,7 @@ if (isset($_SESSION['id_rol'])) {
           <label class="form-label">Correo electrónico</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-            <input type="email" name="correo" class="form-control" placeholder="correo@ejemplo.com" required>
+            <input type="email" name="correo" class="form-control" placeholder="Ingresa tu correo electrónico" required>
           </div>
           <small class="error" id="errorCorreo"></small>
         </div>
@@ -56,7 +56,7 @@ if (isset($_SESSION['id_rol'])) {
           <label class="form-label">Contraseña</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-            <input type="password" name="contraseña" id="contraseña" class="form-control" placeholder="********" required>
+            <input type="password" name="contraseña" id="contraseña" class="form-control" placeholder="Ingresa tu contraseña" required>
             <button type="button" class="btn btn-outline-secondary" id="togglePassword" style="border-radius:0 50px 50px 0;">
               <i class="bi bi-eye-fill"></i>
             </button>
