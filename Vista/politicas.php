@@ -19,11 +19,12 @@ if (session_status() === PHP_SESSION_NONE) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/components/usuaria/navbar.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
+
 </head>
 
 <body>
-  <div class="container">
+  <div class="container mt-5 mb-5">
     <h1>AVISO DE PRIVACIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN</h1>
     <p>Kaizen se compromete a proteger la privacidad y confidencialidad de la información personal de sus clientes y usuarios de la plataforma Shakti, así como de la información sensible relacionada con la prevención de la violencia hacia la mujer. Para ello, se establecen las siguientes políticas de privacidad y confidencialidad de la información:</p>
 

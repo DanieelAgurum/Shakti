@@ -200,7 +200,7 @@ html.dark-mode .text-center {
 
 
 
-/* Alto contraste si lo quieres combinar */
+/* Alto contraste */
 html.high-contrast {
     background-color: #000;
     color: #fff;
@@ -208,4 +208,63 @@ html.high-contrast {
 
 html.high-contrast a {
     color: #00ff00;
+}
+
+html.high-contrast .btn,
+html.high-contrast .btn-dark,
+html.high-contrast .submit-rating,
+html.high-contrast .card.notas a {
+    color: #00ff00;
+    background-color: #000;
+    border-color: #fff;
+}
+
+/* Combinación Dark Mode + Alto Contraste */
+html.dark-mode.high-contrast {
+    background-color: #000;
+    color: #ffffff;
+}
+
+html.dark-mode.high-contrast body,
+html.dark-mode.high-contrast section,
+html.dark-mode.high-contrast .hero,
+html.dark-mode.high-contrast .layout,
+html.dark-mode.high-contrast .card,
+html.dark-mode.high-contrast .card-body,
+html.dark-mode.high-contrast .card-footer,
+html.dark-mode.high-contrast article,
+html.dark-mode.high-contrast .rating-container,
+html.dark-mode.high-contrast .comments-section,
+html.dark-mode.high-contrast .respuesta,
+html.dark-mode.high-contrast .alzalaVoz-card,
+html.dark-mode.high-contrast .shakti-chatbot-input,
+html.dark-mode.high-contrast .form-control,
+html.dark-mode.high-contrast textarea,
+html.dark-mode.high-contrast select,
+html.dark-mode.high-contrast .accordion-button,
+html.dark-mode.high-contrast .accordion-body {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+/* Botones y enlaces combinados */
+html.dark-mode.high-contrast a,
+html.dark-mode.high-contrast .btn,
+html.dark-mode.high-contrast .btn-dark,
+html.dark-mode.high-contrast .submit-rating,
+html.dark-mode.high-contrast .card.notas a {
+    color: #00ff00 !important;
+    background-color: #000 !important;
+    border-color: #fff !important;
+}
+
+/* Scrollbars de alto contraste */
+html.dark-mode.high-contrast ::-webkit-scrollbar-thumb {
+    background-color: #fff !important;
+}
+
+/* Placeholders de alto contraste */
+html.dark-mode.high-contrast ::placeholder {
+    color: #ffffff !important;
 }
