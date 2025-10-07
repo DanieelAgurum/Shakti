@@ -40,7 +40,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     <aside class="chat-list">
       <!-- Chat fijo: Ian Bot -->
       <div class="chat-activo" data-id-amigo="0">
-        <img src="<?= $urlBase ?>img/emoji-emoticon-happy-svgrepo-com.svg" alt="Ian Bot">
+        <img src="<?= $urlBase ?>img/Ian.png" alt="Ian Bot">
         <div class="info-chat">
           <strong>Ian Bot</strong>
           <small></small>
