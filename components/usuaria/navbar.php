@@ -19,7 +19,6 @@ if (isset($_SESSION['id_usuaria'])) {
   $configActual = $config->obtenerConfiguracion($idUsuaria);
 }
 
-// Notificaciones
 $notificaciones = [];
 $notificacionesNoLeidas = 0;
 if ($usuario['id'] && $usuario['rol'] == 1) {
@@ -27,7 +26,7 @@ if ($usuario['id'] && $usuario['rol'] == 1) {
   $notificacionesNoLeidas = count(array_filter($notificaciones, fn($n) => $n['leida'] == 0));
 }
 
-// Función para generar rutas según rol
+
 function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 {
   return $mapa[$rol] ?? $default;
@@ -154,18 +153,15 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   </div>
 </nav>
 
-<!-- Botón del chatbot siempre visible -->
 <div id="shakti-chatbot-circle" data-bs-placement="top" title="Chatbot" class="shakti-btn-chatbot">
   <i class="bi bi-robot"></i>
 </div>
 
-<!-- Botón de regresar al inicio (emerge desde el chatbot) -->
 <button id="shakti-btn-top" class="shakti-btn-top" data-bs-placement="top" title="Regresar al inicio">
   <i class="fas fa-arrow-up"></i>
 </button>
 
 <?php include 'chatBot.php'; ?>
-
 
 <!-- Modal de configuración -->
 <div class="modal fade custom-config-modal" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
@@ -204,18 +200,16 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
             <!-- Cuenta -->
             <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
               <div class="mt-4">
-                <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="Nueva contraseña">
+                <input type="password" class="form-control newContra" name="newPassword" id="newPassword" placeholder="Nueva contraseña">
               </div>
               <small id="passwordMessage" class="text-danger"></small>
 
-              <!-- Botón para generar/enviar token -->
               <div class="mt-4">
                 <button type="button" id="btnGenerarToken" class="btn btn-outline-light w-100">
                   Generar / Enviar token
                 </button>
               </div>
 
-              <!-- Input para ingresar token (oculto al inicio) -->
               <div class="mt-4 d-none" id="tokenContainer">
                 <input type="text" class="form-control" name="token" id="token" placeholder="Ingresa el token">
               </div>

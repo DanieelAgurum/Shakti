@@ -1374,6 +1374,18 @@ label.star:hover {
   padding: 10px;
 }
 
+.custom-config-modal input::-webkit-input-placeholder {
+  color: #fff !important;
+}
+
+.custom-config-modal input:-ms-input-placeholder {
+  color: #fff !important;
+}
+
+.custom-config-modal input::-ms-input-placeholder {
+  color: #fff !important;
+}
+
 .custom-config-modal .form-control:focus,
 .custom-config-modal .form-select:focus {
   border-color: #5a4fff;
