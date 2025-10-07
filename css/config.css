@@ -73,6 +73,9 @@ html.dark-mode .shakti-chatbot-box-body {
     background-color: #121212 !important;
 }
 
+html.dark-mode .notfound h2,
+html.dark-mode .notfound h1,
+html.dark-mode .notfound p,
 html.dark-mode article,
 html.dark-mode span,
 html.dark-mode .dropdown-item,
@@ -158,7 +161,7 @@ html.dark-mode label.btn-subir-imagen:hover {
     color: #121212 !important;
 }
 
-html.dark-mode .chat-activo{
+html.dark-mode .chat-activo {
     background-color: #121212 !important;
 }
 
@@ -200,8 +203,6 @@ html.dark-mode .star+label {
 html.dark-mode .text-center {
     color: #ffff !important;
 }
-
-
 
 
 /* Alto contraste */
