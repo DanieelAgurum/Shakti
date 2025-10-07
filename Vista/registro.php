@@ -14,6 +14,17 @@ if (isset($_SESSION['id_rol'])) {
         case 3: header("Location: " . $urlBase . "Vista/admin/"); exit;
     }
 }
+$message = '';
+$status = '';
+
+if (isset($_GET['status'])) {
+    $status = $_GET['status'];
+}
+if (isset($_GET['message'])) {
+    $message = urldecode($_GET['message']);
+}
+?>
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -136,6 +147,35 @@ if (isset($_SESSION['id_rol'])) {
         <a href="<?= $urlBase ?>Vista/login.php">¿Ya tienes una cuenta? Inicia sesión</a>
       </div>
     </div>
+
+
+    
+<!-- Modal -->
+<div id="alertModal">
+    <div class="modal-content">
+        <p id="modalMessage"></p>
+        <button onclick="closeModal()">Aceptar</button>
+    </div>
+</div>
+    
+<script>
+    function closeModal() {
+        document.getElementById('alertModal').style.display = 'none';
+    }
+
+    <?php if (!empty($message)) : ?>
+        // Mostrar modal
+        document.getElementById('modalMessage').innerText = <?php echo json_encode($message); ?>;
+        document.getElementById('alertModal').style.display = 'flex';
+
+        // Borrar parámetros de URL para que no se vean
+        if (window.history.replaceState) {
+            const cleanURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState(null, '', cleanURL);
+        }
+    <?php endif; ?>
+</script>
+
   </main>
 
   <!-- Footer -->
@@ -208,6 +248,38 @@ if (isset($_SESSION['id_rol'])) {
         padding: 1.5rem;
       }
     }
+    /* Estilos del modal */
+        #alertModal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        #alertModal .modal-content {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
+        }
+        #alertModal button {
+            margin-top: 15px;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #alertModal button:hover {
+            background-color: #0056b3;
+        }
   </style>
 </body>
 </html>

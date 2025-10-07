@@ -1,16 +1,23 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . "/shakti/Modelo/loginMdl.php");
 
-$u = new loginMdln();
+// Crear instancia del modelo
+$login = new loginMdln();
 
-switch($_POST['opcion'] ?? ''){
-    case 1:
-        $u->inicializar($_POST['correo'], $_POST['contraseña']);
-        $u->iniciarSesion(); // ojo: inicia sesión y redirige
+// Verificar qué acción se va a realizar
+switch ($_POST['opcion'] ?? '') {
+    case 1: // Iniciar sesión
+        $correo = $_POST['correo'] ?? '';
+        $contraseña = $_POST['contraseña'] ?? '';
+
+        $login->inicializar($correo, $contraseña);
+        $login->iniciarSesion(); // Este método ya hace todo: validación, verificación, redirección
         break;
-    case 2:
-        $u->cerrarSesion();
+
+    case 2: // Cerrar sesión
+        $login->cerrarSesion();
         break;
+
     default:
         header("Location: ../Vista/login.php");
         exit;

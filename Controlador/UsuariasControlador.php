@@ -1,11 +1,14 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/Usuarias.php';
+include_once '../Modelo/ConfirmarCorreo.php';
+include_once '../obtenerLink/obtenerLink.php';
 
 $u = new Usuarias();
-$u->conectarBD();
+$urlBase = getBaseUrl();
 
 switch ($_REQUEST['opcion']) {
     case 1:
+        // Inicializar la usuaria con los datos del POST
         $u->inicializar(
             $_REQUEST['nombre'],
             $_REQUEST['apellidos'],
@@ -16,8 +19,42 @@ switch ($_REQUEST['opcion']) {
             $_REQUEST['fecha_nac'],
             $_REQUEST['rol']
         );
-        $u->agregarUsuaria();
+
+        // Agregar usuaria a la BD y obtener el ID recién insertado
+        $id_usuaria = $u->agregarUsuaria(); // 🔹 tu método agregarUsuaria debe devolver el ID
+
+        if ($id_usuaria) {
+            // Enviar correo de confirmación
+            $correoConfirmacion = new ConfirmarCorreo();
+            $correoConfirmacion->inicializar($_REQUEST['correo'], $_REQUEST['nombre'], $urlBase, $id_usuaria);
+            $enviado = $correoConfirmacion->enviarCorreoVerificacion();
+
+            if ($enviado) {
+                echo "<script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Cuenta creada correctamente',
+                        text: 'Por favor revisa tu correo para verificar tu cuenta.',
+                        confirmButtonColor: '#5a2a83'
+                    }).then(() => {
+                        window.location.href = '{$urlBase}/Vista/login.php';
+                    });
+                </script>";
+            } else {
+                echo "<script>
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cuenta creada pero sin verificación',
+                        text: 'No se pudo enviar el correo, intenta más tarde.',
+                        confirmButtonColor: '#5a2a83'
+                    }).then(() => {
+                        window.location.href = '{$urlBase}/Vista/login.php';
+                    });
+                </script>";
+            }
+        }
         break;
+
     case 2:
         session_start();
         if (!isset($_SESSION['id'])) {
@@ -36,11 +73,12 @@ switch ($_REQUEST['opcion']) {
             $_REQUEST['descripcion'],
             $_SESSION['id']
         );
-
         break;
+
     case 3:
         $u->eliminarUsuaria($_REQUEST['id']);
         break;
+
     case 4:
         session_start();
         if (!isset($_SESSION['id'])) {
@@ -58,6 +96,7 @@ switch ($_REQUEST['opcion']) {
             header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
         }
         exit;
+
     case 5:
         session_start();
         if (!isset($_SESSION['id'])) {
