@@ -48,7 +48,7 @@ class loginMdln
         $query = "
             SELECT 
                 u.id, u.nombre, u.apellidos, u.fecha_nac, u.contraseña, u.nickname, u.correo, u.id_rol,
-                u.documentos, u.descripcion, u.direccion, u.telefono, u.foto, u.estatus,
+                u.documentos, u.descripcion, u.direccion, u.telefono, u.foto, u.estatus, u.verificado,
                 r.nombre_rol
             FROM usuarias u
             JOIN roles r ON u.id_rol = r.id_rol
@@ -61,6 +61,16 @@ class loginMdln
             $reg = mysqli_fetch_assoc($result);
 
             if ($reg && password_verify($this->contraseña, $reg["contraseña"])) {
+
+                // 🔒 Validar si el correo está verificado
+                if ($reg['verificado'] == 0) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Tu correo no ha sido verificado. Revisa tu bandeja de entrada.'
+                    ]);
+                    exit;
+                }
+
                 // Guardar datos en sesión
                 $_SESSION['id'] = $reg['id'];
                 $_SESSION['id_usuaria'] = $reg['id'];
@@ -108,3 +118,4 @@ class loginMdln
         exit;
     }
 }
+?>
