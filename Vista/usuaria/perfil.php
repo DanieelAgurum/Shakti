@@ -232,10 +232,6 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
     <?php include '../modales/perfil.php'; ?>
     <script src="../../peticiones(js)/actualizarFoto.js"></script>
     <script src="../../validacionRegistro/validacionActualizacion.js"></script>
-    <br>
-    <br>
-    <br>
-    <br>
     <?php include '../../components/usuaria/footer.php'; ?>
 </body>
 

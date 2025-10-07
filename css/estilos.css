@@ -1009,13 +1009,19 @@ label.star:hover {
   font-size: 1.2rem;
 }
 
+#notfound {
+  min-height: calc(100vh - 150px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 15px;
+}
+
 #notfound .notfound {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  position: relative;
+  transform: none;
+  left: auto;
+  top: auto;
 }
 
 .notfound {
@@ -1042,8 +1048,6 @@ label.star:hover {
   height: 130px;
   background-image: url('../img/Generated_Image_September_11__2025_-_9_27PM-removebg-preview.png');
   background-size: cover;
-  -webkit-transform: scale(1.4);
-  -ms-transform: scale(1.4);
   transform: scale(1.4);
   z-index: -1;
 }
@@ -1059,6 +1063,8 @@ label.star:hover {
 .notfound p {
   color: #787878;
   font-weight: 300;
+  margin-top: 10px;
+  margin-bottom: 25px;
 }
 
 .notfound a {
@@ -1078,6 +1084,16 @@ label.star:hover {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
+}
+
 @media only screen and (max-width: 767px) {
   .notfound .notfound-404 {
     height: 115px;
@@ -1092,6 +1108,7 @@ label.star:hover {
     height: 86px;
   }
 }
+
 
 .main-banner {
   background-image: url('../img/adrianna-geo-Z5ZdkWjMTCY-unsplash.jpg');
