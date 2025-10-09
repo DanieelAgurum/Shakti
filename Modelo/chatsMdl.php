@@ -1,10 +1,18 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
 require 'pusher_config.php';
+
 class chatsMdl
 {
     private $con;
-
+    private $clave_secreta;
+    public function __construct()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $this->clave_secreta = hash('sha256', ($_SESSION['id'] ?? '') . 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
+    }
     public function conectarBD()
     {
         if (!$this->con) {
@@ -113,12 +121,12 @@ ORDER BY
         $stmt->close();
         $con->close();
     }
-
     public function enviarMensaje($id_receptor, $mensaje, $imagen = null)
     {
         try {
             $id_emisor = $_SESSION['id'] ?? null;
             $nickname_emisor = $_SESSION['nickname'] ?? "usuario";
+            $mensaje = $this->cifrarAES($mensaje);
 
             if (!$id_emisor) {
                 http_response_code(401);
@@ -278,6 +286,7 @@ ORDER BY
     public function enviarMensajeIanBot($mensaje)
     {
         $id_usuario = $_SESSION['id'] ?? null;
+        $mensaje = $this->cifrarAES($mensaje);
 
         // ✅ Validar sesión activa
         if (!$id_usuario) {
@@ -302,6 +311,7 @@ ORDER BY
         $stmt->execute();
         $stmt->close();
 
+        $mensaje = $this->descifrarAES($mensaje);
         // === Recuperar historial existente de la BD ===
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
 
@@ -393,10 +403,12 @@ EOT;
             return;
         }
 
-        // === Guardar respuesta en BD ===
+        // === Guardar respuesta del bot cifrada también ===
+        $respuestaCifrada = $this->cifrarAES($respuestaBot);
+
         $sqlBot = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())";
         $stmtBot = $con->prepare($sqlBot);
-        $stmtBot->bind_param("is", $id_usuario, $respuestaBot);
+        $stmtBot->bind_param("is", $id_usuario, $respuestaCifrada);
         $stmtBot->execute();
         $stmtBot->close();
 
@@ -409,7 +421,6 @@ EOT;
         // === Devolver respuesta (HTML limpio, conservando listas) ===
         echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
     }
-
 
     /* ============================
    FUNCIONES AUXILIARES PRIVADAS
@@ -506,12 +517,10 @@ EOT;
 
         while ($row = $result->fetch_assoc()) {
             $esBot = ($row['id_emisor'] == 0);
-            $mensaje = html_entity_decode($row['mensaje'], ENT_QUOTES, 'UTF-8');
+            $mensaje = $this->descifrarAES(html_entity_decode($row['mensaje'], ENT_QUOTES, 'UTF-8'));
 
             if ($esBot) {
                 $mensaje = $this->formatearRespuestaHTML($mensaje);
-            } else {
-                $mensaje = htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8');
             }
 
             $mensajes[] = [
@@ -528,7 +537,6 @@ EOT;
         $stmt->close();
         $con->close();
     }
-
     /** 🔎 Recuperar historial completo (usuario ↔ IA) */
     private function obtenerHistorialIanBot($con, $id_usuario)
     {
@@ -559,5 +567,27 @@ EOT;
 
         $stmt->close();
         return $historial;
+    }
+
+    // Cifrado y descifrado Aes
+    private function cifrarAES($texto)
+    {
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
+        return base64_encode($ci . $cifrado);
+    }
+
+    private function descifrarAES($textoCodificado)
+    {
+        if (empty($textoCodificado)) return '';
+        $datos = base64_decode($textoCodificado, true);
+        if ($datos === false) return $textoCodificado;
+
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
+        return $descifrado !== false ? $descifrado : $textoCodificado;
     }
 }
