@@ -14,18 +14,11 @@ if (isset($_SESSION['id_rol'])) {
         case 3: header("Location: " . $urlBase . "Vista/admin/"); exit;
     }
 }
-$message = '';
-$status = '';
 
-if (isset($_GET['status'])) {
-    $status = $_GET['status'];
-}
-if (isset($_GET['message'])) {
-    $message = urldecode($_GET['message']);
-}
+$message = $_GET['message'] ?? '';
+$status = $_GET['status'] ?? '';
 ?>
 
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -147,41 +140,39 @@ if (isset($_GET['message'])) {
         <a href="<?= $urlBase ?>Vista/login.php">¿Ya tienes una cuenta? Inicia sesión</a>
       </div>
     </div>
-
-
-    
-<!-- Modal -->
-<div id="alertModal">
-    <div class="modal-content">
-        <p id="modalMessage"></p>
-        <button onclick="closeModal()">Aceptar</button>
-    </div>
-</div>
-    
-<script>
-    function closeModal() {
-        document.getElementById('alertModal').style.display = 'none';
-    }
-
-    <?php if (!empty($message)) : ?>
-        // Mostrar modal
-        document.getElementById('modalMessage').innerText = <?php echo json_encode($message); ?>;
-        document.getElementById('alertModal').style.display = 'flex';
-
-        // Borrar parámetros de URL para que no se vean
-        if (window.history.replaceState) {
-            const cleanURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.replaceState(null, '', cleanURL);
-        }
-    <?php endif; ?>
-</script>
-
   </main>
+
+  <!-- SweetAlert2 -->
+  <script>
+  <?php if (!empty($message)) : ?>
+    Swal.fire({
+      icon: "<?= $status === 'error' ? 'error' : 'success' ?>",
+      title: "<?= $status === 'error' ? 'Error' : 'Éxito' ?>",
+      text: <?= json_encode($message) ?>,
+      timer: 10000, // 
+      timerProgressBar: true,
+      showConfirmButton: true,
+      confirmButtonText: "Aceptar",
+      confirmButtonColor: "#4682B4"
+    });
+
+    if (window.history.replaceState) {
+      const cleanURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      window.history.replaceState(null, '', cleanURL);
+    }
+  <?php endif; ?>
+  </script>
 
   <!-- Footer -->
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
 
   <!-- Scripts -->
+  <script>
+    function actualizarRol() {
+      const especialistaCheck = document.getElementById('especialistaCheck');
+      document.getElementById('rol').value = especialistaCheck.checked ? 2 : 1;
+    }
+  </script>
   <script src="<?= $urlBase ?>validacionRegistro/validacion.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
 
@@ -214,7 +205,7 @@ if (isset($_GET['message'])) {
     /* Botón morado */
     .btn-purple {
       border-radius: 50px;
-      background: #5a2a83;
+      background:#4682B4;
       color: #fff;
       font-weight: 600;
       padding: 0.7rem 1.5rem;
@@ -231,7 +222,7 @@ if (isset($_GET['message'])) {
     /* Labels */
     .form-label {
       font-weight: 500;
-      color: #5a2a83;
+      color: #4682B4;
     }
 
     /* Iconos input */
@@ -239,47 +230,16 @@ if (isset($_GET['message'])) {
       background: #f0f0f0;
       border-radius: 50px 0 0 50px;
       border: none;
-      color: #5a2a83;
+      color: #4682B4;
     }
 
-    /* Responsive */
-    @media (max-width: 576px) {
-      .auth-container {
-        padding: 1.5rem;
-      }
+    /* Errores */
+    .error {
+      color: #dc3545;
+      font-size: 0.85rem;
+      display: block;
+      margin-top: 0.2rem;
     }
-    /* Estilos del modal */
-        #alertModal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        #alertModal .modal-content {
-            background-color: #fff;
-            padding: 20px 30px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
-        }
-        #alertModal button {
-            margin-top: 15px;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        #alertModal button:hover {
-            background-color: #0056b3;
-        }
   </style>
 </body>
 </html>

@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
-// Redirigir si ya está logueado
+// 🔹 Redirigir si ya está logueado
 if (isset($_SESSION['id_rol'])) {
     switch ($_SESSION['id_rol']) {
         case 1: header("Location: " . $urlBase . "usuaria/perfil.php"); exit;
@@ -14,17 +14,9 @@ if (isset($_SESSION['id_rol'])) {
         case 3: header("Location: " . $urlBase . "admin/"); exit;
     }
 }
-$message = '';
-$status = '';
 
-if (isset($_GET['status'])) {
-    $status = $_GET['status'];
-}
-if (isset($_GET['message'])) {
-    $message = urldecode($_GET['message']);
-}
-?>
-
+$message = $_GET['message'] ?? '';
+$status = $_GET['status'] ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -36,8 +28,8 @@ if (isset($_GET['message'])) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
+
 <body class="d-flex flex-column min-vh-100 bg-light">
 
   <!-- Navbar -->
@@ -45,14 +37,14 @@ if (isset($_GET['message'])) {
 
   <!-- Contenido principal -->
   <main class="flex-grow-1 d-flex justify-content-center align-items-center mt-3 mb-3">
-    <div class="card p-4" style="max-width:420px; width:100%; border-radius:1.5rem; background:#f9f9f9; box-shadow:8px 8px 20px rgba(0,0,0,0.05), -8px -8px 20px rgba(255,255,255,0.8);">
+    <div class="card p-4 shadow-sm border-0" style="max-width:420px; width:100%; border-radius:1.5rem; background:#f9f9f9;">
       <h3 class="text-center mb-4" style="color:#5a2a83;">Iniciar sesión</h3>
 
       <form id="formLogin" action="<?= $urlBase ?>Controlador/loginCtrl.php" method="POST" novalidate>
         <input type="hidden" name="opcion" value="1">
 
         <!-- Correo -->
-        <div class="mb-3 position-relative">
+        <div class="mb-3">
           <label class="form-label">Correo electrónico</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
@@ -62,7 +54,7 @@ if (isset($_GET['message'])) {
         </div>
 
         <!-- Contraseña -->
-        <div class="mb-3 position-relative">
+        <div class="mb-3">
           <label class="form-label">Contraseña</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
@@ -74,36 +66,8 @@ if (isset($_GET['message'])) {
           <small class="error" id="errorContraseña"></small>
         </div>
 
-        <button type="submit" class="btn btn-purple w-100 mb-2">Ingresar</button>
+        <button type="submit" class="btn btn-purple w-100 mb-3">Ingresar</button>
       </form>
-
-      <hr>
-      <!-- Modal -->
-<div id="alertModal">
-    <div class="modal-content">
-        <p id="modalMessage"></p>
-        <button onclick="closeModal()">Aceptar</button>
-    </div>
-</div>
-
-
-<script>
-    function closeModal() {
-        document.getElementById('alertModal').style.display = 'none';
-    }
-
-    <?php if (!empty($message)) : ?>
-        // Mostrar modal
-        document.getElementById('modalMessage').innerText = <?php echo json_encode($message); ?>;
-        document.getElementById('alertModal').style.display = 'flex';
-
-        // Borrar parámetros de URL para que no se vean
-        if (window.history.replaceState) {
-            const cleanURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.replaceState(null, '', cleanURL);
-        }
-    <?php endif; ?>
-</script>
 
       <!-- Botón Google -->
       <a href="#" id="btnGoogleLogin" class="btn btn-google w-100 mb-3">
@@ -116,23 +80,41 @@ if (isset($_GET['message'])) {
       </div>
     </div>
   </main>
+
+  <!-- SweetAlert (mensajes de error o éxito) -->
+  <script>
+  <?php if (!empty($message)) : ?>
+    Swal.fire({
+      icon: "<?= $status === 'error' ? 'error' : 'success' ?>",
+      title: "<?= $status === 'error' ? 'Error' : 'Éxito' ?>",
+      text: <?= json_encode(urldecode($message)) ?>,
+      timer: 10000, 
+      timerProgressBar: true,
+      showConfirmButton: true,
+      confirmButtonText: "Aceptar",
+      confirmButtonColor: "#4682B4"
+    });
+
+    // 🔹 Limpia la URL después de mostrar el mensaje
+    if (window.history.replaceState) {
+      const cleanURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      window.history.replaceState(null, '', cleanURL);
+    }
+  <?php endif; ?>
+  </script>
+
   <!-- Footer -->
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
+
   <!-- Scripts -->
-   <script>const urlBase = "<?= $urlBase ?>";</script>
+  <script>const urlBase = "<?= $urlBase ?>";</script>
   <script src="<?= $urlBase ?>peticiones(js)/auth.js"></script>
   <script src="<?= $urlBase ?>validacionRegistro/validacion.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-  <style>
-    /* Contenedor */
-    .auth-container, .card {
-      background: #f9f9f9;
-      border-radius: 1.5rem;
-      box-shadow: 8px 8px 20px rgba(0,0,0,0.05),
-                  -8px -8px 20px rgba(255,255,255,0.8);
-    }
 
-    /* Inputs estilo inset */
+  <!-- Estilos -->
+  <style>
+    /* Inputs */
     input.form-control {
       border-radius: 50px;
       border: none;
@@ -148,21 +130,18 @@ if (isset($_GET['message'])) {
                   inset -5px -5px 12px rgba(255,255,255,0.8);
     }
 
-    /* Botón morado */
+    /* Botón principal */
     .btn-purple {
       border-radius: 50px;
-      background: #5a2a83;
+      background: #4682B4;
       color: #fff;
       font-weight: 600;
       padding: 0.7rem 1.5rem;
-      box-shadow: 5px 5px 15px rgba(0,0,0,0.1),
-                  -5px -5px 15px rgba(255,255,255,0.2);
       transition: all 0.3s ease;
     }
     .btn-purple:hover {
       transform: translateY(-2px);
-      box-shadow: 5px 5px 20px rgba(0,0,0,0.15),
-                  -5px -5px 20px rgba(255,255,255,0.25);
+      box-shadow: 0px 0px 10px rgba(2, 150, 236, 0.4);
     }
 
     /* Botón Google */
@@ -172,29 +151,26 @@ if (isset($_GET['message'])) {
       color: #fff;
       font-weight: 600;
       padding: 0.7rem 1.5rem;
-      box-shadow: 5px 5px 15px rgba(0,0,0,0.1),
-                  -5px -5px 15px rgba(255,255,255,0.2);
+      text-align: center;
       transition: all 0.3s ease;
-      text-align:center;
     }
     .btn-google:hover {
+      background: #c1351d;
       transform: translateY(-2px);
-      box-shadow: 5px 5px 20px rgba(0,0,0,0.15),
-                  -5px -5px 20px rgba(255,255,255,0.25);
     }
 
-    /* Labels */
+    /* Etiquetas */
     .form-label {
       font-weight: 500;
-      color: #5a2a83;
+      color: #4682B4;
     }
 
-    /* Iconos input */
+    /* Iconos */
     .input-group-text {
       background: #f0f0f0;
       border-radius: 50px 0 0 50px;
       border: none;
-      color: #5a2a83;
+      color: #4682B4;
     }
 
     /* Errores */
@@ -204,45 +180,6 @@ if (isset($_GET['message'])) {
       margin-top: 0.2rem;
       display: block;
     }
-
-    /* Responsive */
-    @media (max-width: 576px) {
-      .auth-container {
-        padding: 1.5rem;
-      }
-    }
-     /* Estilos del modal */
-        #alertModal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        #alertModal .modal-content {
-            background-color: #fff;
-            padding: 20px 30px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
-        }
-        #alertModal button {
-            margin-top: 15px;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        #alertModal button:hover {
-            background-color: #0056b3;
-        }
   </style>
 </body>
 </html>
