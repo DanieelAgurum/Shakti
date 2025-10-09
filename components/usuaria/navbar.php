@@ -50,7 +50,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/config.css">
-  <link rel="icon" href="<?= $urlBase ?>img/4carr.ico">
+  <link rel="icon" href="<?= $urlBase ?>img/Ian.ico">
   <script>
     window.usuarioActual = <?= json_encode($usuario) ?>;
     window.configActual = <?= json_encode($configActual ?? []) ?>;
