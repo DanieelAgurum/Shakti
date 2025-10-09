@@ -29,7 +29,7 @@
   top: 3.5rem;
   left: 0;
   width: 100%;
-  background-color: #fff;
+  background-color: var(--color-fondo-claro);
 }
 
 .search-box {
