@@ -375,6 +375,9 @@ Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo dise�
   tristeza, enojo).
 - Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, pero sin exagerar ni dar falsas promesas.
 
+📌 Excepción importante:
+- Si el usuario solicita repetir listas o consejos relacionados con bienestar o manejo del estrés, el bot debe hacerlo respetando su estilo empático y cálido, sin activar la limitación anterior.
+
 ✅ Meta: Que el usuario se sienta acompañado y comprendido, descubriendo pequeños pasos para cuidar su bienestar.
 EOT;
 
@@ -428,6 +431,11 @@ EOT;
 
     private function formatearRespuestaHTML($texto)
     {
+        // 1. Convertir negritas estilo Markdown (**texto** o *texto*) a HTML
+        $texto = preg_replace('/\*\*(.*?)\*\*/s', '<strong>$1</strong>', $texto);
+        $texto = preg_replace('/\*(.*?)\*/s', '<b>$1</b>', $texto);
+
+        // 2. Separar líneas para listas y párrafos
         $lineas = preg_split('/\r\n|\r|\n/', trim($texto));
         $html = "";
         $enLista = false;
@@ -436,20 +444,19 @@ EOT;
             $linea = trim($linea);
             if ($linea === "") continue;
 
-            // Detectar líneas que parecen elementos de lista:
-            // - Empiezan con número (1., 2), guion, asterisco, o viñeta unicode (•)
-            if (preg_match('/^(?:[\-\*\•]|\d+[\.\)]|\•)\s*(.+)/u', $linea, $matches)) {
+            // Detectar líneas tipo lista: empiezan con -, *, • o números
+            if (preg_match('/^(?:[\-\*\•]|\d+[\.\)])\s*(.+)/u', $linea, $matches)) {
                 if (!$enLista) {
                     $html .= "<ul>";
                     $enLista = true;
                 }
-                $html .= "<li>" . htmlspecialchars($matches[1], ENT_QUOTES, 'UTF-8') . "</li>";
+                $html .= "<li>" . $matches[1] . "</li>";
             } else {
                 if ($enLista) {
                     $html .= "</ul>";
                     $enLista = false;
                 }
-                $html .= "<p>" . htmlspecialchars($linea, ENT_QUOTES, 'UTF-8') . "</p>";
+                $html .= "<p>" . $linea . "</p>";
             }
         }
 
@@ -568,7 +575,6 @@ EOT;
         $stmt->close();
         return $historial;
     }
-
     // Cifrado y descifrado Aes
     private function cifrarAES($texto)
     {
@@ -576,7 +582,6 @@ EOT;
         $cifrado = openssl_encrypt($texto, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
         return base64_encode($ci . $cifrado);
     }
-
     private function descifrarAES($textoCodificado)
     {
         if (empty($textoCodificado)) return '';
