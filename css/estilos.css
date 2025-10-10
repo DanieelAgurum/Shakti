@@ -932,44 +932,6 @@ small.error {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.carousel {
-  background-color: transparent;
-}
-
-.carousel-control-prev,
-.carousel-control-next {
-  width: 40px;
-  height: 40px;
-  background-color: #4682B4;
-  border-radius: 50%;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.carousel-control-prev {
-  left: 20px;
-}
-
-.carousel-control-next {
-  right: 20px;
-}
-
-.carousel-indicators {
-  bottom: -50px;
-}
-
-.carousel-indicators button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #000000ff;
-  opacity: 0.5;
-}
-
-.carousel-indicators .active {
-  opacity: 1;
-}
-
 div.stars {
   display: inline-block;
 }
