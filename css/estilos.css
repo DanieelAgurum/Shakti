@@ -59,7 +59,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #4682B4;
+  background-color: var(--color-primario-claro);
   color: #fff;
   display: flex;
   align-items: center;
@@ -86,7 +86,7 @@
   height: 50px;
   border-radius: 50%;
   border: none;
-  background-color: var(--color-secundario);
+  background-color: var(--color-primario-claro);
   color: #fff;
   font-size: 1.3rem;
   display: flex;
@@ -349,7 +349,7 @@
 
 /* Para evitar que el contenido quede oculto debajo de la navbar */
 body {
-  padding-top: 56px;
+  padding-top: 48px;
   background-color: var(--color-fondo-claro);
 }
 
@@ -373,7 +373,7 @@ body {
 .custom-navbar .navbar-brand:focus,
 .dropdown-menu a:hover {
   color: white;
-  background-color: var(--color-primario-claro);
+  background-color: var(--color-primario-medio);
   text-decoration: none;
 }
 
@@ -1480,7 +1480,7 @@ footer {
 
 /* --- Fondo del carrusel --- */
 #myCarousel .carousel-item {
-  background-image: url('../img/pexels-diva-34062752.jpg');
+  background-image: url('../img/toa-heftiba-xAQZ8plN8cM-unsplash.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1498,22 +1498,6 @@ footer {
   z-index: 1;
 }
 
-/* --- Animación de texto --- */
-.carousel-item h4,
-.carousel-item p,
-.carousel-item a {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.8s ease-in-out;
-}
-
-.carousel-item.active h4,
-.carousel-item.active p,
-.carousel-item.active a {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 #myCarousel h4 {
   font-size: 2.5rem;
   font-weight: 800;
@@ -1526,7 +1510,7 @@ footer {
 
 #myCarousel p {
   font-size: 1.2rem;
-  color: #000000;
+  color: #ffffff;
   line-height: 1.8;
   max-width: 600px;
   text-align: justify;
