@@ -563,7 +563,7 @@ EOT;
 
             // ✅ Solo sanitizar mensajes del usuario, no los del bot
             if ($rol === "usuario") {
-                $contenido = htmlspecialchars($contenido, ENT_QUOTES, 'UTF-8');
+                $contenido = $this->descifrarAES($row['mensaje']);
             }
 
             $historial[] = [
