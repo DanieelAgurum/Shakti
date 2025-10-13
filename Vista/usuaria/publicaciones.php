@@ -75,7 +75,9 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             <label class="form-check-label" for="switchCheckReverse">Publicar de forma anónima</label>
           </div>
           <input type="hidden" name="guardar_publicacion" value="1" />
-          <button type="submit" class="btn btn-outline-primary"><i class="bi bi-check2-circle"></i> Publicar</button>
+          <button type="submit" id="btnPublicar" class="btn btn-outline-primary">
+            <i class="bi bi-check2-circle"></i> Publicar
+          </button>
         </form>
       </div>
     </div>
@@ -116,7 +118,9 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               <input type="text" class="form-control mb-2" name="titulo" id="titulo-<?= $pub['id_publicacion'] ?>" value="<?= htmlspecialchars($pub['titulo']) ?>" minlength="3" required>
               <textarea class="form-control mb-2" name="contenido" id="contenido-<?= $pub['id_publicacion'] ?>" rows="3" minlength="5" required><?= htmlspecialchars($pub['contenido']) ?></textarea>
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-sm btn-outline-success"><i class="bi bi-check2-circle"></i> Guardar</button>
+                <button type="submit" class="btn btn-outline-primary btn-guardar">
+                  <i class="bi bi-check2-circle"></i> Guardar
+                </button>
                 <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel" data-id="<?= $pub['id_publicacion'] ?>"><i class="bi bi-x-lg"></i> Cancelar</button>
               </div>
             </form>
@@ -224,7 +228,9 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
               <input type="hidden" name="id_padre" value="">
               <div class="input-group mb-2">
                 <input type="text" name="comentario" class="form-control form-control-sm" placeholder="Escribe un comentario..." required>
-                <button type="submit" class="btn btn-sm btn-outline-primary">Enviar <i class="bi bi-arrow-right-circle"></i></button>
+                <button type="submit" class="btn btn-sm btn-outline-primary btn-enviar-comentario">
+                  Enviar <i class="bi bi-arrow-right-circle"></i>
+                </button>
               </div>
             </form>
 
@@ -235,6 +241,8 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
       <p class="text-center text-muted">No has creado publicaciones aún.</p>
     <?php endif; ?>
   </div>
+
+
   <?php if (isset($_SESSION['sweet_alert'])): ?>
     <script>
       Swal.fire({
@@ -247,46 +255,13 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
     </script>
     <?php unset($_SESSION['sweet_alert']); ?>
   <?php endif; ?>
+
+  <script src="<?= $urlBase ?>peticiones(js)/publicaciones.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/likesContar.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
   <script src="<?= $urlBase ?>validacionRegistro/abrirComentarios.js"></script>
   <script src="../../peticiones(js)/borrarPublicacion.js"></script>
-  <script>
-    $(document).ready(function() {
-      $(document).on('click', '.btn-toggle-comments', function() {
-        const id = $(this).data('id');
-        const $commentsSection = $('#comments-' + id);
-
-        if ($commentsSection.is(':visible')) {
-          $commentsSection.slideUp(200, function() {
-            $commentsSection.addClass('d-none');
-          });
-        } else {
-          $commentsSection.removeClass('d-none').hide().slideDown(200);
-        }
-      });
-    });
-  </script>
-  <script>
-    document.querySelectorAll('.btn-toggle-edit').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        document.getElementById(`titulo-text-${id}`).style.display = 'none';
-        document.getElementById(`contenido-text-${id}`).style.display = 'none';
-        document.getElementById(`edit-form-${id}`).classList.remove('d-none');
-      });
-    });
-
-    document.querySelectorAll('.btn-cancel').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        document.getElementById(`edit-form-${id}`).classList.add('d-none');
-        document.getElementById(`titulo-text-${id}`).style.display = '';
-        document.getElementById(`contenido-text-${id}`).style.display = '';
-      });
-    });
-  </script>
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
 
 </body>
