@@ -31,6 +31,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
     <link rel="stylesheet" href="<?= $urlBase ?>css/animacionCarga.css" />
     <script src="https://kit.fontawesome.com/fbc3385146.js" crossorigin="anonymous"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarReporte.js"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/usuariosSearch.js"></script>
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/modales/reportarEspecialista.php';
@@ -38,44 +39,30 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
 </head>
 
 <body>
+    <main class="layout">
+        <!-- Sidebar de solicitudes -->
+        <!-- <aside class="solicitud" id="solicitudSidebar">
+        </aside> -->
 
-    <div class="search-wrapper w-100">
-        <div class="search-box">
-            <i class="bi bi-search search-icon"></i>
-            <input type="text" class="form-control search-input" name="especialista" placeholder="Busca a un especialista...">
-        </div>
-    </div>
-
-    <div class="foro">
-        <div id="loaderInicio" class="loader-container">
-            <div class="orbit">
-                <div class="heart">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
-               2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09
-               C13.09 3.81 14.76 3 16.5 3 
-               19.58 3 22 5.42 22 8.5
-               c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
+        <!-- Sección principal -->
+        <section class="contenido-principal">
+            <div class="contenedor-buscador">
+                <div class="search-foro buscador-fijo mx-auto">
+                    <div class="search-box w-100">
+                        <form class="w-100" onsubmit="return false;">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" name="buscador" class="form-control search-input" placeholder="Buscar ...">
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="container mt-4">
-        <div id="contenedor-especialistas" class="row justify-content-center">
-            <div id="resultados" class="row "></div>
-            <div class="mt-3">
-                <ul id="paginacion" class="pagination justify-content-center"></ul>
+            <!-- Cards de usuarios -->
+            <div class="container mt-4">
+                <div id="usuariosGrid"></div>
             </div>
-        </div>
-    </div>
-    
-    <script src="<?= $urlBase ?>peticiones(js)/cargaEspecialistas.js"></script>
-    <script src="<?= $urlBase ?>peticiones(js)/especialistas.js"></script>
-    <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
-    <?php $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
-
+        </section>
+    </main>
 </body>
 
 </html>
