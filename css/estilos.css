@@ -359,6 +359,32 @@ body {
   color: white;
 }
 
+.nexo-logo {
+  font-weight: bold;
+  font-size: 2rem;
+  background: linear-gradient(270deg, #0ff, #f0f, #ff0, #0f0, #f00, #0ff);
+  background-size: 1200% 1200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: nexoNeon 8s ease infinite;
+  transition: transform 0.3s ease;
+}
+
+/* Animación del gradiente */
+@keyframes nexoNeon {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 /* Enlaces y marca del navbar */
 .custom-navbar .nav-link,
 .custom-navbar .navbar-brand,
