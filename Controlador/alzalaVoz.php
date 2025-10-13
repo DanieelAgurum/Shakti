@@ -17,7 +17,7 @@ $conexion = $db->open();
 
 if (!$conexion) {
     $_SESSION['mensaje'] = "Error en la conexión a la base de datos.";
-    header("Location: ../Vista/usuaria/alzalaVoz.php");
+    header("Location: ../Vista/usuaria/alzalaVoz");
     exit;
 }
 
@@ -29,7 +29,7 @@ $ultimaPrueba = $modelo->obtenerUltimaPrueba($id_usuaria);
 
 if ($ultimaPrueba && $ultimaPrueba >= $fechaLimite) {
     $_SESSION['mensaje'] = "Ya realizaste el test hace menos de 2 semanas. Por favor espera para hacerlo de nuevo.";
-    header("Location: ../Vista/usuaria/alzalaVoz.php");
+    header("Location: ../Vista/usuaria/alzalaVoz");
     exit;
 }
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar_test'])) {
 
     if (empty($respuestas)) {
         $_SESSION['mensaje'] = "Debes responder al menos una pregunta.";
-        header("Location: ../Vista/usuaria/alzalaVoz.php");
+        header("Location: ../Vista/usuaria/alzalaVoz");
         exit;
     }
 
@@ -54,12 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar_test'])) {
         $_SESSION['mensaje'] = "Error al guardar el test. Intenta de nuevo.";
     }
 
-    header("Location: ../Vista/usuaria/alzalaVoz.php");
+    header("Location: ../Vista/usuaria/alzalaVoz");
     exit;
 }
 
 // Si se accede sin POST válido, solo redirige a la vista
-header("Location: ../Vista/usuaria/alzalaVoz.php");
+header("Location: ../Vista/usuaria/alzalaVoz");
 exit;
 
 

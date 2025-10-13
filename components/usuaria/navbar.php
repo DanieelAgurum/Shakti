@@ -78,7 +78,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
         ];
         ?>
         <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['libreYSegura'], $usuario['rol']) ?>">Libre y Segura</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro.php">Foro</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro">Foro</a></li>
         <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a></li>
 
         <?php if ($usuario['rol'] <= 1): ?>
@@ -101,53 +101,52 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           <ul class="dropdown-menu dropdown-menu-end">
             <?php if ($usuario['correo']): ?>
               <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/<?= rutaSegura([1 => 'usuaria/perfil.php', 2 => 'especialista/perfil.php'], $usuario['rol']) ?>">Mi perfil <i class="bi bi-person-circle me-1"></i></a>
+                <a class="dropdown-item" href="<?= $urlBase ?>Vista/<?= rutaSegura([1 => 'usuaria/perfil', 2 => 'especialista/perfil'], $usuario['rol']) ?>">Mi perfil <i class="bi bi-person-circle me-1"></i></a>
               </li>
               <li>
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/usuaria/usuarios.php">
-                  Solicitudes <i class="bi bi-person-fill-add"></i>
+                <a class="dropdown-item" href="<?= $urlBase ?>Vista/usuaria/especialistas">
+                  Especialistas <i class="bi bi-person-badge"></i>
                 </a>
               </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
-                  Notificaciones <i class="bi bi-bell-fill"></i>
-                  <?php if ($notificacionesNoLeidas): ?>
-                    <span id="contadorNotificaciones" class="badge bg-danger rounded-pill ms-2"><?= $notificacionesNoLeidas ?></span>
-                  <?php endif; ?>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#configModal">
-                  Configuración <i class="bi bi-gear-fill"></i>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
-                  <input type="hidden" name="opcion" value="2" />
-                  <button type="submit" class="dropdown-item cerrar">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
-                </form>
-              </li>
-            <?php else: ?>
-              <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">
-                  Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
-                </a>
-              </li>
-            <?php endif; ?>
-          </ul>
+              <hr class="dropdown-divider">
         </li>
+        <li>
+          <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
+            Notificaciones <i class="bi bi-bell-fill"></i>
+            <?php if ($notificacionesNoLeidas): ?>
+              <span id="contadorNotificaciones" class="badge bg-danger rounded-pill ms-2"><?= $notificacionesNoLeidas ?></span>
+            <?php endif; ?>
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
+          <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#configModal">
+            Configuración <i class="bi bi-gear-fill"></i>
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
+          <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
+            <input type="hidden" name="opcion" value="2" />
+            <button type="submit" class="dropdown-item cerrar">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
+          </form>
+        </li>
+      <?php else: ?>
+        <li>
+          <a class="dropdown-item" href="<?= $urlBase ?>Vista/login.php">
+            Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
+          </a>
+        </li>
+      <?php endif; ?>
+      </ul>
+      </li>
       </ul>
     </div>
   </div>
