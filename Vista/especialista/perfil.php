@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 if (isset($_SESSION['correo']) || isset($_SESSION['id_rol'])) {
   if ($_SESSION['id_rol'] == 1) {
-    header("Location: {$urlBase}Vista/usuaria/perfil.php");
+    header("Location: {$urlBase}Vista/usuaria/perfil");
     exit;
   } else if ($_SESSION['id_rol'] == 3) {
     header("Location: {$urlBase}Vista/admin");

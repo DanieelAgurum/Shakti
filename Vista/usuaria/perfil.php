@@ -99,7 +99,7 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                                     </p>
 
                                     <button class="btn btn-outline-primary"
-                                        onclick="window.location.href='<?php echo '../chat.php'; ?>'">
+                                        onclick="window.location.href='<?php echo '../chat'; ?>'">
                                         <i class="bi bi-envelope-paper-heart-fill"></i> Mensajes
                                     </button>
 

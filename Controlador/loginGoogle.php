@@ -82,5 +82,5 @@ if ($usuario) {
 }
 
 // Redirigir al perfil en cualquier caso
-header("Location: ../Vista/usuaria/perfil.php");
+header("Location: ../Vista/usuaria/perfil");
 exit;
