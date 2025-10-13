@@ -4,8 +4,8 @@
 
       <!-- Marca y descripción -->
       <div class="col-12 col-md-4">
-        <a href="<?= $urlBase ?>index.php" class="text-decoration-none text-white fw-bold fs-5 d-block mb-2">
-          <i class="bi bi-heart-pulse me-2"></i> Shakti
+        <a class="navbar-brand nexo-logo text-decoration-none text-white fw-bold fs-5 d-block mb-2" href="<?= $urlBase ?>index">
+          <i class="bi bi-heart-pulse me-2"></i> NexoH
         </a>
         <p class="text-white-50 small mb-0">
           Promovemos la salud mental masculina a través del acompañamiento, la información y el desarrollo personal.
@@ -39,7 +39,7 @@
 
     <!-- Créditos -->
     <div class="text-center text-white-50 small">
-      © <?= date("Y") ?> Shakti — Promoviendo la salud mental masculina.
+      © <?= date("Y") ?> NexoH — Promoviendo la salud mental masculina.
     </div>
   </div>
 </footer>

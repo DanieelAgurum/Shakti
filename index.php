@@ -47,9 +47,27 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
           <div class="container">
             <div class="row align-items-center">
               <div class="col-md-7 col-12 order-md-1 order-2">
+                <h4>Nuestro objetivo</h4>
+                <p>Promover la apertura emocional en hombres a través de un chatbot inteligente que brinde
+                  apoyo inicial y motive la búsqueda de ayuda profesional.</p>
+              </div>
+              <div class="col-md-5 col-12 order-md-2 order-1">
+                <img src="img/Chat bot-amico.svg" class="d-block mx-auto img-fluid" alt="slide">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="mask d-flex align-items-center">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-md-7 col-12 order-md-1 order-2">
                 <h4>Misión</h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto ut perferendis aliquid eum eaque reprehenderit iste aspernatur tempora?
-                  Quos, fugit. Nostrum sed temporibus quam cumque perferendis, laudantium amet tempora culpa!</p>
+                <p>Empoderar a los hombres para que fortalezcan su bienestar emocional y mental mediante herramientas educativas,
+                  interactivas y seguras, fomentando el aprendizaje, la reflexión y la conexión con una comunidad de apoyo confiable.
+                  Buscamos brindar acompañamiento accesible que transforme hábitos, promueva la resiliencia y favorezca la salud integral.</p>
               </div>
               <div class="col-md-5 col-12 order-md-2 order-1">
                 <img src="img/undraw_online-community_3o0l.svg" class="d-block mx-auto img-fluid" alt="slide">
@@ -65,11 +83,12 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
             <div class="row align-items-center">
               <div class="col-md-7 col-12 order-md-1 order-2">
                 <h4>Visión</h4>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos, error voluptate.
-                  Maiores tempore et excepturi optio reiciendis commodi ipsam eos nam, nesciunt quae officiis facere, eum ab, incidunt esse numquam.</p>
+                <p>Ser la plataforma líder en apoyo emocional y educativo para hombres, reconocida por su enfoque inclusivo,
+                  tecnología innovadora y compromiso con el bienestar integral.
+                  Queremos crear una comunidad activa donde cada usuario se sienta acompañado, escuchado y motivado a crecer personal y emocionalmente.</p>
               </div>
               <div class="col-md-5 col-12 order-md-2 order-1">
-                <img src="img/Mind map-bro.svg" class="d-block mx-auto img-fluid" alt="slide">
+                <img src="img/undraw_text-messages_978a.svg" class="d-block mx-auto img-fluid" alt="slide">
               </div>
             </div>
           </div>
@@ -82,11 +101,14 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
             <div class="row align-items-center">
               <div class="col-md-7 col-12 order-md-1 order-2">
                 <h4>Nuestros valores</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit perferendis, doloremque, itaque reprehenderit,
-                  dolorum rerum hic fugit dicta aliquid sunt eius deserunt sint corrupti odio consectetur mollitia modi reiciendis officiis!</p>
+                <p>Empatía: Te escuchamos y te acompañamos.<br>
+
+                  Confianza: Espacio seguro y privado.<br>
+
+                  Comunidad: Conecta y apoya a otros como tú.</p>
               </div>
               <div class="col-md-5 col-12 order-md-2 order-1">
-                <img src="img/undraw_chat-bot_c8iw.svg" class="d-block mx-auto img-fluid" alt="slide">
+                <img src="img/Mind map-bro.svg" class="d-block mx-auto img-fluid" alt="slide">
               </div>
             </div>
           </div>
@@ -111,7 +133,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       <!-- Título de la sección -->
       <div class="row mb-4">
         <div class="col text-center">
-          <h2 class="display-5 fw-bold">Acerca de Nuestro Sitio Web</h2>
+          <h2 class="display-5 fw-bold">Acerca de NexoH</h2>
           <p class="lead text-muted">Conoce lo que hacemos y cómo podemos ayudarte</p>
         </div>
       </div>
@@ -120,19 +142,20 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       <div class="row align-items-center">
         <!-- Imagen o ilustración -->
         <div class="col-md-6 mb-4 mb-md-0">
-          <img src="img/undraw_chat-bot_c8iw.svg" class="img-fluid rounded shadow" alt="Imagen representativa del sitio">
+          <img src="img/NexoH.png" class="img-fluid rounded shadow" alt="NexoH">
         </div>
 
         <!-- Texto informativo -->
         <div class="col-md-6">
           <p>
-            Bienvenido a nuestro sitio web, diseñado para ofrecerte una experiencia intuitiva y segura.
-            Aquí encontrarás recursos, información y herramientas que te permitirán explorar y aprender
-            de manera eficiente.
+            Bienvenido a <strong>NexoH</strong>, tu espacio seguro para fortalecer tu bienestar emocional y mental.
+            Aquí encontrarás herramientas interactivas, recursos prácticos y contenidos que te ayudarán a crecer
+            día a día, aprender sobre ti mismo y conectar con una comunidad de apoyo.
           </p>
           <p>
-            Nuestro objetivo es proporcionarte contenido de calidad, servicios confiables y soporte
-            continuo, adaptado a tus necesidades y al ritmo de tu aprendizaje o uso diario.
+            En <strong>NexoH</strong> creemos que cada paso hacia tu desarrollo personal cuenta.
+            Nuestro objetivo es acompañarte con información confiable, servicios accesibles y soporte constante,
+            adaptados a tu ritmo y necesidades.
           </p>
           <div class="d-flex justify-content-center mt-3">
             <a href="#" class="btn btn-banner">Contáctanos</a>

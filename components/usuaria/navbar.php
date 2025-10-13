@@ -50,7 +50,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/config.css">
-  <link rel="icon" href="<?= $urlBase ?>img/Ian.ico">
+  <link rel="icon" href="<?= $urlBase ?>img/NexoH.ico">
   <script>
     window.usuarioActual = <?= json_encode($usuario) ?>;
     window.configActual = <?= json_encode($configActual ?? []) ?>;
@@ -62,7 +62,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
   <div class="container">
-    <a class="navbar-brand" href="<?= $urlBase ?>index">SHAKTI</a>
+    <a class="navbar-brand nexo-logo" href="<?= $urlBase ?>index">NexoH</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
       aria-controls="navbarEspecialista" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
