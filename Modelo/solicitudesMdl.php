@@ -418,7 +418,7 @@ class SolicitudesMdl
                     <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $id . '">
                         <i class="bi bi-eye-fill"></i> Ver perfil
                     </button>
-                    <a href="/Vista/chat.php" class="btn btn-outline-primary mt-2">
+                    <a href="/shakti/Vista/chat?especialistas=' . $this->cifrarAES($id) . '" class="btn btn-outline-primary mt-2">
                         <i class="bi bi-envelope-paper-heart"></i> Mensaje</a>
                 </div>
             </div>
@@ -428,5 +428,25 @@ class SolicitudesMdl
 
         echo $cards;
         $stmt->close();
+    }
+
+    private function cifrarAES($id)
+    {
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($id, 'aes-256-cbc', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', 0, $ci);
+        return base64_encode($ci . $cifrado);
+    }
+    private function descifrarAES($idCodificado)
+    {
+        if (empty($textoCodificado)) return '';
+        $datos = base64_decode($textoCodificado, true);
+        if ($datos === false) return $textoCodificado;
+
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', 0, $ci);
+        return $descifrado !== false ? $descifrado : $textoCodificado;
     }
 }
