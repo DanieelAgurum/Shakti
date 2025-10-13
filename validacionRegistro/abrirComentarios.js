@@ -1,15 +1,22 @@
 $(document).ready(function () {
+
     // Validar y enviar comentario raíz
     $(document).on("submit", ".comment-form", function (e) {
         e.preventDefault();
         const form = $(this);
         const comentario = form.find("input[name='comentario']").val().trim();
         const idPub = form.data("id-publicacion");
+        const btn = form.find("button[type='submit']");
 
         if (comentario.length < 4) {
             Swal.fire("Error", "El comentario debe tener al menos 4 caracteres.", "warning");
             return;
         }
+
+        // Deshabilitar botón y mostrar texto de envío con spinner
+        btn.prop("disabled", true).html(
+            `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Enviando...`
+        );
 
         $.ajax({
             url: "../../Controlador/comentariosCtrl.php",
@@ -24,10 +31,7 @@ $(document).ready(function () {
                         timer: 1200,
                         showConfirmButton: false,
                     });
-
-                    // Recarga TODOS los comentarios para mostrar el botón "Ver respuestas" sólo si hay respuestas
                     cargarComentarios();
-
                     form[0].reset();
                 } else if (data.message === "malas_palabras") {
                     Swal.fire({
@@ -55,6 +59,10 @@ $(document).ready(function () {
             error: function () {
                 Swal.fire("Error", "Error en la comunicación con el servidor.", "error");
             },
+            complete: function () {
+                // 🔹 Restaurar el botón con ícono original
+                btn.prop("disabled", false).html(`Enviar <i class="bi bi-arrow-right-circle"></i>`);
+            }
         });
     });
 
@@ -73,7 +81,6 @@ $(document).ready(function () {
                 data: { opcion: 5, id_padre: idComentario },
                 success: function (data) {
                     if (data.status === "ok") {
-                        // Insertar el HTML ya generado desde el backend
                         container.html(data.html).removeClass("d-none");
                         btn.html("Ocultar respuestas");
                     } else {
@@ -99,12 +106,12 @@ $(document).ready(function () {
             contenedor.empty(); // Cerrar si ya existe
         } else {
             const formHtml = `
-        <form class="form-responder" data-id-padre="${id}">
-          <div class="input-group mb-2">
-            <input type="text" name="comentario" class="form-control form-control-sm" placeholder="Escribe tu respuesta..." required>
-            <button type="submit" class="btn btn-sm btn-outline-primary">Enviar</button>
-          </div>
-        </form>`;
+            <form class="form-responder" data-id-padre="${id}">
+                <div class="input-group mb-2">
+                    <input type="text" name="comentario" class="form-control form-control-sm" placeholder="Escribe tu respuesta..." required>
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Enviar <i class="bi bi-arrow-right-circle"></i></button>
+                </div>
+            </form>`;
             contenedor.html(formHtml);
         }
     });
@@ -116,11 +123,17 @@ $(document).ready(function () {
         const idPadre = form.data("id-padre");
         const comentario = form.find("input[name='comentario']").val().trim();
         const idPublicacion = form.closest(".card").find(".comment-form").data("id-publicacion");
+        const btn = form.find("button[type='submit']");
 
         if (comentario.length < 4) {
             Swal.fire("Error", "La respuesta debe tener al menos 4 caracteres.", "warning");
             return;
         }
+
+        // Deshabilitar el botón durante el envío con spinner
+        btn.prop("disabled", true).html(
+            `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Enviando...`
+        );
 
         $.ajax({
             url: "../../Controlador/comentariosCtrl.php",
@@ -132,7 +145,6 @@ $(document).ready(function () {
                 id_padre: idPadre,
                 id_publicacion: idPublicacion,
             },
-
             success: function (data) {
                 if (data.status === "ok") {
                     Swal.fire({
@@ -144,8 +156,6 @@ $(document).ready(function () {
 
                     form.remove();
                     $(`#respuestas-${idPadre}`).addClass("d-none").empty();
-
-                    // Recargar todos los comentarios para reflejar el nuevo estado
                     cargarComentarios(idPublicacion);
                 } else if (data.message === "malas_palabras") {
                     Swal.fire({
@@ -163,6 +173,10 @@ $(document).ready(function () {
             error: function () {
                 Swal.fire("Error", "Error en la comunicación con el servidor.", "error");
             },
+            complete: function () {
+                // 🔹 Restaurar el botón con ícono original
+                btn.prop("disabled", false).html(`Enviar <i class="bi bi-arrow-right-circle"></i>`);
+            }
         });
     });
 
@@ -174,9 +188,18 @@ $(document).ready(function () {
 
     $(document).on("submit", ".edit-comentario-form", function (e) {
         e.preventDefault();
+
         const form = $(this);
         const id = form.find("input[name='id_comentario']").val();
         const nuevoComentario = form.find("input[name='nuevo_comentario']").val().trim();
+        const btn = form.find("button[type='submit']"); // botón de enviar
+        const originalHTML = btn.html(); // guarda el contenido original (con ícono incluido)
+
+        // Desactiva el botón y muestra spinner
+        btn.prop("disabled", true).html(`
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Guardando...
+    `);
 
         $.ajax({
             url: "../../Controlador/comentariosCtrl.php",
@@ -213,6 +236,10 @@ $(document).ready(function () {
             error: function () {
                 Swal.fire("Error", "Error en la comunicación con el servidor.", "error");
             },
+            complete: function () {
+                // Restaurar el botón original
+                btn.prop("disabled", false).html(originalHTML);
+            }
         });
     });
 

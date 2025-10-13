@@ -145,8 +145,8 @@ class buscadorForoMdl
         $esAnonima = isset($publicacion['anonima']) && $publicacion['anonima'] == '1';
         $nombreMostrar = $esAnonima ? 'Anónima' : htmlspecialchars(ucwords(strtolower($publicacion['nickname'])));
         $fotoMostrar = $esAnonima
-            ? 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png'
-            : (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png');
+            ? '../../img/undraw_chill-guy-avatar_tqsm.svg'
+            : (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : '../../img/undraw_chill-guy-avatar_tqsm.svg');
 
         $likesConsulta = mysqli_query($this->con, "SELECT COUNT(*) AS total FROM likes_publicaciones WHERE id_publicacion = $idPublicacion");
         $likes = ($likesConsulta && $row = mysqli_fetch_assoc($likesConsulta)) ? $row['total'] : 0;
