@@ -62,7 +62,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
   <div class="container">
-    <a class="navbar-brand" href="<?= $urlBase ?>index.php">SHAKTI</a>
+    <a class="navbar-brand" href="<?= $urlBase ?>index">SHAKTI</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
       aria-controls="navbarEspecialista" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -72,14 +72,14 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
         <?php
         // Mapa de rutas
         $rutas = [
-          'libreYSegura' => [1 => 'usuaria/libreYSegura.php', 2 => 'usuaria/libreYSegura.php', 3 => 'admin/'],
-          'alzalaVoz' => [1 => 'usuaria/alzalaVoz.php', 3 => 'admin/'],
-          'publicaciones' => [1 => 'usuaria/publicaciones.php', 2 => 'usuaria/publicaciones.php', 3 => 'admin/']
+          'libreYSegura' => [1 => 'usuaria/libreYSegura', 2 => 'usuaria/libreYSegura', 3 => 'admin/'],
+          'alzalaVoz' => [1 => 'usuaria/alzalaVoz', 3 => 'admin/'],
+          'publicaciones' => [1 => 'usuaria/publicaciones', 2 => 'usuaria/publicaciones', 3 => 'admin/']
         ];
         ?>
         <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['libreYSegura'], $usuario['rol']) ?>">Libre y Segura</a></li>
         <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro">Foro</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/contacto.php">Contáctanos</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/contacto">Contáctanos</a></li>
 
         <?php if ($usuario['rol'] <= 1): ?>
           <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['alzalaVoz'], $usuario['rol']) ?>">Test</a></li>
