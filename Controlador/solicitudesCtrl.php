@@ -39,6 +39,13 @@ if (isset($_GET['rechazarAmigo'])) {
 
 
 if (isset($_GET['eliminarAmigo'])) {
-    $soli->eliminarAmigo($_REQUEST['nickname']); 
+    $soli->eliminarAmigo($_REQUEST['nickname']);
     return;
+}
+
+if (isset($_GET['especialistas'])) {
+    $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
+    $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+    $buscador = trim($_GET['buscador'] ?? '');
+    $soli->obtenerEspecialistas($buscador, $limit, $offset);
 }

@@ -86,7 +86,6 @@ class SolicitudesMdl
         }
         $stmt->close();
     }
-
     public function aceptarSolicitud($nickname)
     {
         $conn = $this->conectarBD();
@@ -122,7 +121,6 @@ class SolicitudesMdl
             $stmtVerificar->close();
         }
     }
-
     public function rechazarSolicitud($nickname)
     {
         $conn = $this->conectarBD();
@@ -158,7 +156,6 @@ class SolicitudesMdl
             $stmtVerificar->close();
         }
     }
-
     public function obtenerSolicitudes()
     {
         $usuarioPrincipal = $_SESSION['nickname'] ?? null;
@@ -207,7 +204,6 @@ class SolicitudesMdl
         }
         $stmt->close();
     }
-
     public function obtenerUsuarios()
     {
         $usuarios = '';
@@ -297,7 +293,6 @@ class SolicitudesMdl
         echo $usuarios;
         $stmt->close();
     }
-
     public function cancelarSolicitud($nicknameAmigo)
     {
         $miNickname = $_SESSION['nickname'] ?? null;
@@ -316,7 +311,6 @@ class SolicitudesMdl
         }
         if ($stmt) $stmt->close();
     }
-
     public function eliminarAmigo($nickname)
     {
         $conn = $this->conectarBD();
@@ -360,5 +354,99 @@ class SolicitudesMdl
             echo "no_existe";
             $stmtVerificar->close();
         }
+    }
+    // Especialistas 
+    public function obtenerEspecialistas($buscador = null, $limit = 10, $offset = 0)
+    {
+        $conn = $this->conectarBD();
+        $cards = '';
+
+        if ($buscador && trim($buscador) !== '') {
+            $like = "%" . trim($buscador) . "%";
+            $sql = "SELECT u.id, u.nombre, u.apellidos, u.descripcion, u.foto
+                FROM usuarias u
+                WHERE u.id_rol = 2 
+                  AND u.estatus = 1 
+                  AND (u.nickname LIKE ? OR u.nombre LIKE ?)
+                LIMIT ? OFFSET ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssii", $like, $like, $limit, $offset);
+        } else {
+            $sql = "SELECT u.id, u.nombre, u.apellidos, u.correo, u.foto, u.descripcion, 
+                       u.telefono, u.estatus, u.nickname, s.servicio
+                FROM usuarias u
+                LEFT JOIN servicios_especialistas s ON u.id = s.id_usuaria
+                WHERE u.estatus = 1 AND u.id_rol = 2
+                LIMIT ? OFFSET ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ii", $limit, $offset);
+        }
+
+        if (!$stmt) {
+            echo '<div class="alert alert-danger text-center">Error en la consulta</div>';
+            return;
+        }
+
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        if ($resultado->num_rows === 0) {
+            echo '<div class="col-12 text-center">No se encontraron especialistas</div>';
+            return;
+        }
+
+        while ($row = $resultado->fetch_assoc()) {
+            $id = htmlspecialchars($row['id']);
+            $src = !empty($row['foto'])
+                ? 'data:image/jpeg;base64,' . base64_encode($row['foto'])
+                : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Doctor-512.png';
+
+            $nombre = htmlspecialchars($row['nombre'] ?? '', ENT_QUOTES, 'UTF-8');
+            $apellidos = htmlspecialchars($row['apellidos'] ?? '', ENT_QUOTES, 'UTF-8');
+            $descripcion = htmlspecialchars($row['descripcion'] ?? '', ENT_QUOTES, 'UTF-8');
+
+            $cards .= '<div class="col-md-4 mb-4">
+            <div class="card testimonial-card ">
+                <div class="card-up"></div>
+                <div class="avatar mx-auto white">
+                    <img src="' . $src . '" class="rounded-circle" width="150" height="150" alt="Especialista">
+                </div>
+                <div class="card-body text-center">
+                    <h4 class="card-title font-weight-bold">' . ucwords($nombre . ' ' . $apellidos) . '</h4>
+                    <p style="max-height: 70px; overflow-y: auto;" class="descripcion-scroll">' . ucwords($descripcion) . '</p>
+                    <hr>
+                    <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $id . '">
+                        <i class="bi bi-eye-fill"></i> Ver perfil
+                    </button>
+                    <a href="/shakti/Vista/chat?especialistas=' . $this->cifrarAES($id) . '" class="btn btn-outline-primary mt-2">
+                        <i class="bi bi-envelope-paper-heart"></i> Mensaje</a>
+                </div>
+            </div>
+        </div>';
+            include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/modales/especialistas.php';
+        }
+
+        echo $cards;
+        $stmt->close();
+    }
+
+    private function cifrarAES($id)
+    {
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($id, 'aes-256-cbc', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', 0, $ci);
+        return base64_encode($ci . $cifrado);
+    }
+    private function descifrarAES($idCodificado)
+    {
+        if (empty($textoCodificado)) return '';
+        $datos = base64_decode($textoCodificado, true);
+        if ($datos === false) return $textoCodificado;
+
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', 0, $ci);
+        return $descifrado !== false ? $descifrado : $textoCodificado;
     }
 }

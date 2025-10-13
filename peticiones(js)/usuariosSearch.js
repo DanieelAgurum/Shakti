@@ -1,21 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const solicitudSidebar = document.getElementById("solicitudSidebar");
   const usuariosList = document.getElementById("usuariosGrid");
   const searchForm = document.querySelector(".search-box form");
   const searchInput = searchForm.querySelector("input[name='buscador']");
+  const limite = 6;
+  let paginaActual = 0;
+  let cargando = false;
+  let noHayMas = false;
 
-  // Mostrar loader en un contenedor
   function showLoader(target) {
+    // Quitar row si existe y mantener flex
+    target.classList.remove("row");
+    target.classList.add("usuario-flex");
+
     target.innerHTML = `
       <div class="loader-container">
         <div class="orbit"></div>
       </div>`;
   }
 
-  // Obtener HTML desde el backend
   async function fetchHTML(url) {
     try {
-      const response = await fetch(url, { method: "GET" });
+      const response = await fetch(url);
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       return await response.text();
     } catch (error) {
@@ -23,209 +28,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Cargar solicitudes
-  async function cargarSolicitudes() {
-    showLoader(solicitudSidebar);
+  async function cargarUsuarios(query = "", reset = true) {
+    if (cargando) return;
+    cargando = true;
 
-    const htmlSolicitudes = await fetchHTML(
-      "/shakti/Controlador/solicitudesCtrl.php?solicitudes"
-    );
+    if (reset) {
+      paginaActual = 0;
+      noHayMas = false;
+      showLoader(usuariosList); // animación de carga
+    }
 
-    solicitudSidebar.innerHTML =
-      htmlSolicitudes ||
-      `<div class="solicitud-vacia"><p>Sin solicitudes</p></div>`;
-  }
-
-  // Cargar usuarios
-  async function cargarUsuarios(query = "") {
-    usuariosList.classList.add("usuario-flex");
-
-    showLoader(usuariosList);
-
-    const url =
-      "/shakti/Controlador/solicitudesCtrl.php?usuarios" +
-      (query ? `&buscador=${encodeURIComponent(query)}` : "");
-
+    const offset = paginaActual * limite;
+    const url = `/shakti/Controlador/solicitudesCtrl.php?especialistas&limit=${limite}&offset=${offset}&buscador=${encodeURIComponent(
+      query
+    )}`;
     const htmlUsuarios = await fetchHTML(url);
 
     if (htmlUsuarios) {
-      usuariosList.classList.remove("usuario-flex");
-      usuariosList.classList.add("usuarios-grid");
+      if (!htmlUsuarios.includes("No se encontraron especialistas")) {
+        if (reset) {
+          usuariosList.innerHTML = htmlUsuarios;
+        } else {
+          usuariosList.insertAdjacentHTML("beforeend", htmlUsuarios);
+        }
 
-      usuariosList.innerHTML = htmlUsuarios;
+        // Animación de los cards
+        const cards = usuariosList.querySelectorAll(".testimonial-card");
+        cards.forEach((card, index) => {
+          card.classList.remove("animate__animated", "animate__backInUp");
+          void card.offsetWidth; // reinicia animación
+          card.classList.add("animate__animated", "animate__backInUp");
+          card.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Después de animar, aplicar layout final
+        usuariosList.classList.remove("usuario-flex");
+        usuariosList.classList.add("row");
+
+        paginaActual++;
+      } else {
+        if (reset) {
+          usuariosList.innerHTML = `<div class="col-12 text-center">No se encontraron especialistas</div>`;
+        }
+        noHayMas = true;
+      }
     } else {
-      usuariosList.innerHTML = `<div class="usuarios-vacio"><p>No se encontraron usuarios</p></div>`;
+      usuariosList.innerHTML = `<div class="col-12 text-center">No se encontraron especialistas</div>`;
+      noHayMas = true;
     }
+
+    cargando = false;
   }
 
-  // Cargar ambos al inicio
-  Promise.all([cargarSolicitudes(), cargarUsuarios()]);
+  // Inicial: cargar todos los usuarios
+  cargarUsuarios("", true);
 
   // Buscar usuarios
-  searchForm.addEventListener("submit", async (e) => {
+  searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const query = searchInput.value.trim();
-    await cargarUsuarios(query);
+    cargarUsuarios(query, true); // animación de carga también
   });
 
-  // Función AJAX
-  function ajaxPost(url, data, onSuccess, onError) {
-    $.ajax({
-      url: url,
-      type: "POST",
-      data: data,
-      success: onSuccess,
-      error: onError || function (xhr, status, error) {},
-    });
-  }
-
-  // Actualizar botón del usuario
-  function actualizarBotonUsuario(usuarioDiv, html) {
-    if (usuarioDiv) usuarioDiv.innerHTML = html;
-  }
-
-  // Eliminar solicitud
-  function eliminarSolicitud(nickname) {
-    // Buscar el contenedor card completo
-    const solicitudCard = document
-      .querySelector(`.solicitud-card div[data-soli-nickname="${nickname}"]`)
-      ?.closest(".solicitud-card");
-
-    if (solicitudCard) solicitudCard.remove();
-
-    // Si ya no hay solicitudes, mostrar mensaje vacío
-    const sidebar = document.getElementById("solicitudSidebar");
-    if (sidebar && sidebar.children.length === 0) {
-      sidebar.innerHTML = `<div class="solicitud-vacia"><p>Sin solicitudes</p></div>`;
-    }
-  }
-
-  // Manejar clicks
-  function manejarClick(e, tipo) {
-    const nickname = e.target.getAttribute("data-nickname");
-    if (!nickname) return;
-
-    const usuarioDiv = document.querySelector(
-      `div[data-soli-usuario-nickname="${nickname}"]`
-    );
-    if (!usuarioDiv) return;
-
-    switch (tipo) {
-      case "aceptar":
-        ajaxPost(
-          "/shakti/Controlador/solicitudesCtrl.php?aceptarSolicitud",
-          { nickname },
-          function () {
-            actualizarBotonUsuario(
-              usuarioDiv,
-              `<button type="button" class="btn btn-secondary btn-agregado" data-nickname="${nickname}">
-                Agregado <i class="bi bi-person-check"></i>
-              </button>`
-            );
-            eliminarSolicitud(nickname);
-          }
-        );
-        break;
-
-      case "rechazar":
-        ajaxPost(
-          "/shakti/Controlador/solicitudesCtrl.php?rechazarAmigo",
-          { nickname },
-          function (data) {
-            if (data === "rechazo" || data === "no_existe") {
-              actualizarBotonUsuario(
-                usuarioDiv,
-                `<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
-                  Agregar Amigo <i class="bi bi-person-add"></i>
-                </button>`
-              );
-              eliminarSolicitud(nickname);
-            }
-          }
-        );
-        break;
-
-      case "agregar":
-        ajaxPost(
-          "/shakti/Controlador/solicitudesCtrl.php?agregarAmigo",
-          { nickname },
-          function (data) {
-            if (data === "enviada") {
-              actualizarBotonUsuario(
-                usuarioDiv,
-                `<button type="button" class="btn btn-warning btn-cancelar" data-nickname="${nickname}">
-                  Cancelar Solicitud <i class="bi bi-x-circle"></i>
-                </button>`
-              );
-            }
-          }
-        );
-        break;
-
-      case "cancelar":
-        ajaxPost(
-          "/shakti/Controlador/solicitudesCtrl.php?cancelarSolicitud",
-          { nickname },
-          function (data) {
-            if (data === "cancelado") {
-              actualizarBotonUsuario(
-                usuarioDiv,
-                `<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
-                  Agregar Amigo <i class="bi bi-person-add"></i>
-                </button>`
-              );
-            }
-          }
-        );
-        break;
-
-      case "eliminar":
-        ajaxPost(
-          "/shakti/Controlador/solicitudesCtrl.php?eliminarAmigo",
-          { nickname },
-          function (data) {
-            if (data === "eliminado") {
-              actualizarBotonUsuario(
-                usuarioDiv,
-                `<button type="button" class="btn btn-banner-azul btn-agregar" data-nickname="${nickname}">
-            Agregar Amigo <i class="bi bi-person-add"></i>
-          </button>`
-              );
-            }
-          }
-        );
-        break;
-    }
-  }
-
-  // Eventos en sidebar
-  solicitudSidebar.addEventListener("click", (e) => {
+  // Scroll infinito
+  window.addEventListener("scroll", () => {
     if (
-      e.target.classList.contains("btn-banner-azul") &&
-      e.target.textContent.includes("Aceptar")
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 200
     ) {
-      manejarClick(e, "aceptar");
-    }
-    if (e.target.classList.contains("btn-banner-rojo")) {
-      manejarClick(e, "rechazar");
+      cargarUsuarios(searchInput.value.trim(), false);
     }
   });
-
-  // Eventos en usuarios
-  usuariosList.addEventListener("click", (e) => {
-    if (e.target.classList.contains("btn-agregar")) manejarClick(e, "agregar");
-    if (e.target.classList.contains("btn-cancelar"))
-      manejarClick(e, "cancelar");
-    if (
-      e.target.classList.contains("btn-banner-azul") &&
-      e.target.textContent.includes("Aceptar")
-    ) {
-      manejarClick(e, "aceptar");
-    }
-    if (e.target.classList.contains("btn-agregado"))
-      manejarClick(e, "eliminar");
-    if (e.target.classList.contains("btn-banner-rojo"))
-      manejarClick(e, "rechazar");
-  });
-
 });
