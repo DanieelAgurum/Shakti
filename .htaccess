@@ -1,39 +1,41 @@
-# ==============================
-# ACTIVAR REESCRITURA DE URLS
-# ==============================
+# ============================================
+# 🔧 ACTIVAR REESCRITURA DE URLS
+# ============================================
 RewriteEngine On
 RewriteBase /shakti/
 
-# ==============================
-# EVITAR AFECTAR ARCHIVOS O CARPETAS REALES
-# ==============================
+# ============================================
+# ⚙️ EVITAR AFECTAR ARCHIVOS O CARPETAS REALES
+# ============================================
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# ==============================
-# RUTAS AMIGABLES (home, about, contact, etc.)
+# ============================================
+# 🌐 RUTAS AMIGABLES (home, about, contact, etc.)
 # Ejemplo: /shakti/home -> index.php?page=home
-# ==============================
+# ============================================
 RewriteRule ^(home|about|contact)/?$ index.php?page=$1 [L,QSA]
 
-# ==============================
-# BLOQUEAR ACCESO DIRECTO A VISTAS SENSIBLES
-# ==============================
+# ============================================
+# 🚫 BLOQUEAR ACCESO DIRECTO A VISTAS SENSIBLES
+# ============================================
 # Si intentan acceder directamente a /Vista, /Vista/usuaria o /Vista/admin -> enviar a 404
-RewriteRule ^Vista(/)?$ Vista/404.php [L,QSA]
-RewriteRule ^Vista/usuaria(/)?$ Vista/404.php [L,QSA]
-RewriteRule ^Vista/admin(/)?$ Vista/404.php [L,QSA]
+RewriteRule ^Vista/?$ Vista/404.php [L,QSA]
+RewriteRule ^Vista/usuaria/?$ Vista/404.php [L,QSA]
+RewriteRule ^Vista/admin/?$ Vista/404.php [L,QSA]
 
-# ==============================
-# EXCEPCIONES PERMITIDAS
-# ==============================
-# Ejemplo: permitir acceso directo a Vista/usuaria/usuarios.php
-RewriteRule ^Vista/usuaria/usuarios/?$ Vista/usuaria/usuarios.php [L,QSA]
+# ============================================
+# ✅ EXCEPCIONES PERMITIDAS
+# ============================================
+# Permitir acceso directo a ciertas vistas específicas
+RewriteRule ^Vista/especialista/perfil/?$ Vista/especialista/perfil.php [L,QSA]
+RewriteRule ^Vista/usuaria/perfil/?$ Vista/usuaria/perfil.php [L,QSA]
+RewriteRule ^Vista/usuaria/foro/?$ Vista/usuaria/foro.php [L,QSA]
+RewriteRule ^Vista/usuaria/especialistas/?$ Vista/usuaria/especialistas.php [L,QSA]
 RewriteRule ^Vista/usuaria/publicaciones/?$ Vista/usuaria/publicaciones.php [L,QSA]
 RewriteRule ^Vista/chat/?$ Vista/chat.php [L,QSA]
 
-
-# ==============================
-# PÁGINA 404 PERSONALIZADA
-# ==============================
+# ============================================
+# ⚠️ PÁGINA 404 PERSONALIZADA
+# ============================================
 ErrorDocument 404 /shakti/Vista/404.php
