@@ -28,7 +28,7 @@ $urlBase = getBaseUrl();
 
 
 <body>
-    <div class="container mt-3 mb-3 animate__animated animate__delay-0.5s animate__fadeInDown">
+    <div class="container mt-5 mb-3 animate__animated animate__delay-0.5s animate__fadeInDown">
         <div class="form m-auto">
             <div class="contact-info">
                 <h3 class="title">Comunícate con nosotros</h3>

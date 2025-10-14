@@ -39,7 +39,7 @@ $urlBase = getBaseUrl();
 </head>
 
 <body class="foro_main text-black">
-    <div class="contenedor-buscador">
+    <div class="contenedor-buscador mt-3">
         <div class="search-foro buscador-fijo mx-auto">
             <div class="search-box w-100">
                 <form method="GET" class="w-100">
