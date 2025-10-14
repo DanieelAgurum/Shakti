@@ -42,6 +42,15 @@ $(document).ready(function () {
                         timerProgressBar: true,
                         showConfirmButton: false
                     });
+                } else if (data.message === "doxxing") {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Información personal detectada",
+                        text: "Evitemos compartir información personal o sensible. Gracias.",
+                        timer: 4000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
                 } else if (data.message && data.message.includes("Únete a la comunidad")) {
                     Swal.fire({
                         icon: "info",
@@ -60,7 +69,7 @@ $(document).ready(function () {
                 Swal.fire("Error", "Error en la comunicación con el servidor.", "error");
             },
             complete: function () {
-                // 🔹 Restaurar el botón con ícono original
+                // Restaurar el botón con ícono original
                 btn.prop("disabled", false).html(`Enviar <i class="bi bi-arrow-right-circle"></i>`);
             }
         });
@@ -166,6 +175,15 @@ $(document).ready(function () {
                         timerProgressBar: true,
                         showConfirmButton: false
                     });
+                } else if (data.message === "doxxing") {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Información personal detectada",
+                        text: "Evitemos compartir información personal o sensible. Gracias.",
+                        timer: 4000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
                 } else {
                     Swal.fire("Error", "No se pudo guardar la respuesta.", "error");
                 }
@@ -174,7 +192,7 @@ $(document).ready(function () {
                 Swal.fire("Error", "Error en la comunicación con el servidor.", "error");
             },
             complete: function () {
-                // 🔹 Restaurar el botón con ícono original
+                // Restaurar el botón con ícono original
                 btn.prop("disabled", false).html(`Enviar <i class="bi bi-arrow-right-circle"></i>`);
             }
         });

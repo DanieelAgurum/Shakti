@@ -232,7 +232,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
               $foto = $item['foto'];
               $src = $foto
                 ? 'data:image/jpeg;base64,' . base64_encode($foto)
-                : 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png';
+                : 'img/undraw_chill-guy-avatar_tqsm.svg';
               $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
               $opinion = htmlspecialchars($item['opinion']);
               $calificacion = (int)$item['calificacion'];

@@ -5,7 +5,6 @@ class Testimonios
 {
     private $db;
 
-
     public function conectarBD()
     {
         try {
@@ -89,6 +88,7 @@ class Testimonios
 
         return $texto;
     }
+
     public function contieneContextoOfensivo($contenido)
     {
         $contextosOfensivos = [
@@ -396,6 +396,7 @@ class Testimonios
 
         return false;
     }
+    
     public function guardarTestimonio($usuariaId, $calificacion, $opinion)
     {
         if ($this->contieneMalasPalabrasPersonalizado($opinion)) {
