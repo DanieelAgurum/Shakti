@@ -31,6 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['opcion'])) {
                     exit;
                 }
 
+                if ($id_comentario === 'doxxing') {
+                    echo json_encode(['status' => 'error', 'message' => 'doxxing']);
+                    exit;
+                }
+
                 if ($id_comentario) {
                     echo json_encode([
                         'status' => 'ok',

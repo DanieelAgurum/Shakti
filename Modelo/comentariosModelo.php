@@ -438,8 +438,71 @@ EOT;
         return strtolower(trim($respuesta));
     }
 
+    public function detectarDoxxingIA(string $contenido): string
+    {
+        $apiKey = OPENAI_API_KEY;
+        $modeloTexto = "gpt-4.1-mini";
+
+        $promptBase = <<<EOT
+Eres un sistema especializado en detección de doxxing (exposición de información personal). 
+Tu tarea es analizar el siguiente texto y determinar si el usuario está revelando información 
+personal sensible propia o de otra persona.
+
+Debes considerar que los usuarios pueden escribir datos personales de forma directa, parcial o implícita. 
+También debes detectar variaciones, abreviaturas o intentos de disfrazar información (por ejemplo, 
+“mi cel es ocho uno siete...” o “correo: juanperez arroba gmail punto com”).
+
+Considera doxxing si el texto incluye o intenta compartir cualquiera de los siguientes tipos de información:
+- **Identidad real**: nombres y apellidos reales, combinaciones de nombre completo o seudónimos que coincidan con nombres comunes.
+- **Ubicación física**: direcciones exactas, calles, colonias, municipios, ciudades, códigos postales o cualquier referencia específica que permita ubicar a una persona.
+- **Datos de contacto**: números telefónicos (reales o escritos con palabras), correos personales o laborales, identificadores de mensajería o redes sociales.
+- **Identificadores personales**: CURP, RFC, NSS, matrícula, número de cuenta, número de empleado o cualquier código identificable.
+- **Redes o plataformas**: nombres de usuario o enlaces a cuentas personales (como @usuario, perfiles de Facebook, Instagram, TikTok, etc.).
+- **Instituciones personales**: escuelas, universidades, lugares de trabajo o cualquier organización directamente asociada con la persona.
+- **Sitios personales**: blogs, páginas personales, portafolios, dominios o subdominios vinculados con el usuario.
+- **Información técnica o financiera**: direcciones IP, datos bancarios, tarjetas, cuentas o cualquier dato financiero.
+
+Evalúa con precaución el contexto. Si el texto solo menciona temas genéricos (por ejemplo, “trabajo en una empresa” o “vivo en una ciudad grande”), **no lo consideres doxxing**.
+Si tienes duda o el texto es ambiguo, responde "doxxing".
+
+Responde **solo con una palabra exacta**, sin explicaciones:
+- `"doxxing"` → si detectas cualquier dato personal o intento de revelarlo.
+- `"false"` → si el texto es seguro y no contiene información personal identificable.
+
+Texto del usuario:
+$contenido
+EOT;
+
+        $ch = curl_init("https://api.openai.com/v1/responses");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer $apiKey",
+            "Content-Type: application/json"
+        ]);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            "model" => $modeloTexto,
+            "input" => $promptBase
+        ]));
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($result, true);
+        $respuesta = $data['output'][0]['content'][0]['text'] ?? "false";
+
+        return strtolower(trim($respuesta));
+    }
+    
     public function agregarComentario($contenido, $idPublicacion, $idUsuaria, $idPadre = null)
     {
+
+        // Validar doxxing con IA antes de insertar
+        $resultadoDoxxing = $this->detectarDoxxingIA($contenido);
+        if ($resultadoDoxxing === 'doxxing') {
+            return 'doxxing';
+        }
+
         // Validar contenido con IA antes de insertar
         $resultadoModeracion = $this->moderarContenidoIA($contenido);
         if ($resultadoModeracion === 'malas_palabras') {
