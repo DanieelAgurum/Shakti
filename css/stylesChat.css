@@ -1,11 +1,12 @@
 /* Contenedor principal */
 #contenedor-chat {
     display: flex;
-    height: 93vh;
+    height: 90vh;
     border: 1px solid #ddd;
     background: #f0f2f5;
     overflow: hidden;
     font-family: Arial, sans-serif;
+    margin-top: 20px;
 }
 
 /* Panel lista de chats */
