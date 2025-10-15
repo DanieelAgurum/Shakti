@@ -57,7 +57,7 @@ $urlBase = getBaseUrl();
         </div>
     </div>
 
-    <section id="contenedorPublicaciones" class="container mt-5 d-flex flex-wrap justify-content-center gap-4">
+    <section id="contenedorPublicaciones" class="container mt-3 d-flex flex-wrap justify-content-center gap-4">
     </section>
 
     <div class="foro">
