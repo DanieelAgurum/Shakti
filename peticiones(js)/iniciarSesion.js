@@ -16,7 +16,7 @@ function iniciarSesion() {
             window.location.href = "../Vista/especialista/perfil";
             break;
           case 3:
-            window.location.href = "../Vista/admin/";
+            window.location.href = "../Vista/admin/index";
             break;
           default:
             location.reload();
