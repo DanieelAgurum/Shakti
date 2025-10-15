@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 window.location.href = urlBase + "Vista/especialista/perfil.php";
                                 break;
                             case "3":
-                                window.location.href = urlBase + "admin/";
+                                window.location.href = urlBase + "Vista/admin/index.php";
                                 break;
                         }
                     } else {
