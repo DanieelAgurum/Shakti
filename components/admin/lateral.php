@@ -3,16 +3,16 @@
          <div class="sb-sidenav-menu">
              <div class="nav">
                  <!-- Inicio -->
-                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin">
-                     <div class="sb-nav-link-icon"><i class="fa-solid fa-house text-dark"></i></div>
+                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/index.php">
+                     <div class="sb-nav-link-icon"><i class="fa-solid fa-house text-white"></i></div>
                      Inicio
                  </a>
 
                  <!-- Opciones (menú principal) -->
-                 <a class="nav-link collapsed text-dark" href="#" data-bs-toggle="collapse" data-bs-target="#collapseOpciones" aria-expanded="false" aria-controls="collapseOpciones">
-                     <div class="sb-nav-link-icon"><i class="fa-solid fa-bars text-dark"></i></div>
+                 <a class="nav-link collapsed text-white" href="#" data-bs-toggle="collapse" data-bs-target="#collapseOpciones" aria-expanded="false" aria-controls="collapseOpciones">
+                     <div class="sb-nav-link-icon"><i class="fa-solid fa-bars text-white"></i></div>
                      Opciones
-                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down text-dark"></i></div>
+                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down text-white"></i></div>
                  </a>
 
                  <!-- Submenús dentro de Opciones -->
@@ -20,34 +20,34 @@
                      <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionOpciones">
 
                          <!-- Submenú: Tablas -->
-                         <a class="nav-link collapsed text-dark" href="#" data-bs-toggle="collapse" data-bs-target="#submenuTablas" aria-expanded="false" aria-controls="submenuTablas">
-                             <div class="sb-nav-link-icon"><i class="fa-solid fa-table text-dark"></i></div>
+                         <a class="nav-link collapsed text-white" href="#" data-bs-toggle="collapse" data-bs-target="#submenuTablas" aria-expanded="false" aria-controls="submenuTablas">
+                             <div class="sb-nav-link-icon"><i class="fa-solid fa-table text-white"></i></div>
                              Tablas
-                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down text-dark"></i></div>
+                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down text-white"></i></div>
                          </a>
                          <div class="collapse" id="submenuTablas" data-bs-parent="#sidenavAccordionOpciones">
                              <nav class="sb-sidenav-menu-nested nav">
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/usuarias.php">Usuarias</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/especialistas.php">Especialistas</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/contenido.php">Contenido</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/libre_segura.php">Documentos Legales</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/organizaciones.php">Organizaciones</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/preguntas_frecuentes.php">Preguntas Frecuentes</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/usuarias.php">Usuarias</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/especialistas.php">Especialistas</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/contenido.php">Contenido</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/libre_segura.php">Documentos Legales</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/organizaciones.php">Organizaciones</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/preguntas_frecuentes.php">Preguntas Frecuentes</a>
                              </nav>
                          </div>
 
                          <!-- Submenú: Administrar -->
-                         <a class="nav-link collapsed text-dark" href="#" data-bs-toggle="collapse" data-bs-target="#submenuAdministrar" aria-expanded="false" aria-controls="submenuAdministrar">
-                             <div class="sb-nav-link-icon"><i class="fa-solid fa-gear text-dark"></i></div>
+                         <a class="nav-link collapsed text-white" href="#" data-bs-toggle="collapse" data-bs-target="#submenuAdministrar" aria-expanded="false" aria-controls="submenuAdministrar">
+                             <div class="sb-nav-link-icon"><i class="fa-solid fa-gear text-white"></i></div>
                              Administrar
-                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down text-dark"></i></div>
+                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down text-white"></i></div>
                          </a>
                          <div class="collapse" id="submenuAdministrar" data-bs-parent="#sidenavAccordionOpciones">
                              <nav class="sb-sidenav-menu-nested nav">
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/reportes.php">Reportes</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/tipos_reportes.php">Tipo de Reportes</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/metricas.php">Métricas</a>
-                                 <a class="nav-link text-dark" href="<?php echo $urlBase ?>Vista/admin/glosario.php">Glosario</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/reportes.php">Reportes</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/tipos_reportes.php">Tipo de Reportes</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/metricas.php">Métricas</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/glosario.php">Glosario</a>
                              </nav>
                          </div>
 

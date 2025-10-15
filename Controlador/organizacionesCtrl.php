@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . 'shakti//Modelo/organizacionesModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/organizacionesModelo.php';
 
 $preg = new organizacionesModelo();
 $preg->conectarBD();
