@@ -4949,7 +4949,7 @@ fieldset:disabled .btn {
 .card-footer {
   padding: var(--bs-card-cap-padding-y) var(--bs-card-cap-padding-x);
   color: var(--bs-card-cap-color);
-  background-color: var(--bs-card-cap-bg);
+  background-color: var(--color-acento2);
   border-top: var(--bs-card-border-width) solid var(--bs-card-border-color);
 }
 
@@ -12815,9 +12815,22 @@ body {
   }
 }
 
+
+:root {
+  --color-primario-oscuro: #0a192f;
+  --color-primario-medio: #1b3a57;
+  --color-primario-claro: #3a6073;
+  --color-secundario: #8db5c9;
+  --color-acento1: #5ee6b5;
+  --color-acento2: #f5c542;
+  --color-fondo-claro: #f0f4f8;
+  --color-texto-principal: #e5e7eb;
+  --color-texto-secundario: #9ca3af;
+}
+
 .sb-nav-fixed .sb-topnav {
   z-index: 1039;
-  background-color: #FFD1DC;
+  background-color: var(--color-primario-medio);
 }
 
 
@@ -12865,7 +12878,7 @@ body {
 }
 
 .sb-topnav {
-  background-color: #FFD1DC;
+  background-color: var(--color-primario-medio);
   padding-left: 0;
   height: 56px;
   z-index: 1039;
@@ -12892,7 +12905,7 @@ body {
 }
 
 .sb-sidenav .sb-sidenav-menu {
-  background-color: #FFD1DC;
+  background-color: var(--color-primario-medio);
   flex-grow: 1;
 }
 
@@ -12941,7 +12954,7 @@ body {
 }
 
 .sb-sidenav-dark {
-  background-color: #212529;
+  background-color: var(--color-primario-medio);
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -12974,11 +12987,11 @@ body {
 }
 
 .sb-sidenav-dark .sb-sidenav-footer {
-  background-color: #fff;
+  background-color: var(--color-primario-medio);
 }
 
 .sb-sidenav-light {
-  background-color: #f8f9fa;
+  background-color: var(--color-primario-medio);
   color: #212529;
 }
 

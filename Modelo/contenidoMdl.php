@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
 
 class contenidoMdl
 {
@@ -72,12 +72,12 @@ class contenidoMdl
         mysqli_stmt_close($stmt);
         mysqli_close($conexion);
     }
-    
+
     // Nuevo método para actualizar el contenido existente.
     public function actualizarContenido()
     {
         $conexion = $this->conectarBD();
-        
+
         if ($this->imagen === null) {
             // Si no se proporciona una nueva imagen, se actualizan solo los otros campos.
             $sql = "UPDATE contenido SET titulo = ?, descripcion = ?, url = ? WHERE id = ?";
@@ -136,4 +136,3 @@ class contenidoMdl
         mysqli_close($conexion);
     }
 }
-?>
