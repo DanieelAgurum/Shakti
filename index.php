@@ -14,7 +14,7 @@ $testimonio = new Testimonios($db);
 $testimonios = $testimonio->obtenerTestimonios();
 
 if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
-  header("Location: shakti/Vista/admin");
+  header("Location: " . $urlBase . "vista/admin/");
   exit;
 }
 ?>
