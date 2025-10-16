@@ -27,7 +27,7 @@ class chatsMdl
         }
         return $this->con;
     }
-    public function cargarChats()
+    public function cargarChats($Especialista = null)
     {
         $id_usuaria = $_SESSION['id'] ?? null;
 
@@ -38,55 +38,70 @@ class chatsMdl
 
         $con = $this->conectarBD();
 
-        $sql = "SELECT u.id, u.nickname, u.foto, MAX(m.creado_en) AS ultimo_mensaje
-FROM usuarias u
-INNER JOIN amigos a
-    ON (a.nickname_enviado = u.nickname OR a.nickname_amigo = u.nickname)
-    AND a.estado = 'aceptado'
-LEFT JOIN mensajes m
-    ON ( (m.id_emisor = ? AND m.id_receptor = u.id) 
-       OR (m.id_receptor = ? AND m.id_emisor = u.id) )
-WHERE u.id != ?
-GROUP BY u.id, u.nickname, u.foto
-ORDER BY 
-    CASE WHEN MAX(m.creado_en) IS NULL THEN 1 ELSE 0 END,
-    MAX(m.creado_en) DESC,
-    u.nickname ASC";
+        if ($Especialista) {
+            // 🔹 Si se pasa un especialista cifrado (por ejemplo, desde la vista)
+            $idEspecialista = $this->descifrarAESChatEspecialista($Especialista);
 
-        $stmt = $con->prepare($sql);
-        if (!$stmt) {
-            echo json_encode(['error' => $con->error], JSON_UNESCAPED_UNICODE);
-            return;
+            if (empty($idEspecialista)) {
+                echo json_encode([
+                    'success' => false,
+                    'mensaje' => 'Error al descifrar ID de especialista o ID vacío.'
+                ], JSON_UNESCAPED_UNICODE);
+                return;
+            }
+
+            $sql = "SELECT u.id, u.nickname, u.foto
+                FROM usuarias u
+                WHERE u.id = ?
+                  AND u.id_rol = 2
+                  AND u.estatus = 1
+                LIMIT 1";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("i", $idEspecialista);
+        } else {
+            // 🔹 Solo los usuarios con los que ya haya mensajes (chat activo)
+            $sql = "SELECT 
+                    u.id, 
+                    u.nickname, 
+                    u.foto, 
+                    MAX(m.creado_en) AS ultimo_mensaje
+                FROM mensajes m
+                INNER JOIN usuarias u 
+                    ON (m.id_emisor = u.id OR m.id_receptor = u.id)
+                WHERE (m.id_emisor = ? OR m.id_receptor = ?)
+                  AND u.id != ?
+                GROUP BY u.id, u.nickname, u.foto
+                ORDER BY MAX(m.creado_en) DESC
+                LIMIT 1";
+
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("iii", $id_usuaria, $id_usuaria, $id_usuaria);
         }
 
-        $stmt->bind_param("iii", $id_usuaria, $id_usuaria, $id_usuaria);
-
-        if (!$stmt->execute()) {
-            echo json_encode(['error' => $stmt->error], JSON_UNESCAPED_UNICODE);
-            return;
-        }
-
-        // Variables donde se guardarán los resultados
-        $id = $nickname = $foto = $ultimo_mensaje = null;
-        $stmt->bind_result($id, $nickname, $foto, $ultimo_mensaje);
-
+        $stmt->execute();
+        $resultado = $stmt->get_result();
         $chats = [];
-        while ($stmt->fetch()) {
+
+        while ($row = $resultado->fetch_assoc()) {
             $chats[] = [
-                'id' => $id,
-                'nickname' => $nickname,
-                'ultimo_mensaje' => $ultimo_mensaje,
-                'foto' => $foto ? 'data:image/jpeg;base64,' . base64_encode($foto) : "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png"
+                'id' => $row['id'],
+                'nickname' => $row['nickname'],
+                'ultimo_mensaje' => $row['ultimo_mensaje'] ?? null,
+                'foto' => $row['foto']
+                    ? 'data:image/jpeg;base64,' . base64_encode($row['foto'])
+                    : "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Secretary-512.png"
             ];
         }
 
-
-        // JSON de salida
-        echo json_encode(['success' => true, 'data' => $chats], JSON_UNESCAPED_UNICODE);
+        echo json_encode([
+            'success' => true,
+            'data' => $chats
+        ], JSON_UNESCAPED_UNICODE);
 
         $stmt->close();
         $con->close();
     }
+
     public function cargarMensajes($idEmisor, $idReceptor)
     {
         $con = $this->conectarBD();
@@ -126,7 +141,6 @@ ORDER BY
         try {
             $id_emisor = $_SESSION['id'] ?? null;
             $nickname_emisor = $_SESSION['nickname'] ?? "usuario";
-            $mensaje = $this->cifrarAES($mensaje);
 
             if (!$id_emisor) {
                 http_response_code(401);
@@ -286,7 +300,7 @@ ORDER BY
     public function enviarMensajeIanBot($mensaje)
     {
         $id_usuario = $_SESSION['id'] ?? null;
-        $mensaje = $this->cifrarAES($mensaje);
+        $mensaje = $this->cifrarAESIanBot($mensaje);
 
         // ✅ Validar sesión activa
         if (!$id_usuario) {
@@ -311,7 +325,7 @@ ORDER BY
         $stmt->execute();
         $stmt->close();
 
-        $mensaje = $this->descifrarAES($mensaje);
+        $mensaje = $this->descifrarAESIanBot($mensaje);
         // === Recuperar historial existente de la BD ===
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
 
@@ -407,7 +421,7 @@ EOT;
         }
 
         // === Guardar respuesta del bot cifrada también ===
-        $respuestaCifrada = $this->cifrarAES($respuestaBot);
+        $respuestaCifrada = $this->cifrarAESIanBot($respuestaBot);
 
         $sqlBot = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())";
         $stmtBot = $con->prepare($sqlBot);
@@ -524,7 +538,7 @@ EOT;
 
         while ($row = $result->fetch_assoc()) {
             $esBot = ($row['id_emisor'] == 0);
-            $mensaje = $this->descifrarAES(html_entity_decode($row['mensaje'], ENT_QUOTES, 'UTF-8'));
+            $mensaje = $this->descifrarAESIanBot(html_entity_decode($row['mensaje'], ENT_QUOTES, 'UTF-8'));
 
             if ($esBot) {
                 $mensaje = $this->formatearRespuestaHTML($mensaje);
@@ -563,7 +577,7 @@ EOT;
 
             // ✅ Solo sanitizar mensajes del usuario, no los del bot
             if ($rol === "usuario") {
-                $contenido = $this->descifrarAES($row['mensaje']);
+                $contenido = $this->descifrarAESIanBot($row['mensaje']);
             }
 
             $historial[] = [
@@ -576,13 +590,13 @@ EOT;
         return $historial;
     }
     // Cifrado y descifrado Aes
-    private function cifrarAES($texto)
+    private function cifrarAESIanBot($texto)
     {
         $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
         $cifrado = openssl_encrypt($texto, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
         return base64_encode($ci . $cifrado);
     }
-    private function descifrarAES($textoCodificado)
+    private function descifrarAESIanBot($textoCodificado)
     {
         if (empty($textoCodificado)) return '';
         $datos = base64_decode($textoCodificado, true);
@@ -594,5 +608,18 @@ EOT;
 
         $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
         return $descifrado !== false ? $descifrado : $textoCodificado;
+    }
+    private function descifrarAESChatEspecialista($idCodificado)
+    {
+        if (empty($idCodificado)) return '';
+        $datos = base64_decode($idCodificado, true);
+        if ($datos === false) return $idCodificado;
+
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', 0, $ci);
+        return $descifrado !== false ? $descifrado : $idCodificado;
     }
 }
