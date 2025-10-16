@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalEspecialista<?= htmlspecialchars($row['id'] ?? '') ?>" tabindex="-1" aria-labelledby="labelModal<?= htmlspecialchars($row['id'] ?? '') ?>" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="modalEspecialista<?= htmlspecialchars($row['id'] ?? '') ?>" tabindex="-1" aria-labelledby="labelModal<?= htmlspecialchars($row['id'] ?? '') ?>" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content shadow-lg rounded-4" style="background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);">
 

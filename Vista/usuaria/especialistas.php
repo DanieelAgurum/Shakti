@@ -39,14 +39,14 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] == 2) {
 </head>
 
 <body>
-    <main class="layout">
+    <main class="">
         <!-- Sidebar de solicitudes -->
         <!-- <aside class="solicitud" id="solicitudSidebar">
         </aside> -->
 
         <!-- Sección principal -->
         <section class="contenido-principal">
-            <div class="contenedor-buscador">
+            <div class="contenedor-buscador mt-5">
                 <div class="search-foro buscador-fijo mx-auto">
                     <div class="search-box w-100">
                         <form class="w-100" onsubmit="return false;">

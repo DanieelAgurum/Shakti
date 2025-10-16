@@ -9,7 +9,7 @@ $sql_reportes = "SELECT * FROM tipo_reporte WHERE tipo_objetivo IN (2)";
 $consulta_reporte = $conn->query($sql_reportes);
 ?>
 
-<div class="modal fade" id="modalReportar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="modalReportar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

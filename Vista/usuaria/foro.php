@@ -50,6 +50,7 @@ $urlBase = getBaseUrl();
             </div>
         </div>
     </div>
+    
     <div class="foro">
         <div id="loaderInicio" class="loader-container d-none">
             <div class="orbit">
