@@ -60,7 +60,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   <script src="<?= $urlBase ?>peticiones(js)/chatBotFlotante.js"></script>
 </head>
 
-<nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm">
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm" style="background-color: var(--color-primario-medio);">
   <div class="container">
     <a class="navbar-brand nexo-logo" href="<?= $urlBase ?>index">NexoH</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
