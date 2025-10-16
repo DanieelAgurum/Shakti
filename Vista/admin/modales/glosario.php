@@ -1,5 +1,5 @@
 <!-- Modal para agregar -->
-<div class="modal fade custom-config-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -33,7 +33,7 @@
 </div>
 
 <!-- Modal para modificar -->
-<div class="modal fade custom-config-modal" id="modificarModal" tabindex="-1" aria-labelledby="modificarModalLabel" aria-hidden="true">
+<div class="modal fade" id="modificarModal" tabindex="-1" aria-labelledby="modificarModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

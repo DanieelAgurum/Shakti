@@ -1,6 +1,6 @@
 <div class="modal fade custom-config-modal" id="modalEspecialista<?= htmlspecialchars($row['id'] ?? '') ?>" tabindex="-1" aria-labelledby="labelModal<?= htmlspecialchars($row['id'] ?? '') ?>" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content shadow-lg rounded-4" style="background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);">
+        <div class="modal-content shadow-lg rounded-4">
 
             <div class="modal-header bg-dark text-white d-flex justify-content-between align-items-start">
                 <div>
@@ -34,7 +34,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <strong>Nombre completo:</strong>
-                                <div class="text-muted">
+                                <div class="text-blank">
                                     <?= htmlspecialchars($row['nombre'] ?? '') ?>
                                     <?= htmlspecialchars($row['apellidos'] ?? '') ?>
                                 </div>
@@ -42,22 +42,22 @@
 
                             <div class="col-md-6 mb-3">
                                 <strong>Correo:</strong>
-                                <div class="text-muted"><?= htmlspecialchars($row['correo'] ?? '') ?></div>
+                                <div class="text-blank"><?= htmlspecialchars($row['correo'] ?? '') ?></div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <strong>Descripción:</strong>
-                                <div class="text-muted"><?= htmlspecialchars($row['descripcion'] ?? '') ?></div>
+                                <div class="text-blank"><?= htmlspecialchars($row['descripcion'] ?? '') ?></div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <strong>Servicios:</strong>
-                                <div class="text-muted"><?= htmlspecialchars($row['servicio'] ?? '') ?></div>
+                                <div class="text-blank"><?= htmlspecialchars($row['servicio'] ?? '') ?></div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <strong>Teléfono:</strong>
-                                <div class="text-muted"><?= htmlspecialchars($row['telefono'] ?? '') ?></div>
+                                <div class="text-blank"><?= htmlspecialchars($row['telefono'] ?? '') ?></div>
                             </div>
                         </div>
                     </div>

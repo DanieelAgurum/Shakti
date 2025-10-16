@@ -9,7 +9,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     exit;
 }
 ?>
-<div class="modal fade custom-config-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -56,7 +56,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 </div>
 
 
-<div class="modal fade custom-config-modal" id="modificarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modificarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
