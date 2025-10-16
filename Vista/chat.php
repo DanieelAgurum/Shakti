@@ -67,6 +67,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
         <label for="archivo" class="btn-subir-imagen" title="Enviar imagen">
           <i class="fa-solid fa-image"></i>
         </label>
+        
         <input type="file" id="archivo" name="imagen" accept="image/*" style="display: none;">
 
         <!-- Botón enviar -->
