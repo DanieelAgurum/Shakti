@@ -1,3 +1,15 @@
+:root {
+    --color-primario-oscuro: #0a192f;
+    --color-primario-medio: #1b3a57;
+    --color-primario-claro: #3a6073;
+    --color-secundario: #8db5c9;
+    --color-acento1: #5ee6b5;
+    --color-acento2: #f5c542;
+    --color-fondo-claro: #f0f4f8;
+    --color-texto-principal: #e5e7eb;
+    --color-texto-secundario: #9ca3af;
+}
+
 /* Tamaño de fuente */
 html.font-small {
     font-size: 14px;
@@ -51,7 +63,6 @@ html.dark-mode .lead {
 
 html.dark-mode .rating-container,
 html.dark-mode article,
-html.dark-mode .dropdown-menu,
 html.dark-mode .comentario-raiz,
 html.dark-mode .comments-section,
 html.dark-mode .respuesta,
@@ -67,6 +78,11 @@ html.dark-mode .shakti-chatbot-input,
 html.dark-mode .shakti-cm-msg-text {
     background-color: #1e1e1e !important;
 }
+
+html.dark-mode .dropdown-menu{
+    background-color: var(--color-primario-medio) !important;
+}
+
 
 html.dark-mode .contenedor-buscador,
 html.dark-mode .shakti-chatbot-box-body {

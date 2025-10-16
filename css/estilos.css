@@ -298,7 +298,7 @@
 
 /* Footer */
 .custom-footer {
-  background-color: var(--color-primario-oscuro);
+  background-color: var(--color-primario-medio);
   color: #fff;
   font-family: 'Open Sans', sans-serif;
   position: relative;
@@ -355,7 +355,7 @@ body {
 
 /* NAVBAR Personalizado */
 .custom-navbar {
-  background-color: var(--color-primario-oscuro);
+  background-color: var(--color-primario-medio);
   color: white;
 }
 
@@ -399,7 +399,7 @@ body {
 .custom-navbar .navbar-brand:focus,
 .dropdown-menu a:hover {
   color: white;
-  background-color: var(--color-primario-medio);
+  background-color: var(--color-primario-oscuro);
   text-decoration: none;
 }
 
