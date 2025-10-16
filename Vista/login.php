@@ -9,9 +9,9 @@ $urlBase = getBaseUrl();
 // 🔹 Redirigir si ya está logueado
 if (isset($_SESSION['id_rol'])) {
     switch ($_SESSION['id_rol']) {
-        case 1: header("Location: " . $urlBase . "usuaria/perfil.php"); exit;
-        case 2: header("Location: " . $urlBase . "especialista/perfil.php"); exit;
-        case 3: header("Location: " . $urlBase . "admin/"); exit;
+        case 1: header("Location: " . $urlBase . "vista/usuaria/perfil.php"); exit;
+        case 2: header("Location: " . $urlBase . "vista/especialista/perfil.php"); exit;
+        case 3: header("Location: " . $urlBase . "vista/admin/"); exit;
     }
 }
 
