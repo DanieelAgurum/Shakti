@@ -13,7 +13,7 @@ $urlBase = getBaseUrl();
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Contacto - Shakti</title>
+    <title>404 - Shakti</title>
 
     <!-- Estilos -->
     <link rel="stylesheet" href="<?= $urlBase ?>/css/estilos.css" />

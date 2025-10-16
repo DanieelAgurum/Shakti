@@ -63,7 +63,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm" style="background-color: var(--color-primario-medio);">
   <div class="container">
     <a class="navbar-brand nexo-logo" href="<?= $urlBase ?>index">NexoH</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
+    <button class="navbar-toggler" style="background-color: var(--color-secundario);" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
       aria-controls="navbarEspecialista" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

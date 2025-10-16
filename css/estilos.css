@@ -349,8 +349,14 @@
 
 /* Para evitar que el contenido quede oculto debajo de la navbar */
 body {
-  padding-top: 48px;
+  padding-top: 65px;
   background-color: var(--color-fondo-claro);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* NAVBAR Personalizado */
@@ -1134,12 +1140,6 @@ label.star:hover {
   background: linear-gradient(90deg, #357ab8, #4a90e2);
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
 footer {

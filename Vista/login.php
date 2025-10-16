@@ -1,6 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
@@ -8,11 +8,17 @@ $urlBase = getBaseUrl();
 
 // 🔹 Redirigir si ya está logueado
 if (isset($_SESSION['id_rol'])) {
-    switch ($_SESSION['id_rol']) {
-        case 1: header("Location: " . $urlBase . "vista/usuaria/perfil.php"); exit;
-        case 2: header("Location: " . $urlBase . "vista/especialista/perfil.php"); exit;
-        case 3: header("Location: " . $urlBase . "vista/admin/"); exit;
-    }
+  switch ($_SESSION['id_rol']) {
+    case 1:
+      header("Location: " . $urlBase . "vista/usuaria/perfil.php");
+      exit;
+    case 2:
+      header("Location: " . $urlBase . "vista/especialista/perfil.php");
+      exit;
+    case 3:
+      header("Location: " . $urlBase . "vista/admin/");
+      exit;
+  }
 }
 
 $message = $_GET['message'] ?? '';
@@ -21,6 +27,7 @@ $status = $_GET['status'] ?? '';
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -83,31 +90,33 @@ $status = $_GET['status'] ?? '';
 
   <!-- SweetAlert (mensajes de error o éxito) -->
   <script>
-  <?php if (!empty($message)) : ?>
-    Swal.fire({
-      icon: "<?= $status === 'error' ? 'error' : 'success' ?>",
-      title: "<?= $status === 'error' ? 'Error' : 'Éxito' ?>",
-      text: <?= json_encode(urldecode($message)) ?>,
-      timer: 10000, 
-      timerProgressBar: true,
-      showConfirmButton: true,
-      confirmButtonText: "Aceptar",
-      confirmButtonColor: "#4682B4"
-    });
+    <?php if (!empty($message)) : ?>
+      Swal.fire({
+        icon: "<?= $status === 'error' ? 'error' : 'success' ?>",
+        title: "<?= $status === 'error' ? 'Error' : 'Éxito' ?>",
+        text: <?= json_encode(urldecode($message)) ?>,
+        timer: 10000,
+        timerProgressBar: true,
+        showConfirmButton: true,
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#4682B4"
+      });
 
-    // 🔹 Limpia la URL después de mostrar el mensaje
-    if (window.history.replaceState) {
-      const cleanURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-      window.history.replaceState(null, '', cleanURL);
-    }
-  <?php endif; ?>
+      // 🔹 Limpia la URL después de mostrar el mensaje
+      if (window.history.replaceState) {
+        const cleanURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState(null, '', cleanURL);
+      }
+    <?php endif; ?>
   </script>
 
   <!-- Footer -->
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
 
   <!-- Scripts -->
-  <script>const urlBase = "<?= $urlBase ?>";</script>
+  <script>
+    const urlBase = "<?= $urlBase ?>";
+  </script>
   <script src="<?= $urlBase ?>peticiones(js)/auth.js"></script>
   <script src="<?= $urlBase ?>validacionRegistro/validacion.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
@@ -120,14 +129,15 @@ $status = $_GET['status'] ?? '';
       border: none;
       padding: 0.7rem 1rem;
       background: #f0f0f0;
-      box-shadow: inset 5px 5px 10px rgba(0,0,0,0.05),
-                  inset -5px -5px 10px rgba(255,255,255,0.7);
+      box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.05),
+        inset -5px -5px 10px rgba(255, 255, 255, 0.7);
       transition: all 0.3s ease;
     }
+
     input.form-control:focus {
       outline: none;
-      box-shadow: inset 5px 5px 12px rgba(0,0,0,0.1),
-                  inset -5px -5px 12px rgba(255,255,255,0.8);
+      box-shadow: inset 5px 5px 12px rgba(0, 0, 0, 0.1),
+        inset -5px -5px 12px rgba(255, 255, 255, 0.8);
     }
 
     /* Botón principal */
@@ -139,6 +149,7 @@ $status = $_GET['status'] ?? '';
       padding: 0.7rem 1.5rem;
       transition: all 0.3s ease;
     }
+
     .btn-purple:hover {
       transform: translateY(-2px);
       box-shadow: 0px 0px 10px rgba(2, 150, 236, 0.4);
@@ -154,6 +165,7 @@ $status = $_GET['status'] ?? '';
       text-align: center;
       transition: all 0.3s ease;
     }
+
     .btn-google:hover {
       background: #c1351d;
       transform: translateY(-2px);
@@ -182,4 +194,5 @@ $status = $_GET['status'] ?? '';
     }
   </style>
 </body>
+
 </html>
