@@ -1,5 +1,5 @@
 <!-- Modal Agregar contenido legal -->
-<div class="modal fade" id="agregarLegal" tabindex="-1" aria-labelledby="agregarLegalLabel" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="agregarLegal" tabindex="-1" aria-labelledby="agregarLegalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -45,7 +45,7 @@
 </div>
 
 <!-- Modal Editar contenido legal -->
-<div class="modal fade" id="editarLegal_<?php echo $row['id_legal']; ?>" tabindex="-1" aria-labelledby="editarLegalLabel" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="editarLegal_<?php echo $row['id_legal']; ?>" tabindex="-1" aria-labelledby="editarLegalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
