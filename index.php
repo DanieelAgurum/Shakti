@@ -209,7 +209,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
             <div class="col-12 col-xl-11">
 
               <!-- Título -->
-              <h2 class="h1 mb-3 fw-bold text-dark" data-aos="zoom-in" data-aos-delay="200">
+              <h2 class="h1 mb-3 fw-bold" data-aos="zoom-in" data-aos-delay="200">
                 ¿Cómo podemos ayudarte?
               </h2>
 
