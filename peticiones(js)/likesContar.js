@@ -21,7 +21,7 @@ document.addEventListener('click', e => {
                 confirmButtonColor: '#3085d6'
             }).then(result => {
                 if (result.isConfirmed) {
-                    window.location.href = '/Vista/login.php';
+                    window.location.href = '/Shakti/Vista/login.php';
                 }
             });
             return;
