@@ -7,7 +7,7 @@ $consulta = $conn->query($sql);
 ?>
 
 <!-- Modal para reportar -->
-<div class="modal fade" id="modalReportar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="modalReportar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
