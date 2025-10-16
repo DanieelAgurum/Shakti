@@ -70,7 +70,7 @@ $resultados = $legales->buscar($busqueda);
 
 <body class="bg-white text-black">
 
-    <div class="container mt-5 mb-5">
+    <div class="container mb-5">
         <h2 class="text-center w-100 mt-3">Libre y Segura</h2>
         <div class="search-wrapper w-100">
             <div class="search-box search-foro">
