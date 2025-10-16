@@ -184,6 +184,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
           Organizaciones
         </a>
       </div>
+      <hr class="my-5">
     <?php endif; ?>
   </main>
 
