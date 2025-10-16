@@ -32,6 +32,9 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
   <!-- Scripts únicos -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
@@ -130,23 +133,19 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <!-- Contenedor inicial de información del sitio web -->
   <section id="about" class="py-5 bg-light">
     <div class="container">
-      <!-- Título de la sección -->
-      <div class="row mb-4">
+      <div class="row mb-4" data-aos="fade-down">
         <div class="col text-center">
           <h2 class="display-5 fw-bold">Acerca de NexoH</h2>
           <p class="lead text-muted">Conoce lo que hacemos y cómo podemos ayudarte</p>
         </div>
       </div>
 
-      <!-- Contenido principal -->
       <div class="row align-items-center">
-        <!-- Imagen o ilustración -->
-        <div class="col-md-6 mb-4 mb-md-0">
+        <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
           <img src="img/NexoH.png" class="img-fluid rounded shadow" alt="NexoH">
         </div>
 
-        <!-- Texto informativo -->
-        <div class="col-md-6">
+        <div class="col-md-6" data-aos="fade-left">
           <p>
             Bienvenido a <strong>NexoH</strong>, tu espacio seguro para fortalecer tu bienestar emocional y mental.
             Aquí encontrarás herramientas interactivas, recursos prácticos y contenidos que te ayudarán a crecer
@@ -157,7 +156,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
             Nuestro objetivo es acompañarte con información confiable, servicios accesibles y soporte constante,
             adaptados a tu ritmo y necesidades.
           </p>
-          <div class="d-flex justify-content-center mt-3">
+          <div class="d-flex justify-content-center mt-3" data-aos="zoom-in">
             <a href="#" class="btn btn-banner">Contáctanos</a>
           </div>
         </div>
@@ -166,34 +165,61 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   </section>
 
   <!-- Bienvenida -->
-  <main class="hero p-5 text-center">
+  <main class="hero p-5 text-center bg-light" data-aos="fade-up" data-aos-duration="1200">
     <?php if (!empty($_SESSION['correo'])): ?>
       <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/usuaria/inicioUser.php'; ?>
     <?php else: ?>
-      <h1>Bienvenido a Nuestro Sitio Shakti</h1>
-      <p class="lead">Tu bienestar es primero</p>
-      <div class="hero-buttons d-flex flex-wrap justify-content-center">
-        <a href="<?= $urlBase ?>/Vista/contenido.php" class="btn btn-primary me-2 mt-2 mb-2 w-45">Más contenido...</a>
-        <a href="<?= $urlBase ?>/Vista/organizacionVista.php" class="btn btn-outline-secondary mt-2 mb-2 w-45">Organizaciones</a>
+      <div data-aos="zoom-in" data-aos-delay="200">
+        <h1 class="fw-bold mb-3">Bienvenido a Nuestro Sitio <span class="text-primary">Shakti</span></h1>
+        <p class="lead text-muted mb-4">Tu bienestar es primero</p>
+      </div>
+
+      <div class="hero-buttons d-flex flex-wrap justify-content-center" data-aos="fade-up" data-aos-delay="400">
+        <a href="<?= $urlBase ?>/Vista/contenido.php"
+          class="btn btn-primary me-2 mt-2 mb-2 px-4 py-2 rounded-pill shadow-sm hover-scale">
+          Más contenido...
+        </a>
+        <a href="<?= $urlBase ?>/Vista/organizacionVista.php"
+          class="btn btn-outline-secondary mt-2 mb-2 px-4 py-2 rounded-pill shadow-sm hover-scale">
+          Organizaciones
+        </a>
       </div>
     <?php endif; ?>
   </main>
 
-  <!-- FAQ 1 - Bootstrap Brain Component -->
-  <section class="py-3 py-md-5 bg-light">
+  <!-- FAQ - ¿Cómo podemos ayudarte? -->
+  <section class="py-3 py-md-5 bg-light" id="faq" data-aos="fade-up" data-aos-duration="1000">
     <div class="container">
       <div class="row gy-5 gy-lg-0 align-items-lg-center">
-        <div class="col-12 col-lg-6">
-          <img class="img-fluid rounded animate__animated animate__fadeInLeft  animate__delay-1s animate__slow animacion" loading="lazy" src="img/Shrug-bro.svg" alt="¿Comó podemos ayudarte?">
+
+        <!-- Imagen con animación desde la izquierda -->
+        <div class="col-12 col-lg-6 text-center" data-aos="fade-right" data-aos-duration="1200">
+          <img
+            class="img-fluid rounded shadow-sm"
+            loading="lazy"
+            src="img/Shrug-bro.svg"
+            alt="¿Cómo podemos ayudarte?"
+            style="max-width: 90%; border-radius: 20px;">
         </div>
-        <div class="col-12 col-lg-6 animate__animated animate__fadeInRight  animate__delay-1s animate__slow animacion">
+
+        <!-- Contenido del FAQ -->
+        <div class="col-12 col-lg-6" data-aos="fade-left" data-aos-duration="1200">
           <div class="row justify-content-xl-end">
             <div class="col-12 col-xl-11">
-              <h2 class="h1 mb-3">¿Cómo podemos ayudarte?</h2>
-              <p class="lead text-secondary mb-5">
-                Esperamos que hayas encontrado una respuesta a tu pregunta. Si necesitas ayuda, por favor busca tu consulta en nuestro Centro de Soporte o contáctanos por correo electrónico.
+
+              <!-- Título -->
+              <h2 class="h1 mb-3 fw-bold text-dark" data-aos="zoom-in" data-aos-delay="200">
+                ¿Cómo podemos ayudarte?
+              </h2>
+
+              <!-- Descripción -->
+              <p class="lead text-secondary mb-5" data-aos="fade-up" data-aos-delay="400">
+                Esperamos que hayas encontrado una respuesta a tu pregunta.
+                Si necesitas ayuda, por favor busca tu consulta en nuestro Centro de Soporte o contáctanos por correo electrónico.
               </p>
-              <div id="carouselAcordeon" class="carousel slide">
+
+              <!-- Carrusel de preguntas -->
+              <div id="carouselAcordeon" class="carousel slide" data-aos="zoom-in" data-aos-delay="600">
                 <div class="carousel-inner">
                   <?php
                   require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/preguntasFrecuentesCtrl.php';
@@ -203,93 +229,117 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
                   ?>
                 </div>
               </div>
-              <div class="d-flex justify-content-center mt-4 gap-3">
-                <button class="btn btn-black text-white d-flex align-items-center justify-content-center square-button"
-                  type="button" data-bs-target="#carouselAcordeon" data-bs-slide="prev">
-                  <i class="fas fa-arrow-left" style="color: black;"></i>
+
+              <!-- Controles -->
+              <div class="d-flex justify-content-center mt-4 gap-3" data-aos="fade-up" data-aos-delay="800">
+                <button
+                  class="btn btn-outline-dark d-flex align-items-center justify-content-center rounded-circle shadow-sm"
+                  type="button" data-bs-target="#carouselAcordeon" data-bs-slide="prev"
+                  style="width: 50px; height: 50px;">
+                  <i class="fas fa-arrow-left"></i>
                 </button>
-                <button class="btn btn-black text-white d-flex align-items-center justify-content-center square-button"
-                  type="button" data-bs-target="#carouselAcordeon" data-bs-slide="next">
-                  <i class="fas fa-arrow-right" style="color: black;"></i>
+                <button
+                  class="btn btn-outline-dark d-flex align-items-center justify-content-center rounded-circle shadow-sm"
+                  type="button" data-bs-target="#carouselAcordeon" data-bs-slide="next"
+                  style="width: 50px; height: 50px;">
+                  <i class="fas fa-arrow-right"></i>
                 </button>
               </div>
+
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
   <!-- Testimonios -->
-  <div class="container">
-    <div class="row align-items-center" style="min-height: 500px;">
-      <!-- Carrusel vertical personalizado -->
-      <div class="col-md-6 d-flex justify-content-center mt-4">
-        <div class="my-vertical-carousel" id="myVerticalCarousel">
-          <div class="my-carousel-wrapper">
-            <?php foreach ($testimonios as $item): ?>
-              <?php
-              $foto = $item['foto'];
-              $src = $foto
-                ? 'data:image/jpeg;base64,' . base64_encode($foto)
-                : 'img/undraw_chill-guy-avatar_tqsm.svg';
-              $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
-              $opinion = htmlspecialchars($item['opinion']);
-              $calificacion = (int)$item['calificacion'];
-              $estrellas = str_repeat("★", $calificacion) . str_repeat("☆", 5 - $calificacion);
-              ?>
-              <div class="my-carousel-item">
-                <div class="testimonial-card">
-                  <img src="<?= $src ?>" alt="Foto de <?= $nombre ?>">
-                  <h5><?= $nombre ?></h5>
-                  <div class="testimonial-stars"><?= $estrellas ?></div>
-                  <p class="testimonial-text"><?= $opinion ?></p>
-                  <span class="see-more">Ver más</span>
+  <section id="testimonios" class="py-5 bg-white" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <div class="row align-items-center" style="min-height: 500px;">
+
+        <!-- Carrusel vertical personalizado -->
+        <div class="col-md-6 d-flex justify-content-center mt-4" data-aos="fade-right" data-aos-delay="200">
+          <div class="my-vertical-carousel" id="myVerticalCarousel">
+            <div class="my-carousel-wrapper">
+              <?php foreach ($testimonios as $item): ?>
+                <?php
+                $foto = $item['foto'];
+                $src = $foto
+                  ? 'data:image/jpeg;base64,' . base64_encode($foto)
+                  : 'img/undraw_chill-guy-avatar_tqsm.svg';
+                $nombre = htmlspecialchars($item['nombre'] ?? 'Usuaria');
+                $opinion = htmlspecialchars($item['opinion']);
+                $calificacion = (int)$item['calificacion'];
+                $estrellas = str_repeat("★", $calificacion) . str_repeat("☆", 5 - $calificacion);
+                ?>
+                <div class="my-carousel-item" data-aos="zoom-in" data-aos-delay="300">
+                  <div class="testimonial-card">
+                    <img src="<?= $src ?>" alt="Foto de <?= $nombre ?>">
+                    <h5><?= $nombre ?></h5>
+                    <div class="testimonial-stars"><?= $estrellas ?></div>
+                    <p class="testimonial-text"><?= $opinion ?></p>
+                    <span class="see-more">Ver más</span>
+                  </div>
                 </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-          <div class="my-carousel-controls">
-            <button class="my-carousel-btn prev">&uarr;</button>
-            <button class="my-carousel-btn next">&darr;</button>
+              <?php endforeach; ?>
+            </div>
+
+            <div class="my-carousel-controls mt-3 d-flex flex-column align-items-center gap-2">
+              <button class="my-carousel-btn prev btn btn-outline-dark rounded-circle shadow-sm" style="width:45px;height:45px;">
+                &uarr;
+              </button>
+              <button class="my-carousel-btn next btn btn-outline-dark rounded-circle shadow-sm" style="width:45px;height:45px;">
+                &darr;
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Formulario -->
-      <div class="col-md-6 d-flex justify-content-center">
-        <div class="rating-container text-center bg-light">
-          <div class="rating-emoji"><img src="img/emoji-emoticon-happy-svgrepo-com.svg" class="w-25" alt=""></div>
-          <h3 class="rating-title">¿Cómo fue tu experiencia?</h3>
-          <form id="formCalificacion">
-            <div class="container d-flex justify-content-center">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="stars likes-count">
-                    <input class="star star-1" id="star-1" type="radio" value="5" name="calificacion" />
-                    <label class="star star-1" for="star-1"></label>
-                    <input class="star star-2" id="star-2" type="radio" value="4" name="calificacion" />
-                    <label class="star star-2" for="star-2"></label>
-                    <input class="star star-3" id="star-3" type="radio" value="3" name="calificacion" />
-                    <label class="star star-3" for="star-3"></label>
-                    <input class="star star-4" id="star-4" type="radio" value="2" name="calificacion" />
-                    <label class="star star-4" for="star-4"></label>
-                    <input class="star star-5" id="star-5" type="radio" value="1" name="calificacion" />
-                    <label class="star star-5" for="star-5"></label>
+        <!-- Formulario -->
+        <div class="col-md-6 d-flex justify-content-center" data-aos="fade-left" data-aos-delay="300">
+          <div class="rating-container text-center bg-light">
+            <div class="rating-emoji" data-aos="zoom-in" data-aos-delay="400">
+              <img src="img/emoji-emoticon-happy-svgrepo-com.svg" class="w-25" alt="">
+            </div>
+            <h3 class="rating-title" data-aos="fade-up" data-aos-delay="500">¿Cómo fue tu experiencia?</h3>
+
+            <form id="formCalificacion" data-aos="fade-up" data-aos-delay="600">
+              <div class="container d-flex justify-content-center">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="stars likes-count">
+                      <input class="star star-1" id="star-1" type="radio" value="5" name="calificacion" />
+                      <label class="star star-1" for="star-1"></label>
+                      <input class="star star-2" id="star-2" type="radio" value="4" name="calificacion" />
+                      <label class="star star-2" for="star-2"></label>
+                      <input class="star star-3" id="star-3" type="radio" value="3" name="calificacion" />
+                      <label class="star star-3" for="star-3"></label>
+                      <input class="star star-4" id="star-4" type="radio" value="2" name="calificacion" />
+                      <label class="star star-4" for="star-4"></label>
+                      <input class="star star-5" id="star-5" type="radio" value="1" name="calificacion" />
+                      <label class="star star-5" for="star-5"></label>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="rating-feedback mt-3">
-              <textarea class="form-control bg-light" rows="3" id="opinion" name="opinion" placeholder="Cuéntanos tu experiencia"></textarea>
-            </div>
-            <input type="hidden" name="opcion" value="1">
-            <button type="submit" class="submit-rating bg-dark mt-3 btn btn-dark likes-count">Enviar calificación</button>
-          </form>
+
+              <div class="rating-feedback mt-3" data-aos="fade-up" data-aos-delay="700">
+                <textarea class="form-control bg-light" rows="3" id="opinion" name="opinion" placeholder="Cuéntanos tu experiencia"></textarea>
+              </div>
+
+              <input type="hidden" name="opcion" value="1">
+              <button type="submit" class="submit-rating bg-dark mt-3 btn btn-dark likes-count" data-aos="fade-up" data-aos-delay="800">
+                Enviar calificación
+              </button>
+            </form>
+          </div>
         </div>
+
       </div>
     </div>
-  </div>
+  </section>
 
   <?php
   include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php';
@@ -299,6 +349,15 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <script src="peticiones(js)/carruselTestimonios.js"></script>
   <script src="peticiones(js)/testimonios.js"></script>
   <script src="peticiones(js)/return.js"></script>
+
+  <script>
+    AOS.init({
+      duration: 1000, // Duración de la animación
+      once: true, // Solo se anima una vez
+      offset: 120, // Distancia antes de activarse
+    });
+  </script>
+
 
 </body>
 
