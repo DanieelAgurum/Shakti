@@ -64,7 +64,7 @@ class chatsMdl
                     u.nickname, 
                     u.foto, 
                     MAX(m.creado_en) AS ultimo_mensaje
-                FROM mensaje m
+                FROM mensajes m
                 INNER JOIN usuarias u 
                     ON (m.id_emisor = u.id OR m.id_receptor = u.id)
                 WHERE (m.id_emisor = ? OR m.id_receptor = ?)
@@ -105,7 +105,7 @@ class chatsMdl
         $con = $this->conectarBD();
 
         $sql = "SELECT *
-            FROM mensaje
+            FROM mensajes
             WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
               AND id_emisor <> id_receptor
             ORDER BY creado_en ASC";
@@ -254,7 +254,7 @@ class chatsMdl
             }
 
             // Guardar mensaje en BD
-            $sqlInsert = "INSERT INTO mensaje (id_emisor, id_receptor, mensaje, archivo, creado_en) 
+            $sqlInsert = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, archivo, creado_en) 
                   VALUES (?, ?, ?, ?, NOW())";
             $stmtInsert = $this->conectarBD()->prepare($sqlInsert);
 
@@ -319,7 +319,7 @@ class chatsMdl
         $con = $this->conectarBD();
 
         // ✅ Guardar mensaje del usuario
-        $sqlUsuario = "INSERT INTO mensaje (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())";
+        $sqlUsuario = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())";
         $stmt = $con->prepare($sqlUsuario);
         $stmt->bind_param("is", $id_usuario, $mensaje);
         $stmt->execute();
@@ -423,7 +423,7 @@ EOT;
         // === Guardar respuesta del bot cifrada también ===
         $respuestaCifrada = $this->cifrarAESIanBot($respuestaBot);
 
-        $sqlBot = "INSERT INTO mensaje (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())";
+        $sqlBot = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())";
         $stmtBot = $con->prepare($sqlBot);
         $stmtBot->bind_param("is", $id_usuario, $respuestaCifrada);
         $stmtBot->execute();
@@ -524,7 +524,7 @@ EOT;
         $con = $this->conectarBD();
 
         $sql = "SELECT mensaje, id_emisor, id_receptor, creado_en, archivo
-        FROM mensaje
+        FROM mensajes
         WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
           AND id_emisor <> id_receptor
         ORDER BY creado_en ASC";
@@ -562,7 +562,7 @@ EOT;
     private function obtenerHistorialIanBot($con, $id_usuario)
     {
         $historial = [];
-        $sql = "SELECT id_emisor, mensaje FROM mensaje
+        $sql = "SELECT id_emisor, mensaje FROM mensajes
             WHERE (id_emisor IN (?, 0) AND id_receptor IN (?, 0))
             ORDER BY creado_en ASC";
 
