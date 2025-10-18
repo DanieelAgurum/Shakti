@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 03-10-2025 a las 10:30:31
+-- Tiempo de generación: 18-10-2025 a las 21:06:09
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `mensajes`
+-- Estructura de tabla para la tabla `mensaje`
 --
 
-CREATE TABLE `mensajes` (
+CREATE TABLE `mensaje` (
   `id` int(11) NOT NULL,
   `id_emisor` int(11) NOT NULL,
   `id_receptor` int(11) NOT NULL,
@@ -41,19 +41,20 @@ CREATE TABLE `mensajes` (
 --
 
 --
--- Indices de la tabla `mensajes`
+-- Indices de la tabla `mensaje`
 --
-ALTER TABLE `mensajes`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `mensaje`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_chat_fecha` (`id`,`creado_en`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `mensajes`
+-- AUTO_INCREMENT de la tabla `mensaje`
 --
-ALTER TABLE `mensajes`
+ALTER TABLE `mensaje`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 

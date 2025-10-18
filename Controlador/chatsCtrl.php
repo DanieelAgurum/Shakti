@@ -16,8 +16,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/chatsMdl.php';
 
 $chat = new chatsMdl();
 if (isset($_GET['cargarChats'])) {
-    $Especialista = $_GET['Especialista'] ?? $_GET['especialista'] ?? null;
-    $chat->cargarChats($Especialista);
+    $especialista = $_GET['especialista'] ?? $_GET['especialista'] ?? null;
+    $chat->cargarChats($especialista);
 }
 
 if (isset($_GET['cargarMensajes'])) {
