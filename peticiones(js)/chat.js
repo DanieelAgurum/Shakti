@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     encrypted: true,
   });
 
-  const canalesSuscritos = {}; // 🔹 Evita múltiples bindings
+  const canalesSuscritos = {}; 
 
   function suscribirCanal(id1, id2) {
     const canal = `chat-${Math.min(id1, id2)}-${Math.max(id1, id2)}`;
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const idEspecialista = params.get("especialistas");
 
   fetch(
-    "/shakti/Controlador/chatsCtrl.php?cargarChats&Especialista=" +
+    "/shakti/Controlador/chatsCtrl.php?cargarChats&especialista=" +
       (idEspecialista || "")
   )
     .then((res) => res.json())
