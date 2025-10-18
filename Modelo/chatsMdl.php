@@ -1,7 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
+define('CLAVE_SECRETA', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
 require 'pusher_config.php';
-
 class chatsMdl
 {
     private $con;
@@ -45,7 +45,7 @@ class chatsMdl
             if (empty($idEspecialista)) {
                 echo json_encode([
                     'success' => false,
-                    'mensaje' => 'Error al descifrar ID de especialista o ID vacío.'
+                    'mensaje' => 'Error al descifrar al especialista.'
                 ], JSON_UNESCAPED_UNICODE);
                 return;
             }
@@ -101,7 +101,6 @@ class chatsMdl
         $stmt->close();
         $con->close();
     }
-
     public function cargarMensajes($idEmisor, $idReceptor)
     {
         $con = $this->conectarBD();
@@ -121,13 +120,13 @@ class chatsMdl
 
         while ($row = $result->fetch_assoc()) {
             $mensajes[] = [
-                'mensaje'       => $row['mensaje'],
+                'mensaje'       => $this->descifrarAES($row['mensaje']),
                 'id_emisor'     => $row['id_emisor'],
                 'id_receptor'   => $row['id_receptor'],
                 'creado_en'     => $row['creado_en'],
                 'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
-                'tipo'          => $row['archivo'] ? "imagen" : "texto",
-                'contenido'        => $row['archivo'] ?: null // Aquí ya es URL absoluta si existe
+                'tipo'          => $this->descifrarAES($row['archivo']) ? "imagen" : "texto",
+                'contenido'     => $this->descifrarAES($row['archivo']) ?: null // Aquí ya es URL absoluta si existe
             ];
         }
 
@@ -149,7 +148,9 @@ class chatsMdl
             }
 
             // Escapar texto
-            $mensaje = htmlspecialchars(trim($mensaje), ENT_QUOTES, 'UTF-8');
+            $mensaje = $this->cifrarAES(htmlspecialchars(trim($mensaje), ENT_QUOTES, 'UTF-8'));
+
+            // Antidoxing
 
             // Crear carpeta si no existe
             $carpetaUploads = $_SERVER['DOCUMENT_ROOT'] . '/shakti/uploads/mensajes/';
@@ -174,8 +175,8 @@ class chatsMdl
 
                 $width = $imgInfo[0];
                 $height = $imgInfo[1];
-                $maxWidth = 1500;   // puedes ajustar
-                $maxHeight = 1500;  // puedes ajustar
+                $maxWidth = 1500;
+                $maxHeight = 1500;
                 $ratio = min($maxWidth / $width, $maxHeight / $height, 1);
                 $newWidth = (int)($width * $ratio);
                 $newHeight = (int)($height * $ratio);
@@ -249,7 +250,7 @@ class chatsMdl
                     // Crear URL absoluta
                     $protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
                     $dominio = $_SERVER['HTTP_HOST'];
-                    $imagenURL = $protocolo . $dominio . "/shakti/uploads/mensajes/" . $nombreArchivo;
+                    $imagenURL = $this->cifrarAES($protocolo . $dominio . "/shakti/uploads/mensajes/" . $nombreArchivo);
                 }
             }
 
@@ -272,9 +273,9 @@ class chatsMdl
             $respuesta = [
                 'id_emisor'   => $id_emisor,
                 'id_receptor' => $id_receptor,
-                'mensaje'     => $mensaje,
-                'tipo'        => $imagenURL ? "imagen" : "texto",
-                'contenido'   => $imagenURL,
+                'mensaje'     => $this->descifrarAES($mensaje),
+                'tipo'        => $this->descifrarAES($imagenURL) ? "imagen" : "texto",
+                'contenido'   => $this->descifrarAES($imagenURL),
                 'creado_en'   => date("Y-m-d H:i:s")
             ];
 
@@ -621,5 +622,19 @@ EOT;
 
         $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', 0, $ci);
         return $descifrado !== false ? $descifrado : $idCodificado;
+    }
+    private function cifrarAES($texto)
+    {
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
+        return base64_encode($ci . $cifrado);
+    }
+    private function descifrarAES($textoCodificado)
+    {
+        $datos = base64_decode($textoCodificado);
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+        return openssl_decrypt($cifrado, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
     }
 }
