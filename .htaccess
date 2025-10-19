@@ -21,6 +21,7 @@ RewriteRule ^(index)/?$ index.php [L,QSA,NC]
 # ==========================================
 RewriteRule ^Vista/?$ Vista/404.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/?$ Vista/404.php [L,QSA,NC]
+RewriteRule ^Controlador/?$ Vista/404.php [L,QSA,NC]
 
 # ==========================================
 # ✅ EXCEPCIONES PERMITIDAS
