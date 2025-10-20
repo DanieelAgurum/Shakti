@@ -33,21 +33,21 @@ $consulta = $conn->query($sql);
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="enviarReporte(event)" class="btn btn-primary w-100">Reportar</button>
+                <button type="button" onclick="enviarReporte(event)" class="btn btn-banner w-100">Reportar</button>
             </div>
         </div>
     </div>
 </div>
 
 
-<div class="modal fade" id="modalCompartir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="modalCompartir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-info position-relative">
+            <div class="modal-header position-relative">
                 <h1 class="modal-title fs-5 position-absolute top-50 start-50 translate-middle" id="exampleModalLabel">
                     Compartir
                 </h1>
-                <button type="button" class="btn btn-close btn-sm ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
@@ -57,7 +57,7 @@ $consulta = $conn->query($sql);
                     <a href="#" onclick="compartirFacebook()" class="btn btn-outline-primary" title="Compartir en Facebook">
                         <i class="bi bi-facebook"></i> Facebook
                     </a>
-                    <a href="#" onclick="compartirTwitter()" class="btn btn-outline-dark" title="Compartir en X (Twitter)">
+                    <a href="#" onclick="compartirTwitter()" class="btn btn-outline-light" title="Compartir en X (Twitter)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
                             <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
                         </svg>

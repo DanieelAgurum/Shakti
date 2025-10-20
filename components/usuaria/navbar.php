@@ -303,10 +303,10 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 </div>
 
 <!-- Modal Notificaciones -->
-<div class="modal fade" id="modalNotificaciones">
+<div class="modal fade custom-config-modal" id="modalNotificaciones">
   <div class="modal-dialog modal-dialog-scrollable modal-md">
     <div class="modal-content">
-      <div class="modal-header bg-warning text-white">
+      <div class="modal-header text-white">
         <h5 class="modal-title"><i class="bi bi-bell"></i> Notificaciones</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
@@ -315,16 +315,16 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           <ul class="list-group">
             <?php foreach ($notificaciones as $n): ?>
               <li class="list-group-item d-flex justify-content-between align-items-start <?= $n['leida'] == 0 ? 'fw-bold bg-light' : '' ?>">
-                <div class="ms-2 me-auto"><?= htmlspecialchars($n['mensaje']) ?><br><small class="text-muted"><?= date('d/m/Y H:i', strtotime($n['fecha_creacion'])) ?></small></div>
+                <div class="ms-2 me-auto"><?= htmlspecialchars($n['mensaje']) ?><br><small class="text-white"><?= date('d/m/Y H:i', strtotime($n['fecha_creacion'])) ?></small></div>
                 <?= $n['leida'] == 0 ? '<span class="badge bg-danger rounded-pill">Nuevo</span>' : '' ?>
               </li>
             <?php endforeach; ?>
           </ul>
         <?php else: ?>
-          <p class="text-muted">No tienes notificaciones.</p>
+          <p class="text-white">No tienes notificaciones.</p>
         <?php endif; ?>
       </div>
-      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+      <div class="modal-footer"><button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cerrar</button></div>
     </div>
   </div>
 </div>
