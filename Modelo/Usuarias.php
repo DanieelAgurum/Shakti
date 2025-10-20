@@ -47,80 +47,80 @@ class Usuarias
         $this->rol = $rol;
     }
 
-public function agregarUsuaria()
-{
-    $con = $this->conectarBD();
+    public function agregarUsuaria()
+    {
+        $con = $this->conectarBD();
 
-    // Validaciones de campos vacíos
-    if (
-        empty(trim($this->nombre)) ||
-        empty(trim($this->apellidos)) ||
-        empty(trim($this->nickname)) ||
-        empty(trim($this->correo)) ||
-        empty(trim($this->contraseña)) ||
-        empty(trim($this->conContraseña)) ||
-        empty(trim($this->fecha_nac))
-    ) {
-        header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Todos los campos obligatorios deben estar llenos"));
-        exit;
-    }
+        // Validaciones de campos vacíos
+        if (
+            empty(trim($this->nombre)) ||
+            empty(trim($this->apellidos)) ||
+            empty(trim($this->nickname)) ||
+            empty(trim($this->correo)) ||
+            empty(trim($this->contraseña)) ||
+            empty(trim($this->conContraseña)) ||
+            empty(trim($this->fecha_nac))
+        ) {
+            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Todos los campos obligatorios deben estar llenos"));
+            exit;
+        }
 
-    // Validación de correo
-    if (!filter_var($this->correo, FILTER_VALIDATE_EMAIL)) {
-        header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Correo electrónico inválido"));
-        exit;
-    }
+        // Validación de correo
+        if (!filter_var($this->correo, FILTER_VALIDATE_EMAIL)) {
+            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Correo electrónico inválido"));
+            exit;
+        }
 
-    // Validación de contraseñas
-    if ($this->contraseña !== $this->conContraseña) {
-        header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Las contraseñas no coinciden"));
-        exit;
-    }
+        // Validación de contraseñas
+        if ($this->contraseña !== $this->conContraseña) {
+            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Las contraseñas no coinciden"));
+            exit;
+        }
 
-    // Validación de duplicados
-    $correo = mysqli_real_escape_string($con, $this->correo);
-    $correoDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE correo = '$correo'");
-    if (mysqli_fetch_array($correoDuplicado)) {
-        header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Este correo ya pertenece a una cuenta"));
-        exit;
-    }
+        // Validación de duplicados
+        $correo = mysqli_real_escape_string($con, $this->correo);
+        $correoDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE correo = '$correo'");
+        if (mysqli_fetch_array($correoDuplicado)) {
+            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Este correo ya pertenece a una cuenta"));
+            exit;
+        }
 
-    $nickname = mysqli_real_escape_string($con, $this->nickname);
-    $nickDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE nickname = '$nickname'");
-    if (mysqli_fetch_array($nickDuplicado)) {
-        header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Este nombre de usuario ya está en uso"));
-        exit;
-    }
+        $nickname = mysqli_real_escape_string($con, $this->nickname);
+        $nickDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE nickname = '$nickname'");
+        if (mysqli_fetch_array($nickDuplicado)) {
+            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Este nombre de usuario ya está en uso"));
+            exit;
+        }
 
-    $hash = password_hash($this->contraseña, PASSWORD_DEFAULT);
-    $nombre = mysqli_real_escape_string($con, $this->nombre);
-    $apellidos = mysqli_real_escape_string($con, $this->apellidos);
-    $fecha = mysqli_real_escape_string($con, $this->fecha_nac);
-    $rol = (int)$this->rol;
+        $hash = password_hash($this->contraseña, PASSWORD_DEFAULT);
+        $nombre = mysqli_real_escape_string($con, $this->nombre);
+        $apellidos = mysqli_real_escape_string($con, $this->apellidos);
+        $fecha = mysqli_real_escape_string($con, $this->fecha_nac);
+        $rol = (int)$this->rol;
 
-    // Insertar usuaria con verificado = 0
-    $insertar = mysqli_query($con, "
+        // Insertar usuaria con verificado = 0
+        $insertar = mysqli_query($con, "
         INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, verificado)
         VALUES ('$nombre', '$apellidos', '$nickname', '$correo', '$hash', '$fecha', $rol, 0)
     ") or die("Error al insertar usuaria: " . mysqli_error($con));
 
-    $id_nueva = mysqli_insert_id($con);
+        $id_nueva = mysqli_insert_id($con);
 
-    // ---------------------- Enviar correo de verificación ----------------------
-    require_once '../Modelo/ConfirmarCorreo.php';
-    $correoConfirmacion = new ConfirmarCorreo();
-    $correoConfirmacion->inicializar($this->correo, $this->nombre, $this->urlBase, $id_nueva);
-    $enviado = $correoConfirmacion->enviarCorreoVerificacion();
+        // ---------------------- Enviar correo de verificación ----------------------
+        require_once '../Modelo/ConfirmarCorreo.php';
+        $correoConfirmacion = new ConfirmarCorreo();
+        $correoConfirmacion->inicializar($this->correo, $this->nombre, $this->urlBase, $id_nueva);
+        $enviado = $correoConfirmacion->enviarCorreoVerificacion();
 
-    if (!$enviado) {
-        error_log("No se pudo enviar el correo de verificación a: " . $this->correo);
+        if (!$enviado) {
+            error_log("No se pudo enviar el correo de verificación a: " . $this->correo);
+        }
+        // ---------------------------------------------------------------------------
+
+        // **No iniciar sesión todavía, solo redirigir al login con mensaje**
+        header("Location: ../Vista/login.php?status=success&message=" . urlencode("Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta."));
+        exit;
     }
-    // ---------------------------------------------------------------------------
-
-    // **No iniciar sesión todavía, solo redirigir al login con mensaje**
-    header("Location: ../Vista/login.php?status=success&message=" . urlencode("Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta."));
-    exit;
-}
 
 
     // actualizar datos -------------------------------------------
@@ -276,7 +276,6 @@ public function agregarUsuaria()
             session_start();
             $_SESSION['foto'] = null;
             $resultado = ['status' => 'success', 'message' => 'Foto de perfil eliminada correctamente'];
-            
         } else {
             $resultado = ['status' => 'error', 'message' => 'Error al eliminar la foto: ' . mysqli_error($con)];
         }

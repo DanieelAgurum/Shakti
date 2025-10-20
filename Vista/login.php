@@ -168,6 +168,7 @@ $status = $_GET['status'] ?? '';
 
     .btn-google:hover {
       background: #c1351d;
+      color: #fff;
       transform: translateY(-2px);
     }
 

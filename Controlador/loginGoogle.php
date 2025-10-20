@@ -38,7 +38,8 @@ $email = $userInfo->email;
 $nombre = $userInfo->givenName;
 $apellidos = $userInfo->familyName ?? "";
 $nickname = explode("@", $email)[0]; // nickname por default
-$fotoGoogle = $userInfo->picture ?? null; // URL de la foto de Google
+$fotoGoogle = "../img/undraw_chill-guy-avatar_tqsm.svg";
+
 
 // Verificar si el usuario ya existe en la base de datos
 $stmt = $con->prepare("SELECT * FROM usuarias WHERE correo=? LIMIT 1");
