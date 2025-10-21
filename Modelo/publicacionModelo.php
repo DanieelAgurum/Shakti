@@ -382,16 +382,25 @@ EOT;
         $this->conectar();
 
         try {
+            // Eliminar likes asociados
             $sqlLikes = "DELETE FROM likes_publicaciones WHERE id_publicacion = ?";
             $stmtLikes = $this->conn->prepare($sqlLikes);
             $stmtLikes->bindParam(1, $id, PDO::PARAM_INT);
             $stmtLikes->execute();
 
+            // Eliminar comentarios asociados
             $sqlComentarios = "DELETE FROM comentarios WHERE id_publicacion = ?";
             $stmtComentarios = $this->conn->prepare($sqlComentarios);
             $stmtComentarios->bindParam(1, $id, PDO::PARAM_INT);
             $stmtComentarios->execute();
 
+            // Eliminar notificaciones asociadas
+            $sqlNotificaciones = "DELETE FROM notificaciones WHERE id_publicacion = ?";
+            $stmtNotificaciones = $this->conn->prepare($sqlNotificaciones);
+            $stmtNotificaciones->bindParam(1, $id, PDO::PARAM_INT);
+            $stmtNotificaciones->execute();
+
+            // Finalmente, eliminar la publicación
             $sqlPublicacion = "DELETE FROM publicacion WHERE id_publicacion = ? AND id_usuarias = ?";
             $stmtPublicacion = $this->conn->prepare($sqlPublicacion);
             $stmtPublicacion->bindParam(1, $id, PDO::PARAM_INT);
@@ -403,6 +412,7 @@ EOT;
             return false;
         }
     }
+
     public function cerrarConexion()
     {
         $this->conn = null;
