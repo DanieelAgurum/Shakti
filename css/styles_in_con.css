@@ -9,10 +9,9 @@
     --color-texto-principal: #e5e7eb;
     --color-texto-secundario: #9ca3af;
 }
-
-
+/* ======================================= */
 /* ESTILOS GLOBALES DEL BLOG */
-
+/* ======================================= */
 
 .blog-pagina-fondo {
     background-color: var(--color-fondo-claro);
@@ -53,6 +52,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #f2f2f2;
 }
 
 .blog-card-img {
@@ -75,6 +75,7 @@
     font-size: 1.25rem;
     font-weight: 600;
 }
+
 .blog-card-text {
     color: var(--color-texto-secundario);
 }
@@ -129,12 +130,13 @@
 .blog-modal-img {
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 60%; 
-    max-height: 200px; 
+    max-width: 100%;
+    height: 250px;
     display: block;
     margin: 0 auto 20px auto;
-    object-fit: contain;
+    object-fit: cover;
 }
+
 .blog-modal-text {
     line-height: 1.6;
     font-size: 1.05rem;
@@ -146,6 +148,8 @@
 .blog-modal-footer {
     border-top: 1px solid #dee2e6;
 }
+
+
 
 /*<<<<<<<<<<<<<INSTITUCIONES<<<<<<<<<<<<<<<*/
 
