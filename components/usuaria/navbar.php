@@ -4,12 +4,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/configuracionMdl.php';
 $urlBase = getBaseUrl();
 
+// $usuario = [
+//   'id' => $_SESSION['id'] ?? 0,
+//   'rol' => $_SESSION['id_rol'] ?? 0,
+//   'nickname' => $_SESSION['nickname'] ?? 'Invitado',
+//   'correo' => $_SESSION['correo'] ?? null
+// ];
+
 $usuario = [
-  'id' => $_SESSION['id'] ?? 0,
+  'id' => $_SESSION['id_usuaria'] ?? $_SESSION['id'] ?? 0,
   'rol' => $_SESSION['id_rol'] ?? 0,
   'nickname' => $_SESSION['nickname'] ?? 'Invitado',
   'correo' => $_SESSION['correo'] ?? null
 ];
+
 
 $config = null;
 $configActual = null;
@@ -21,7 +29,12 @@ if (isset($_SESSION['id_usuaria'])) {
 
 $notificaciones = [];
 $notificacionesNoLeidas = 0;
-if ($usuario['id'] && $usuario['rol'] == 1) {
+// if ($usuario['id'] && $usuario['rol'] == 1) {
+//   $notificaciones = Notificacion::obtenerParaUsuaria($usuario['id']);
+//   $notificacionesNoLeidas = count(array_filter($notificaciones, fn($n) => $n['leida'] == 0));
+// }
+
+if (!empty($usuario['id'])) {
   $notificaciones = Notificacion::obtenerParaUsuaria($usuario['id']);
   $notificacionesNoLeidas = count(array_filter($notificaciones, fn($n) => $n['leida'] == 0));
 }
@@ -58,13 +71,18 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
   </script>
   <script src="<?= $urlBase ?>peticiones(js)/accesibilidad.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/chatBotFlotante.js"></script>
+  <!-- Toastify -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 
-<nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm" style="background-color: var(--color-primario-medio);">
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm"
+  style="background-color: var(--color-primario-medio);">
   <div class="container">
     <a class="navbar-brand nexo-logo" href="<?= $urlBase ?>index">NexoH</a>
-    <button class="navbar-toggler" style="background-color: var(--color-secundario);" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEspecialista"
-      aria-controls="navbarEspecialista" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" style="background-color: var(--color-secundario);" type="button"
+      data-bs-toggle="collapse" data-bs-target="#navbarEspecialista" aria-controls="navbarEspecialista"
+      aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarEspecialista">
@@ -77,15 +95,21 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           'publicaciones' => [1 => 'usuaria/publicaciones', 2 => 'usuaria/publicaciones', 3 => 'admin/']
         ];
         ?>
-        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['libreYSegura'], $usuario['rol']) ?>">Libre y Segura</a></li>
+        <li class="nav-item"><a class="nav-link"
+            href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['libreYSegura'], $usuario['rol']) ?>">Libre y
+            Segura</a></li>
         <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro">Foro</a></li>
         <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/contacto">Contáctanos</a></li>
 
         <?php if ($usuario['rol'] <= 1): ?>
-          <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['alzalaVoz'], $usuario['rol']) ?>">Test</a></li>
+          <li class="nav-item"><a class="nav-link"
+              href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['alzalaVoz'], $usuario['rol']) ?>">Test</a>
+          </li>
         <?php endif; ?>
 
-        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a></li>
+        <li class="nav-item"><a class="nav-link"
+            href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a>
+        </li>
 
         <li class="nav-item ms-3 d-flex align-items-center custom-search-wrapper">
           <i class="bi bi-search custom-search-icon"></i>
@@ -101,7 +125,9 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           <ul class="dropdown-menu dropdown-menu-end">
             <?php if ($usuario['correo']): ?>
               <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/<?= rutaSegura([1 => 'usuaria/perfil', 2 => 'especialista/perfil'], $usuario['rol']) ?>">Mi perfil <i class="bi bi-person-circle me-1"></i></a>
+                <a class="dropdown-item"
+                  href="<?= $urlBase ?>Vista/<?= rutaSegura([1 => 'usuaria/perfil', 2 => 'especialista/perfil'], $usuario['rol']) ?>">Mi
+                  perfil <i class="bi bi-person-circle me-1"></i></a>
               </li>
               <li>
                 <hr class="dropdown-divider">
@@ -117,7 +143,8 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
             Notificaciones <i class="bi bi-bell-fill"></i>
             <?php if ($notificacionesNoLeidas): ?>
-              <span id="contadorNotificaciones" class="badge bg-danger rounded-pill ms-2"><?= $notificacionesNoLeidas ?></span>
+              <span id="contadorNotificaciones"
+                class="badge bg-danger rounded-pill ms-2"><?= $notificacionesNoLeidas ?></span>
             <?php endif; ?>
           </a>
         </li>
@@ -134,8 +161,9 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
         </li>
         <li>
           <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
-            <input type="hidden" name="opcion" value="2"/>
-            <button type="submit" class="dropdown-item cerrar">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
+            <input type="hidden" name="opcion" value="2" />
+            <button type="submit" class="dropdown-item cerrar">Cerrar sesión <i
+                class="bi bi-door-open-fill"></i></button>
           </form>
         </li>
       <?php else: ?>
@@ -162,8 +190,15 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 
 <?php include 'chatBot.php'; ?>
 
+<!-- Contenedor para toasts -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+  <div id="toastContainer"></div>
+</div>
+
+
 <!-- Modal de configuración -->
-<div class="modal fade custom-config-modal" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+<div class="modal fade custom-config-modal" id="configModal" tabindex="-1" aria-labelledby="configModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
     <div class="modal-content">
 
@@ -180,16 +215,20 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
           <!-- Tabs -->
           <ul class="nav nav-tabs" id="configTabs" role="tablist">
             <li class="nav-item">
-              <button class="nav-link active" id="cuenta-tab" data-bs-toggle="tab" data-bs-target="#cuenta" type="button" role="tab">Cuenta</button>
+              <button class="nav-link active" id="cuenta-tab" data-bs-toggle="tab"
+                data-bs-target="#cuenta" type="button" role="tab">Cuenta</button>
             </li>
             <li class="nav-item">
-              <button class="nav-link" id="privacidad-tab" data-bs-toggle="tab" data-bs-target="#privacidad" type="button" role="tab">Privacidad</button>
+              <button class="nav-link" id="privacidad-tab" data-bs-toggle="tab"
+                data-bs-target="#privacidad" type="button" role="tab">Privacidad</button>
             </li>
             <li class="nav-item">
-              <button class="nav-link" id="notificaciones-tab" data-bs-toggle="tab" data-bs-target="#notificaciones" type="button" role="tab">Notificaciones</button>
+              <button class="nav-link" id="notificaciones-tab" data-bs-toggle="tab"
+                data-bs-target="#notificaciones" type="button" role="tab">Notificaciones</button>
             </li>
             <li class="nav-item">
-              <button class="nav-link" id="accesibilidad-tab" data-bs-toggle="tab" data-bs-target="#accesibilidad" type="button" role="tab">Accesibilidad</button>
+              <button class="nav-link" id="accesibilidad-tab" data-bs-toggle="tab"
+                data-bs-target="#accesibilidad" type="button" role="tab">Accesibilidad</button>
             </li>
           </ul>
 
@@ -199,7 +238,8 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
             <!-- Cuenta -->
             <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
               <div class="mt-4">
-                <input type="password" class="form-control newContra" name="newPassword" id="newPassword" placeholder="Nueva contraseña">
+                <input type="password" class="form-control newContra" name="newPassword"
+                  id="newPassword" placeholder="Nueva contraseña">
               </div>
               <small id="passwordMessage" class="text-danger"></small>
 
@@ -210,26 +250,22 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
               </div>
 
               <div class="mt-4 d-none" id="tokenContainer">
-                <input type="text" class="form-control" name="token" id="token" placeholder="Ingresa el token">
+                <input type="text" class="form-control" name="token" id="token"
+                  placeholder="Ingresa el token">
               </div>
             </div>
 
             <!-- Privacidad -->
             <div class="tab-pane fade" id="privacidad" role="tabpanel">
               <div class="form-check form-switch mt-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="permitir_amigos"
+                <input class="form-check-input" type="checkbox" name="permitir_amigos"
                   id="addFriendOption"
                   <?= !empty($configActual['permitir_amigos']) && $configActual['permitir_amigos'] == 1 ? 'checked' : '' ?>>
-                <label class="form-check-label" for="addFriendOption">Permitir que me agreguen como amigo</label>
+                <label class="form-check-label" for="addFriendOption">Permitir que me agreguen como
+                  amigo</label>
               </div>
               <div class="form-check form-switch mt-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="perfil_privado"
+                <input class="form-check-input" type="checkbox" name="perfil_privado"
                   id="privateProfile"
                   <?= !empty($configActual['perfil_privado']) && $configActual['perfil_privado'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="privateProfile">Perfil privado</label>
@@ -239,22 +275,18 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
             <!-- Notificaciones -->
             <div class="tab-pane fade" id="notificaciones" role="tabpanel">
               <div class="form-check mt-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="notificar_mensajes"
+                <input class="form-check-input" type="checkbox" name="notificar_mensajes"
                   id="notifyMessages"
                   <?= !empty($configActual['notificar_mensajes']) && $configActual['notificar_mensajes'] == 1 ? 'checked' : '' ?>>
-                <label class="form-check-label" for="notifyMessages">Notificarme de nuevos mensajes</label>
+                <label class="form-check-label" for="notifyMessages">Notificarme de nuevos
+                  mensajes</label>
               </div>
               <div class="form-check mt-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="notificar_comentarios"
+                <input class="form-check-input" type="checkbox" name="notificar_comentarios"
                   id="notifyComments"
                   <?= !empty($configActual['notificar_comentarios']) && $configActual['notificar_comentarios'] == 1 ? 'checked' : '' ?>>
-                <label class="form-check-label" for="notifyComments">Notificarme de comentarios y respuestas</label>
+                <label class="form-check-label" for="notifyComments">Notificarme de comentarios y
+                  respuestas</label>
               </div>
             </div>
 
@@ -263,26 +295,24 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
               <div class="mb-3">
                 <label for="fontSize" class="form-label">Tamaño de fuente</label>
                 <select class="form-select" name="tamano_fuente" id="fontSize">
-                  <option value="small" <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'small' ? 'selected' : '' ?>>Pequeño</option>
-                  <option value="medium" <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'medium' ? 'selected' : '' ?>>Medio</option>
-                  <option value="large" <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'large' ? 'selected' : '' ?>>Grande</option>
+                  <option value="small"
+                    <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'small' ? 'selected' : '' ?>>
+                    Pequeño</option>
+                  <option value="medium"
+                    <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'medium' ? 'selected' : '' ?>>
+                    Medio</option>
+                  <option value="large"
+                    <?= isset($configActual['tamano_fuente']) && $configActual['tamano_fuente'] == 'large' ? 'selected' : '' ?>>
+                    Grande</option>
                 </select>
               </div>
               <div class="form-check form-switch mt-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="modo_oscuro"
-                  id="darkMode"
+                <input class="form-check-input" type="checkbox" name="modo_oscuro" id="darkMode"
                   <?= !empty($configActual['modo_oscuro']) && $configActual['modo_oscuro'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="darkMode">Activar modo oscuro</label>
               </div>
               <div class="form-check form-switch mt-2">
-                <input
-                  class="form-check-input"
-                  name="alto_contraste"
-                  type="checkbox"
-                  id="highContrast"
+                <input class="form-check-input" name="alto_contraste" type="checkbox" id="highContrast"
                   <?= !empty($configActual['alto_contraste']) && $configActual['alto_contraste'] == 1 ? 'checked' : '' ?>>
                 <label class="form-check-label" for="highContrast">Activar alto contraste</label>
               </div>
@@ -294,8 +324,10 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
         <!-- Footer -->
         <div class="modal-footer">
           <input type="hidden" name="accion" id="accion" value="guardar_configuracion">
-          <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cerrar</button>
-          <button type="submit" class="btn btn-banner"><i class="bi bi-check2-circle"></i> Guardar cambios</button>
+          <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal"><i
+              class="bi bi-x-lg"></i> Cerrar</button>
+          <button type="submit" class="btn btn-banner"><i class="bi bi-check2-circle"></i> Guardar
+            cambios</button>
         </div>
       </form>
     </div>
@@ -303,10 +335,10 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
 </div>
 
 <!-- Modal Notificaciones -->
-<div class="modal fade" id="modalNotificaciones">
+<div class="modal fade custom-config-modal" id="modalNotificaciones">
   <div class="modal-dialog modal-dialog-scrollable modal-md">
     <div class="modal-content">
-      <div class="modal-header bg-warning text-white">
+      <div class="modal-header text-white">
         <h5 class="modal-title"><i class="bi bi-bell"></i> Notificaciones</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
@@ -314,22 +346,36 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login.php')
         <?php if ($notificaciones): ?>
           <ul class="list-group">
             <?php foreach ($notificaciones as $n): ?>
-              <li class="list-group-item d-flex justify-content-between align-items-start <?= $n['leida'] == 0 ? 'fw-bold bg-light' : '' ?>">
-                <div class="ms-2 me-auto"><?= htmlspecialchars($n['mensaje']) ?><br><small class="text-muted"><?= date('d/m/Y H:i', strtotime($n['fecha_creacion'])) ?></small></div>
+              <!-- <li
+                class="list-group-item d-flex justify-content-between align-items-start <?= $n['leida'] == 0 ? 'fw-bold bg-light' : '' ?>">
+                <div class="ms-2 me-auto"><?= htmlspecialchars($n['mensaje']) ?><br><small
+                    class=""><?= date('d/m/Y H:i', strtotime($n['fecha_creacion'])) ?></small>
+                </div>
+                <?= $n['leida'] == 0 ? '<span class="badge bg-danger rounded-pill">Nuevo</span>' : '' ?>
+              </li> -->
+
+              <li class="list-group-item noti-item d-flex justify-content-between align-items-start <?= $n['leida'] == 0 ? 'fw-bold bg-light' : '' ?>"
+                data-id="<?= $n['id_publicacion'] ?>" data-bs-placement="top" title="Ver publicación">
+                <div class="ms-2 me-auto">
+                  <?= htmlspecialchars($n['mensaje']) ?><br>
+                  <small class=""><?= date('d/m/Y H:i', strtotime($n['fecha_creacion'])) ?></small>
+                </div>
                 <?= $n['leida'] == 0 ? '<span class="badge bg-danger rounded-pill">Nuevo</span>' : '' ?>
               </li>
             <?php endforeach; ?>
           </ul>
         <?php else: ?>
-          <p class="text-muted">No tienes notificaciones.</p>
+          <p class="text-white">No tienes notificaciones.</p>
         <?php endif; ?>
       </div>
-      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+      <div class="modal-footer"><button type="button" class="btn btn-banner btn-secondary"
+          data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cerrar</button></div>
     </div>
   </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="<?= $urlBase ?>peticiones(js)/clickNotificacion.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= $urlBase ?>peticiones(js)/navbar.js"></script>
 <script src="<?= $urlBase ?>peticiones(js)/tooltip.js"></script>

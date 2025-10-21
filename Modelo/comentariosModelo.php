@@ -11,7 +11,7 @@ class Comentario
             header('Content-Type: application/json');
             echo json_encode([
                 'status' => 'error',
-                'message' => '❌ Error de conexión a la base de datos: ' . mysqli_connect_error()
+                'message' => 'Error de conexión a la base de datos: ' . mysqli_connect_error()
             ]);
             exit;
         }
@@ -207,7 +207,6 @@ class Comentario
 
         return false;
     }
-
     public function contieneMalasPalabrasPersonalizado($contenido)
     {
         $malasPalabras = [
@@ -396,7 +395,6 @@ class Comentario
 
         return false;
     }
-
     public function moderarContenidoIA(string $contenido): string
     {
         $apiKey = OPENAI_API_KEY;
@@ -437,7 +435,6 @@ EOT;
 
         return strtolower(trim($respuesta));
     }
-
     public function detectarDoxxingIA(string $contenido): string
     {
         $apiKey = OPENAI_API_KEY;
@@ -492,8 +489,7 @@ EOT;
         $respuesta = $data['output'][0]['content'][0]['text'] ?? "false";
 
         return strtolower(trim($respuesta));
-    }
-    
+    }    
     public function agregarComentario($contenido, $idPublicacion, $idUsuaria, $idPadre = null)
     {
 

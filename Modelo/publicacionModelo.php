@@ -178,8 +178,10 @@ EOT;
             return false;
         }
     }
-
-
+    public function ultimoInsertId(): ?int
+    {
+        return $this->conn ? (int)$this->conn->lastInsertId() : null;
+    }
     public function obtenerTodasConNickname(): array
     {
         $this->conectar();
@@ -195,12 +197,10 @@ EOT;
             return [];
         }
     }
-
     public function inicializar($buscar)
     {
         $this->buscar = $buscar;
     }
-
     public function buscar()
     {
         $this->conectar();

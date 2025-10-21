@@ -36,6 +36,7 @@ $urlBase = getBaseUrl();
     include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/modales/reportarPostUsuarias.php';
     ?>
     <link rel="stylesheet" href="<?= $urlBase ?>css/foro.css" />
+    <script src="<?= $urlBase ?>peticiones(js)/abrirNotificacion.js"></script>
 </head>
 
 <body class="foro_main text-black">
@@ -50,7 +51,7 @@ $urlBase = getBaseUrl();
             </div>
         </div>
     </div>
-    
+
     <div class="foro">
         <div id="loaderInicio" class="loader-container d-none">
             <div class="orbit">
