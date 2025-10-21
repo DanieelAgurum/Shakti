@@ -15,7 +15,7 @@
 
   <!-- Scripts únicos -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>------------------------------
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     
@@ -24,7 +24,7 @@
 <body class="recurso-pagina-fondo">
 
     <div class="recurso-pagina-principal container my-5">
-        <h1 class="recurso-titulo-principal text-center mb-5">Instituciones</h1>
+        <h1 class="recurso-titulo-principal text-center mb-5"> Instituciones</h1>
         
         <div class="recurso-tarjetas-fila row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             
