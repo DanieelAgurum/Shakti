@@ -1,0 +1,267 @@
+:root {
+    --color-primario-oscuro: #0a192f;
+    --color-primario-medio: #1b3a57;
+    --color-primario-claro: #3a6073;
+    --color-secundario: #8db5c9;
+    --color-acento1: #5ee6b5;
+    --color-acento2: #f5c542;
+    --color-fondo-claro: #f0f4f8;
+    --color-texto-principal: #e5e7eb;
+    --color-texto-secundario: #9ca3af;
+}
+/* ======================================= */
+/* ESTILOS GLOBALES DEL BLOG */
+/* ======================================= */
+
+.blog-pagina-fondo {
+    background-color: var(--color-fondo-claro);
+}
+
+.blog-titulo-seccion {
+    color: var(--color-primario-medio) !important;
+    border-bottom: 3px solid var(--color-primario-medio);
+    display: inline-block;
+    padding-bottom: 10px;
+    font-weight: 700 !important;
+}
+
+/* ======================================= */
+/* ESTILOS DE LAS TARJETAS (CARDS) */
+/* ======================================= */
+
+.blog-card-base {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    border: none;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+.blog-card-base:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.blog-card-img-container {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f2f2f2;
+}
+
+.blog-card-img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.blog-card-base:hover .blog-card-img {
+    transform: scale(1.05);
+}
+
+.blog-card-body {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.blog-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.blog-card-text {
+    color: var(--color-texto-secundario);
+}
+
+.blog-card-boton {
+    background-color: var(--color-primario-medio);
+    border-color: var(--color-primario-medio);
+    font-weight: 500;
+}
+
+/* ======================================= */
+/* ESTILOS DEL CARRUSEL */
+/* ======================================= */
+
+.blog-carrusel-interno {
+    padding: 10px;
+}
+
+.blog-carrusel-item {
+    padding: 20px 0;
+}
+
+.blog-control-prev,
+.blog-control-next {
+    width: 5%;
+    opacity: 1;
+}
+
+.blog-control-icono-prev,
+.blog-control-icono-next {
+    background-color: var(--color-primario-medio) !important;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 40px;
+    height: 40px;
+}
+
+/* ======================================= */
+/* ESTILOS DEL MODAL DE LECTURA */
+/* ======================================= */
+
+.blog-modal-content {
+    border-radius: 15px;
+}
+
+.blog-modal-header {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    color: var(--color-texto-principal);
+}
+
+.blog-modal-img {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    height: 250px;
+    display: block;
+    margin: 0 auto 20px auto;
+    object-fit: cover;
+}
+
+.blog-modal-text {
+    line-height: 1.6;
+    font-size: 1.05rem;
+    white-space: pre-line;
+    text-align: justify;
+    padding: 0 15px;
+}
+
+.blog-modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+
+
+/*<<<<<<<<<<<<<INSTITUCIONES<<<<<<<<<<<<<<<*/
+
+/* ======================================= */
+/* ESTILOS GLOBALES Y DE CONTENEDOR PRINCIPAL */
+/* ======================================= */
+
+.recurso-pagina-fondo {
+    background-color: var(--color-fondo-claro);
+    font-family: 'Arial', sans-serif;
+}
+
+.recurso-titulo-principal {
+    color: var(--color-primario-medio);
+    font-weight: 700;
+    border-bottom: 3px solid var(--color-primario-medio);
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.recurso-tarjetas-fila {
+    padding-top: 20px;
+}
+
+/* ======================================= */
+/* ESTILOS DE LA TARJETA (CARD) */
+/* ======================================= */
+
+.recurso-card-base {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.recurso-card-base:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.recurso-card-img-container {
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.recurso-card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recurso-card-body {
+    padding: 1.5rem;
+}
+
+.recurso-card-titulo {
+    color: var(--color-primario-oscuro);
+    font-weight: 600;
+    min-height: 48px;
+}
+
+.recurso-card-texto-breve {
+    font-style: italic;
+}
+
+.recurso-card-boton {
+    background-color: var(--color-primario-medio);
+    border-color: var(--color-primario-medio);
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+/* ======================================= */
+/* ESTILOS DEL MODAL (VENTANA EMERGENTE) */
+/* ======================================= */
+
+.recurso-modal-contenido {
+    border-radius: 15px;
+}
+
+.recurso-modal-header {
+    background-color: var(--color-primario-medio);
+    color: var(--color-texto-principal);
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+}
+
+.recurso-modal-titulo {
+    font-weight: 700;
+}
+
+.recurso-modal-img {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 250px;
+    width: auto;
+    object-fit: cover;
+}
+
+.recurso-modal-contacto {
+    border-radius: 5px;
+    font-size: 0.95rem;
+}
+
+.recurso-modal-boton-web:hover {
+    background-color: var(--color-primario-medio);
+    color: var(--color-texto-principal) !important;
+}
+
+.recurso-modal-footer {
+    border-top: none;
+}
