@@ -28,10 +28,11 @@
     <h1 class="blog-titulo-seccion text-center mb-5 font-weight-bold text-primary">Contenido para ti</h1>
 
     <div id="blogCarousel" class="blog-carrusel carousel slide" data-ride="carousel" data-interval="8000"> 
+        
         <ol class="carousel-indicators blog-indicadores-lista">
             <li data-target="#blogCarousel" data-slide-to="0" class="active"></li>
             <li data-target="#blogCarousel" data-slide-to="1"></li>
-        </ol>
+            <li data-target="#blogCarousel" data-slide-to="2"></li> </ol>
 
         <div class="carousel-inner blog-carrusel-interno">
 
@@ -116,7 +117,50 @@
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="carousel-item blog-carrusel-item">
+                <div class="row justify-content-center">
+                    
+                    <div class="col-md-6 col-lg-5 mb-4">
+                        <div class="blog-card-base card shadow-lg border-0" 
+                             data-article-title="Título de la Tarjeta 5: ¡Nueva Tarjeta!" 
+                             data-article-body="Cuerpo del artículo 5. Este es el contenido detallado que se mostrará en el modal. Asegúrate de que sea informativo y relevante para el tema." 
+                             data-article-image="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=870&auto=format&fit=crop">
+                            <div class="blog-card-img-container">
+                                <img src="https://plus.unsplash.com/premium_photo-1661777477077-599ac9fc880f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1032" class="blog-card-img card-img-top" alt="Imagen Tarjeta 5">
+                            </div>
+                            <div class="blog-card-body card-body d-flex flex-column">
+                               <h5 class="blog-card-title card-title text-primary">Sonidos relajantes</h5>
+                               <p class="blog-card-text card-text">Encuentra los sonidos más relajates para tu día a día</p>
+    
+                                <a href="Sonidos.php" class="blog-card-boton btn btn-primary mt-auto btn-read-more">
+                                Escuchar ahora...
+                                </a>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-5 mb-4">
+                        <div class="blog-card-base card shadow-lg border-0" 
+                             data-article-title="Título de la Tarjeta 6: Segundo Artículo Nuevo" 
+                             data-article-body="Cuerpo del artículo 6. ¡Añade tu contenido aquí! Recuerda que puedes usar un texto más largo para el modal." 
+                             data-article-image="https://images.unsplash.com/photo-1623916962078-43e86749007e?q=80&w=870&auto=format&fit=crop">
+                            <div class="blog-card-img-container">
+                                <img src="https://images.unsplash.com/photo-1716284130499-2c7c04d1dc96?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1031" class="blog-card-img card-img-top" alt="Imagen Tarjeta 6">
+                            </div>
+                            <div class="blog-card-body card-body d-flex flex-column">
+                                <h5 class="blog-card-title card-title text-primary">Ejercicios de respiración</h5>
+                                <p class="blog-card-text card-text">Los mejores ejercios de respiración para ti.</p>
+                                 <a href="Respiracion.php" class="blog-card-boton btn btn-primary mt-auto btn-read-more">
+                                Probar ahora...
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
 
         <a class="carousel-control-prev blog-control-prev" href="#blogCarousel" role="button" data-slide="prev">
             <span class="blog-control-icono-prev carousel-control-prev-icon bg-primary p-3 rounded-circle" aria-hidden="true"></span>
