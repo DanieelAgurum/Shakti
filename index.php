@@ -183,10 +183,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
           class="btn btn-outline-secondary mt-2 mb-2 px-4 py-2 rounded-pill shadow-sm hover-scale">
           Instituciones
         </a>
-        <a href="<?= $urlBase ?>/Vista/Sonidos.php"
-          class="btn btn-outline-secondary mt-2 mb-2 px-4 py-2 rounded-pill shadow-sm hover-scale">
-          Sonidos Relajantes
-        </a>
+        
       </div>
       <hr class="my-5">
     <?php endif; ?>
