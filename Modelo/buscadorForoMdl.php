@@ -143,7 +143,7 @@ class buscadorForoMdl
     {
         $idPublicacion = (int)$publicacion['id_publicacion'];
         $esAnonima = isset($publicacion['anonima']) && $publicacion['anonima'] == '1';
-        $nombreMostrar = $esAnonima ? 'Anónima' : htmlspecialchars(ucwords(strtolower($publicacion['nickname'])));
+        $nombreMostrar = $esAnonima ? 'Anónimo' : htmlspecialchars(ucwords(strtolower($publicacion['nickname'])));
         $fotoMostrar = $esAnonima
             ? '../../img/undraw_chill-guy-avatar_tqsm.svg'
             : (!empty($publicacion['foto']) ? 'data:image/*;base64,' . base64_encode($publicacion['foto']) : '../../img/undraw_chill-guy-avatar_tqsm.svg');

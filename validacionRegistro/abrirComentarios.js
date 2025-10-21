@@ -10,10 +10,10 @@ $(document).ready(function () {
 
         if (comentario.length < 4) {
             Swal.fire("Error", "El comentario debe tener al menos 4 caracteres.", "warning");
+            btn.prop("disabled", false).html(`Enviar <i class="bi bi-arrow-right-circle"></i>`);
             return;
         }
 
-        // Deshabilitar botón y mostrar texto de envío con spinner
         btn.prop("disabled", true).html(
             `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Enviando...`
         );
@@ -69,7 +69,6 @@ $(document).ready(function () {
                 Swal.fire("Error", "Error en la comunicación con el servidor.", "error");
             },
             complete: function () {
-                // Restaurar el botón con ícono original
                 btn.prop("disabled", false).html(`Enviar <i class="bi bi-arrow-right-circle"></i>`);
             }
         });
@@ -112,7 +111,7 @@ $(document).ready(function () {
         const contenedor = $(`#form-responder-${id}`);
 
         if (contenedor.children().length > 0) {
-            contenedor.empty(); // Cerrar si ya existe
+            contenedor.empty();
         } else {
             const formHtml = `
             <form class="form-responder" data-id-padre="${id}">
@@ -136,10 +135,10 @@ $(document).ready(function () {
 
         if (comentario.length < 4) {
             Swal.fire("Error", "La respuesta debe tener al menos 4 caracteres.", "warning");
+            btn.prop("disabled", false).html(`Enviar <i class="bi bi-arrow-right-circle"></i>`);
             return;
         }
 
-        // Deshabilitar el botón durante el envío con spinner
         btn.prop("disabled", true).html(
             `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Enviando...`
         );
@@ -192,7 +191,6 @@ $(document).ready(function () {
                 Swal.fire("Error", "Error en la comunicación con el servidor.", "error");
             },
             complete: function () {
-                // Restaurar el botón con ícono original
                 btn.prop("disabled", false).html(`Enviar <i class="bi bi-arrow-right-circle"></i>`);
             }
         });
@@ -210,14 +208,19 @@ $(document).ready(function () {
         const form = $(this);
         const id = form.find("input[name='id_comentario']").val();
         const nuevoComentario = form.find("input[name='nuevo_comentario']").val().trim();
-        const btn = form.find("button[type='submit']"); // botón de enviar
-        const originalHTML = btn.html(); // guarda el contenido original (con ícono incluido)
+        const btn = form.find("button[type='submit']");
+        const originalHTML = btn.html();
 
-        // Desactiva el botón y muestra spinner
+        if (nuevoComentario.length < 4) {
+            Swal.fire("Error", "El comentario debe tener al menos 4 caracteres.", "warning");
+            btn.prop("disabled", false).html(originalHTML);
+            return;
+        }
+
         btn.prop("disabled", true).html(`
-        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        Guardando...
-    `);
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Guardando...
+        `);
 
         $.ajax({
             url: "../../Controlador/comentariosCtrl.php",
@@ -247,6 +250,15 @@ $(document).ready(function () {
                         timerProgressBar: true,
                         showConfirmButton: false
                     });
+                } else if (data.message === "doxxing") {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Información personal detectada",
+                        text: "Evitemos compartir información personal o sensible. Gracias.",
+                        timer: 4000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
                 } else {
                     Swal.fire("Error", "No se pudo editar el comentario.", "error");
                 }
@@ -255,7 +267,6 @@ $(document).ready(function () {
                 Swal.fire("Error", "Error en la comunicación con el servidor.", "error");
             },
             complete: function () {
-                // Restaurar el botón original
                 btn.prop("disabled", false).html(originalHTML);
             }
         });

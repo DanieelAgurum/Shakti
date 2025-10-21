@@ -28,11 +28,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_publicacion']
     } elseif (strlen($titulo) < 3) {
         $_SESSION['mensaje'] = "El título debe tener al menos 3 caracteres.";
     } else {
+
+        // $guardado = $publicacionModelo->guardar($titulo, $contenido, $anonima, $id_usuaria);
+        // if ($guardado) {
+        //     // Crear notificaciones para otras usuarias
+        //     Notificacion::crearDesdePublicacion($id_usuaria);
+        //     $_SESSION['mensaje'] = "Publicación guardada con éxito.";
+        // } else {
+        //     $_SESSION['mensaje'] = "Error al guardar la publicación.";
+        // }
+
         $guardado = $publicacionModelo->guardar($titulo, $contenido, $anonima, $id_usuaria);
 
         if ($guardado) {
-            // Crear notificaciones para otras usuarias
-            Notificacion::crearDesdePublicacion($id_usuaria);
+            $id_publicacion = $publicacionModelo->ultimoInsertId();
+            if ($id_publicacion) {
+                Notificacion::crearDesdePublicacion($id_usuaria, $id_publicacion);
+            }
             $_SESSION['mensaje'] = "Publicación guardada con éxito.";
         } else {
             $_SESSION['mensaje'] = "Error al guardar la publicación.";

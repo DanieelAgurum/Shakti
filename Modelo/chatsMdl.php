@@ -125,7 +125,7 @@ class chatsMdl
                 'creado_en'     => $row['creado_en'],
                 'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
                 'tipo'          => $this->descifrarAES($row['archivo']) ? "imagen" : "texto",
-                'contenido'     => $this->descifrarAES($row['archivo']) ?: null 
+                'contenido'     => $this->descifrarAES($row['archivo']) ?: null
             ];
         }
 
@@ -300,44 +300,43 @@ class chatsMdl
     public function enviarMensajeIanBot($mensaje)
     {
         $id_usuario = $_SESSION['id'] ?? null;
-        $mensaje = $this->cifrarAESIanBot($mensaje);
+        $nombre_usuario = $_SESSION['nombre'] ?? 'usuario';
 
-        // ✅ Validar sesión activa
         if (!$id_usuario) {
             echo json_encode(["respuesta" => "⚠️ No hay sesión iniciada."]);
             return;
         }
 
-        // ✅ Validar mensaje recibido
-        $mensaje = trim($mensaje ?? '');
-        if ($mensaje === '') {
+        $mensajeOriginal = trim($mensaje ?? '');
+        if ($mensajeOriginal === '') {
             echo json_encode(["respuesta" => "⚠️ No se recibió ningún mensaje."]);
             return;
         }
 
-        // === Conexión BD ===
         $con = $this->conectarBD();
 
-        // ✅ Guardar mensaje del usuario
+        // ===================== BLOQUE 1: Guardar mensaje del usuario =====================
+        $mensajeCifrado = $this->cifrarAESIanBot($mensajeOriginal);
         $sqlUsuario = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())";
         $stmt = $con->prepare($sqlUsuario);
-        $stmt->bind_param("is", $id_usuario, $mensaje);
+        $stmt->bind_param("is", $id_usuario, $mensajeCifrado);
         $stmt->execute();
         $stmt->close();
 
-        $mensaje = $this->descifrarAESIanBot($mensaje);
-        // === Recuperar historial existente de la BD ===
+        // ===================== BLOQUE 2: Obtener historial =====================
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
+        $historial[] = ["rol" => "usuario", "contenido" => htmlspecialchars($mensajeOriginal, ENT_QUOTES, 'UTF-8')];
 
-        // Agregar mensaje del usuario al historial
-        $historial[] = [
-            "rol" => "usuario",
-            "contenido" => htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8')
-        ];
+        $historialTexto = "";
+        foreach ($historial as $linea) {
+            $historialTexto .= ucfirst($linea['rol']) . ": " . $linea['contenido'] . "\n";
+        }
 
-        // === Contexto base del bot ===
+        // ===================== BLOQUE 3: Prompt completo del bot =====================
         $promptBase = <<<EOT
 Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
+
+Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
 
 🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
 - Expresar cómo se sienten sin juicios.
@@ -362,81 +361,188 @@ Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo dise�
 💬 Estilo de comunicación:
 - Usa frases cálidas, comprensibles y breves.
 - Valida la emoción del usuario sin exagerar.
-- No repitas constantemente frases de compañía (“siempre estoy aquí para ti”), úsalas solo en momentos clave.
 - Haz preguntas indirectas y suaves para conocer mejor al usuario (nombre, edad, ocupación, intereses), pero de manera 
-  escalonada y natural según el flujo de la conversación. Ejemplos:
-  - “Por cierto, ¿cómo te llamas? Me gusta personalizar las charlas.”
-  - “Me da curiosidad, ¿qué edad tienes? A veces la manera en que manejamos el estrés cambia según la etapa de la vida.”
-  - “¿Y a qué te dedicas normalmente? El trabajo o los estudios suelen influir mucho en cómo nos sentimos.”
-  - “Cuando tienes un rato libre, ¿qué es lo que más disfrutas hacer?”
+  escalonada y natural según el flujo de la conversación.
 - Alterna entre validar emociones y dejar caer alguna de estas preguntas sin forzar el tema.
-- Usa las respuestas del usuario para personalizar consejos posteriores (ejemplo: si estudia → sugerir 
-  pausas de estudio; si trabaja en oficina → recomendar estiramientos).
+- Usa las respuestas del usuario para personalizar consejos posteriores.
 - Mantén un tono confidencial y respetuoso.
-- Si el usuario guarda silencio, responde con una frase cálida que invite a expresarse sin presión, como: 
-  “Está bien si no quieres hablar mucho ahora, ¿quieres que te comparta una idea simple para relajarte?”
 
 📌 Reglas de continuidad y personalización:
 - Recuerda la información que el usuario comparta y úsala de forma natural para dar continuidad.
-- Haz que la conversación fluya sin sonar mecánica ni forzar consejos.
-- Las sugerencias deben ser simples y accionables (ejemplo: respirar hondo tres veces, salir a caminar 5 minutos,
-  escribir lo que sientes).
-- Si el usuario responde con cualquier mensaje afirmativo o breve (como “sí”, “claro”, “vale”, “ok”, “smn” o 
-  cualquier abreviatura), interpreta su intención de manera positiva y **retoma inmediatamente la acción o 
-  sugerencia ofrecida** sin preguntar de nuevo.
-- Evita tecnicismos psicológicos complejos.
-- Siempre que ofrezcas pasos prácticos o recomendaciones para manejar emociones (estrés, frustración, ansiedad, 
-  tristeza, enojo).
-- Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, pero sin exagerar ni dar falsas promesas.
+- Las sugerencias deben ser simples y accionables (respirar hondo, caminar, escribir lo que sientes).
+- Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, sin exagerar.
 
-📌 Excepción importante:
-- Si el usuario solicita repetir listas o consejos relacionados con bienestar o manejo del estrés, el bot debe hacerlo respetando su estilo empático y cálido, sin activar la limitación anterior.
-
-✅ Meta: Que el usuario se sienta acompañado y comprendido, descubriendo pequeños pasos para cuidar su bienestar.
+✅ Meta: Que {$nombre_usuario} se sienta comprendido y acompañado emocionalmente.
 EOT;
 
-        // === Crear prompt unificado ===
-        $historialTexto = "";
-        foreach ($historial as $linea) {
-            $historialTexto .= ucfirst($linea['rol']) . ": " . $linea['contenido'] . "\n";
-        }
-
         $promptFinal = $promptBase . "\n\n" . $historialTexto . "IAn Bot:";
-
-        // === Llamada a OpenAI (respuesta del bot) ===
         $respuestaBot = $this->llamarOpenAI($promptFinal);
 
-        // ✅ Validar error en la respuesta del bot
         if (empty($respuestaBot) || stripos($respuestaBot, 'error') !== false) {
-            echo json_encode(["respuesta" => "⚠️ Hubo un problema al procesar tu mensaje. Intenta nuevamente."]);
+            echo json_encode(["respuesta" => "⚠️ Error en la comunicación con el bot."]);
             $con->close();
             return;
         }
 
-        // ✅ Evitar guardar respuestas vacías o nulas en la BD
-        if (trim($respuestaBot) === '') {
-            echo json_encode(["respuesta" => "⚠️ No se recibió una respuesta válida del bot."]);
-            $con->close();
-            return;
-        }
+        // ===================== BLOQUE 4: Evaluar necesidad de ayuda profesional =====================
+        $promptRiesgo = "Analiza la siguiente conversación y responde solo con 'SI' o 'NO' si necesita atención profesional inmediata:\n$historialTexto";
+        $pideAyudaRaw = $this->llamarOpenAI($promptRiesgo);
+        $pideAyuda = strtoupper(trim($pideAyudaRaw ?? "NO"));
 
-        // === Guardar respuesta del bot cifrada también ===
+        // ===================== BLOQUE 5: Buscar centros de ayuda si es necesario =====================
+        if ($pideAyuda === "SI") {
+            $direccion = null;
+            $filtroMunicipio = null;
+
+            // Detectar dirección automáticamente en historial
+            foreach ($historial as $h) {
+                $d = $this->detectarDireccion($h['contenido']);
+                if ($d) {
+                    $direccion = $d;
+                    break;
+                }
+            }
+
+            // Extraer municipio/ciudad/estado si el usuario lo proporciona
+            foreach ($historial as $h) {
+                if (preg_match('/\b(en|dentro de|ciudad de|municipio de)\s+([\w\s]+)/i', $h['contenido'], $m)) {
+                    $filtroMunicipio = trim($m[2]);
+                    break;
+                }
+            }
+
+            // Si no hay dirección, usar la BD
+            if (!$direccion) {
+                $stmtDir = $con->prepare("SELECT direccion FROM usuarias WHERE id = ?");
+                $stmtDir->bind_param("i", $id_usuario);
+                $stmtDir->execute();
+                $resDir = $stmtDir->get_result()->fetch_assoc();
+                $direccion = $resDir['direccion'] ?? null;
+                $stmtDir->close();
+            }
+
+            // Buscar centros con dirección detectada
+            $centros = $this->buscarCentrosNominatim($direccion, $filtroMunicipio);
+
+            if (empty($centros)) {
+                $respuestaBot .= "\n\n📍 No pude ubicar tu dirección exactamente. ¿Podrías indicarme el municipio, ciudad o estado para ofrecerte centros de ayuda cercanos?";
+            } elseif (count($centros) > 2) {
+                // Más de 2 resultados: pedir al usuario que precise
+                $respuestaBot .= "\n\n📍 Encontré varios posibles centros cerca de ti. ¿Podrías indicarme cuál colonia o referencia específica para mostrar la mejor opción?";
+            } else {
+                // 2 o menos resultados: usar el primero
+                $respuestaBot .= "\n\n🏥 <b>Centro de ayuda cercano (fuente: OpenStreetMap):</b><br>";
+                $c = $centros[0];
+                $respuestaBot .= "• {$c['nombre']} — {$c['direccion']} — <a href='{$c['maps']}' target='_blank'>Ver en Maps</a> — Tel: {$c['telefono']}<br>";
+            }
+        }
+        // ===================== BLOQUE 6: Guardar respuesta y retornar =====================
         $respuestaCifrada = $this->cifrarAESIanBot($respuestaBot);
-
-        $sqlBot = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())";
-        $stmtBot = $con->prepare($sqlBot);
+        $stmtBot = $con->prepare("INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())");
         $stmtBot->bind_param("is", $id_usuario, $respuestaCifrada);
         $stmtBot->execute();
         $stmtBot->close();
-
-        // === Actualizar historial en sesión ===
-        $_SESSION['historial'] = $historial;
-        $_SESSION['historial'][] = ["rol" => "bot", "contenido" => $respuestaBot];
-
         $con->close();
 
-        // === Devolver respuesta (HTML limpio, conservando listas) ===
         echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
+    }
+    private function detectarDireccion($texto)
+    {
+        // Patrón simple: número + letras/calle + posible ciudad
+        if (preg_match('/\d{1,5}[\w\s.,#-]+/i', $texto)) {
+            return trim($texto);
+        }
+        return null;
+    }
+    private function buscarCentrosNominatim($direccion, $filtroMunicipio = null)
+    {
+        $coords = $this->obtenerCoordenadasAmbigua($direccion, $filtroMunicipio);
+        if (!$coords) return [];
+
+        $busquedas = [
+            "centro de salud mental",
+            "hospital psiquiátrico",
+            "clínica psicológica",
+            "centro DIF",
+            "centro de atención psicológica"
+        ];
+
+        $centros = [];
+
+        foreach ($busquedas as $q) {
+            $lon = (float)$coords['lon'];
+            $lat = (float)$coords['lat'];
+
+            $url = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($q . " ,México") .
+                "&viewbox=" . ($lon - 0.2) . "," . ($lat + 0.2) . "," . ($lon + 0.2) . "," . ($lat - 0.2) .
+                "&bounded=1&countrycodes=mx";
+
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15,
+                CURLOPT_USERAGENT => "IANBot/1.0"
+            ]);
+            $response = curl_exec($curl);
+            curl_close($curl);
+
+            $data = json_decode($response, true);
+            if (is_array($data)) {
+                foreach ($data as $place) {
+                    if (!isset($place['display_name'])) continue;
+                    $nombreCompleto = $place['display_name'];
+                    $partes = explode(',', $nombreCompleto);
+                    $nombre = trim($partes[0]);
+                    $direccionCorta = isset($partes[1]) ? trim(implode(',', array_slice($partes, 1))) : '';
+
+                    if (!in_array($nombre, array_column($centros, 'nombre'))) {
+                        $centros[] = [
+                            "nombre" => $nombre,
+                            "direccion" => $direccionCorta,
+                            "maps" => "https://www.google.com/maps/search/?api=1&query=" . urlencode($nombreCompleto),
+                            "telefono" => "No disponible"
+                        ];
+                    }
+                }
+            }
+        }
+        return array_slice($centros, 0, 5); // Solo 5 resultados
+    }
+    private function obtenerCoordenadasAmbigua($direccion, $filtroMunicipio = null)
+    {
+        $url = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($direccion . " México");
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_USERAGENT => "IANBot/1.0"
+        ]);
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $data = json_decode($response, true);
+        if (!$data || !is_array($data)) return null;
+
+        // Filtrar resultados si se indicó municipio/ciudad/estado
+        if ($filtroMunicipio) {
+            $data = array_filter($data, function ($d) use ($filtroMunicipio) {
+                return stripos($d['display_name'], $filtroMunicipio) !== false;
+            });
+            $data = array_values($data); // reindexar
+        }
+
+        // Si no hay ningún resultado filtrado, usar el primero
+        if (empty($data)) return null;
+
+        // Si hay múltiples resultados y no se proporcionó filtro, devolver null para pedir más datos al usuario
+        if (count($data) > 1 && !$filtroMunicipio) return null;
+
+        return [
+            'lat' => (float)$data[0]['lat'],
+            'lon' => (float)$data[0]['lon']
+        ];
     }
 
     /* ============================
