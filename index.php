@@ -175,14 +175,15 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       </div>
 
       <div class="hero-buttons d-flex flex-wrap justify-content-center" data-aos="fade-up" data-aos-delay="400">
-        <a href="<?= $urlBase ?>/Vista/contenido.php"
+        <a href="<?= $urlBase ?>/Vista/Contenido_1.php"
           class="btn btn-primary me-2 mt-2 mb-2 px-4 py-2 rounded-pill shadow-sm hover-scale">
           Más contenido...
         </a>
-        <a href="<?= $urlBase ?>/Vista/organizacionVista.php"
+        <a href="<?= $urlBase ?>/Vista/Instituciones.php"
           class="btn btn-outline-secondary mt-2 mb-2 px-4 py-2 rounded-pill shadow-sm hover-scale">
-          Organizaciones
+          Instituciones
         </a>
+        
       </div>
       <hr class="my-5">
     <?php endif; ?>
