@@ -70,6 +70,16 @@ $status = $_GET['status'] ?? '';
               <i class="bi bi-eye-fill"></i>
             </button>
           </div>
+          <div class="text-end mt-1">
+            <a href="#"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              style="text-decoration: none; color: #6f42c1; font-weight: 500;"
+              onmouseover="this.style.textDecoration='underline'"
+              onmouseout="this.style.textDecoration='none'">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
           <small class="error" id="errorContraseña"></small>
         </div>
 
@@ -86,6 +96,37 @@ $status = $_GET['status'] ?? '';
         <a href="<?= $urlBase ?>Vista/registro.php">¿No tienes cuenta? Crea una cuenta</a>
       </div>
     </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+          style="border-radius: 1rem; background-color: #fefcf7; box-shadow: 0 8px 16px rgba(90, 42, 131, 0.25);">
+
+          <div class="modal-header border-0">
+            <h5 class="modal-title text-secondary">¿Quieres recuperar tu contraseña?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="formRecuperar" class="d-grid gap-3">
+              <h5 class="mb-3" id="mostrarMensaje"></h5>
+              <input type="email"
+                name="correo"
+                id="recuperarEmail"
+                class="form-control"
+                placeholder="Ingresar correo electrónico"
+                required>
+              <button type="submit"
+                id="btnEnviarRecuperacion"
+                class="btn btn-purple w-100">
+                Enviar
+              </button>
+            </form>
+          </div>
+
+        </div> <!-- /.modal-content -->
+      </div> <!-- /.modal-dialog -->
+    </div> <!-- /.modal -->
+
   </main>
 
   <!-- SweetAlert (mensajes de error o éxito) -->
@@ -118,6 +159,7 @@ $status = $_GET['status'] ?? '';
     const urlBase = "<?= $urlBase ?>";
   </script>
   <script src="<?= $urlBase ?>peticiones(js)/auth.js"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/deshabilitarModalCambiarContra.js"></script>
   <script src="<?= $urlBase ?>validacionRegistro/validacion.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
 

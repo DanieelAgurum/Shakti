@@ -97,7 +97,7 @@ class cambiarContraCorreo
                 $token = bin2hex(random_bytes(60) . hash("sha512", $correo));
                 $this->guardarTokenEnBD($id, $token);
 
-                $link = $this->urlBase . "/Vista/recuperarContra.php?token=" . $token;
+                $link = $this->urlBase . "/Vista/recuperarContra?token=" . $token;
 
                 $bodyHTML = "
                 <html>
@@ -141,7 +141,7 @@ class cambiarContraCorreo
             } else {
                 $mail->addAddress($this->correo);
 
-                $linkSimple = $this->urlBase . "/Vista/registro.php";
+                $linkSimple = $this->urlBase . "/Vista/registro";
 
                 $bodyHTML = "
                 <html>

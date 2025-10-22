@@ -1,32 +1,31 @@
-# ==========================================
+# = =========================================
 # 🔧 ACTIVAR REESCRITURA DE URLS
-# ==========================================
+# = =========================================
 RewriteEngine On
 RewriteBase /shakti/
-
-# ==========================================
+# = =========================================
 # ⚙️ EVITAR AFECTAR ARCHIVOS O CARPETAS REALES
-# ==========================================
+# = =========================================
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# ==========================================
+# = =========================================
 # 🌐 RUTAS AMIGABLES (home, about, contact, etc.)
-# Ejemplo: /shakti/home -> index.php?page=home
-# ==========================================
+# Ejemplo: /shakti/home -> index.php?page = home
+# = =========================================
 RewriteRule ^(index)/?$ index.php [L,QSA,NC]
-
-# ==========================================
+# = =========================================
 # 🚫 BLOQUEAR ACCESO DIRECTO A VISTAS SENSIBLES
-# ==========================================
+# = =========================================
 RewriteRule ^Vista/?$ Vista/404.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/?$ Vista/404.php [L,QSA,NC]
 RewriteRule ^Controlador/?$ Vista/404.php [L,QSA,NC]
-
-# ==========================================
+# = =========================================
 # ✅ EXCEPCIONES PERMITIDAS
-# ==========================================
+# = =========================================
 RewriteRule ^Vista/chat/?$ Vista/chat.php [L,QSA,NC]
+RewriteRule ^Vista/Instituciones/?$ Vista/Instituciones.php [L,QSA,NC]
+RewriteRule ^Vista/recuperarContra/?$ Vista/recuperarContra.php [L,QSA,NC]
+RewriteRule ^Vista/Contenido/?$ Vista/Contenido_1.php [L,QSA,NC]
 RewriteRule ^Vista/contacto/?$ Vista/contacto.php [L,QSA,NC]
 RewriteRule ^Vista/especialista/perfil/?$ Vista/especialista/perfil.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/alzalaVoz/?$ Vista/usuaria/alzalaVoz.php [L,QSA,NC]
@@ -35,8 +34,7 @@ RewriteRule ^Vista/usuaria/foro/?$ Vista/usuaria/foro.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/libreYSegura/?$ Vista/usuaria/libreYSegura.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/perfil/?$ Vista/usuaria/perfil.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/publicaciones/?$ Vista/usuaria/publicaciones.php [L,QSA,NC]
-
-# ==========================================
+# = =========================================
 # ⚠️ PÁGINA 404 PERSONALIZADA
-# ==========================================
+# = =========================================
 ErrorDocument 404 /shakti/Vista/404.php
