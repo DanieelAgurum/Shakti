@@ -96,11 +96,11 @@ $status = $_GET['status'] ?? '';
         <a href="<?= $urlBase ?>Vista/registro.php">¿No tienes cuenta? Crea una cuenta</a>
       </div>
     </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content"
-          style="border-radius: 1rem; background-color: #fefcf7; box-shadow: 0 8px 16px rgba(90, 42, 131, 0.25);">
 
+    
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered custom-config-modal">
+        <div class="modal-content">
           <div class="modal-header border-0">
             <h5 class="modal-title text-secondary">¿Quieres recuperar tu contraseña?</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -123,9 +123,9 @@ $status = $_GET['status'] ?? '';
             </form>
           </div>
 
-        </div> <!-- /.modal-content -->
-      </div> <!-- /.modal-dialog -->
-    </div> <!-- /.modal -->
+        </div>
+      </div>
+    </div>
 
   </main>
 
