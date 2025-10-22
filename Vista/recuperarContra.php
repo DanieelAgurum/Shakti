@@ -1,12 +1,10 @@
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-?>
-
-<?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti//obtenerLink/obtenerLink.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti//Modelo/conexion.php';
 
 $conexion = new ConectarDB();
 $con = $conexion->open();
@@ -20,22 +18,23 @@ try {
         exit;
     }
 
+    // Validar token válido y no expirado (menos de 15 minutos)
     $sql = "SELECT u.id, t.fecha, t.token 
             FROM tokens_contrasena t 
             JOIN usuarias u ON u.id = t.id_usuaria 
             WHERE t.token = :token 
-              AND t.fecha <= DATE_SUB(NOW(), INTERVAL 15 MINUTE)  
+              AND t.fecha >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)
             LIMIT 1";
 
     $stmt = $con->prepare($sql);
     $stmt->bindParam(':token', $token, PDO::PARAM_STR);
     $stmt->execute();
 
-    if ($stmt->rowCount() == 0) {
+    if ($stmt->rowCount() === 0) {
         header("Location: {$urlBase}Vista/registro.php");
         exit;
     }
-} catch (\Throwable $th) {
+} catch (Throwable $th) {
     error_log("Error en validación de token: " . $th->getMessage());
     header("Location: {$urlBase}Vista/registro.php");
     exit;
@@ -49,10 +48,8 @@ try {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Recuperar Contraseña - Shakti</title>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
     <link rel="stylesheet" href="<?php echo $urlBase ?>css/styles.css" />
-    <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/shakti//components/usuaria/navbar.php';
-    ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -62,29 +59,39 @@ try {
             <div class="auth-header text-center mb-4">
                 <h1 class="h3 fw-bold text-secondary">Cambiar Contraseña</h1>
             </div>
-            <form class="auth-form" id="registroForm" novalidate action="../Controlador/cambiarContraCorreo.php?opcion=2" method="post">
+
+            <form class="auth-form" id="registroForm" novalidate
+                action="<?php echo $urlBase ?>/Controlador/cambiarContraCorreo.php?opcion=2" method="post">
+
                 <div class="mb-3 position-relative">
-                    <label for="contraseña" class="form-label">Contraseña</label>
+                    <label for="contraseña" class="form-label">Nueva contraseña</label>
                     <div class="input-group">
-                        <input type="password" class="form-control" name="contraseña" id="contraseña" placeholder="Ingrese su nueva contraseña" />
+                        <input type="password" class="form-control" name="contraseña" id="contraseña"
+                            placeholder="Ingrese su nueva contraseña" required />
                         <button class="btn btn-outline" type="button" id="togglePassword">
                             <i class="bi bi-eye-fill" id="iconPassword"></i>
                         </button>
-                        <input type="hidden" name="token" value="<?php echo isset($token) ? htmlspecialchars($token) : "" ?>">
+                        <input type="hidden" name="token"
+                            value="<?php echo isset($token) ? htmlspecialchars($token) : ''; ?>">
                     </div>
+                    <div class="invalid-feedback d-block text-danger mt-1" id="errorContraseña"></div>
                 </div>
 
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-purple w-100 shadow-sm fw-semibold" id="cambiar">Cambiar</button>
+                    <button type="submit" class="btn btn-purple w-100 mb-3 shadow-sm fw-semibold" id="cambiar">
+                        Cambiar contraseña
+                    </button>
                 </div>
             </form>
         </div>
-        <script src="<?= $urlBase ?>peticiones(js)/verContra.js"></script>
-        <script src="<?= $urlBase ?>validacionRegistro/validarContra.js"></script>
-        <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
     </main>
-    <?php include '../components/usuaria/footer.php'; ?>
 
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
+
+    <!-- Scripts -->
+    <script src="<?= $urlBase ?>peticiones(js)/verContra.js"></script>
+    <script src="<?= $urlBase ?>validacionRegistro/validarContra.js"></script>
+    <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
 </body>
 
 </html>

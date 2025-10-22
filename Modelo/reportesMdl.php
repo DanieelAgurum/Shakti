@@ -28,7 +28,6 @@ class reportesMdl
             exit;
         }
     }
-
     public function inicializar($nickname, $publicacion, $tipo, $id_reporto, $tipoRep)
     {
         $this->nickname = $nickname;
@@ -37,7 +36,6 @@ class reportesMdl
         $this->id_reporto = $id_reporto;
         $this->tipoRep = $tipoRep;
     }
-
     public function agregarReporte()
     {
         $this->conectarBD();
@@ -132,30 +130,26 @@ class reportesMdl
             ]);
         }
     }
-
-    public function verReportes()
+    public function verReportes($offset = 0, $limit = 10)
     {
         $this->conectarBD();
 
-        // Consultamos los reportes agrupados por publicación y usuaria reportada
-        $sql = "SELECT u.id AS id_usuaria, u.nombre AS nombre_usuaria, r.id_publicacion
-            FROM reportar r
-            JOIN usuarias u ON r.id_reportada = u.id
-            GROUP BY u.id, u.nombre, r.id_publicacion
-            ORDER BY MAX(r.fecha) DESC";
+        $sql = "SELECT u.id AS id_usuaria, u.nombre AS nombre_usuaria, r.id_publicacion 
+            FROM reportes r 
+            JOIN usuarias u ON r.id_reportada = u.id 
+            GROUP BY u.id, u.nombre, r.id_publicacion 
+            ORDER BY MAX(r.fecha) DESC
+            LIMIT $limit OFFSET $offset";
         $consulta = $this->con->query($sql);
 
-        // Consultamos motivos por usuaria y publicación
+        // Motivos de reporte
         $sqlMotivos = "SELECT r.id_reportada, r.id_publicacion, tp.nombre_reporte, tp.tipo_objetivo, COUNT(*) AS total
-                   FROM reportar r
+                   FROM reportes r
                    JOIN tipo_reporte tp ON r.id_tipo_reporte = tp.id_tipo_reporte
                    GROUP BY r.id_reportada, r.id_publicacion, tp.nombre_reporte, tp.tipo_objetivo";
         $consultaMotivos = $this->con->query($sqlMotivos);
 
-        // Array para motivos agrupados por usuaria y publicación
         $motivosPorUsuariaPublicacion = [];
-
-        // Array para guardar tipo por usuaria y publicación
         $tiposPorUsuariaPublicacion = [];
 
         while ($fila = $consultaMotivos->fetch_assoc()) {
@@ -173,22 +167,18 @@ class reportesMdl
             $motivosPorUsuariaPublicacion[$idUsuaria][$idPublicacion][] = "{$motivo} ({$total})";
         }
 
-        $num = 1;
+        $num = $offset + 1;
+        $html = '';
+
         if ($consulta->num_rows > 0) {
             while ($reporte = $consulta->fetch_assoc()) {
                 $idUsuaria = $reporte['id_usuaria'];
                 $nombre = ucwords(strtolower($reporte['nombre_usuaria']));
                 $idPublicacion = $reporte['id_publicacion'];
 
-                // Obtener contenido de la publicación
-                $contenido = $this->obtenerContenidoPublicacion($idPublicacion);
-                if (!$contenido) {
-                    $contenido = "Sin contenido disponible";
-                }
+                $contenido = $this->obtenerContenidoPublicacion($idPublicacion) ?: "Sin contenido disponible";
 
                 $tipoReporte = $tiposPorUsuariaPublicacion[$idUsuaria][$idPublicacion] ?? 0;
-
-                // Traducir tipo
                 switch ($tipoReporte) {
                     case 1:
                         $tipoTexto = "Contenido";
@@ -204,32 +194,47 @@ class reportesMdl
                         break;
                 }
 
-                // Motivos formateados
                 $motivos = isset($motivosPorUsuariaPublicacion[$idUsuaria][$idPublicacion])
                     ? implode(', ', $motivosPorUsuariaPublicacion[$idUsuaria][$idPublicacion])
                     : 'Sin motivos';
 
-                echo <<<HTML
-                    <tr>
-                        <td>{$num}</td>
-                        <td>{$nombre}</td>
-                        <td>{$contenido}</td>
-                        <td>{$tipoTexto}</td>
-                        <td>{$motivos}</td>
-                        <td>   
-                            <button type="button" class="btn btn-danger btn-sm btnEliminar" data-id="{$idPublicacion}" data-nombre="{$nombre}" data-contenido="{$tipoTexto}" data-bs-toggle="modal" data-bs-target="#miModal">                        
-                                <i class="fa-solid fa-eraser"></i> Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                 HTML;
+                $html .= '
+                <tr>
+                    <td>' . $num . '</td>
+                    <td>' . htmlspecialchars($nombre) . '</td>
+                    <td>' . htmlspecialchars($contenido) . '</td>
+                    <td>' . htmlspecialchars($tipoTexto) . '</td>
+                    <td>' . htmlspecialchars($motivos) . '</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm btnEliminar"
+                            data-id="' . $idPublicacion . '"
+                            data-nombre="' . htmlspecialchars($nombre) . '"
+                            data-contenido="' . htmlspecialchars($tipoTexto) . '"
+                            data-bs-toggle="modal"
+                            data-bs-target="#miModal">
+                            <i class="fa-solid fa-eraser"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>';
                 $num++;
             }
+
+            return json_encode([
+                'html' => $html,
+                'offset' => $offset,
+                'limit' => $limit,
+                'sinDatos' => false
+            ]);
         } else {
-            echo "<tr><td colspan='5'>No hay reportes.</td></tr>";
+            // No hay más reportes disponibles
+            return json_encode([
+                'html' => '',
+                'offset' => $offset,
+                'limit' => $limit,
+                'sinDatos' => true
+            ]);
         }
     }
-
     public function obtenerContenidoPublicacion($id_publicacion)
     {
         $sql = "SELECT contenido FROM publicacion WHERE id_publicacion = ?";
@@ -245,7 +250,6 @@ class reportesMdl
         $fila = $resultado->fetch_assoc();
         return $fila['contenido'];
     }
-
     public function eliminarReporte($id_publicacion, $tipo)
     {
         $this->base(); // para urlBase
