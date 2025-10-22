@@ -278,11 +278,11 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
             <!-- Notificaciones -->
             <div class="tab-pane fade" id="notificaciones" role="tabpanel">
               <div class="form-check mt-2">
-                <input class="form-check-input" type="checkbox" name="notificar_mensajes"
+                <input class="form-check-input" type="checkbox" name="notificar_publicaciones"
                   id="notifyMessages"
-                  <?= !empty($configActual['notificar_mensajes']) && $configActual['notificar_mensajes'] == 1 ? 'checked' : '' ?>>
-                <label class="form-check-label" for="notifyMessages">Notificarme de nuevos
-                  mensajes</label>
+                  <?= !empty($configActual['notificar_publicaciones']) && $configActual['notificar_publicaciones'] == 1 ? 'checked' : '' ?>>
+                <label class="form-check-label" for="notifyMessages">Notificarme de nuevas
+                  publicaciones</label>
               </div>
               <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" name="notificar_comentarios"
