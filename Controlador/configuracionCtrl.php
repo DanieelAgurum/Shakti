@@ -90,7 +90,7 @@ if (isset($_POST['accion']) && $_POST['accion'] === "guardar_configuracion") {
     $datosConfig = [
         'permitir_amigos' => isset($_POST['permitir_amigos']) ? 1 : 0,
         'perfil_privado' => isset($_POST['perfil_privado']) ? 1 : 0,
-        'notificar_mensajes' => isset($_POST['notificar_mensajes']) ? 1 : 0,
+        'notificar_publicaciones' => isset($_POST['notificar_publicaciones']) ? 1 : 0,
         'notificar_comentarios' => isset($_POST['notificar_comentarios']) ? 1 : 0,
         'tamano_fuente' => $_POST['tamano_fuente'] ?? 'medium',
         'modo_oscuro' => isset($_POST['modo_oscuro']) ? 1 : 0,
