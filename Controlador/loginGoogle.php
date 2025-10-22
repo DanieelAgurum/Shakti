@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../Modelo/configuracionG.php';
 require_once __DIR__ . '/../Modelo/Usuarias.php';
@@ -17,58 +17,75 @@ $client->addScope('profile');
 $u = new Usuarias();
 $con = $u->conectarBD();
 
-// Si no hay 'code', redirige a login Google
+// Redirige a Google si no hay código
 if (!isset($_GET['code'])) {
     header("Location: " . $client->createAuthUrl());
     exit;
 }
 
-// Intercambiar 'code' por token
+// Intercambiar code por token
 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
 if (isset($token['error'])) {
     die("Error al obtener token: " . $token['error']);
 }
 $client->setAccessToken($token);
 
-// Obtener datos del usuario de Google
+// Obtener datos del usuario
 $google_oauth = new Google\Service\Oauth2($client);
 $userInfo = $google_oauth->userinfo->get();
 
 $email = $userInfo->email;
 $nombre = $userInfo->givenName;
 $apellidos = $userInfo->familyName ?? "";
-$nickname = explode("@", $email)[0]; // nickname por default
-$fotoGoogle = "../img/undraw_chill-guy-avatar_tqsm.svg";
+$nickname = explode("@", $email)[0];
 
+if (!empty($userInfo->picture)) {
+    $fotoGoogleBin = @file_get_contents($userInfo->picture);
+    if ($fotoGoogleBin === false) {
+        $fotoGoogleBin = file_get_contents(__DIR__ . '/../img/undraw_chill-guy-avatar_tqsm.svg');
+    }
+} else {
+    $fotoGoogleBin = file_get_contents(__DIR__ . '/../img/undraw_chill-guy-avatar_tqsm.svg');
+}
 
-// Verificar si el usuario ya existe en la base de datos
+// Buscar usuario en la base
 $stmt = $con->prepare("SELECT * FROM usuarias WHERE correo=? LIMIT 1");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $usuario = $stmt->get_result()->fetch_assoc();
 
 if ($usuario) {
-    // Usuario ya registrado → login directo
+    // Usuario existente
     $_SESSION['id_usuaria'] = $usuario['id'];
     $_SESSION['id_rol'] = $usuario['id_rol'];
     $_SESSION['correo'] = $usuario['correo'];
     $_SESSION['nombre'] = $usuario['nombre'];
     $_SESSION['apellidos'] = $usuario['apellidos'] ?? $apellidos;
     $_SESSION['nickname'] = $usuario['nickname'] ?: explode("@", $usuario['correo'])[0];
-    
-    
-    $_SESSION['foto'] = $usuario['foto'] ?? $fotoGoogle;
 
+    if (!empty($usuario['foto'])) {
+        // Ya tiene BLOB
+        $_SESSION['foto'] = $usuario['foto'];
+    } else {
+        // No tiene BLOB, usamos la foto de Google y la guardamos
+        $fotoEscaped = mysqli_real_escape_string($con, $fotoGoogleBin);
+        $update = $con->prepare("UPDATE usuarias SET foto=? WHERE id=?");
+        $update->bind_param("si", $fotoEscaped, $usuario['id']);
+        $update->execute();
+
+        $_SESSION['foto'] = $fotoGoogleBin;
+    }
 } else {
-    $rol = 1; 
+    // Usuario nuevo
+    $rol = 1;
     $fecha = date("Y-m-d");
 
+    $fotoEscaped = mysqli_real_escape_string($con, $fotoGoogleBin);
     $insert = $con->prepare("INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, foto)
         VALUES (?, ?, ?, ?, '', ?, ?, ?)");
-    $insert->bind_param("sssssis", $nombre, $apellidos, $nickname, $email, $fecha, $rol, $fotoGoogle);
+    $insert->bind_param("sssssis", $nombre, $apellidos, $nickname, $email, $fecha, $rol, $fotoEscaped);
 
     if ($insert->execute()) {
-        // Guardar sesión automáticamente
         $id_nueva = $insert->insert_id;
         $_SESSION['id_usuaria'] = $id_nueva;
         $_SESSION['id_rol'] = $rol;
@@ -76,12 +93,12 @@ if ($usuario) {
         $_SESSION['nombre'] = $nombre;
         $_SESSION['apellidos'] = $apellidos;
         $_SESSION['nickname'] = $nickname;
-        $_SESSION['foto'] = $fotoGoogle;
+        $_SESSION['foto'] = $fotoGoogleBin;
     } else {
         die("Error al registrar la usuaria: " . $con->error);
     }
 }
 
-// Redirigir al perfil en cualquier caso
+// Redirigir al perfil
 header("Location: ../Vista/usuaria/perfil");
 exit;
