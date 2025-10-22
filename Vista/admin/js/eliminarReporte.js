@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
   let offset = 0;
-  let cargando = false; // Evita llamadas múltiples simultáneas
-  let finDeReportes = false; // Controla si ya se cargaron todos
+  let cargando = false;
+  let finDeReportes = false;
 
   const tablaReportes = document.querySelector("#tablaReportes");
+  const inputBuscar = document.getElementById("buscarReporte");
 
   function cargarReportes() {
     if (cargando || finDeReportes) return;
@@ -12,8 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`/shakti/Controlador/reportesCtrl.php?opcion=1&offset=${offset}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Reportes cargados:", data);
-
         if (!data.sinDatos && data.html.trim() !== "") {
           tablaReportes.insertAdjacentHTML("beforeend", data.html);
           offset += 10;
@@ -23,8 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
               "beforeend",
               `<tr><td colspan="6" class="text-center text-muted p-3">No hay reportes disponibles.</td></tr>`
             );
-          } else {
-            console.log("✅ Ya se cargaron todos los reportes.");
           }
           finDeReportes = true;
         }
@@ -56,9 +53,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
       document.getElementById("nombreUsuariaModal").textContent = nombre;
       document.getElementById("contenidoUsuariaModal").textContent = contenido;
-
+      document.getElementById("subfijoTipo").textContent = prefijo;
       const link = `../../Controlador/reportesCtrl.php?opcion=3&id=${id}&tipo=${contenido}`;
       document.getElementById("btnEliminarLink").setAttribute("href", link);
     }
+  });
+
+  // 🔹 Filtrado por buscador en tiempo real
+  inputBuscar.addEventListener("input", function () {
+    const valor = inputBuscar.value.toLowerCase();
+    const filas = tablaReportes.querySelectorAll("tr");
+
+    filas.forEach((fila) => {
+      const celdas = fila.querySelectorAll("td");
+      if (celdas.length > 0) {
+        // Concatenamos todas las celdas y buscamos coincidencias
+        const textoFila = Array.from(celdas)
+          .map((td) => td.textContent.toLowerCase())
+          .join(" ");
+        if (textoFila.includes(valor)) {
+          fila.style.display = ""; // Mostrar fila
+        } else {
+          fila.style.display = "none"; // Ocultar fila
+        }
+      }
+    });
   });
 });
