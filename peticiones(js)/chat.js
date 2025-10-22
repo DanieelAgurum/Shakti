@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         data.data.forEach((msg) => {
           const tipo = msg.es_mensaje_yo ? "yo" : "ia";
-          const esHTML = /<\/?[a-z][\s\S]*>/i.test(msg.mensaje); // detecta si contiene etiquetas HTML
+          const esHTML = /<\/?[a-z][\s\S]*>/i.test(msg.mensaje); 
           mostrarMensaje(msg.mensaje, tipo, null, esHTML);
         });
 

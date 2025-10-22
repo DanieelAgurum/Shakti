@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/vendor/autoload.php';
 require_once __DIR__ . '/../Modelo/configuracionG.php';
 require_once __DIR__ . '/../Modelo/Usuarias.php';
 
@@ -39,6 +39,7 @@ $nombre = $userInfo->givenName;
 $apellidos = $userInfo->familyName ?? "";
 $nickname = explode("@", $email)[0];
 
+// Obtener o generar la foto
 if (!empty($userInfo->picture)) {
     $fotoGoogleBin = @file_get_contents($userInfo->picture);
     if ($fotoGoogleBin === false) {
@@ -48,14 +49,15 @@ if (!empty($userInfo->picture)) {
     $fotoGoogleBin = file_get_contents(__DIR__ . '/../img/undraw_chill-guy-avatar_tqsm.svg');
 }
 
-// Buscar usuario en la base
+// Buscar usuaria existente
 $stmt = $con->prepare("SELECT * FROM usuarias WHERE correo=? LIMIT 1");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $usuario = $stmt->get_result()->fetch_assoc();
 
 if ($usuario) {
-    // Usuario existente
+    // ✅ USUARIA EXISTENTE
+    $_SESSION['id'] = $usuario['id'];
     $_SESSION['id_usuaria'] = $usuario['id'];
     $_SESSION['id_rol'] = $usuario['id_rol'];
     $_SESSION['correo'] = $usuario['correo'];
@@ -64,19 +66,17 @@ if ($usuario) {
     $_SESSION['nickname'] = $usuario['nickname'] ?: explode("@", $usuario['correo'])[0];
 
     if (!empty($usuario['foto'])) {
-        // Ya tiene BLOB
         $_SESSION['foto'] = $usuario['foto'];
     } else {
-        // No tiene BLOB, usamos la foto de Google y la guardamos
         $fotoEscaped = mysqli_real_escape_string($con, $fotoGoogleBin);
         $update = $con->prepare("UPDATE usuarias SET foto=? WHERE id=?");
         $update->bind_param("si", $fotoEscaped, $usuario['id']);
         $update->execute();
-
         $_SESSION['foto'] = $fotoGoogleBin;
     }
+
 } else {
-    // Usuario nuevo
+    // ✅ USUARIA NUEVA
     $rol = 1;
     $fecha = date("Y-m-d");
 
@@ -87,7 +87,9 @@ if ($usuario) {
 
     if ($insert->execute()) {
         $id_nueva = $insert->insert_id;
-        $_SESSION['id_usuaria'] = $id_nueva;
+
+        $_SESSION['id'] = $id_nueva;            // ✅ ambas variables con el mismo valor
+        $_SESSION['id_usuaria'] = $id_nueva;    // ✅
         $_SESSION['id_rol'] = $rol;
         $_SESSION['correo'] = $email;
         $_SESSION['nombre'] = $nombre;
@@ -99,6 +101,5 @@ if ($usuario) {
     }
 }
 
-// Redirigir al perfil
 header("Location: ../Vista/usuaria/perfil");
 exit;

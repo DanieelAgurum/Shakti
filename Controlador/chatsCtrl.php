@@ -6,10 +6,14 @@ if (session_status() === PHP_SESSION_NONE) {
 // ============================================================
 // Bloquear acceso directo desde navegador
 // ============================================================
-if (!isset($_SERVER['HTTP_REFERER']) || !str_contains($_SERVER['HTTP_REFERER'], 'shakti')) {
+$host = $_SERVER['HTTP_HOST'] ?? '';
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
+
+if (empty($referer) || !str_contains($referer, $host)) {
     header('HTTP/1.0 403 Forbidden');
     exit('Acceso denegado');
 }
+
 
 header('Content-Type: application/json; charset=utf-8');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/chatsMdl.php';
