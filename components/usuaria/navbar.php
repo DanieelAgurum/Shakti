@@ -130,49 +130,51 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/usuaria/especialistas">
-                  Especialistas <i class="bi bi-person-badge"></i>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
-                  Notificaciones <i class="bi bi-bell-fill"></i>
-                  <?php if ($notificacionesNoLeidas): ?>
-                    <span id="contadorNotificaciones"
-                      class="badge bg-danger rounded-pill ms-2"><?= $notificacionesNoLeidas ?></span>
-                  <?php endif; ?>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#configModal">
-                  Configuración <i class="bi bi-gear-fill"></i>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
-                  <input type="hidden" name="opcion" value="2" />
-                  <button type="submit" class="dropdown-item cerrar">
-                    Cerrar sesión <i class="bi bi-door-open-fill"></i>
-                  </button>
-                </form>
-              </li>
-            <?php else: ?>
-              <li>
-                <a class="dropdown-item" href="<?= $urlBase ?>Vista/login">
-                  Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
-                </a>
-              </li>
-            <?php endif; ?>
+              <?php if ($usuario['rol'] <= 1): ?>
+                <li>
+                  <a class="dropdown-item" href="<?= $urlBase ?>Vista/usuaria/especialistas">
+                    Especialistas <i class="bi bi-person-badge"></i>
+                  </a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                <?php endif; ?>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
+                    Notificaciones <i class="bi bi-bell-fill"></i>
+                    <?php if ($notificacionesNoLeidas): ?>
+                      <span id="contadorNotificaciones"
+                        class="badge bg-danger rounded-pill ms-2"><?= $notificacionesNoLeidas ?></span>
+                    <?php endif; ?>
+                  </a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#configModal">
+                    Configuración <i class="bi bi-gear-fill"></i>
+                  </a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
+                    <input type="hidden" name="opcion" value="2" />
+                    <button type="submit" class="dropdown-item cerrar">
+                      Cerrar sesión <i class="bi bi-door-open-fill"></i>
+                    </button>
+                  </form>
+                </li>
+              <?php else: ?>
+                <li>
+                  <a class="dropdown-item" href="<?= $urlBase ?>Vista/login">
+                    Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
+                  </a>
+                </li>
+              <?php endif; ?>
           </ul>
         </li>
       </ul>
