@@ -24,6 +24,7 @@ RewriteRule ^Controlador/?$ Vista/404.php [L,QSA,NC]
 # = =========================================
 RewriteRule ^Vista/chat/?$ Vista/chat.php [L,QSA,NC]
 RewriteRule ^Vista/Instituciones/?$ Vista/Instituciones.php [L,QSA,NC]
+RewriteRule ^Vista/login/?$ Vista/login.php [L,QSA,NC]
 RewriteRule ^Vista/recuperarContra/?$ Vista/recuperarContra.php [L,QSA,NC]
 RewriteRule ^Vista/Contenido/?$ Vista/Contenido_1.php [L,QSA,NC]
 RewriteRule ^Vista/contacto/?$ Vista/contacto.php [L,QSA,NC]
