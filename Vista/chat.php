@@ -39,13 +39,16 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     <!-- Lista de chats -->
     <aside class="chat-list">
       <!-- Chat fijo: Ian Bot -->
-      <div class="chat-activo" data-id-amigo="0">
-        <img src="<?= $urlBase ?>img/Ian.png" alt="Ian Bot">
-        <div class="info-chat">
-          <strong>Ian Bot</strong>
-          <small></small>
+      <?php if ($usuario['rol'] <= 1): ?>
+        <div class="chat-activo" data-id-amigo="0">
+          <img src="<?= $urlBase ?>img/Ian.png" alt="Ian Bot">
+          <div class="info-chat">
+            <strong>Ian Bot</strong>
+            <small></small>
+          </div>
         </div>
-      </div>
+        <hr class="dropdown-divider">
+      <?php endif; ?>
       <!-- Encabezado -->
       <div class="chat-header">
         <h3 class="text-center m-2">Mis chats</h3>
@@ -67,7 +70,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
         <label for="archivo" class="btn-subir-imagen" title="Enviar imagen">
           <i class="fa-solid fa-image"></i>
         </label>
-        
+
         <input type="file" id="archivo" name="imagen" accept="image/*" style="display: none;">
 
         <!-- Botón enviar -->
