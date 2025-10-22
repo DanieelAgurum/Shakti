@@ -19,7 +19,6 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <a id="btnEliminarLink" href="#" class="btn btn-danger">Eliminar</a>
             </div>
-
         </div>
     </div>
 </div>
