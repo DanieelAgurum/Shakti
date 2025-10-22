@@ -81,12 +81,12 @@ switch ($_REQUEST['opcion']) {
 
     case 4:
         session_start();
-        if (!isset($_SESSION['id'])) {
+        if (!isset($_SESSION['id_usuaria'])) {
             header("Location: ../Vista/login.php");
             exit;
         }
 
-        $resultado = $u->cambiarFotoPerfil($_SESSION['id'], $_FILES['nuevaFoto']);
+        $resultado = $u->cambiarFotoPerfil($_SESSION['id_usuaria'], $_FILES['nuevaFoto']);
         $status = $resultado['status'];
         $message = urlencode($resultado['message']);
 
@@ -99,7 +99,7 @@ switch ($_REQUEST['opcion']) {
 
     case 5:
         session_start();
-        if (!isset($_SESSION['id'])) {
+        if (!isset($_SESSION['id_usuaria'])) {
             header("Location: ../Vista/login.php");
             exit;
         }
