@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     encrypted: true,
   });
 
-  const canalesSuscritos = {}; 
+  const canalesSuscritos = {};
 
   function suscribirCanal(id1, id2) {
     const canal = `chat-${Math.min(id1, id2)}-${Math.max(id1, id2)}`;
@@ -61,45 +61,44 @@ document.addEventListener("DOMContentLoaded", () => {
     chatList.appendChild(div);
   }
 
- function cargarChats() {
-  const params = new URLSearchParams(window.location.search);
-  const idEspecialista = params.get("especialistas");
+  function cargarChats() {
+    const params = new URLSearchParams(window.location.search);
+    const idEspecialista = params.get("especialistas");
 
-  fetch(
-    "/shakti/Controlador/chatsCtrl.php?cargarChats&especialista=" +
-      (idEspecialista || "")
-  )
-    .then((res) => res.json())
-    .then((json) => {
-      const data = json.data;
-      chatList.innerHTML = "";
+    fetch(
+      "/shakti/Controlador/chatsCtrl.php?cargarChats&especialista=" +
+        (idEspecialista || "")
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        const data = json.data;
+        chatList.innerHTML = "";
 
-      if (!data || data.length === 0) return;
+        if (!data || data.length === 0) return;
 
-      data.forEach((chat) => agregarChatNuevo(chat));
+        data.forEach((chat) => agregarChatNuevo(chat));
 
-      // 🔹 Solo selecciona automáticamente si hay especialista en la URL
-      if (idEspecialista && data.length > 0) {
-        const primerChat = data[0];
-        const divChat = chatList.querySelector(
-          `[data-id-amigo="${primerChat.id}"]`
-        );
+        // 🔹 Solo selecciona automáticamente si hay especialista en la URL
+        if (idEspecialista && data.length > 0) {
+          const primerChat = data[0];
+          const divChat = chatList.querySelector(
+            `[data-id-amigo="${primerChat.id}"]`
+          );
 
-        if (divChat) {
-          divChat.classList.add("activo");
-          seleccionarChat(primerChat.id);
-          chatMensajes.innerHTML = "";
-          cargarMensajes(idUsuario, primerChat.id);
-          suscribirCanal(idUsuario, primerChat.id);
+          if (divChat) {
+            divChat.classList.add("activo");
+            seleccionarChat(primerChat.id);
+            chatMensajes.innerHTML = "";
+            cargarMensajes(idUsuario, primerChat.id);
+            suscribirCanal(idUsuario, primerChat.id);
+          }
         }
-      }
-      // 🔹 Si NO hay especialista, no selecciona ningún chat
-    })
-    .catch((error) => {
-      console.error("Error al cargar los chats:", error);
-    });
-}
-
+        // 🔹 Si NO hay especialista, no selecciona ningún chat
+      })
+      .catch((error) => {
+        console.error("Error al cargar los chats:", error);
+      });
+  }
 
   function cargarMensajes(idEmisor, idReceptor) {
     fetch(
@@ -312,8 +311,13 @@ document.addEventListener("DOMContentLoaded", () => {
   formulario?.addEventListener("submit", enviarMensaje);
 
   mensajeInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+    // Si presiona Enter
+    if (e.key === "Enter") {
+      if (e.shiftKey) {
+        return;
+      }
+
+      e.preventDefault(); 
       formulario.requestSubmit();
     }
   });
