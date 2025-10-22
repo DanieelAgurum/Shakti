@@ -13,16 +13,31 @@ if (!$id_usuaria) {
     exit;
 }
 
-// Si se pide marcar todas como leídas
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=shakti;charset=utf8mb4", "root", "", [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+
+    $stmt = $pdo->prepare("SELECT notificar_publicaciones, notificar_comentarios FROM configuraciones WHERE id_usuaria = ?");
+    $stmt->execute([$id_usuaria]);
+    $config = $stmt->fetch() ?: ['notificar_publicaciones' => 1];
+} catch (PDOException $e) {
+    error_log("Error al obtener configuración de notificaciones: " . $e->getMessage());
+    $config = ['notificar_publicaciones' => 1];
+}
+
 if (isset($_GET['marcarLeidas'])) {
     Notificacion::marcarTodasComoLeidas($id_usuaria);
     echo json_encode(['status' => 'ok']);
     exit;
 }
 
-// Si no, devolver notificaciones no leídas
 $notificaciones = Notificacion::obtenerParaUsuaria($id_usuaria);
 $noLeidas = array_values(array_filter($notificaciones, fn($n) => $n['leida'] == 0));
 
 header('Content-Type: application/json; charset=utf-8');
-echo json_encode($noLeidas);
+echo json_encode([
+    'config' => $config,
+    'notificaciones' => $noLeidas
+]);
