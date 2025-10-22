@@ -11,9 +11,9 @@ class Notificacion
 
     public static function crearDesdePublicacion($id_usuaria_origen, $id_publicacion = null)
     {
-        $conn = self::conectar();
-
         if (!$id_publicacion) return;
+
+        $conn = self::conectar();
 
         $stmtPub = $conn->prepare("SELECT anonima FROM publicacion WHERE id_publicacion = :id");
         $stmtPub->execute(['id' => $id_publicacion]);
@@ -23,29 +23,24 @@ class Notificacion
 
         $esAnonima = $publicacion['anonima'] == 1;
 
-        // Obtener nombre de la usuaria origen solo si no es anónimo
-        $nombreOrigen = "Anónimo";
+        $nombreOrigen = $esAnonima ? "Anónimo" : null;
         if (!$esAnonima) {
             $stmtNombre = $conn->prepare("SELECT nombre FROM usuarias WHERE id = :id");
             $stmtNombre->execute(['id' => $id_usuaria_origen]);
             $usuariaOrigen = $stmtNombre->fetch();
-            if ($usuariaOrigen) {
-                $nombreOrigen = $usuariaOrigen['nombre'];
-            }
+            $nombreOrigen = $usuariaOrigen ? $usuariaOrigen['nombre'] : "Anónimo";
         }
 
-        // Obtener todas las demás usuarias
         $stmt = $conn->prepare("SELECT id FROM usuarias WHERE id != :id_origen");
         $stmt->execute(['id_origen' => $id_usuaria_origen]);
         $usuarias = $stmt->fetchAll();
 
-        // Crear notificaciones
         foreach ($usuarias as $usuaria) {
             $mensaje = "Nueva publicación agregada por " . $nombreOrigen;
             $stmtInsert = $conn->prepare("
-            INSERT INTO notificaciones (id_usuaria_origen, id_usuaria_destino, id_publicacion, mensaje, fecha_creacion)
-            VALUES (:origen, :destino, :publicacion, :mensaje, NOW())
-        ");
+                INSERT INTO notificaciones (id_usuaria_origen, id_usuaria_destino, id_publicacion, mensaje, fecha_creacion)
+                VALUES (:origen, :destino, :publicacion, :mensaje, NOW())
+            ");
             $stmtInsert->execute([
                 'origen' => $id_usuaria_origen,
                 'destino' => $usuaria['id'],
@@ -55,11 +50,73 @@ class Notificacion
         }
     }
 
+    public static function crearDesdeComentario($id_usuaria_origen, $id_publicacion, $id_comentario, $id_padre = null)
+    {
+        $conn = self::conectar();
+
+        $stmtNombre = $conn->prepare("SELECT nombre FROM usuarias WHERE id = :id");
+        $stmtNombre->execute(['id' => $id_usuaria_origen]);
+        $usuariaOrigen = $stmtNombre->fetch();
+        $nombreOrigen = $usuariaOrigen ? $usuariaOrigen['nombre'] : "Anónimo";
+
+        if ($id_padre !== null) {
+            $stmt = $conn->prepare("SELECT id_usuaria FROM comentarios WHERE id_comentario = :id");
+            $stmt->execute(['id' => $id_padre]);
+            $comentarioPadre = $stmt->fetch();
+
+            if ($comentarioPadre && $comentarioPadre['id_usuaria'] != $id_usuaria_origen) {
+                $mensaje = "$nombreOrigen respondió a tu comentario";
+                $stmtInsert = $conn->prepare("
+                    INSERT INTO notificaciones (id_usuaria_origen, id_usuaria_destino, id_publicacion, mensaje, fecha_creacion)
+                    VALUES (:origen, :destino, :publicacion, :mensaje, NOW())
+                ");
+                $stmtInsert->execute([
+                    'origen' => $id_usuaria_origen,
+                    'destino' => $comentarioPadre['id_usuaria'],
+                    'publicacion' => $id_publicacion,
+                    'mensaje' => $mensaje
+                ]);
+            }
+        } else {
+            $stmtAutor = $conn->prepare("SELECT id_usuarias, anonima FROM publicacion WHERE id_publicacion = :id");
+            $stmtAutor->execute(['id' => $id_publicacion]);
+            $pub = $stmtAutor->fetch();
+
+            if ($pub && $pub['id_usuarias'] != $id_usuaria_origen) {
+                $nombreDestinataria = $pub['anonima'] ? "Anónimo" : null;
+                if (!$pub['anonima']) {
+                    $stmtNombreDest = $conn->prepare("SELECT nombre FROM usuarias WHERE id = :id");
+                    $stmtNombreDest->execute(['id' => $pub['id_usuarias']]);
+                    $usuariaDest = $stmtNombreDest->fetch();
+                    $nombreDestinataria = $usuariaDest ? $usuariaDest['nombre'] : "Usuaria";
+                }
+                $mensaje = "$nombreOrigen comentó tu publicación";
+                $stmtInsert = $conn->prepare("
+                    INSERT INTO notificaciones (id_usuaria_origen, id_usuaria_destino, id_publicacion, mensaje, fecha_creacion)
+                    VALUES (:origen, :destino, :publicacion, :mensaje, NOW())
+                ");
+                $stmtInsert->execute([
+                    'origen' => $id_usuaria_origen,
+                    'destino' => $pub['id_usuarias'],
+                    'publicacion' => $id_publicacion,
+                    'mensaje' => $mensaje
+                ]);
+            }
+        }
+    }
+
     public static function obtenerParaUsuaria($id_usuaria)
     {
         $conn = self::conectar();
         $stmt = $conn->prepare("
-        SELECT n.*, p.anonima, u.nombre AS nombre_origen
+        SELECT 
+            n.*, 
+            p.anonima AS anonima_publicacion, 
+            u.nombre AS nombre_origen,
+            CASE
+                WHEN n.mensaje LIKE '%comentó%' OR n.mensaje LIKE '%respondió%' THEN 'comentario'
+                ELSE 'publicacion'
+            END AS tipo_notificacion
         FROM notificaciones n
         LEFT JOIN publicacion p ON n.id_publicacion = p.id_publicacion
         LEFT JOIN usuarias u ON n.id_usuaria_origen = u.id
@@ -69,13 +126,15 @@ class Notificacion
         $stmt->execute(['id' => $id_usuaria]);
         $notificaciones = $stmt->fetchAll();
 
-        // Ajustar mensaje según anonima
         foreach ($notificaciones as &$n) {
-            $n['mensaje'] = "Nueva publicación agregada por " . ($n['anonima'] == 1 ? "Anónimo" : $n['nombre_origen']);
+            if ($n['tipo_notificacion'] === 'publicacion') {
+                $n['mensaje'] = "Nueva publicación agregada por " . ($n['anonima_publicacion'] == 1 ? "Anónimo" : $n['nombre_origen']);
+            }
         }
 
         return $notificaciones;
     }
+
 
     public static function marcarComoLeida($id_notificacion)
     {
