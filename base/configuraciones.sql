@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-09-2025 a las 04:39:40
+-- Tiempo de generación: 22-10-2025 a las 19:00:42
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -32,7 +32,7 @@ CREATE TABLE `configuraciones` (
   `id_usuaria` int(11) NOT NULL,
   `permitir_amigos` tinyint(1) DEFAULT 1,
   `perfil_privado` tinyint(1) DEFAULT 0,
-  `notificar_mensajes` tinyint(1) DEFAULT 1,
+  `notificar_publicaciones` tinyint(1) DEFAULT 1,
   `notificar_comentarios` tinyint(1) DEFAULT 1,
   `tamano_fuente` enum('small','medium','large') DEFAULT 'medium',
   `modo_oscuro` tinyint(1) DEFAULT 0,
@@ -43,8 +43,9 @@ CREATE TABLE `configuraciones` (
 -- Volcado de datos para la tabla `configuraciones`
 --
 
-INSERT INTO `configuraciones` (`id_config`, `id_usuaria`, `permitir_amigos`, `perfil_privado`, `notificar_mensajes`, `notificar_comentarios`, `tamano_fuente`, `modo_oscuro`, `alto_contraste`) VALUES
-(1, 40, 0, 0, 1, 1, 'large', 1, 1);
+INSERT INTO `configuraciones` (`id_config`, `id_usuaria`, `permitir_amigos`, `perfil_privado`, `notificar_publicaciones`, `notificar_comentarios`, `tamano_fuente`, `modo_oscuro`, `alto_contraste`) VALUES
+(3, 71, 0, 0, 1, 1, 'small', 0, 0),
+(4, 90, 0, 0, 1, 1, 'small', 0, 0);
 
 --
 -- Índices para tablas volcadas
@@ -65,7 +66,7 @@ ALTER TABLE `configuraciones`
 -- AUTO_INCREMENT de la tabla `configuraciones`
 --
 ALTER TABLE `configuraciones`
-  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
