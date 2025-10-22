@@ -172,7 +172,7 @@
         </a>
     </div>
 
-    <div class="modal fade" id="blogModal" tabindex="-1" role="dialog" aria-labelledby="blogModalTitle" aria-hidden="true">
+    <div class="modal fade custom-config-modal" id="blogModal" tabindex="-1" role="dialog" aria-labelledby="blogModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
             <div class="blog-modal-content modal-content shadow-lg">
                 <div class="blog-modal-header modal-header bg-primary text-white">

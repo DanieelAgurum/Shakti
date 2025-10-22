@@ -8,17 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const validar = () => {
     const val = pwd.value.trim();
-
-    // Validar longitud y caracteres permitidos
-    if (!regPermitidos.test(val)) {
-      return "Debe tener entre 8 y 12 caracteres válidos.";
-    }
-
-    // Validar al menos un carácter especial
-    if (!regEspeciales.test(val)) {
-      return "Incluye al menos un carácter especial (!@#$...)";
-    }
-
+    if (!regPermitidos.test(val)) return "Debe tener entre 8 y 12 caracteres válidos.";
+    if (!regEspeciales.test(val)) return "Incluye al menos un carácter especial (!@#$...)";
     return true;
   };
 
@@ -47,8 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
   pwd.addEventListener("blur", manejarValidacion);
 
   form.addEventListener("submit", (e) => {
-    if (!manejarValidacion()) {
-      e.preventDefault();
-    }
+    if (!manejarValidacion()) e.preventDefault();
   });
 });

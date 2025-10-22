@@ -1,33 +1,40 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instituciones</title>
-  <!-- Librerías adicionales en el head del navbar -->
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <!-- Librerías adicionales en el head del navbar -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
-  <!-- Scripts únicos -->
-  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>------------------------------
-    
+    <!-- Scripts únicos -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
-    <link rel="stylesheet" href="css/styles_in_con.css"> 
+
+    <link rel="stylesheet" href="css/styles_in_con.css">
 </head>
+
 <body class="recurso-pagina-fondo">
 
     <div class="recurso-pagina-principal container my-5">
         <h1 class="recurso-titulo-principal text-center mb-5"> Instituciones</h1>
-        
+
         <div class="recurso-tarjetas-fila row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            
+
             <div class="col">
                 <div class="recurso-card-base card h-100 shadow-sm">
                     <div class="recurso-card-img-container">
@@ -118,10 +125,10 @@
                 </div>
             </div>
 
-        </div> 
-    </div> 
+        </div>
+    </div>
 
-    <div class="modal fade" id="modalCard1" tabindex="-1" aria-labelledby="modalCard1Label" aria-hidden="true">
+    <div class="modal fade custom-config-modal" id="modalCard1" tabindex="-1" aria-labelledby="modalCard1Label" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content recurso-modal-contenido">
                 <div class="modal-header recurso-modal-header">
@@ -143,14 +150,14 @@
                                 <li>Programas reeducativos grupales</li>
                                 <li>Terapia individual con enfoque de género</li>
                             </ul>
-                            <div class="recurso-modal-contacto mt-3 p-3 border-start border-3 bg-light">
+                            <div class="recurso-modal-contacto mt-3 p-3 border-start border-3">
                                 <p class="fw-bold mb-1">Contacto Rápido:</p>
                                 <p class="mb-1">
                                     Línea de Apoyo GENDES: <a href="tel:+525547579288" class="fw-bold text-success">55 4757 9288</a> (Servicio sin costo, 24 horas, 365 días).
                                 </p>
                             </div>
                             <p class="mt-3">
-                                <a href="https://gendes.org.mx/" target="_blank" class="recurso-modal-boton-web btn btn-sm btn-outline-secondary">Ir al Sitio Web</a> 
+                                <a href="https://gendes.org.mx/" target="_blank" class="recurso-modal-boton-web btn btn-sm btn-outline-secondary">Ir al Sitio Web</a>
                                 <span class="text-muted">(Sito web: GENDES A.C.)</span>
                             </p>
                         </div>
@@ -162,8 +169,8 @@
             </div>
         </div>
     </div>
-    
-    <div class="modal fade" id="modalCard2" tabindex="-1" aria-labelledby="modalCard2Label" aria-hidden="true">
+
+    <div class="modal fade custom-config-modal" id="modalCard2" tabindex="-1" aria-labelledby="modalCard2Label" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content recurso-modal-contenido">
                 <div class="modal-header recurso-modal-header">
@@ -185,7 +192,7 @@
                                 <li>Terapia Cognitivo-Conductual (TCC)</li>
                                 <li>Terapia Psicoanalítica y Gestalt</li>
                             </ul>
-                            <div class="recurso-modal-contacto mt-3 p-3 border-start border-3 bg-light">
+                            <div class="recurso-modal-contacto mt-3 p-3 border-start border-3">
                                 <p class="fw-bold mb-1">Contacto Rápido:</p>
                                 <p class="mb-1">
                                     **Teléfono CDMX:** <a href="tel:+525588547316" class="fw-bold text-success">55 8854 7316</a>
@@ -205,7 +212,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCard3" tabindex="-1" aria-labelledby="modalCard3Label" aria-hidden="true">
+    <div class="modal fade custom-config-modal" id="modalCard3" tabindex="-1" aria-labelledby="modalCard3Label" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content recurso-modal-contenido">
                 <div class="modal-header recurso-modal-header">
@@ -242,7 +249,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCard4" tabindex="-1" aria-labelledby="modalCard4Label" aria-hidden="true">
+    <div class="modal fade custom-config-modal" id="modalCard4" tabindex="-1" aria-labelledby="modalCard4Label" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content recurso-modal-contenido">
                 <div class="modal-header recurso-modal-header">
@@ -264,7 +271,7 @@
                                 <li>Atención Psicológica</li>
                                 <li>Talleres y pláticas reeducativas</li>
                             </ul>
-                            <div class="recurso-modal-contacto mt-3 p-3 border-start border-3 bg-light">
+                            <div class="recurso-modal-contacto mt-3 p-3 border-start border-3">
                                 <p class="fw-bold mb-1">Contacto Rápido:</p>
                                 <p class="mb-1">
                                     **Teléfono:** <a href="tel:+525550063807" class="fw-bold text-success">55 5006 3807</a>
@@ -283,7 +290,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCard5" tabindex="-1" aria-labelledby="modalCard5Label" aria-hidden="true">
+    <div class="modal fade custom-config-modal" id="modalCard5" tabindex="-1" aria-labelledby="modalCard5Label" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content recurso-modal-contenido">
                 <div class="modal-header recurso-modal-header">
@@ -305,7 +312,7 @@
                                 <li>Terapia Individual y de Pareja</li>
                                 <li>Evaluación Psicológica y Psiquiátrica</li>
                             </ul>
-                            <div class="recurso-modal-contacto mt-3 p-3 border-start border-3 bg-light">
+                            <div class="recurso-modal-contacto mt-3 p-3 border-start border-3">
                                 <p class="fw-bold mb-1">Teléfonos de Referencia (Sedes):</p>
                                 <ul>
                                     <li>Aurora: <a href="tel:+525557340976" class="fw-bold text-success">55 5734 0976</a></li>
@@ -326,7 +333,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCard6" tabindex="-1" aria-labelledby="modalCard6Label" aria-hidden="true">
+    <div class="modal fade custom-config-modal" id="modalCard6" tabindex="-1" aria-labelledby="modalCard6Label" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content recurso-modal-contenido">
                 <div class="modal-header recurso-modal-header">
@@ -360,10 +367,10 @@
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
     <?php
-  include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php';
-  ?>
+    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php';
+    ?>
 </body>
+
 </html>
