@@ -19,7 +19,8 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Reportes - Shakti</title>
-    <script src="js/aliminarReporte.js"></script>
+    <script src="js/eliminarReporte.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
 </head>
 
@@ -63,8 +64,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </div>
-
-                            <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top: 20px;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <input type="text" id="buscarReporte" class="form-control w-25" placeholder="Buscar...">
+                            </div>
+                            <table class="table table-bordered table-striped dataTable no-footer" id="MiAgenda" style="margin-top: 20px;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -75,14 +78,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <?php
-                                    require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/reportesCtrl.php';
-                                    $reporte = new reportesMdl();
-                                    $reporte->conectarBD();
-                                    $reporte->verReportes();
-                                    ?>
-                                </tbody>
+                                <tbody id="tablaReportes"></tbody>
                             </table>
                         </div>
                     </div>
@@ -90,34 +86,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             </main>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#MiAgenda').DataTable({
-                language: {
-                    decimal: "",
-                    emptyTable: "No hay información",
-                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    infoEmpty: "Mostrando 0 a 0 de 0 Entradas",
-                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
-                    infoPostFix: "",
-                    thousands: ",",
-                    lengthMenu: "Mostrar _MENU_ Entradas",
-                    loadingRecords: "Cargando...",
-                    processing: "Procesando...",
-                    search: "Buscar:",
-                    zeroRecords: "Sin resultados encontrados",
-                    paginate: {
-                        first: "Primero",
-                        last: "Último",
-                        next: "Siguiente",
-                        previous: "Anterior"
-                    },
-                },
-            });
-        });
-    </script>
-
     <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center justify-content-between small">
