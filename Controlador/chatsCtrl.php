@@ -13,6 +13,7 @@ if (empty($referer) || !str_contains($referer, $host)) {
     header('HTTP/1.0 403 Forbidden');
     exit('Acceso denegado');
 }
+// ============================================================
 
 
 header('Content-Type: application/json; charset=utf-8');

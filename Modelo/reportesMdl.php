@@ -69,7 +69,7 @@ class reportesMdl
             if ($id_reportada == $this->id_reporto) {
                 return json_encode([
                     'opcion' => 1,
-                    'mensaje' => 'No puedes reportar tu propia publicación.'
+                    'mensaje' => 'No puedes reportes tu propia publicación.'
                 ]);
             }
         }
@@ -93,7 +93,7 @@ class reportesMdl
         }
 
 
-        $sqlVerificar = "SELECT id_reporte FROM reportar WHERE id_usuaria = ? AND id_publicacion = ?";
+        $sqlVerificar = "SELECT id_reporte FROM reportes WHERE id_usuaria = ? AND id_publicacion = ?";
         $stmtVerificar = $this->con->prepare($sqlVerificar);
         $stmtVerificar->bind_param("ii", $this->id_reporto, $this->publicacion);
         $stmtVerificar->execute();
@@ -113,7 +113,7 @@ class reportesMdl
             }
         }
 
-        $sqlInsertar = "INSERT INTO reportar (id_tipo_reporte, id_usuaria, id_reportada, id_publicacion, fecha) 
+        $sqlInsertar = "INSERT INTO reportes (id_tipo_reporte, id_usuaria, id_reportada, id_publicacion, fecha) 
                     VALUES (?, ?, ?, ?, NOW())";
         $stmtInsertar = $this->con->prepare($sqlInsertar);
         $stmtInsertar->bind_param("iiii", $this->tipo, $this->id_reporto, $id_reportada, $this->publicacion);
@@ -264,7 +264,7 @@ class reportesMdl
         $estado = "eliminado" . $tipo;
 
         // Eliminar reportes asociados
-        $sqlReportes = "DELETE FROM reportar WHERE id_publicacion = ?";
+        $sqlReportes = "DELETE FROM reportes WHERE id_publicacion = ?";
         $stmtReportes = $this->con->prepare($sqlReportes);
         $stmtReportes->bind_param("i", $id_publicacion);
         $stmtReportes->execute();
