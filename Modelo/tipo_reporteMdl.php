@@ -92,7 +92,7 @@ class TipoReporteMdl
         $this->conectarBD();
 
         // Verificar reportes asociados
-        $sql = "SELECT 1 FROM reportar WHERE id_tipo_reporte = ?";
+        $sql = "SELECT 1 FROM reportes WHERE id_tipo_reporte = ?";
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
