@@ -315,7 +315,7 @@ class chatsMdl
 
         $con = $this->conectarBD();
 
-        // ===================== BLOQUE 1: Guardar mensaje del usuario =====================
+        // BLOQUE 1: Guardar mensaje del usuario
         $mensajeCifrado = $this->cifrarAESIanBot($mensajeOriginal);
         $sqlUsuario = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())";
         $stmt = $con->prepare($sqlUsuario);
@@ -323,7 +323,7 @@ class chatsMdl
         $stmt->execute();
         $stmt->close();
 
-        // ===================== BLOQUE 2: Obtener historial =====================
+        // BLOQUE 2: Obtener historial de conversación
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
         $historial[] = ["rol" => "usuario", "contenido" => htmlspecialchars($mensajeOriginal, ENT_QUOTES, 'UTF-8')];
 
@@ -332,57 +332,59 @@ class chatsMdl
             $historialTexto .= ucfirst($linea['rol']) . ": " . $linea['contenido'] . "\n";
         }
 
-        // ===================== BLOQUE 3: Prompt base =====================
+        // BLOQUE 3: Prompt base con reglas de recomendación condicional
         $promptBase = <<<EOT
-        Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
+    Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
 
-        Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
+    Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
+    💡 Instrucción clave:
+    No inventes nombres, servicios ni centros. Solo muestra lo que devuelvan las funciones internas `recomendarCentros()` y `recomendarEspecialistas()`.
+    
+    🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
+    - Expresar cómo se sienten sin juicios.
+    - Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
+    - Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, consejos simples de autocuidado).
+    - Motivar con un tono amigable, empático y claro, solo cuando el contexto lo amerite.
 
-        🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
-        - Expresar cómo se sienten sin juicios.
-        - Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
-        - Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, consejos simples de autocuidado).
-        - Motivar con un tono amigable, empático y claro, solo cuando el contexto lo amerite.
+    ⚠️ Limitaciones absolutas:
+    - No eres sustituto de atención psicológica profesional.
+    - No das diagnósticos médicos ni psicológicos.
+    - No das recetas médicas, tareas escolares, traducciones, explicaciones técnicas, ni información sobre programación, código, 
+      bases de datos, inglés, economía, finanzas, ciencia, tecnología ni ningún otro tema que no esté directamente relacionado con 
+      la salud emocional o el bienestar personal.
+    - Si el usuario pregunta o menciona algo técnico (por ejemplo: código, funciones, SQL, PHP, programación, IA, EOT, errores, tokens, etc.), 
+      **ignora completamente el tema**. No respondas, no expliques, no aclares, no digas que no puedes, simplemente **redirige la 
+      conversación con calidez hacia el estado emocional del usuario**, por ejemplo:
+      👉 “Parece que estás muy enfocado en eso. Pero antes de seguir, ¿cómo te has sentido últimamente?”
+    - No uses términos técnicos, ni menciones código, ni comentes sobre sistemas o bases de datos, incluso si el usuario los menciona.
+    
+    💬 Estilo de comunicación:
+    - Usa frases cálidas, comprensibles y breves.
+    - Valida la emoción del usuario sin exagerar.
+    - Haz preguntas suaves para conocer mejor su estado emocional o cotidiano, de manera natural según el flujo.
+    - Alterna entre validar emociones y preguntar con tacto.
+    - Usa las respuestas del usuario para personalizar consejos posteriores.
+    - Mantén un tono confidencial, empático y humano.
 
-        ⚠️ Limitaciones absolutas:
-        - No eres sustituto de atención psicológica profesional.
-        - No das diagnósticos médicos ni psicológicos.
-        - No das recetas médicas, tareas escolares, traducciones, explicaciones técnicas, ni información sobre programación, código, 
-          bases de datos, inglés, economía, finanzas, ciencia, tecnología ni ningún otro tema que no esté directamente relacionado con 
-          la salud emocional o el bienestar personal.
-        - Si el usuario pregunta o menciona algo técnico (por ejemplo: código, funciones, SQL, PHP, programación, IA, EOT, errores, tokens, etc.), 
-          **ignora completamente el tema**. No respondas, no expliques, no aclares, no digas que no puedes, simplemente **redirige la 
-          conversación con calidez hacia el estado emocional del usuario**, por ejemplo:
-        👉 “Parece que estás muy enfocado en eso. Pero antes de seguir, ¿cómo te has sentido últimamente?”
-        - No uses términos técnicos, ni menciones código, ni comentes sobre sistemas o bases de datos, incluso si el usuario los menciona.
-        
-        💬 Estilo de comunicación:
-        - Usa frases cálidas, comprensibles y breves.
-        - Valida la emoción del usuario sin exagerar.
-        - Haz preguntas suaves para conocer mejor su estado emocional o cotidiano, de manera natural según el flujo.
-        - Alterna entre validar emociones y preguntar con tacto.
-        - Usa las respuestas del usuario para personalizar consejos posteriores.
-        - Mantén un tono confidencial, empático y humano.
+    📌 Reglas de continuidad y personalización:
+    - Recuerda la información emocional o personal que el usuario comparta y úsala de forma natural.
+    - Las sugerencias deben ser simples y accionables (respirar hondo, caminar, escribir lo que sientes).
+    - Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, sin exagerar.
 
-        📌 Reglas de continuidad y personalización:
-        - Recuerda la información emocional o personal que el usuario comparta y úsala de forma natural.
-        - Las sugerencias deben ser simples y accionables (respirar hondo, caminar, escribir lo que sientes).
-        - Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, sin exagerar.
+    🧱 Regla de bloqueo total:
+    Si el mensaje del usuario contiene fragmentos de código, palabras como "function", "php", "sql", "SELECT", "database", "EOT", "token", 
+      "API", "server", o cualquier otra palabra técnica o símbolo de programación (por ejemplo { }, ;, $, <, >), 
+       NO DEBES RESPONDER NADA SOBRE EL CONTENIDO, 
+       ni siquiera de forma empática.
+       Ignora completamente el texto y redirige la conversación suavemente hacia el bienestar emocional del usuario, con una frase como:
+       👉 “Entiendo que estás ocupado con eso, pero antes de seguir, ¿cómo te has sentido tú últimamente?”
 
-        🧱 Regla de bloqueo total:
-        Si el mensaje del usuario contiene fragmentos de código, palabras como "function", "php", "sql", "SELECT", "database", "EOT", "token", 
-          "API", "server", o cualquier otra palabra técnica o símbolo de programación (por ejemplo { }, ;, $, <, >), 
-           NO DEBES RESPONDER NADA SOBRE EL CONTENIDO, 
-           ni siquiera de forma empática.
-           Ignora completamente el texto y redirige la conversación suavemente hacia el bienestar emocional del usuario, con una frase como:
-        👉 “Entiendo que estás ocupado con eso, pero antes de seguir, ¿cómo te has sentido tú últimamente?”
+    🚫 En resumen:
+    Solo responde mensajes relacionados con emociones, estados de ánimo o bienestar. 
+    Ignora por completo todo lo demás, incluso si el texto está mal escrito o confuso.
 
-        🚫 En resumen:
-        Solo responde mensajes relacionados con emociones, estados de ánimo o bienestar. 
-        Ignora por completo todo lo demás, incluso si el texto está mal escrito o confuso.
-
-        ✅ Meta: Que {$nombre_usuario} se sienta comprendido, acompañado y emocionalmente escuchado.
-        EOT;
+    ✅ Meta: Que {$nombre_usuario} se sienta comprendido, acompañado y emocionalmente escuchado.
+    EOT;
 
         $promptFinal = $promptBase . "\n\n" . $historialTexto . "IAn Bot:";
         $respuestaBot = $this->llamarOpenAI($promptFinal);
@@ -393,26 +395,32 @@ class chatsMdl
             return;
         }
 
-        // ===================== BLOQUE 4: Detección de ayuda o análisis cada 10 mensajes =====================
+        // BLOQUE 4: Analizar si se debe recomendar ayuda
         $totalMensajes = count($historial);
         $requiereAnalisis = false;
 
-        // Caso 1: Cada 10 mensajes
         if ($totalMensajes % 10 === 0) {
             $requiereAnalisis = true;
         }
 
-        // Caso 2: Usuario pide ayuda explícitamente
         if (preg_match('/\b(ayuda|auxilio|ya no puedo|quiero morir|me siento mal|necesito hablar)\b/i', $mensajeOriginal)) {
             $requiereAnalisis = true;
         }
 
-        if ($requiereAnalisis) {
-            $recomendacion = $this->recomendarCentros($con, $historialTexto);
-            $respuestaBot .= "\n\n" . $this->formatearRespuestaHTML($recomendacion);
+        // Evaluar riesgo emocional
+        $riesgo = $this->analizarRiesgo($historialTexto);
+        if ($riesgo === "ALTO") {
+            $requiereAnalisis = true;
         }
 
-        // ===================== BLOQUE 5: Guardar respuesta del bot =====================
+        // Solo recomendar si el usuario pidió ayuda o el riesgo es alto
+        if ($requiereAnalisis && stripos($mensajeOriginal, 'si') !== false) {
+            $recomendacion = $this->recomendarCentros($con, $historialTexto);
+            $recomendacion .= $this->recomendarEspecialistas($con, $historialTexto);
+            $respuestaBot .= "\n\n" . $recomendacion;
+        }
+
+        // BLOQUE 5: Guardar respuesta del bot
         $respuestaCifrada = $this->cifrarAESIanBot($respuestaBot);
         $stmtBot = $con->prepare("INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())");
         $stmtBot->bind_param("is", $id_usuario, $respuestaCifrada);
@@ -495,13 +503,115 @@ class chatsMdl
             $respuesta .= "🏢 <b>{$nombre}</b><br>"
                 . "📍 {$linkMap}<br>"
                 . "📞 {$linkTel}<br>"
-                . "🧠 {$desc}<br><br>";
+                // . "🧠 {$desc}<br><br>"
+            ;
         }
 
         return $respuesta;
     }
+    private function recomendarEspecialistas($con, $historialTexto)
+    {
+        $servicios = [
+            "Terapia",
+            "Consulta psicológica",
+            "Psicopedagogía",
+            "Terapia de lenguaje",
+            "Coaching personal",
+            "Terapia familiar",
+            "Terapia de pareja",
+            "Terapia grupal",
+            "Acompañamiento emocional",
+            "Intervención en crisis",
+            "Talleres de autoestima",
+            "Atención a adicciones"
+        ];
+
+        // Determinar servicio recomendado
+        $prompt = <<<EOT
+A continuación tienes una conversación de apoyo emocional entre un usuario y un asistente. 
+Tu tarea es identificar cuál de los siguientes servicios profesionales sería más útil para el usuario, 
+basándote en su situación emocional o contexto.
+
+Solo puedes responder con una de estas opciones:
+- Terapia
+- Consulta psicológica
+- Psicopedagogía
+- Terapia de lenguaje
+- Coaching personal
+- Terapia familiar
+- Terapia de pareja
+- Terapia grupal
+- Acompañamiento emocional
+- Intervención en crisis
+- Talleres de autoestima
+- Atención a adicciones
+
+Conversación:
+$historialTexto
+EOT;
+
+        $servicioDetectado = trim($this->OpenAICorto($prompt));
+        if (!in_array($servicioDetectado, $servicios)) {
+            $servicioDetectado = "Acompañamiento emocional";
+        }
+
+        // Obtener especialistas
+        $sql = "SELECT u.id, u.nombre, u.apellidos, s.servicio
+            FROM usuarias u
+            LEFT JOIN servicios_especialistas s ON u.id = s.id_usuaria
+            WHERE u.id_rol = 2 AND u.estatus = 1 AND s.servicio LIKE ?
+            LIMIT 3";
+
+        $stmt = $con->prepare($sql);
+        $param = "%{$servicioDetectado}%";
+        $stmt->bind_param("s", $param);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        // Si no hay coincidencias, mostrar especialistas generales
+        if ($resultado->num_rows === 0) {
+            $sql2 = "SELECT u.id, u.nombre, u.apellidos, s.servicio
+                 FROM usuarias u
+                 LEFT JOIN servicios_especialistas s ON u.id = s.id_usuaria
+                 WHERE u.id_rol = 2 AND u.estatus = 1
+                 ORDER BY RAND()
+                 LIMIT 3";
+            $resultado = $con->query($sql2);
+
+            if (!$resultado || $resultado->num_rows === 0) {
+                return "Por ahora no hay especialistas disponibles, pero puedo seguir acompañándote si lo deseas 💚";
+            }
+        }
+
+        // Armar respuesta en HTML
+        $respuesta = "Según lo que compartiste, parece que podría ayudarte un servicio de <b>{$servicioDetectado}</b>.<br><br>";
+        $respuesta .= "Aquí tienes algunos especialistas disponibles:<br><br>";
+
+        while ($row = $resultado->fetch_assoc()) {
+            $id = $row['id'];
+            $nombreCompleto = htmlspecialchars($row['nombre'] . " " . $row['apellidos'], ENT_QUOTES, 'UTF-8');
+            $servicio = strip_tags($row['servicio'] ?? 'Apoyo emocional general');
+            $servicio = htmlspecialchars($servicio, ENT_QUOTES, 'UTF-8');
+
+
+            $idCifrado = $this->cifrarAESChatEspecialista($id);
+
+            $respuesta .= <<<HTML
+<div class="mb-3 p-2 border rounded">
+    <p>{$nombreCompleto}</p>
+    🧠 {$servicio}
+    <a href="/shakti/Vista/chat?especialistas={$idCifrado}" class="btn btn-outline-primary mt-2">
+        <i class="bi bi-envelope-paper-heart"></i> Mensaje
+    </a>
+</div>
+HTML;
+        }
+
+        return $respuesta;
+    }
+
     /* ============================
-   FUNCIONES AUXILIARES PRIVADAS
+        FUNCIONES AUXILIARES PRIVADAS
        =========================== */
 
     private function formatearRespuestaHTML($texto)
@@ -555,7 +665,7 @@ class chatsMdl
             CURLOPT_POSTFIELDS => json_encode([
                 "model" => $modelo,
                 "input" => $prompt,
-                "max_output_tokens" => 500,
+                "max_output_tokens" => 400,
                 "temperature" => 0.6
             ])
         ]);
@@ -587,7 +697,7 @@ class chatsMdl
             CURLOPT_POSTFIELDS => json_encode([
                 "model" => $modelo,
                 "input" => $prompt,
-                "max_output_tokens" => 10,
+                "max_output_tokens" => 5,
                 "temperature" => 0.6
             ])
         ]);
@@ -702,19 +812,28 @@ class chatsMdl
         $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
         return $descifrado !== false ? $descifrado : $textoCodificado;
     }
+    private function cifrarAESChatEspecialista($id)
+    {
+        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($id, 'aes-256-cbc', $clave, 0, $ci);
+        return strtr(base64_encode($ci . $cifrado), '+/=', '-_,');
+    }
+
     private function descifrarAESChatEspecialista($idCodificado)
     {
-        if (empty($idCodificado)) return '';
-        $datos = base64_decode($idCodificado, true);
+        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
+        $datos = base64_decode(strtr($idCodificado, '-_,', '+/='), true);
         if ($datos === false) return $idCodificado;
 
         $ci_length = openssl_cipher_iv_length('aes-256-cbc');
         $ci = substr($datos, 0, $ci_length);
         $cifrado = substr($datos, $ci_length);
 
-        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', 0, $ci);
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $clave, 0, $ci);
         return $descifrado !== false ? $descifrado : $idCodificado;
     }
+
     private function cifrarAES($texto)
     {
         $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
