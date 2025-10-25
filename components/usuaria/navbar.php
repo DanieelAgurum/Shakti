@@ -70,7 +70,6 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
     window.urlBase = "<?= $urlBase ?>";
   </script>
   <script src="<?= $urlBase ?>peticiones(js)/accesibilidad.js"></script>
-  <script src="<?= $urlBase ?>peticiones(js)/chatBotFlotante.js"></script>
   <!-- Toastify -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -107,7 +106,15 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
         <li class="nav-item"><a class="nav-link"
             href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['libreYSegura'], $usuario['rol']) ?>">Libre y Segura</a></li>
         <li class="nav-item"><a class="nav-link"
-            href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a></li>
+            href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a>
+        </li>
+        <?php if (isset($usuario['rol']) && $usuario['rol'] >= 1 && $usuario['rol'] <= 2): ?>
+          <li>
+            <a class="nav-link" href="<?= $urlBase ?>Vista/chat">
+              <i class="bi bi-chat"></i>
+            </a>
+          </li>
+        <?php endif; ?>
 
         <li class="nav-item ms-3 d-flex align-items-center custom-search-wrapper">
           <i class="bi bi-search custom-search-icon"></i>
@@ -190,8 +197,6 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
 <button id="shakti-btn-top" class="shakti-btn-top" data-bs-placement="top" title="Regresar al inicio">
   <i class="fas fa-arrow-up"></i>
 </button>
-
-<?php include 'chatBot.php'; ?>
 
 <!-- Contenedor para toasts -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">

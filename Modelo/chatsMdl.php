@@ -167,7 +167,7 @@ class chatsMdl
                 }
 
                 $ext = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
-                $extPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                $extPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', ''];
                 if (!in_array($ext, $extPermitidas)) {
                     $ext = "jpg";
                 }
