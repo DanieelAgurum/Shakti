@@ -372,9 +372,9 @@ class chatsMdl
         🧱 Regla de bloqueo total:
         Si el mensaje del usuario contiene fragmentos de código, palabras como "function", "php", "sql", "SELECT", "database", "EOT", "token", 
           "API", "server", o cualquier otra palabra técnica o símbolo de programación (por ejemplo { }, ;, $, <, >), 
-        NO DEBES RESPONDER NADA SOBRE EL CONTENIDO, 
-        ni siquiera de forma empática.
-        Ignora completamente el texto y redirige la conversación suavemente hacia el bienestar emocional del usuario, con una frase como:
+           NO DEBES RESPONDER NADA SOBRE EL CONTENIDO, 
+           ni siquiera de forma empática.
+           Ignora completamente el texto y redirige la conversación suavemente hacia el bienestar emocional del usuario, con una frase como:
         👉 “Entiendo que estás ocupado con eso, pero antes de seguir, ¿cómo te has sentido tú últimamente?”
 
         🚫 En resumen:
@@ -408,11 +408,8 @@ class chatsMdl
         }
 
         if ($requiereAnalisis) {
-            $riesgo = $this->analizarRiesgo($historialTexto);
-            if ($riesgo === "ALTO") {
-                $recomendacion = $this->recomendarCentrosYEspecialistas($id_usuario);
-                $respuestaBot .= "\n\n" . $this->formatearRespuestaHTML($recomendacion);
-            }
+            $recomendacion = $this->recomendarCentros($con, $historialTexto);
+            $respuestaBot .= "\n\n" . $this->formatearRespuestaHTML($recomendacion);
         }
 
         // ===================== BLOQUE 5: Guardar respuesta del bot =====================
@@ -441,7 +438,7 @@ class chatsMdl
         EOT;
 
         // Enviar análisis al mismo modelo que usa el bot
-        $resultado = strtoupper(trim($this->llamarOpenAI($prompt)));
+        $resultado = strtoupper(trim($this->OpenAICorto($prompt)));
 
         // Validación final (por si el modelo devuelve texto adicional)
         if (strpos($resultado, 'ALTO') !== false) {
@@ -449,26 +446,60 @@ class chatsMdl
         }
         return "BAJO";
     }
-    private function recomendarCentrosYEspecialistas($id_usuario)
+    private function recomendarCentros($con, $historialTexto)
     {
-        // En versión inicial: texto predeterminado
-        // Luego puedes reemplazar esto por una consulta real a la BD según zona, especialidad o preferencia
-        $texto = <<<EOT
-        <strong>Parece que podrías estar pasando por un momento difícil.</strong><br>
-        No estás solo. Te recomiendo contactar con alguno de los siguientes recursos de apoyo cercanos a ti:<br><br>
-        <ul>
-        <li><b>Centro de Atención Psicológica Municipal</b> — Atención gratuita y confidencial. Tel: 800 822 3737</li>
-        <li><b>Línea de la Vida</b> — 800 911 2000 (24/7, orientación emocional)</li>
-        <li><b>Salud Mental IMSS</b> — acude a tu clínica más cercana y pide apoyo psicológico.</li>
-        </ul>
+        // Análisis contextual para ver si es una situación grave o si el usuario pide ayuda
+        $riesgo = $this->analizarRiesgo($historialTexto);
 
-        Si deseas, puedo ayudarte a realizar un pequeño test emocional guardado en tu base de datos para conocerte mejor y 
-        ofrecerte orientación personalizada. ¿Te gustaría hacerlo ahora?
-        EOT;
+        // Si el riesgo es alto → mostrar organizaciones masculinas de apoyo emocional
+        if ($riesgo === "ALTO") {
+            $sql = "SELECT nombre, descripcion, domicilio, numero 
+                FROM organizaciones 
+                WHERE nombre LIKE '%Hombre%' 
+                   OR nombre LIKE '%Mascul%' 
+                   OR descripcion LIKE '%apoyo%' 
+                   OR descripcion LIKE '%emocional%' 
+                LIMIT 5";
+        } else {
+            // Si el riesgo no es alto, mostrar algunos centros generales de orientación emocional
+            $sql = "SELECT nombre, descripcion, domicilio, numero 
+                FROM organizaciones 
+                WHERE descripcion LIKE '%psicol%' 
+                   OR descripcion LIKE '%emocional%' 
+                   OR descripcion LIKE '%bienestar%' 
+                LIMIT 5";
+        }
 
-        return $this->formatearRespuestaHTML($texto);
+        $resultado = $con->query($sql);
+        if (!$resultado || $resultado->num_rows === 0) {
+            return "No se encontraron centros disponibles en este momento.";
+        }
+
+        $respuesta = "💚 Aquí tienes algunos centros y organizaciones que podrían ayudarte:<br><br>";
+
+        while ($row = $resultado->fetch_assoc()) {
+            $nombre = htmlspecialchars($row['nombre'], ENT_QUOTES, 'UTF-8');
+            $desc = htmlspecialchars($row['descripcion'], ENT_QUOTES, 'UTF-8');
+            $dom = htmlspecialchars($row['domicilio'] ?? 'Sin dirección registrada', ENT_QUOTES, 'UTF-8');
+            $num = htmlspecialchars($row['numero'] ?? 'Sin número disponible', ENT_QUOTES, 'UTF-8');
+
+            // Crear enlaces interactivos
+            $linkTel = ($row['numero'])
+                ? "<a href='tel:{$num}' style='color:#007bff; text-decoration:none;' title='Llamar a {$nombre}'>{$num}</a>"
+                : 'Sin número disponible';
+
+            $linkMap = ($row['domicilio'])
+                ? "<a href='https://www.google.com/maps/search/?api=1&query=" . urlencode($row['domicilio']) . "' target='_blank' style='color:#007bff; text-decoration:none;' title='Ver en Google Maps'>{$dom}</a>"
+                : 'Sin dirección registrada';
+
+            $respuesta .= "🏢 <b>{$nombre}</b><br>"
+                . "📍 {$linkMap}<br>"
+                . "📞 {$linkTel}<br>"
+                . "🧠 {$desc}<br><br>";
+        }
+
+        return $respuesta;
     }
-
     /* ============================
    FUNCIONES AUXILIARES PRIVADAS
        =========================== */
@@ -525,6 +556,38 @@ class chatsMdl
                 "model" => $modelo,
                 "input" => $prompt,
                 "max_output_tokens" => 500,
+                "temperature" => 0.6
+            ])
+        ]);
+
+        $respuesta = curl_exec($curl);
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return "⚠️ Error al conectar con OpenAI: $error";
+        }
+        curl_close($curl);
+
+        $data = json_decode($respuesta, true);
+        return $data['output'][0]['content'][0]['text'] ?? "";
+    }
+    private function OpenAICorto($prompt)
+    {
+        $apiKey = OPENAI_API_KEY;
+        $modelo = "gpt-4.1-mini";
+
+        $curl = curl_init("https://api.openai.com/v1/responses");
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer $apiKey",
+                "Content-Type: application/json"
+            ],
+            CURLOPT_POSTFIELDS => json_encode([
+                "model" => $modelo,
+                "input" => $prompt,
+                "max_output_tokens" => 10,
                 "temperature" => 0.6
             ])
         ]);
