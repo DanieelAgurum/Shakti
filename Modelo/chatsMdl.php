@@ -297,6 +297,105 @@ class chatsMdl
             ], JSON_UNESCAPED_UNICODE);
         }
     }
+
+    /* ============================
+        FUNCIONES AUXILIARES PRIVADAS
+       =========================== */
+
+    private function formatearRespuestaHTML($texto)
+    {
+        // 1. Convertir negritas estilo Markdown (**texto** o *texto*) a HTML
+        $texto = preg_replace('/\*\*(.*?)\*\*/s', '<strong>$1</strong>', $texto);
+        $texto = preg_replace('/\*(.*?)\*/s', '<b>$1</b>', $texto);
+
+        // 2. Separar líneas para listas y párrafos
+        $lineas = preg_split('/\r\n|\r|\n/', trim($texto));
+        $html = "";
+        $enLista = false;
+
+        foreach ($lineas as $linea) {
+            $linea = trim($linea);
+            if ($linea === "") continue;
+
+            // Detectar líneas tipo lista: empiezan con -, *, • o números
+            if (preg_match('/^(?:[\-\*\•]|\d+[\.\)])\s*(.+)/u', $linea, $matches)) {
+                if (!$enLista) {
+                    $html .= "<ul>";
+                    $enLista = true;
+                }
+                $html .= "<li>" . $matches[1] . "</li>";
+            } else {
+                if ($enLista) {
+                    $html .= "</ul>";
+                    $enLista = false;
+                }
+                $html .= "<p>" . $linea . "</p>";
+            }
+        }
+
+        if ($enLista) $html .= "</ul>";
+
+        return $html;
+    }
+    // Cifrado y descifrado Aes
+    private function cifrarAESChatEspecialista($id)
+    {
+        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($id, 'aes-256-cbc', $clave, 0, $ci);
+        return strtr(base64_encode($ci . $cifrado), '+/=', '-_,');
+    }
+    private function descifrarAESChatEspecialista($idCodificado)
+    {
+        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
+        $datos = base64_decode(strtr($idCodificado, '-_,', '+/='), true);
+        if ($datos === false) return $idCodificado;
+
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $clave, 0, $ci);
+        return $descifrado !== false ? $descifrado : $idCodificado;
+    }
+    private function cifrarAES($texto)
+    {
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
+        return base64_encode($ci . $cifrado);
+    }
+    private function descifrarAES($textoCodificado)
+    {
+        $datos = base64_decode($textoCodificado);
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+        return openssl_decrypt($cifrado, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
+    }
+    private function cifrarAESIanBot($texto)
+    {
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
+        return base64_encode($ci . $cifrado);
+    }
+    private function descifrarAESIanBot($textoCodificado)
+    {
+        if (empty($textoCodificado)) return '';
+        $datos = base64_decode($textoCodificado, true);
+        if ($datos === false) return $textoCodificado;
+
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
+        return $descifrado !== false ? $descifrado : $textoCodificado;
+    }
+
+    /* ============================
+        CHAT IAN
+       =========================== */
+
     public function enviarMensajeIanBot($mensaje)
     {
         $id_usuario = $_SESSION['id'] ?? null;
@@ -327,8 +426,11 @@ class chatsMdl
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
         $historial[] = ["rol" => "usuario", "contenido" => htmlspecialchars($mensajeOriginal, ENT_QUOTES, 'UTF-8')];
 
+        // Limitar a los últimos 5 mensajes
+        $historialReciente = array_slice($historial, -5);
+
         $historialTexto = "";
-        foreach ($historial as $linea) {
+        foreach ($historialReciente as $linea) {
             $historialTexto .= ucfirst($linea['rol']) . ": " . $linea['contenido'] . "\n";
         }
 
@@ -609,46 +711,6 @@ HTML;
 
         return $respuesta;
     }
-
-    /* ============================
-        FUNCIONES AUXILIARES PRIVADAS
-       =========================== */
-
-    private function formatearRespuestaHTML($texto)
-    {
-        // 1. Convertir negritas estilo Markdown (**texto** o *texto*) a HTML
-        $texto = preg_replace('/\*\*(.*?)\*\*/s', '<strong>$1</strong>', $texto);
-        $texto = preg_replace('/\*(.*?)\*/s', '<b>$1</b>', $texto);
-
-        // 2. Separar líneas para listas y párrafos
-        $lineas = preg_split('/\r\n|\r|\n/', trim($texto));
-        $html = "";
-        $enLista = false;
-
-        foreach ($lineas as $linea) {
-            $linea = trim($linea);
-            if ($linea === "") continue;
-
-            // Detectar líneas tipo lista: empiezan con -, *, • o números
-            if (preg_match('/^(?:[\-\*\•]|\d+[\.\)])\s*(.+)/u', $linea, $matches)) {
-                if (!$enLista) {
-                    $html .= "<ul>";
-                    $enLista = true;
-                }
-                $html .= "<li>" . $matches[1] . "</li>";
-            } else {
-                if ($enLista) {
-                    $html .= "</ul>";
-                    $enLista = false;
-                }
-                $html .= "<p>" . $linea . "</p>";
-            }
-        }
-
-        if ($enLista) $html .= "</ul>";
-
-        return $html;
-    }
     private function llamarOpenAI($prompt)
     {
         $apiKey = OPENAI_API_KEY;
@@ -791,61 +853,5 @@ HTML;
 
         $stmt->close();
         return $historial;
-    }
-    // Cifrado y descifrado Aes
-    private function cifrarAESIanBot($texto)
-    {
-        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
-        return base64_encode($ci . $cifrado);
-    }
-    private function descifrarAESIanBot($textoCodificado)
-    {
-        if (empty($textoCodificado)) return '';
-        $datos = base64_decode($textoCodificado, true);
-        if ($datos === false) return $textoCodificado;
-
-        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
-        $ci = substr($datos, 0, $ci_length);
-        $cifrado = substr($datos, $ci_length);
-
-        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
-        return $descifrado !== false ? $descifrado : $textoCodificado;
-    }
-    private function cifrarAESChatEspecialista($id)
-    {
-        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
-        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $cifrado = openssl_encrypt($id, 'aes-256-cbc', $clave, 0, $ci);
-        return strtr(base64_encode($ci . $cifrado), '+/=', '-_,');
-    }
-
-    private function descifrarAESChatEspecialista($idCodificado)
-    {
-        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
-        $datos = base64_decode(strtr($idCodificado, '-_,', '+/='), true);
-        if ($datos === false) return $idCodificado;
-
-        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
-        $ci = substr($datos, 0, $ci_length);
-        $cifrado = substr($datos, $ci_length);
-
-        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $clave, 0, $ci);
-        return $descifrado !== false ? $descifrado : $idCodificado;
-    }
-
-    private function cifrarAES($texto)
-    {
-        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
-        return base64_encode($ci . $cifrado);
-    }
-    private function descifrarAES($textoCodificado)
-    {
-        $datos = base64_decode($textoCodificado);
-        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
-        $ci = substr($datos, 0, $ci_length);
-        $cifrado = substr($datos, $ci_length);
-        return openssl_decrypt($cifrado, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
     }
 }
