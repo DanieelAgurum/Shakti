@@ -96,10 +96,12 @@ class SolicitudesMdl
         $stmt->close();
     }
 
-    private function cifrarAES($id)
+
+   private function cifrarAES($id)
     {
+        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
         $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $cifrado = openssl_encrypt($id, 'aes-256-cbc', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', 0, $ci);
-        return base64_encode($ci . $cifrado);
-    }
+        $cifrado = openssl_encrypt($id, 'aes-256-cbc', $clave, 0, $ci);
+        return strtr(base64_encode($ci . $cifrado), '+/=', '-_,');
+    } 
 }
