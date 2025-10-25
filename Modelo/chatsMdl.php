@@ -332,48 +332,57 @@ class chatsMdl
             $historialTexto .= ucfirst($linea['rol']) . ": " . $linea['contenido'] . "\n";
         }
 
-        // ===================== BLOQUE 3: Prompt completo del bot =====================
+        // ===================== BLOQUE 3: Prompt base =====================
         $promptBase = <<<EOT
-Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
+        Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
 
-Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
+        Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
 
-🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
-- Expresar cómo se sienten sin juicios.
-- Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
-- Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, 
-  consejos simples de autocuidado).
-- Motivar con un tono amigable, empático y claro, solo cuando el contexto lo amerite.
+        🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
+        - Expresar cómo se sienten sin juicios.
+        - Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
+        - Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, consejos simples de autocuidado).
+        - Motivar con un tono amigable, empático y claro, solo cuando el contexto lo amerite.
 
-⚠️ Limitaciones:
-- No eres sustituto de atención psicológica profesional.
-- No das diagnósticos médicos ni psicológicos.
-- No das recetas médicas, tareas escolares, traducciones, ni información técnica o financiera.
-- Si el usuario expresa pensamientos de daño hacia sí mismo u otros, responde con un mensaje breve de 
-  contención y redirige hacia ayuda profesional inmediata.
-- Si el usuario pide ayuda en temas de idiomas, tareas escolares, programación, finanzas, recetas, tecnología u 
-  otros fuera de tu propósito, **responde con una frase breve como: ‘Entiendo lo que me pides, pero no 
-  estoy autorizado para eso. Prefiero enfocarme en cómo te sientes tú’. Luego redirige la conversación con una 
-  pregunta cálida hacia su estado emocional.
-- Todo lo que compartas conmigo es confidencial y no será juzgado. Mi propósito es que te sientas en un 
-  espacio seguro para expresarte.
+        ⚠️ Limitaciones absolutas:
+        - No eres sustituto de atención psicológica profesional.
+        - No das diagnósticos médicos ni psicológicos.
+        - No das recetas médicas, tareas escolares, traducciones, explicaciones técnicas, ni información sobre programación, código, 
+          bases de datos, inglés, economía, finanzas, ciencia, tecnología ni ningún otro tema que no esté directamente relacionado con 
+          la salud emocional o el bienestar personal.
+        - Si el usuario pregunta o menciona algo técnico (por ejemplo: código, funciones, SQL, PHP, programación, IA, EOT, errores, tokens, etc.), 
+          **ignora completamente el tema**. No respondas, no expliques, no aclares, no digas que no puedes, simplemente **redirige la 
+          conversación con calidez hacia el estado emocional del usuario**, por ejemplo:
+        👉 “Parece que estás muy enfocado en eso. Pero antes de seguir, ¿cómo te has sentido últimamente?”
+        - No uses términos técnicos, ni menciones código, ni comentes sobre sistemas o bases de datos, incluso si el usuario los menciona.
+        
+        💬 Estilo de comunicación:
+        - Usa frases cálidas, comprensibles y breves.
+        - Valida la emoción del usuario sin exagerar.
+        - Haz preguntas suaves para conocer mejor su estado emocional o cotidiano, de manera natural según el flujo.
+        - Alterna entre validar emociones y preguntar con tacto.
+        - Usa las respuestas del usuario para personalizar consejos posteriores.
+        - Mantén un tono confidencial, empático y humano.
 
-💬 Estilo de comunicación:
-- Usa frases cálidas, comprensibles y breves.
-- Valida la emoción del usuario sin exagerar.
-- Haz preguntas indirectas y suaves para conocer mejor al usuario (nombre, edad, ocupación, intereses), pero de manera 
-  escalonada y natural según el flujo de la conversación.
-- Alterna entre validar emociones y dejar caer alguna de estas preguntas sin forzar el tema.
-- Usa las respuestas del usuario para personalizar consejos posteriores.
-- Mantén un tono confidencial y respetuoso.
+        📌 Reglas de continuidad y personalización:
+        - Recuerda la información emocional o personal que el usuario comparta y úsala de forma natural.
+        - Las sugerencias deben ser simples y accionables (respirar hondo, caminar, escribir lo que sientes).
+        - Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, sin exagerar.
 
-📌 Reglas de continuidad y personalización:
-- Recuerda la información que el usuario comparta y úsala de forma natural para dar continuidad.
-- Las sugerencias deben ser simples y accionables (respirar hondo, caminar, escribir lo que sientes).
-- Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, sin exagerar.
+        🧱 Regla de bloqueo total:
+        Si el mensaje del usuario contiene fragmentos de código, palabras como "function", "php", "sql", "SELECT", "database", "EOT", "token", 
+          "API", "server", o cualquier otra palabra técnica o símbolo de programación (por ejemplo { }, ;, $, <, >), 
+        NO DEBES RESPONDER NADA SOBRE EL CONTENIDO, 
+        ni siquiera de forma empática.
+        Ignora completamente el texto y redirige la conversación suavemente hacia el bienestar emocional del usuario, con una frase como:
+        👉 “Entiendo que estás ocupado con eso, pero antes de seguir, ¿cómo te has sentido tú últimamente?”
 
-✅ Meta: Que {$nombre_usuario} se sienta comprendido y acompañado emocionalmente.
-EOT;
+        🚫 En resumen:
+        Solo responde mensajes relacionados con emociones, estados de ánimo o bienestar. 
+        Ignora por completo todo lo demás, incluso si el texto está mal escrito o confuso.
+
+        ✅ Meta: Que {$nombre_usuario} se sienta comprendido, acompañado y emocionalmente escuchado.
+        EOT;
 
         $promptFinal = $promptBase . "\n\n" . $historialTexto . "IAn Bot:";
         $respuestaBot = $this->llamarOpenAI($promptFinal);
@@ -384,59 +393,29 @@ EOT;
             return;
         }
 
-        // ===================== BLOQUE 4: Evaluar necesidad de ayuda profesional =====================
-        $promptRiesgo = "Analiza la siguiente conversación y responde solo con 'SI' o 'NO' si necesita atención profesional inmediata:\n$historialTexto";
-        $pideAyudaRaw = $this->llamarOpenAI($promptRiesgo);
-        $pideAyuda = strtoupper(trim($pideAyudaRaw ?? "NO"));
+        // ===================== BLOQUE 4: Detección de ayuda o análisis cada 10 mensajes =====================
+        $totalMensajes = count($historial);
+        $requiereAnalisis = false;
 
-        // ===================== BLOQUE 5: Buscar centros de ayuda si es necesario =====================
-        if ($pideAyuda === "SI") {
-            $direccion = null;
-            $filtroMunicipio = null;
+        // Caso 1: Cada 10 mensajes
+        if ($totalMensajes % 10 === 0) {
+            $requiereAnalisis = true;
+        }
 
-            // Detectar dirección automáticamente en historial
-            foreach ($historial as $h) {
-                $d = $this->detectarDireccion($h['contenido']);
-                if ($d) {
-                    $direccion = $d;
-                    break;
-                }
-            }
+        // Caso 2: Usuario pide ayuda explícitamente
+        if (preg_match('/\b(ayuda|auxilio|ya no puedo|quiero morir|me siento mal|necesito hablar)\b/i', $mensajeOriginal)) {
+            $requiereAnalisis = true;
+        }
 
-            // Extraer municipio/ciudad/estado si el usuario lo proporciona
-            foreach ($historial as $h) {
-                if (preg_match('/\b(en|dentro de|ciudad de|municipio de)\s+([\w\s]+)/i', $h['contenido'], $m)) {
-                    $filtroMunicipio = trim($m[2]);
-                    break;
-                }
-            }
-
-            // Si no hay dirección, usar la BD
-            if (!$direccion) {
-                $stmtDir = $con->prepare("SELECT direccion FROM usuarias WHERE id = ?");
-                $stmtDir->bind_param("i", $id_usuario);
-                $stmtDir->execute();
-                $resDir = $stmtDir->get_result()->fetch_assoc();
-                $direccion = $resDir['direccion'] ?? null;
-                $stmtDir->close();
-            }
-
-            // Buscar centros con dirección detectada
-            $centros = $this->buscarCentrosNominatim($direccion, $filtroMunicipio);
-
-            if (empty($centros)) {
-                $respuestaBot .= "\n\n📍 No pude ubicar tu dirección exactamente. ¿Podrías indicarme el municipio, ciudad o estado para ofrecerte centros de ayuda cercanos?";
-            } elseif (count($centros) > 2) {
-                // Más de 2 resultados: pedir al usuario que precise
-                $respuestaBot .= "\n\n📍 Encontré varios posibles centros cerca de ti. ¿Podrías indicarme cuál colonia o referencia específica para mostrar la mejor opción?";
-            } else {
-                // 2 o menos resultados: usar el primero
-                $respuestaBot .= "\n\n🏥 <b>Centro de ayuda cercano (fuente: OpenStreetMap):</b><br>";
-                $c = $centros[0];
-                $respuestaBot .= "• {$c['nombre']} — {$c['direccion']} — <a href='{$c['maps']}' target='_blank'>Ver en Maps</a> — Tel: {$c['telefono']}<br>";
+        if ($requiereAnalisis) {
+            $riesgo = $this->analizarRiesgo($historialTexto);
+            if ($riesgo === "ALTO") {
+                $recomendacion = $this->recomendarCentrosYEspecialistas($id_usuario);
+                $respuestaBot .= "\n\n" . $this->formatearRespuestaHTML($recomendacion);
             }
         }
-        // ===================== BLOQUE 6: Guardar respuesta y retornar =====================
+
+        // ===================== BLOQUE 5: Guardar respuesta del bot =====================
         $respuestaCifrada = $this->cifrarAESIanBot($respuestaBot);
         $stmtBot = $con->prepare("INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())");
         $stmtBot->bind_param("is", $id_usuario, $respuestaCifrada);
@@ -446,103 +425,48 @@ EOT;
 
         echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
     }
-    private function detectarDireccion($texto)
+    private function analizarRiesgo($texto)
     {
-        // Patrón simple: número + letras/calle + posible ciudad
-        if (preg_match('/\d{1,5}[\w\s.,#-]+/i', $texto)) {
-            return trim($texto);
+        // 🧠 Prompt especializado para análisis de riesgo emocional
+        $prompt = <<<EOT
+        Analiza la siguiente conversación entre un usuario y un asistente emocional.
+        Evalúa si existe riesgo emocional alto (por ejemplo, ideación suicida, desesperanza extrema o deseos de autodaño).
+
+        Responde SOLO con una palabra:
+        - "ALTO" → si detectas riesgo emocional, desesperación, ideas suicidas o pensamientos autodestructivos.
+        - "BAJO" → si el texto no sugiere riesgo ni pensamientos autodestructivos.
+
+        Conversación:
+        $texto
+        EOT;
+
+        // Enviar análisis al mismo modelo que usa el bot
+        $resultado = strtoupper(trim($this->llamarOpenAI($prompt)));
+
+        // Validación final (por si el modelo devuelve texto adicional)
+        if (strpos($resultado, 'ALTO') !== false) {
+            return "ALTO";
         }
-        return null;
+        return "BAJO";
     }
-    private function buscarCentrosNominatim($direccion, $filtroMunicipio = null)
+    private function recomendarCentrosYEspecialistas($id_usuario)
     {
-        $coords = $this->obtenerCoordenadasAmbigua($direccion, $filtroMunicipio);
-        if (!$coords) return [];
+        // En versión inicial: texto predeterminado
+        // Luego puedes reemplazar esto por una consulta real a la BD según zona, especialidad o preferencia
+        $texto = <<<EOT
+        <strong>Parece que podrías estar pasando por un momento difícil.</strong><br>
+        No estás solo. Te recomiendo contactar con alguno de los siguientes recursos de apoyo cercanos a ti:<br><br>
+        <ul>
+        <li><b>Centro de Atención Psicológica Municipal</b> — Atención gratuita y confidencial. Tel: 800 822 3737</li>
+        <li><b>Línea de la Vida</b> — 800 911 2000 (24/7, orientación emocional)</li>
+        <li><b>Salud Mental IMSS</b> — acude a tu clínica más cercana y pide apoyo psicológico.</li>
+        </ul>
 
-        $busquedas = [
-            "centro de salud mental",
-            "hospital psiquiátrico",
-            "clínica psicológica",
-            "centro DIF",
-            "centro de atención psicológica"
-        ];
+        Si deseas, puedo ayudarte a realizar un pequeño test emocional guardado en tu base de datos para conocerte mejor y 
+        ofrecerte orientación personalizada. ¿Te gustaría hacerlo ahora?
+        EOT;
 
-        $centros = [];
-
-        foreach ($busquedas as $q) {
-            $lon = (float)$coords['lon'];
-            $lat = (float)$coords['lat'];
-
-            $url = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($q . " ,México") .
-                "&viewbox=" . ($lon - 0.2) . "," . ($lat + 0.2) . "," . ($lon + 0.2) . "," . ($lat - 0.2) .
-                "&bounded=1&countrycodes=mx";
-
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT => 15,
-                CURLOPT_USERAGENT => "IANBot/1.0"
-            ]);
-            $response = curl_exec($curl);
-            curl_close($curl);
-
-            $data = json_decode($response, true);
-            if (is_array($data)) {
-                foreach ($data as $place) {
-                    if (!isset($place['display_name'])) continue;
-                    $nombreCompleto = $place['display_name'];
-                    $partes = explode(',', $nombreCompleto);
-                    $nombre = trim($partes[0]);
-                    $direccionCorta = isset($partes[1]) ? trim(implode(',', array_slice($partes, 1))) : '';
-
-                    if (!in_array($nombre, array_column($centros, 'nombre'))) {
-                        $centros[] = [
-                            "nombre" => $nombre,
-                            "direccion" => $direccionCorta,
-                            "maps" => "https://www.google.com/maps/search/?api=1&query=" . urlencode($nombreCompleto),
-                            "telefono" => "No disponible"
-                        ];
-                    }
-                }
-            }
-        }
-        return array_slice($centros, 0, 5); // Solo 5 resultados
-    }
-    private function obtenerCoordenadasAmbigua($direccion, $filtroMunicipio = null)
-    {
-        $url = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($direccion . " México");
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 10,
-            CURLOPT_USERAGENT => "IANBot/1.0"
-        ]);
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $data = json_decode($response, true);
-        if (!$data || !is_array($data)) return null;
-
-        // Filtrar resultados si se indicó municipio/ciudad/estado
-        if ($filtroMunicipio) {
-            $data = array_filter($data, function ($d) use ($filtroMunicipio) {
-                return stripos($d['display_name'], $filtroMunicipio) !== false;
-            });
-            $data = array_values($data); // reindexar
-        }
-
-        // Si no hay ningún resultado filtrado, usar el primero
-        if (empty($data)) return null;
-
-        // Si hay múltiples resultados y no se proporcionó filtro, devolver null para pedir más datos al usuario
-        if (count($data) > 1 && !$filtroMunicipio) return null;
-
-        return [
-            'lat' => (float)$data[0]['lat'],
-            'lon' => (float)$data[0]['lon']
-        ];
+        return $this->formatearRespuestaHTML($texto);
     }
 
     /* ============================
