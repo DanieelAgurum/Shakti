@@ -108,13 +108,6 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
         <li class="nav-item"><a class="nav-link"
             href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a>
         </li>
-        <?php if (isset($usuario['rol']) && $usuario['rol'] >= 1 && $usuario['rol'] <= 2): ?>
-          <li>
-            <a class="nav-link" href="<?= $urlBase ?>Vista/chat">
-              <i class="bi bi-chat"></i>
-            </a>
-          </li>
-        <?php endif; ?>
 
         <li class="nav-item ms-3 d-flex align-items-center custom-search-wrapper">
           <i class="bi bi-search custom-search-icon"></i>
@@ -189,10 +182,13 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
   </div>
 </nav>
 
-
-<div id="shakti-chatbot-circle" data-bs-placement="top" title="Chatbot" class="shakti-btn-chatbot">
-  <i class="bi bi-robot"></i>
-</div>
+<?php if (isset($usuario['rol']) && $usuario['rol'] >= 1 && $usuario['rol'] <= 2): ?>
+  <a class="" href="<?= $urlBase ?>Vista/chat">
+    <div id="shakti-chatbot-circle" data-bs-placement="top" title="Chatbot" class="shakti-btn-chatbot">
+      <i class="bi bi-robot"></i>
+    </div>
+  </a>
+<?php endif; ?>
 
 <button id="shakti-btn-top" class="shakti-btn-top" data-bs-placement="top" title="Regresar al inicio">
   <i class="fas fa-arrow-up"></i>
