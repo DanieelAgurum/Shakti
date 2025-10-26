@@ -65,6 +65,7 @@ $puedeHacerTest = $model->puedeHacerTest($idUsuario);
         <div id="respuestaIATest"  class="mt-4"></div>
     </div>
 </div>
+
 <script>
 const preguntas = [
     "¿Sueles guardar lo que sientes para no parecer débil?",
@@ -101,10 +102,19 @@ document.getElementById('nextPreguntaTest').addEventListener('click', async func
     e.preventDefault();
     const valor = document.getElementById('respuestaSelectTest').value;
     if(!valor) return alert("Selecciona una opción");
+    
     respuestas[`p${i+1}`] = valor;
     i++;
-    if(i < preguntas.length) mostrarPregunta();
-    else enviarTest();
+
+    if(i < preguntas.length) {
+        mostrarPregunta();
+    } else {
+        // BLOQUEAR botón para evitar múltiples envíos
+        const btnNext = document.getElementById('nextPreguntaTest');
+        btnNext.disabled = true;
+        btnNext.textContent = 'Enviando...';
+        await enviarTest();
+    }
 });
 
 document.getElementById('prevPreguntaTest').addEventListener('click', function(e) {
@@ -116,10 +126,17 @@ async function enviarTest() {
     const formData = new FormData();
     Object.keys(respuestas).forEach(k => formData.append(`respuestas[${k}]`, respuestas[k]));
 
-    const resp = await fetch('<?= $urlBase ?>Controlador/testControl.php', { method:'POST', body: formData });
-    const data = await resp.json();
-    document.getElementById('respuestaIATest').innerHTML = `<div class="alert alert-info mt-3">${data.mensaje}</div>`;
-    document.getElementById('testIanTest').style.display = 'none';
+    try {
+        const resp = await fetch('<?= $urlBase ?>Controlador/testControl.php', { method:'POST', body: formData });
+        const data = await resp.json();
+        document.getElementById('respuestaIATest').innerHTML = `<div class="alert alert-info mt-3">${data.mensaje}</div>`;
+        document.getElementById('testIanTest').style.display = 'none';
+    } catch(err) {
+        alert("Ocurrió un error al enviar el test. Intenta nuevamente.");
+        const btnNext = document.getElementById('nextPreguntaTest');
+        btnNext.disabled = false;
+        btnNext.textContent = 'Siguiente';
+    }
 }
 
 var myModal = new bootstrap.Modal(document.getElementById('modalBienvenidaTest'));
