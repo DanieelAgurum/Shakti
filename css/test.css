@@ -1,0 +1,77 @@
+/* ------------------test------------------------ */
+:root {
+    --color-primario-oscuro: #0a192f;
+    --color-primario-medio: #1b3a57;
+    --color-primario-claro: #3a6073;
+    --color-secundario: #8db5c9;
+    --color-fondo: #ffffff;
+    --color-texto: #0a192f;
+    --color-boton: #1b3a57;
+    --color-boton-hover: #3a6073;
+}
+
+#testContainerTest {
+    background-color: var(--color-fondo);
+    border: 2px solid var(--color-primario-medio);
+    border-radius: 12px;
+    padding: 30px;
+}
+#tituloTest {
+    color: #0a192f; /* azul fuerte */
+}
+h1.text-primary {
+    color: #0a192f !important;
+}
+
+#testContainerTest h1 {
+    color: var(--color-primario-oscuro); /* azul fuerte */
+    font-size: 1.8rem;
+}
+
+#preguntaActualTest {
+    padding: 20px;
+    background-color: var(--color-fondo);
+    border: 2px solid var(--color-primario-oscuro);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: var(--color-texto);
+}
+
+#preguntaActualTest label {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+#preguntaActualTest select {
+    margin-top: 10px;
+}
+
+#prevPreguntaTest,
+#nextPreguntaTest,
+#startTest {
+    background-color: var(--color-boton);
+    border: none;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+#prevPreguntaTest:hover,
+#nextPreguntaTest:hover,
+#startTest:hover {
+    background-color: var(--color-boton-hover);
+}
+
+#respuestaIATest .alert {
+    background-color: var(--color-primario-claro);
+    color: #fff;
+    border: none;
+}
+
+.modal-header.bg-primary {
+    background-color: var(--color-primario-medio) !important;
+}
+
+.modal-title {
+    color: #fff;
+}
+/* ------------------login------------------*/

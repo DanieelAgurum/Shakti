@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
@@ -10,79 +8,124 @@ if (!(isset($_SESSION['id_rol'])) || $_SESSION['id_rol'] == 2) {
     header("Location: {$urlBase}Vista/especialista/perfil.php");
     exit;
 }
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/TestModelo.php';
+$model = new TestIanMdl();
+$idUsuario = $_SESSION['id_usuaria'];
+$puedeHacerTest = $model->puedeHacerTest($idUsuario);
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Test IAn – Bienestar Emocional Masculino</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= $urlBase ?>css/publicaciones.css">
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
+<meta charset="UTF-8">
+<title>Test IAn – Salud Mental</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="<?= $urlBase ?>css/test.css">
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>
 </head>
-
 <body>
+
+<!-- Modal -->
+<div class="modal fade" id="modalBienvenidaTest" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Bienvenido al Test de Salud Mental</h5>
+      </div>
+      <div class="modal-body" id="modalBodyTest">
+        <?php if($puedeHacerTest): ?>
+          <p>Este test no es un diagnóstico médico. Sirve para conocerte mejor antes de hablar con un profesional.</p>
+        <?php else: ?>
+          <p>Ya realizaste este test recientemente. Debes esperar 7 días para volver a hacerlo.</p>
+        <?php endif; ?>
+      </div>
+      <div class="modal-footer">
+        <?php if($puedeHacerTest): ?>
+        <button type="button" id="startTest" class="btn btn-primary" data-bs-dismiss="modal">Empezar Test</button>
+        <?php else: ?>
+        <a href="<?= $urlBase ?>index.php" class="btn btn-secondary">Volver</a>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contenedor del test -->
 <div class="container mt-3 mb-3 d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow p-4 w-100" style="max-width: 650px;">
-        <h1 class="text-center mb-4 fw-bold text-primary">Test IAn – Bienestar Emocional Masculino</h1>
-        <p class="text-muted text-center mb-4">Este test busca ayudarte a identificar cómo estás gestionando tus emociones. 
-        No es un diagnóstico, solo una guía para conocerte mejor.</p>
-
-        <form id="testIan" method="POST">
-            <?php
-            $preguntas = [
-                "p1" => "¿Sueles guardar lo que sientes para no parecer débil?",
-                "p2" => "¿Te cuesta hablar de tus emociones con tus amigos o familia?",
-                "p3" => "¿Últimamente te has sentido cansado mentalmente o sin motivación?",
-                "p4" => "¿Te enojas con facilidad, incluso por cosas pequeñas?",
-                "p5" => "¿Sientes que no puedes fallar o mostrarte vulnerable?",
-                "p6" => "¿Has sentido presión por cumplir con expectativas de los demás?",
-                "p7" => "¿Duermes bien y descansas lo suficiente?",
-                "p8" => "¿Tienes alguien con quien puedas hablar sin sentirte juzgado?"
-            ];
-
-            $opciones = [
-                'no' => 'No, nunca',
-                'poco' => 'A veces',
-                'frecuente' => 'Con frecuencia',
-                'siempre' => 'Casi siempre'
-            ];
-
-            foreach ($preguntas as $key => $texto) {
-                echo "<div class='mb-3'>";
-                echo "<label for='$key' class='form-label fw-semibold'>$texto</label>";
-                echo "<select class='form-select' id='$key' name='respuestas[$key]' required>";
-                echo "<option value=''>Selecciona</option>";
-                foreach ($opciones as $val => $label) {
-                    echo "<option value='$val'>$label</option>";
-                }
-                echo "</select></div>";
-            }
-            ?>
-
-            <button type="submit" class="btn btn-primary w-100 mt-3">Analizar con IAn</button>
+    <div id="testContainerTest" class="card shadow p-4 w-100" style="max-width: 650px; display:none;">
+        <h1 id="tituloTest" class="text-center mb-4 fw-bold">Test IAn – Salud Mental</h1>
+        <form id="testIanTest">
+            <div id="preguntaActualTest"></div>
+            <div class="d-flex justify-content-between mt-3">
+                <button type="button" id="prevPreguntaTest" class="btn btn-secondary">Anterior</button>
+                <button type="submit" id="nextPreguntaTest" class="btn btn-primary">Siguiente</button>
+            </div>
         </form>
-
-        <div id="respuestaIA" class="mt-4"></div>
+        <div id="respuestaIATest" class="mt-4"></div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-document.getElementById('testIan').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    const respuestas = Object.fromEntries(formData.entries());
+const preguntas = [
+    "¿Sueles guardar lo que sientes para no parecer débil?",
+    "¿Te cuesta hablar de tus emociones con amigos o familia?",
+    "¿Últimamente te has sentido cansado mentalmente o sin motivación?",
+    "¿Te enojas con facilidad, incluso por cosas pequeñas?",
+    "¿Sientes que no puedes fallar o mostrarte vulnerable?",
+    "¿Has sentido presión por cumplir con expectativas de los demás?",
+    "¿Duermes bien y descansas lo suficiente?",
+    "¿Tienes alguien con quien puedas hablar sin sentirte juzgado?"
+];
 
-    const resp = await fetch('<?= $urlBase ?>Controlador/testControl.php', {
-        method: 'POST',
-        body: formData
-    });
+const opciones = ['No, nunca', 'A veces', 'Con frecuencia', 'Casi siempre'];
+let respuestas = {};
+let i = 0;
 
-    const data = await resp.json();
-    document.getElementById('respuestaIA').innerHTML = `
-        <div class="alert alert-info mt-3">${data.respuesta}</div>`;
+function mostrarPregunta() {
+    const qContainer = document.getElementById('preguntaActualTest');
+    qContainer.innerHTML = `
+        <label class="form-label fw-semibold">${preguntas[i]}</label>
+        <select class="form-select" id="respuestaSelectTest" required>
+            <option value="">Selecciona</option>
+            ${opciones.map(op => `<option value="${op}">${op}</option>`).join('')}
+        </select>
+    `;
+}
+
+document.getElementById('startTest')?.addEventListener('click', function() {
+    document.getElementById('testContainerTest').style.display = 'block';
+    mostrarPregunta();
 });
+
+document.getElementById('nextPreguntaTest').addEventListener('click', async function(e) {
+    e.preventDefault();
+    const valor = document.getElementById('respuestaSelectTest').value;
+    if(!valor) return alert("Selecciona una opción");
+    respuestas[`p${i+1}`] = valor;
+    i++;
+    if(i < preguntas.length) mostrarPregunta();
+    else enviarTest();
+});
+
+document.getElementById('prevPreguntaTest').addEventListener('click', function(e) {
+    e.preventDefault();
+    if(i>0){ i--; mostrarPregunta(); }
+});
+
+async function enviarTest() {
+    const formData = new FormData();
+    Object.keys(respuestas).forEach(k => formData.append(`respuestas[${k}]`, respuestas[k]));
+
+    const resp = await fetch('<?= $urlBase ?>Controlador/testControl.php', { method:'POST', body: formData });
+    const data = await resp.json();
+    document.getElementById('respuestaIATest').innerHTML = `<div class="alert alert-info mt-3">${data.mensaje}</div>`;
+    document.getElementById('testIanTest').style.display = 'none';
+}
+
+var myModal = new bootstrap.Modal(document.getElementById('modalBienvenidaTest'));
+myModal.show();
 </script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
