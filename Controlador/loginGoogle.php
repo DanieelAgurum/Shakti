@@ -5,19 +5,23 @@ require_once __DIR__ . '/../Modelo/Usuarias.php';
 
 session_start();
 
+// Crear objeto Usuarias y conectar BD
+$u = new Usuarias();
+$con = $u->conectarBD();
+
+if (!$con) {
+    die("Error al conectar a la base de datos.");
+}
+
+// Inicializar Google Client
 $client = new Google\Client();
 $client->setClientId($clientID);
 $client->setClientSecret($clientSecret);
 $client->setRedirectUri("http://localhost/Shakti/Controlador/loginGoogle.php");
-
-// Scopes básicos
 $client->addScope('email');
 $client->addScope('profile');
 
-$u = new Usuarias();
-$con = $u->conectarBD();
-
-// Redirige a Google si no hay código
+// Redirigir a Google si no hay código
 if (!isset($_GET['code'])) {
     header("Location: " . $client->createAuthUrl());
     exit;
@@ -49,14 +53,20 @@ if (!empty($userInfo->picture)) {
     $fotoGoogleBin = file_get_contents(__DIR__ . '/../img/undraw_chill-guy-avatar_tqsm.svg');
 }
 
-// Buscar usuaria existente
+// -------------------- VALIDACIÓN DE USUARIA EXISTENTE --------------------
 $stmt = $con->prepare("SELECT * FROM usuarias WHERE correo=? LIMIT 1");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $usuario = $stmt->get_result()->fetch_assoc();
 
 if ($usuario) {
-    //  USUARIA EXISTENTE
+    // Bloquear inicio de sesión con Google si la cuenta fue registrada manualmente
+    if (!empty($usuario['contraseña'])) {
+        header("Location: ../Vista/login.php?status=error&message=" . urlencode("Este correo ya está en uso. Usa otro correo o inicia sesión con tu cuenta."));
+        exit;
+    }
+
+    // Iniciar sesión normalmente si la cuenta es vía Google
     $_SESSION['id'] = $usuario['id'];
     $_SESSION['id_usuaria'] = $usuario['id'];
     $_SESSION['id_rol'] = $usuario['id_rol'];
@@ -76,11 +86,11 @@ if ($usuario) {
     }
 
 } else {
-    // 
+    // No existe, crear cuenta vía Google
     $rol = 1;
     $fecha = date("Y-m-d");
-
     $fotoEscaped = mysqli_real_escape_string($con, $fotoGoogleBin);
+
     $insert = $con->prepare("INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, foto)
         VALUES (?, ?, ?, ?, '', ?, ?, ?)");
     $insert->bind_param("sssssis", $nombre, $apellidos, $nickname, $email, $fecha, $rol, $fotoEscaped);
