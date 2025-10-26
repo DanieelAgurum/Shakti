@@ -424,22 +424,23 @@ class chatsMdl
 
         $con = $this->conectarBD();
 
-        // --- INICIALIZAR SESIÓN PARA EMOCIONES Y LISTA ---
+        // --- INICIALIZAR SESIÓN PARA EMOCIONES, LISTAS Y CONTROL DE RIESGO ---
         if (!isset($_SESSION['ianbot_data'])) {
             $_SESSION['ianbot_data'] = [
                 'emociones_detectadas' => [],
                 'ultima_lista' => '',
-                'mensajes_analizados' => 0,
-                'riesgo_actual' => 'BAJO'
+                'acepta_recomendaciones' => null,
+                'riesgo_actual' => 'BAJO',
+                'mensajes_analizados' => 0
             ];
         }
 
-        // --- BLOQUE 0: Evitar respuestas repetidas ---
+        // --- BLOQUE 0: Revisar si el usuario pide la última lista ---
         if (!empty($_SESSION['respuestas_ianbot'])) {
             foreach (array_reverse($_SESSION['respuestas_ianbot']) as $prev) {
                 similar_text($mensajeOriginal, $prev['pregunta'], $porc);
-                if ($porc >= 85) {
-                    $respuestaBot = $prev['respuesta'];
+                if ($porc >= 85 && preg_match('/\b(dame mi lista|lista de nuevo)\b/i', $mensajeOriginal)) {
+                    $respuestaBot = $_SESSION['ianbot_data']['ultima_lista'] ?: $prev['respuesta'];
                     $this->guardarRespuestaBD($con, $id_usuario, $respuestaBot);
                     echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
                     $con->close();
@@ -448,14 +449,14 @@ class chatsMdl
             }
         }
 
-        // --- BLOQUE 1: Guardar mensaje del usuario (cifrado AES) ---
+        // --- BLOQUE 1: Guardar mensaje del usuario ---
         $mensajeCifrado = $this->cifrarAESIanBot($mensajeOriginal);
         $stmt = $con->prepare("INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())");
         $stmt->bind_param("is", $id_usuario, $mensajeCifrado);
         $stmt->execute();
         $stmt->close();
 
-        // --- BLOQUE 2: Obtener los últimos 3 mensajes para contexto (ahorra tokens) ---
+        // --- BLOQUE 2: Obtener historial resumido (últimos 3 mensajes) ---
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
         $historial[] = ["rol" => "usuario", "contenido" => $mensajeOriginal];
         $historialReciente = array_slice($historial, -3);
@@ -464,7 +465,7 @@ class chatsMdl
             $historialTexto .= $linea['rol'] . ": " . substr($linea['contenido'], 0, 80) . "\n";
         }
 
-        // --- BLOQUE 3: Detección de emoción ---
+        // --- BLOQUE 2.5: Detectar emoción y decidir si preguntar ---
         $emocionDetectada = $this->detectarEmocion($mensajeOriginal);
         $preguntarEmocion = true;
         if (in_array($emocionDetectada, $_SESSION['ianbot_data']['emociones_detectadas'])) {
@@ -473,60 +474,86 @@ class chatsMdl
             $_SESSION['ianbot_data']['emociones_detectadas'][] = $emocionDetectada;
         }
 
-        // --- BLOQUE 4: Prompt base ---
+        // --- BLOQUE 3: Prompt base ---
         $promptBase = <<<EOT
 Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
-
 Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
-
-👋 Importante:
-No eres un sustituto de atención psicológica profesional.
-Tu función es brindar acompañamiento emocional y, si el usuario lo desea o si existe riesgo alto, ayudarle a encontrar al mejor especialista o centro de apoyo.
-
 💡 Instrucción clave:
-- No inventes nombres, servicios ni centros.
-- Escucha y responde con empatía.
-- No hables de programación, código, tecnología o temas técnicos.
 
-🎯 Tu enfoque:
-- Escuchar y validar emociones (estrés, tristeza, enojo, ansiedad).
-- Ofrecer apoyo práctico (respiración, pausas, autocuidado).
-- Repetir información útil solo si el usuario la solicita explícitamente.
-- Mantén un tono cálido y humano.
+No inventes nombres, servicios ni centros.
 
-⚠️ Si el usuario menciona temas técnicos (código, SQL, PHP, IA, etc.), ignora el contenido técnico y redirige la conversación hacia su bienestar emocional.
+🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
+- Expresar cómo se sienten sin juicios.
+- Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
+- Ofrecer recomendaciones prácticas y cotidianas (respiración, descanso, escribir emociones, caminar, etc.).
+- Motivar con un tono humano, empático y claro, solo cuando el contexto lo amerite.
 
-✅ Meta final:
-Que {$nombre_usuario} se sienta escuchado y acompañado.
+⚠️ Limitaciones absolutas:
+- No eres sustituto de atención psicológica profesional.
+- No das diagnósticos ni recetas.
+- No das información sobre programación, código, tecnología, idiomas, tareas ni temas técnicos.
+- Si el usuario menciona temas técnicos (php, sql, código, token, api, etc.), ignora completamente el tema y redirige la conversación con calidez hacia su estado emocional.
+
+💬 Estilo de comunicación:
+- Usa frases cálidas, breves y humanas.
+- Valida la emoción del usuario sin dramatizar.
+- Haz preguntas suaves y naturales.
+- Mantén confidencialidad y cercanía emocional.
+
+📌 Continuidad:
+- Recuerda el estado emocional y haz referencia con empatía.
+- Usa las respuestas previas para dar coherencia.
+- Si el usuario muestra angustia o cansancio, valida y ofrece apoyo simple.
+
+🚫 En resumen:
+Solo responde sobre emociones o bienestar.
+Ignora todo lo demás, incluso si el mensaje es confuso o mezcla temas.
+
+✅ Meta:
+Que {$nombre_usuario} se sienta comprendido y acompañado.
 EOT;
 
-        $promptFinal = $promptBase . "\n\n" . $historialTexto . "\nPreguntarEmocion: " . ($preguntarEmocion ? "SI" : "NO") . "\nIAn Bot:";
+        $promptFinal = $promptBase . "\n\n" . $historialTexto . "PreguntarEmocion: " . ($preguntarEmocion ? "SI" : "NO") . "\nIAn Bot:";
 
-        // --- BLOQUE 5: Evaluar riesgo cada 5 mensajes del usuario ---
+        // --- BLOQUE 4: Determinar riesgo y conteo ---
         $_SESSION['ianbot_data']['mensajes_analizados']++;
-        if ($_SESSION['ianbot_data']['mensajes_analizados'] % 5 === 0) {
-            $_SESSION['ianbot_data']['riesgo_actual'] = $this->analizarRiesgo($historialTexto);
-        }
+        $conteo = $_SESSION['ianbot_data']['mensajes_analizados'];
         $riesgo = $_SESSION['ianbot_data']['riesgo_actual'];
 
-        // --- BLOQUE 6: Llamar al modelo (IA) ---
+        if ($conteo % 5 === 0) {
+            $riesgo = $this->analizarRiesgo($historialTexto);
+            $_SESSION['ianbot_data']['riesgo_actual'] = $riesgo;
+        }
+
+        // --- BLOQUE 5: Llamar al modelo ---
         $respuestaBot = $this->llamarOpenAI($promptFinal);
         if (empty($respuestaBot) || stripos($respuestaBot, 'error') !== false) {
-            echo json_encode(["respuesta" => "⚠️ Error al procesar la respuesta del bot."]);
+            echo json_encode(["respuesta" => "⚠️ Error en la comunicación con el bot."]);
             $con->close();
             return;
         }
 
-        // --- BLOQUE 7: Añadir recomendaciones condicionales ---
-        $pideCentros = preg_match('/\b(apoyo|centros|especialistas|ayuda)\b/i', $mensajeOriginal);
-        if ($pideCentros || ($riesgo === "ALTO" && $_SESSION['ianbot_data']['mensajes_analizados'] % 5 === 0)) {
-            $recomendacion = $this->recomendarCentros($con, $historialTexto);
-            $recomendacion .= "\n\n" . $this->recomendarEspecialistas($con, $historialTexto);
-            $respuestaBot .= "\n\n" . $recomendacion;
-            $_SESSION['ianbot_data']['ultima_lista'] = $respuestaBot;
+        // --- BLOQUE 6: Evaluar si debe ofrecer ayuda profesional ---
+        if (is_null($_SESSION['ianbot_data']['acepta_recomendaciones'])) {
+            if (preg_match('/\b(sí|si quiero|de acuerdo|acepto|claro)\b/i', $mensajeOriginal)) {
+                $_SESSION['ianbot_data']['acepta_recomendaciones'] = true;
+            } elseif (preg_match('/\b(no|prefiero que no|no quiero)\b/i', $mensajeOriginal)) {
+                $_SESSION['ianbot_data']['acepta_recomendaciones'] = false;
+            }
         }
 
-        // --- BLOQUE 8: Guardar respuesta (en sesión y BD) ---
+        $acepta = $_SESSION['ianbot_data']['acepta_recomendaciones'];
+
+        // --- BLOQUE 7: Recomendaciones solo si hay consentimiento o riesgo alto ---
+        if ($acepta || $riesgo === "ALTO") {
+            $recomendacion = "🩺 Recuerda que IAn Bot no sustituye la atención profesional. Si lo deseas, puedo ayudarte a encontrar especialistas o centros de apoyo cercanos para ti.\n\n";
+            $recomendacion .= $this->recomendarCentros($con, $historialTexto);
+            $recomendacion .= $this->recomendarEspecialistas($con, $historialTexto);
+            $respuestaBot .= "\n\n" . $recomendacion;
+            $_SESSION['ianbot_data']['ultima_lista'] = $recomendacion;
+        }
+
+        // --- BLOQUE 8: Guardar respuesta en sesión y BD ---
         $_SESSION['respuestas_ianbot'][] = [
             'pregunta' => $mensajeOriginal,
             'respuesta' => $respuestaBot
