@@ -2,17 +2,20 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/TestModelo.php';
 header('Content-Type: application/json; charset=utf-8');
 
-$respuestas = $_POST['respuestas'] ?? [];
+session_start();
+$idUsuario = $_SESSION['id_usuaria'] ?? null;
+if (!$idUsuario) {
+    echo json_encode(["estado" => "error", "mensaje" => "Usuario no identificado."]);
+    exit;
+}
 
-if (!$respuestas) {
-    echo json_encode(["respuesta" => "No se recibieron respuestas"]);
+$respuestas = $_POST['respuestas'] ?? [];
+if (empty($respuestas)) {
+    echo json_encode(["estado" => "error", "mensaje" => "No se recibieron respuestas."]);
     exit;
 }
 
 $model = new TestIanMdl();
-$mensajeIA = $model->analizarTest($respuestas);
+$mensajeIA = $model->analizarTest($respuestas, $idUsuario);
 
-// Formateo simple para mostrar en HTML
-$mensajeIA = nl2br(htmlspecialchars($mensajeIA));
-
-echo json_encode(["respuesta" => $mensajeIA]);
+echo json_encode(["estado" => "ok", "mensaje" => $mensajeIA]);
