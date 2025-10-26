@@ -427,17 +427,19 @@ class chatsMdl
         // --- INICIALIZAR SESIÓN PARA EMOCIONES Y LISTA ---
         if (!isset($_SESSION['ianbot_data'])) {
             $_SESSION['ianbot_data'] = [
-                'emociones_detectadas' => [],  // lista de emociones que el bot ya validó
-                'ultima_lista' => ''            // última lista de centros/especialistas
+                'emociones_detectadas' => [],
+                'ultima_lista' => '',
+                'mensajes_analizados' => 0,
+                'riesgo_actual' => 'BAJO'
             ];
         }
 
-        // --- BLOQUE 0: Revisar si el usuario pide reutilizar la última lista ---
+        // --- BLOQUE 0: Evitar respuestas repetidas ---
         if (!empty($_SESSION['respuestas_ianbot'])) {
             foreach (array_reverse($_SESSION['respuestas_ianbot']) as $prev) {
                 similar_text($mensajeOriginal, $prev['pregunta'], $porc);
-                if ($porc >= 85 && preg_match('/\b(dame mi lista|lista de nuevo)\b/i', $mensajeOriginal)) {
-                    $respuestaBot = $_SESSION['ianbot_data']['ultima_lista'] ?: $prev['respuesta'];
+                if ($porc >= 85) {
+                    $respuestaBot = $prev['respuesta'];
                     $this->guardarRespuestaBD($con, $id_usuario, $respuestaBot);
                     echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
                     $con->close();
@@ -446,112 +448,85 @@ class chatsMdl
             }
         }
 
-        // --- BLOQUE 1: Guardar mensaje del usuario ---
+        // --- BLOQUE 1: Guardar mensaje del usuario (cifrado AES) ---
         $mensajeCifrado = $this->cifrarAESIanBot($mensajeOriginal);
         $stmt = $con->prepare("INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())");
         $stmt->bind_param("is", $id_usuario, $mensajeCifrado);
         $stmt->execute();
         $stmt->close();
 
-        // --- BLOQUE 2: Obtener historial resumido (solo últimos 3 mensajes para ahorrar tokens) ---
+        // --- BLOQUE 2: Obtener los últimos 3 mensajes para contexto (ahorra tokens) ---
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
         $historial[] = ["rol" => "usuario", "contenido" => $mensajeOriginal];
-        $historialReciente = array_slice($historial, -3); // últimos 3 mensajes
+        $historialReciente = array_slice($historial, -3);
         $historialTexto = "";
         foreach ($historialReciente as $linea) {
             $historialTexto .= $linea['rol'] . ": " . substr($linea['contenido'], 0, 80) . "\n";
         }
 
-        // --- BLOQUE 2.5: Detectar emoción y decidir si preguntar ---
+        // --- BLOQUE 3: Detección de emoción ---
         $emocionDetectada = $this->detectarEmocion($mensajeOriginal);
         $preguntarEmocion = true;
         if (in_array($emocionDetectada, $_SESSION['ianbot_data']['emociones_detectadas'])) {
-            $preguntarEmocion = false; // ya se preguntó antes
+            $preguntarEmocion = false;
         } else {
             $_SESSION['ianbot_data']['emociones_detectadas'][] = $emocionDetectada;
         }
 
-        // --- BLOQUE 3: Preparar prompt base ---
+        // --- BLOQUE 4: Prompt base ---
         $promptBase = <<<EOT
 Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
+
 Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
+
+👋 Importante:
+No eres un sustituto de atención psicológica profesional.
+Tu función es brindar acompañamiento emocional y, si el usuario lo desea o si existe riesgo alto, ayudarle a encontrar al mejor especialista o centro de apoyo.
+
 💡 Instrucción clave:
+- No inventes nombres, servicios ni centros.
+- Escucha y responde con empatía.
+- No hables de programación, código, tecnología o temas técnicos.
 
-No inventes nombres, servicios ni centros.
+🎯 Tu enfoque:
+- Escuchar y validar emociones (estrés, tristeza, enojo, ansiedad).
+- Ofrecer apoyo práctico (respiración, pausas, autocuidado).
+- Repetir información útil solo si el usuario la solicita explícitamente.
+- Mantén un tono cálido y humano.
 
-🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
-- Expresar cómo se sienten sin juicios.
-- Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
-- Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, consejos simples de autocuidado).
-- Motivar con un tono amigable, empático y claro, solo cuando el contexto lo amerite.
+⚠️ Si el usuario menciona temas técnicos (código, SQL, PHP, IA, etc.), ignora el contenido técnico y redirige la conversación hacia su bienestar emocional.
 
-⚠️ Limitaciones absolutas:
-- No eres sustituto de atención psicológica profesional.
-- No das diagnósticos médicos ni psicológicos.
-- No das recetas médicas, tareas escolares, traducciones, explicaciones técnicas, ni información sobre programación, código, 
-  bases de datos, inglés, economía, finanzas, ciencia, tecnología ni ningún otro tema que no esté directamente relacionado con 
-  la salud emocional o el bienestar personal.
-- Si el usuario pregunta o menciona algo técnico (por ejemplo: código, funciones, SQL, PHP, programación, IA, EOT, errores, tokens, etc.), 
-  **ignora completamente el tema**. No respondas, no expliques, no aclares, simplemente **redirige la conversación con calidez hacia el estado emocional del usuario**.
-- No uses términos técnicos, ni menciones código, ni comentes sobre sistemas o bases de datos, incluso si el usuario los menciona.
-
-💬 Estilo de comunicación:
-- Usa frases cálidas, comprensibles y breves.
-- Valida la emoción del usuario sin exagerar.
-- Haz preguntas suaves para conocer mejor su estado emocional o cotidiano, de manera natural según el flujo.
-- Alterna entre validar emociones y preguntar con tacto.
-- Usa las respuestas del usuario para personalizar consejos posteriores.
-- Mantén un tono confidencial, empático y humano.
-
-📌 Reglas de continuidad y personalización:
-- Recuerda la información emocional o personal que el usuario comparta y úsala de forma natural.
-- Las sugerencias deben ser simples y accionables (respirar hondo, caminar, escribir lo que sientes).
-- Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, sin exagerar.
-
-🧱 Regla de bloqueo total:
-Si el mensaje del usuario contiene fragmentos de código, palabras como "function", "php", "sql", "SELECT", "database", "EOT", "token", 
-  "API", "server", o cualquier otra palabra técnica o símbolo de programación, 
-   NO DEBES RESPONDER NADA SOBRE EL CONTENIDO, 
-   ni siquiera de forma empática.
-   Ignora completamente el texto y redirige la conversación suavemente hacia el bienestar emocional del usuario.
-
-🚫 En resumen:
-Solo responde mensajes relacionados con emociones, estados de ánimo o bienestar. 
-Ignora por completo todo lo demás, incluso si el texto está mal escrito o confuso.
-
-✅ Meta: Que {$nombre_usuario} se sienta comprendido, acompañado y emocionalmente escuchado.
+✅ Meta final:
+Que {$nombre_usuario} se sienta escuchado y acompañado.
 EOT;
 
-        $promptFinal = $promptBase . "\n\n" . $historialTexto . "PreguntarEmocion: " . ($preguntarEmocion ? "SI" : "NO") . "\nIAn Bot:";
+        $promptFinal = $promptBase . "\n\n" . $historialTexto . "\nPreguntarEmocion: " . ($preguntarEmocion ? "SI" : "NO") . "\nIAn Bot:";
 
-        // --- BLOQUE 4: Determinar riesgo solo si corresponde (cada 5 mensajes) ---
-        $conteoMensajes = count(array_filter($historial, fn($m) => $m['rol'] === 'usuario'));
-        $riesgo = $_SESSION['riesgo_actual'] ?? "BAJO";
-
-        if ($conteoMensajes % 5 === 0) {
-            $riesgo = $this->analizarRiesgo($historialTexto);
-            $_SESSION['riesgo_actual'] = $riesgo;
+        // --- BLOQUE 5: Evaluar riesgo cada 5 mensajes del usuario ---
+        $_SESSION['ianbot_data']['mensajes_analizados']++;
+        if ($_SESSION['ianbot_data']['mensajes_analizados'] % 5 === 0) {
+            $_SESSION['ianbot_data']['riesgo_actual'] = $this->analizarRiesgo($historialTexto);
         }
+        $riesgo = $_SESSION['ianbot_data']['riesgo_actual'];
 
-        // --- BLOQUE 5: Llamar al bot ---
+        // --- BLOQUE 6: Llamar al modelo (IA) ---
         $respuestaBot = $this->llamarOpenAI($promptFinal);
         if (empty($respuestaBot) || stripos($respuestaBot, 'error') !== false) {
-            echo json_encode(["respuesta" => "⚠️ Error en la comunicación con el bot."]);
+            echo json_encode(["respuesta" => "⚠️ Error al procesar la respuesta del bot."]);
             $con->close();
             return;
         }
 
-        // --- BLOQUE 6: Recomendaciones condicionales ---
-        $pedirCentros = preg_match('/\b(apoyo|centros|especialistas)\b/i', $mensajeOriginal);
-        if ($pedirCentros || ($riesgo === "ALTO" && $conteoMensajes % 5 === 0)) {
-            // Genera la lista solo si el usuario la pide o si es riesgo ALTO y toca
+        // --- BLOQUE 7: Añadir recomendaciones condicionales ---
+        $pideCentros = preg_match('/\b(apoyo|centros|especialistas|ayuda)\b/i', $mensajeOriginal);
+        if ($pideCentros || ($riesgo === "ALTO" && $_SESSION['ianbot_data']['mensajes_analizados'] % 5 === 0)) {
             $recomendacion = $this->recomendarCentros($con, $historialTexto);
-            $recomendacion .= $this->recomendarEspecialistas($con, $historialTexto);
+            $recomendacion .= "\n\n" . $this->recomendarEspecialistas($con, $historialTexto);
             $respuestaBot .= "\n\n" . $recomendacion;
-            $_SESSION['ianbot_data']['ultima_lista'] = $respuestaBot; // Guardar última lista generada
+            $_SESSION['ianbot_data']['ultima_lista'] = $respuestaBot;
         }
 
-        // --- BLOQUE 7: Guardar respuesta en sesión y BD ---
+        // --- BLOQUE 8: Guardar respuesta (en sesión y BD) ---
         $_SESSION['respuestas_ianbot'][] = [
             'pregunta' => $mensajeOriginal,
             'respuesta' => $respuestaBot
@@ -823,8 +798,6 @@ HTML;
         if (isset($data['error']['message'])) {
             return "⚠️ Error API: " . $data['error']['message'];
         }
-
-        return "No se pudo obtener respuesta del modelo.";
     }
     private function llamarOpenAI_Fallback($prompt)
     {
@@ -856,7 +829,7 @@ HTML;
         curl_close($curl);
         $data = json_decode($respuesta, true);
 
-        return $data['output'][0]['content'][0]['text'] ?? "⚠️ No se obtuvo respuesta del modelo de respaldo.";
+        return $data['output'][0]['content'][0]['text'];
     }
     private function OpenAICorto($prompt)
     {
