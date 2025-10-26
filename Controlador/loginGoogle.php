@@ -56,7 +56,7 @@ $stmt->execute();
 $usuario = $stmt->get_result()->fetch_assoc();
 
 if ($usuario) {
-    // ✅ USUARIA EXISTENTE
+    //  USUARIA EXISTENTE
     $_SESSION['id'] = $usuario['id'];
     $_SESSION['id_usuaria'] = $usuario['id'];
     $_SESSION['id_rol'] = $usuario['id_rol'];
@@ -76,7 +76,7 @@ if ($usuario) {
     }
 
 } else {
-    // ✅ USUARIA NUEVA
+    // 
     $rol = 1;
     $fecha = date("Y-m-d");
 
@@ -88,8 +88,8 @@ if ($usuario) {
     if ($insert->execute()) {
         $id_nueva = $insert->insert_id;
 
-        $_SESSION['id'] = $id_nueva;            // ✅ ambas variables con el mismo valor
-        $_SESSION['id_usuaria'] = $id_nueva;    // ✅
+        $_SESSION['id'] = $id_nueva;            
+        $_SESSION['id_usuaria'] = $id_nueva;    
         $_SESSION['id_rol'] = $rol;
         $_SESSION['correo'] = $email;
         $_SESSION['nombre'] = $nombre;

@@ -65,8 +65,6 @@ $puedeHacerTest = $model->puedeHacerTest($idUsuario);
         <div id="respuestaIATest"  class="mt-4"></div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 const preguntas = [
     "¿Sueles guardar lo que sientes para no parecer débil?",
