@@ -62,7 +62,7 @@ $puedeHacerTest = $model->puedeHacerTest($idUsuario);
                 <button type="submit" id="nextPreguntaTest" class="btn btn-primary">Siguiente</button>
             </div>
         </form>
-        <div id="respuestaIATest" class="mt-4"></div>
+        <div id="respuestaIATest"  class="mt-4"></div>
     </div>
 </div>
 
