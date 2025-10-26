@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         data.data.forEach((msg) => {
           const tipo = msg.es_mensaje_yo ? "yo" : "ia";
-          const esHTML = /<\/?[a-z][\s\S]*>/i.test(msg.mensaje); 
+          const esHTML = /<\/?[a-z][\s\S]*>/i.test(msg.mensaje);
           mostrarMensaje(msg.mensaje, tipo, null, esHTML);
         });
 
@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         // Si no hay mensajes previos
         mostrarMensaje(
-          "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear...",
+          "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear. \n Solo brindo apoyo y acompañamiento emocional preventivo. No soy un sustituto profesional de salud mental, pero puedo ayudarte a encontrar un especialista adecuado si así lo deseas.",
           "ia"
         );
       }
@@ -317,7 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      e.preventDefault(); 
+      e.preventDefault();
       formulario.requestSubmit();
     }
   });
