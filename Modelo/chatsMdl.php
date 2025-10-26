@@ -149,8 +149,6 @@ class chatsMdl
             // Escapar texto
             $mensaje = $this->cifrarAES(htmlspecialchars(trim($mensaje), ENT_QUOTES, 'UTF-8'));
 
-            // Antidoxing
-
             // Crear carpeta si no existe
             $carpetaUploads = $_SERVER['DOCUMENT_ROOT'] . '/shakti/uploads/mensajes/';
             if (!is_dir($carpetaUploads)) {
@@ -215,9 +213,9 @@ class chatsMdl
                     $nombreArchivo = "{$nickname_emisor}_{$fecha}_{$id_receptor}.{$ext}";
                     $rutaArchivo = $carpetaUploads . $nombreArchivo;
 
-                    // 🔹 Verificar tamaño original (si > 20 MB, aplicar compresión fuerte)
+                    // Verificar tamaño original (si > 20 MB, aplicar compresión fuerte)
                     $calidadAlta = 80;
-                    $calidadBaja = 40; // fuerza más compresión
+                    $calidadBaja = 40;
 
                     $pesoOriginal = $imagen['size']; // bytes
                     $calidadFinal = ($pesoOriginal > (20 * 1024 * 1024)) ? $calidadBaja : $calidadAlta;
@@ -303,16 +301,16 @@ class chatsMdl
        =========================== */
     private function formatearRespuestaHTML($texto)
     {
-        // 1. Convertir encabezados Markdown a HTML con tamaños moderados
+        // Convertir encabezados Markdown a HTML con tamaños moderados
         $texto = preg_replace('/^###\s*(.+)$/m', '<h3>$1</h3>', $texto);
         $texto = preg_replace('/^##\s*(.+)$/m', '<h2>$1</h2>', $texto);
         $texto = preg_replace('/^#\s*(.+)$/m', '<h1>$1</h1>', $texto);
 
-        // 2. Convertir negritas y cursivas Markdown a HTML
+        // Convertir negritas y cursivas Markdown a HTML
         $texto = preg_replace('/\*\*(.*?)\*\*/s', '<strong>$1</strong>', $texto);
         $texto = preg_replace('/\*(.*?)\*/s', '<b>$1</b>', $texto);
 
-        // 3. Separar líneas
+        // Separar líneas
         $lineas = preg_split('/\r\n|\r|\n/', trim($texto));
         $html = "";
         $enLista = false;
@@ -405,7 +403,6 @@ class chatsMdl
     /* ============================
         CHAT IAN
        =========================== */
-
     public function enviarMensajeIanBot($mensaje)
     {
         $id_usuario = $_SESSION['id'] ?? null;
@@ -424,18 +421,19 @@ class chatsMdl
 
         $con = $this->conectarBD();
 
-        // --- INICIALIZAR SESIÓN PARA EMOCIONES, LISTAS Y CONTROL DE RIESGO ---
+        // --- BLOQUE 0: Inicializar datos de sesión para IanBot ---
         if (!isset($_SESSION['ianbot_data'])) {
             $_SESSION['ianbot_data'] = [
                 'emociones_detectadas' => [],
                 'ultima_lista' => '',
                 'acepta_recomendaciones' => null,
                 'riesgo_actual' => 'BAJO',
-                'mensajes_analizados' => 0
+                'mensajes_analizados' => 0,
+                'ultimo_riesgo_alto' => null
             ];
         }
 
-        // --- BLOQUE 0: Revisar si el usuario pide la última lista ---
+        // --- BLOQUE 1: Revisar si el usuario pide la última lista ---
         if (!empty($_SESSION['respuestas_ianbot'])) {
             foreach (array_reverse($_SESSION['respuestas_ianbot']) as $prev) {
                 similar_text($mensajeOriginal, $prev['pregunta'], $porc);
@@ -449,14 +447,14 @@ class chatsMdl
             }
         }
 
-        // --- BLOQUE 1: Guardar mensaje del usuario ---
+        // --- BLOQUE 2: Guardar mensaje del usuario ---
         $mensajeCifrado = $this->cifrarAESIanBot($mensajeOriginal);
         $stmt = $con->prepare("INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())");
         $stmt->bind_param("is", $id_usuario, $mensajeCifrado);
         $stmt->execute();
         $stmt->close();
 
-        // --- BLOQUE 2: Obtener historial resumido (últimos 3 mensajes) ---
+        // --- BLOQUE 3: Obtener historial resumido (últimos 3 mensajes) ---
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
         $historial[] = ["rol" => "usuario", "contenido" => $mensajeOriginal];
         $historialReciente = array_slice($historial, -3);
@@ -465,13 +463,72 @@ class chatsMdl
             $historialTexto .= $linea['rol'] . ": " . substr($linea['contenido'], 0, 80) . "\n";
         }
 
-        // --- BLOQUE 2.5: Detectar emoción y decidir si preguntar ---
+        // --- BLOQUE 4: Detectar emoción ---
         $emocionDetectada = $this->detectarEmocion($mensajeOriginal);
         $preguntarEmocion = true;
         if (in_array($emocionDetectada, $_SESSION['ianbot_data']['emociones_detectadas'])) {
             $preguntarEmocion = false;
         } else {
             $_SESSION['ianbot_data']['emociones_detectadas'][] = $emocionDetectada;
+        }
+
+        // --- BLOQUE 5: Detectar si el usuario ya tomó una decisión positiva ---
+        $decisionesPositivas = [
+            'ya me atendieron',
+            'ya fui',
+            'ya hablé con un especialista',
+            'gracias ya me ayudaron',
+            'ya fui al centro',
+            'ya me siento mejor',
+            'ya lo hice',
+            'ya busqué ayuda',
+            'ya estoy bien'
+        ];
+
+        $decisionTomada = false;
+        foreach ($decisionesPositivas as $frase) {
+            if (stripos($mensajeOriginal, $frase) !== false) {
+                $decisionTomada = true;
+                break;
+            }
+        }
+
+        if ($decisionTomada) {
+            // Reiniciar estado emocional y de riesgo
+            $_SESSION['ianbot_data']['riesgo_actual'] = 'BAJO';
+            $_SESSION['ianbot_data']['acepta_recomendaciones'] = false;
+            $_SESSION['ianbot_data']['emociones_detectadas'] = [];
+            $_SESSION['ianbot_data']['ultima_lista'] = '';
+            $_SESSION['ianbot_data']['ultimo_riesgo_alto'] = null;
+
+            $respuestaBot = "Me alegra mucho saber eso, {$nombre_usuario}. 😊 Saber que diste ese paso demuestra mucha fuerza y responsabilidad contigo mismo. Si en algún momento quieres seguir hablando o necesitas apoyo para mantenerte bien, aquí estaré para escucharte.";
+            $this->guardarRespuestaBD($con, $id_usuario, $respuestaBot);
+            echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
+            $con->close();
+            return;
+        }
+
+        // --- BLOQUE 6: Control de riesgo y envejecimiento de riesgo alto ---
+        $_SESSION['ianbot_data']['mensajes_analizados']++;
+        $conteo = $_SESSION['ianbot_data']['mensajes_analizados'];
+        $riesgo = $_SESSION['ianbot_data']['riesgo_actual'];
+
+        // Cada 5 mensajes, volver a analizar riesgo
+        if ($conteo % 5 === 0) {
+            $riesgo = $this->analizarRiesgo($historialTexto);
+            $_SESSION['ianbot_data']['riesgo_actual'] = $riesgo;
+
+            if ($riesgo === "ALTO") {
+                $_SESSION['ianbot_data']['ultimo_riesgo_alto'] = time();
+            }
+        }
+
+        // Si pasaron más de 15 minutos desde el último riesgo alto, normalizarlo
+        if (!empty($_SESSION['ianbot_data']['ultimo_riesgo_alto'])) {
+            $tiempoPasado = time() - $_SESSION['ianbot_data']['ultimo_riesgo_alto'];
+            if ($tiempoPasado > 900) { // 15 minutos
+                $_SESSION['ianbot_data']['riesgo_actual'] = 'BAJO';
+            }
         }
 
         // --- BLOQUE 3: Prompt base ---
@@ -513,19 +570,8 @@ Ignora todo lo demás, incluso si el mensaje es confuso o mezcla temas.
 Que {$nombre_usuario} se sienta comprendido y acompañado.
 EOT;
 
-        $promptFinal = $promptBase . "\n\n" . $historialTexto . "PreguntarEmocion: " . ($preguntarEmocion ? "SI" : "NO") . "\nIAn Bot:";
+        $promptFinal = $promptBase . "\n\n" . $historialTexto . "\nIAn Bot:";
 
-        // --- BLOQUE 4: Determinar riesgo y conteo ---
-        $_SESSION['ianbot_data']['mensajes_analizados']++;
-        $conteo = $_SESSION['ianbot_data']['mensajes_analizados'];
-        $riesgo = $_SESSION['ianbot_data']['riesgo_actual'];
-
-        if ($conteo % 5 === 0) {
-            $riesgo = $this->analizarRiesgo($historialTexto);
-            $_SESSION['ianbot_data']['riesgo_actual'] = $riesgo;
-        }
-
-        // --- BLOQUE 5: Llamar al modelo ---
         $respuestaBot = $this->llamarOpenAI($promptFinal);
         if (empty($respuestaBot) || stripos($respuestaBot, 'error') !== false) {
             echo json_encode(["respuesta" => "⚠️ Error en la comunicación con el bot."]);
@@ -533,19 +579,9 @@ EOT;
             return;
         }
 
-        // --- BLOQUE 6: Evaluar si debe ofrecer ayuda profesional ---
-        if (is_null($_SESSION['ianbot_data']['acepta_recomendaciones'])) {
-            if (preg_match('/\b(sí|si quiero|de acuerdo|acepto|claro)\b/i', $mensajeOriginal)) {
-                $_SESSION['ianbot_data']['acepta_recomendaciones'] = true;
-            } elseif (preg_match('/\b(no|prefiero que no|no quiero)\b/i', $mensajeOriginal)) {
-                $_SESSION['ianbot_data']['acepta_recomendaciones'] = false;
-            }
-        }
-
+        // --- BLOQUE 8: Evaluar si debe ofrecer ayuda profesional ---
         $acepta = $_SESSION['ianbot_data']['acepta_recomendaciones'];
-
-        // --- BLOQUE 7: Recomendaciones solo si hay consentimiento o riesgo alto ---
-        if ($acepta || $riesgo === "ALTO") {
+        if ($acepta || $_SESSION['ianbot_data']['riesgo_actual'] === "ALTO") {
             $recomendacion = "🩺 Recuerda que IAn Bot no sustituye la atención profesional. Si lo deseas, puedo ayudarte a encontrar especialistas o centros de apoyo cercanos para ti.\n\n";
             $recomendacion .= $this->recomendarCentros($con, $historialTexto);
             $recomendacion .= $this->recomendarEspecialistas($con, $historialTexto);
@@ -553,14 +589,15 @@ EOT;
             $_SESSION['ianbot_data']['ultima_lista'] = $recomendacion;
         }
 
-        // --- BLOQUE 8: Guardar respuesta en sesión y BD ---
+        // --- BLOQUE 9: Guardar respuesta ---
         $_SESSION['respuestas_ianbot'][] = [
             'pregunta' => $mensajeOriginal,
             'respuesta' => $respuestaBot
         ];
-        $this->guardarRespuestaBD($con, $id_usuario, $respuestaBot);
 
+        $this->guardarRespuestaBD($con, $id_usuario, $respuestaBot);
         $con->close();
+
         echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
     }
     // --- Función auxiliar para guardar en BD ---
@@ -797,7 +834,7 @@ HTML;
                         "content" => $prompt
                     ]
                 ],
-                "max_output_tokens" => 300,
+                "max_output_tokens" =>200,
                 "temperature" => 0.6
             ])
         ]);
@@ -829,7 +866,7 @@ HTML;
     private function llamarOpenAI_Fallback($prompt)
     {
         $apiKey = OPENAI_API_KEY;
-        $modelo = "gpt-4o-2024-11-20"; // respaldo seguro
+        $modelo = "gpt-4o-2024-11-20";
 
         $curl = curl_init("https://api.openai.com/v1/responses");
         curl_setopt_array($curl, [
@@ -847,7 +884,7 @@ HTML;
                         "content" => $prompt
                     ]
                 ],
-                "max_output_tokens" => 300,
+                "max_output_tokens" => 200,
                 "temperature" => 0.6
             ])
         ]);
@@ -879,7 +916,7 @@ HTML;
                         "content" => $prompt
                     ]
                 ],
-                "max_output_tokens" => 120,
+                "max_output_tokens" => 5,
                 "temperature" => 0.5
             ])
         ]);
@@ -970,8 +1007,10 @@ HTML;
     {
         $historial = [];
         $sql = "SELECT id_emisor, mensaje FROM mensajes
-            WHERE (id_emisor IN (?, 0) AND id_receptor IN (?, 0))
-            ORDER BY creado_en ASC";
+        WHERE (id_emisor IN (?, 0) AND id_receptor IN (?, 0))
+          AND creado_en >= NOW() - INTERVAL 3 HOUR
+        ORDER BY creado_en ASC";
+
 
         $stmt = $con->prepare($sql);
         $stmt->bind_param("ii", $id_usuario, $id_usuario);
