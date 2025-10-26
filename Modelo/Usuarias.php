@@ -77,13 +77,20 @@ class Usuarias
             exit;
         }
 
-        // Validación de duplicados
-        $correo = mysqli_real_escape_string($con, $this->correo);
-        $correoDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE correo = '$correo'");
-        if (mysqli_fetch_array($correoDuplicado)) {
-            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Este correo ya pertenece a una cuenta"));
-            exit;
-        }
+ // Validación de duplicados
+     $correo = mysqli_real_escape_string($con, $this->correo);
+
+// Buscar cualquier usuaria con el mismo correo
+     $stmt = $con->prepare("SELECT id FROM usuarias WHERE correo = ? LIMIT 1");
+     $stmt->bind_param("s", $correo);
+     $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+    header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Este correo ya está en uso. Inicia sesión o utiliza otro correo."));
+    exit;
+}
+
 
         $nickname = mysqli_real_escape_string($con, $this->nickname);
         $nickDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE nickname = '$nickname'");
