@@ -24,8 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         const esPublicacion = noti.tipo_notificacion === "publicacion";
                         const esComentario = noti.tipo_notificacion === "comentario";
 
-                        if ((esPublicacion && config.notificar_publicaciones == 1) ||
-                            (esComentario && config.notificar_comentarios == 1)) {
+                        if (
+                            (esPublicacion && config.notificar_publicaciones == 1) ||
+                            (esComentario && config.notificar_comentarios == 1)
+                        ) {
                             nuevas.push(noti.mensaje);
                             totalNuevas++;
                         }
@@ -45,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 contador.style.display = "none";
             }
-
         } catch (error) {
             console.error("Error cargando notificaciones:", error);
         }
@@ -53,7 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mostrar Toast
     function mostrarToast(mensaje) {
-        Toastify({
+        const fondo = mensaje.includes("Tienes")
+            ? "linear-gradient(135deg, #27ae60, #5ee6b5)"
+            : "linear-gradient(135deg, #f39c12, #f5c542)";
+
+        const toast = Toastify({
             text: mensaje,
             duration: toastDuration,
             close: true,
@@ -61,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             position: "right",
             offset: { x: 10, y: 460 },
             style: {
-                background: "linear-gradient(135deg, #f39c12, #e67e22)",
+                background: fondo,
                 borderRadius: "12px",
                 fontSize: "15px",
                 color: "#fff",
@@ -74,11 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
                 modalInstance.show();
             }
-        }).showToast();
+        });
+
+        toast.showToast();
+        window.toastActivo = toast;
     }
 
-    // Al abrir el modal, marcar todas como leídas
     modal.addEventListener('show.bs.modal', async () => {
+        if (window.toastActivo) {
+            const toastEl = document.querySelector('.toastify.on');
+            if (toastEl) toastEl.remove();
+            window.toastActivo = null;
+        }
+
         try {
             const res = await fetch('/shakti/Controlador/notificacionesCtrl.php?marcarLeidas=1');
             if (res.ok) {
@@ -90,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Carga inicial y revisión periódica
     cargarNotificaciones();
     setInterval(cargarNotificaciones, 10000);
 });
