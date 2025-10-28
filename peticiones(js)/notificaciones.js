@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('modalNotificaciones');
     let idsMostrados = new Set();
 
-    // Función principal para cargar las notificaciones
     async function cargarNotificaciones() {
         try {
             const res = await fetch('/shakti/Controlador/notificacionesCtrl.php');
@@ -15,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const notificaciones = data.notificaciones || [];
 
             if (Array.isArray(notificaciones) && notificaciones.length > 0) {
-                let nuevas = 0;
+                let nuevas = [];
+                let totalNuevas = 0;
 
                 notificaciones.forEach(noti => {
                     if (!idsMostrados.has(noti.id)) {
@@ -26,15 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if ((esPublicacion && config.notificar_publicaciones == 1) ||
                             (esComentario && config.notificar_comentarios == 1)) {
-                            mostrarToast(noti.mensaje);
-                            nuevas++;
+                            nuevas.push(noti.mensaje);
+                            totalNuevas++;
                         }
                     }
                 });
 
-                if (nuevas > 0) {
+                if (totalNuevas > 0) {
                     contador.style.display = "inline-block";
                     contador.textContent = notificaciones.length;
+
+                    if (totalNuevas === 1) {
+                        mostrarToast(`🔔 ${nuevas[0]}`);
+                    } else {
+                        mostrarToast(`🔔 Tienes ${totalNuevas} nuevas notificaciones`);
+                    }
                 }
             } else {
                 contador.style.display = "none";
@@ -45,9 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Mostrar Toast
     function mostrarToast(mensaje) {
         Toastify({
-            text: `🔔 ${mensaje}`,
+            text: mensaje,
             duration: toastDuration,
             close: true,
             gravity: "bottom",
@@ -70,18 +77,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }).showToast();
     }
 
+    // Al abrir el modal, marcar todas como leídas
     modal.addEventListener('show.bs.modal', async () => {
         try {
             const res = await fetch('/shakti/Controlador/notificacionesCtrl.php?marcarLeidas=1');
             if (res.ok) {
                 contador.style.display = "none";
-                console.log("Notificaciones marcadas como leídas");
+                console.log("✅ Notificaciones marcadas como leídas");
             }
         } catch (error) {
             console.error("Error al marcar como leídas:", error);
         }
     });
 
+    // Carga inicial y revisión periódica
     cargarNotificaciones();
     setInterval(cargarNotificaciones, 10000);
 });
