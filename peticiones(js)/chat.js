@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Si hay mensajes previos
       if (data.data && Array.isArray(data.data) && data.data.length > 0) {
         mostrarMensaje(
-          "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear...",
+          "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear. \n Solo brindo apoyo y acompañamiento emocional preventivo. No soy un sustituto profesional de salud mental, pero puedo ayudarte a encontrar un especialista adecuado si así lo deseas.",
           "ia"
         );
 
