@@ -149,6 +149,8 @@ class chatsMdl
             // Escapar texto
             $mensaje = $this->cifrarAES(htmlspecialchars(trim($mensaje), ENT_QUOTES, 'UTF-8'));
 
+            // Antidoxing
+
             // Crear carpeta si no existe
             $carpetaUploads = $_SERVER['DOCUMENT_ROOT'] . '/shakti/uploads/mensajes/';
             if (!is_dir($carpetaUploads)) {
@@ -165,7 +167,7 @@ class chatsMdl
                 }
 
                 $ext = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
-                $extPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', ''];
+                $extPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
                 if (!in_array($ext, $extPermitidas)) {
                     $ext = "jpg";
                 }
@@ -213,9 +215,9 @@ class chatsMdl
                     $nombreArchivo = "{$nickname_emisor}_{$fecha}_{$id_receptor}.{$ext}";
                     $rutaArchivo = $carpetaUploads . $nombreArchivo;
 
-                    // Verificar tamaño original (si > 20 MB, aplicar compresión fuerte)
+                    // 🔹 Verificar tamaño original (si > 20 MB, aplicar compresión fuerte)
                     $calidadAlta = 80;
-                    $calidadBaja = 40;
+                    $calidadBaja = 40; // fuerza más compresión
 
                     $pesoOriginal = $imagen['size']; // bytes
                     $calidadFinal = ($pesoOriginal > (20 * 1024 * 1024)) ? $calidadBaja : $calidadAlta;
@@ -295,114 +297,6 @@ class chatsMdl
             ], JSON_UNESCAPED_UNICODE);
         }
     }
-
-    /* ============================
-        FUNCIONES AUXILIARES PRIVADAS
-       =========================== */
-    private function formatearRespuestaHTML($texto)
-    {
-        // Convertir encabezados Markdown a HTML con tamaños moderados
-        $texto = preg_replace('/^###\s*(.+)$/m', '<h3>$1</h3>', $texto);
-        $texto = preg_replace('/^##\s*(.+)$/m', '<h2>$1</h2>', $texto);
-        $texto = preg_replace('/^#\s*(.+)$/m', '<h1>$1</h1>', $texto);
-
-        // Convertir negritas y cursivas Markdown a HTML
-        $texto = preg_replace('/\*\*(.*?)\*\*/s', '<strong>$1</strong>', $texto);
-        $texto = preg_replace('/\*(.*?)\*/s', '<b>$1</b>', $texto);
-
-        // Separar líneas
-        $lineas = preg_split('/\r\n|\r|\n/', trim($texto));
-        $html = "";
-        $enLista = false;
-
-        foreach ($lineas as $linea) {
-            $linea = trim($linea);
-            if ($linea === "") continue;
-
-            // Detectar líneas tipo lista: empiezan con -, *, • o números
-            if (preg_match('/^(?:[\-\*\•]|\d+[\.\)])\s*(.+)/u', $linea, $matches)) {
-                if (!$enLista) {
-                    $html .= "<ul>";
-                    $enLista = true;
-                }
-                $html .= "<li>" . $matches[1] . "</li>";
-            } else {
-                if ($enLista) {
-                    $html .= "</ul>";
-                    $enLista = false;
-                }
-
-                // No envolver los encabezados ya convertidos en <p>
-                if (!preg_match('/^<h[1-3]>.*<\/h[1-3]>$/', $linea)) {
-                    $html .= "<p>" . $linea . "</p>";
-                } else {
-                    $html .= $linea;
-                }
-            }
-        }
-
-        if ($enLista) $html .= "</ul>";
-
-        return $html;
-    }
-    // Cifrado y descifrado Aes
-    private function cifrarAESChatEspecialista($id)
-    {
-        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
-        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $cifrado = openssl_encrypt($id, 'aes-256-cbc', $clave, 0, $ci);
-        return strtr(base64_encode($ci . $cifrado), '+/=', '-_,');
-    }
-    private function descifrarAESChatEspecialista($idCodificado)
-    {
-        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
-        $datos = base64_decode(strtr($idCodificado, '-_,', '+/='), true);
-        if ($datos === false) return $idCodificado;
-
-        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
-        $ci = substr($datos, 0, $ci_length);
-        $cifrado = substr($datos, $ci_length);
-
-        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $clave, 0, $ci);
-        return $descifrado !== false ? $descifrado : $idCodificado;
-    }
-    private function cifrarAES($texto)
-    {
-        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
-        return base64_encode($ci . $cifrado);
-    }
-    private function descifrarAES($textoCodificado)
-    {
-        $datos = base64_decode($textoCodificado);
-        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
-        $ci = substr($datos, 0, $ci_length);
-        $cifrado = substr($datos, $ci_length);
-        return openssl_decrypt($cifrado, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
-    }
-    private function cifrarAESIanBot($texto)
-    {
-        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
-        return base64_encode($ci . $cifrado);
-    }
-    private function descifrarAESIanBot($textoCodificado)
-    {
-        if (empty($textoCodificado)) return '';
-        $datos = base64_decode($textoCodificado, true);
-        if ($datos === false) return $textoCodificado;
-
-        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
-        $ci = substr($datos, 0, $ci_length);
-        $cifrado = substr($datos, $ci_length);
-
-        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
-        return $descifrado !== false ? $descifrado : $textoCodificado;
-    }
-
-    /* ============================
-        CHAT IAN
-       =========================== */
     public function enviarMensajeIanBot($mensaje)
     {
         $id_usuario = $_SESSION['id'] ?? null;
@@ -421,193 +315,120 @@ class chatsMdl
 
         $con = $this->conectarBD();
 
-        // --- BLOQUE 0: Inicializar datos de sesión para IanBot ---
-        if (!isset($_SESSION['ianbot_data'])) {
-            $_SESSION['ianbot_data'] = [
-                'emociones_detectadas' => [],
-                'ultima_lista' => '',
-                'acepta_recomendaciones' => null,
-                'riesgo_actual' => 'BAJO',
-                'mensajes_analizados' => 0,
-                'ultimo_riesgo_alto' => null
-            ];
-        }
-
-        // --- BLOQUE 1: Revisar si el usuario pide la última lista ---
-        if (!empty($_SESSION['respuestas_ianbot'])) {
-            foreach (array_reverse($_SESSION['respuestas_ianbot']) as $prev) {
-                similar_text($mensajeOriginal, $prev['pregunta'], $porc);
-                if ($porc >= 85 && preg_match('/\b(dame mi lista|lista de nuevo)\b/i', $mensajeOriginal)) {
-                    $respuestaBot = $_SESSION['ianbot_data']['ultima_lista'] ?: $prev['respuesta'];
-                    $this->guardarRespuestaBD($con, $id_usuario, $respuestaBot);
-                    echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
-                    $con->close();
-                    return;
-                }
-            }
-        }
-
-        // --- BLOQUE 2: Guardar mensaje del usuario ---
+        // BLOQUE 1: Guardar mensaje del usuario
         $mensajeCifrado = $this->cifrarAESIanBot($mensajeOriginal);
-        $stmt = $con->prepare("INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())");
+        $sqlUsuario = "INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (?, 0, ?, NOW())";
+        $stmt = $con->prepare($sqlUsuario);
         $stmt->bind_param("is", $id_usuario, $mensajeCifrado);
         $stmt->execute();
         $stmt->close();
 
-        // --- BLOQUE 3: Obtener historial resumido (últimos 3 mensajes) ---
+        // BLOQUE 2: Obtener historial de conversación
         $historial = $this->obtenerHistorialIanBot($con, $id_usuario);
-        $historial[] = ["rol" => "usuario", "contenido" => $mensajeOriginal];
-        $historialReciente = array_slice($historial, -3);
+        $historial[] = ["rol" => "usuario", "contenido" => htmlspecialchars($mensajeOriginal, ENT_QUOTES, 'UTF-8')];
+
         $historialTexto = "";
-        foreach ($historialReciente as $linea) {
-            $historialTexto .= $linea['rol'] . ": " . substr($linea['contenido'], 0, 80) . "\n";
+        foreach ($historial as $linea) {
+            $historialTexto .= ucfirst($linea['rol']) . ": " . $linea['contenido'] . "\n";
         }
 
-        // --- BLOQUE 4: Detectar emoción ---
-        $emocionDetectada = $this->detectarEmocion($mensajeOriginal);
-        $preguntarEmocion = true;
-        if (in_array($emocionDetectada, $_SESSION['ianbot_data']['emociones_detectadas'])) {
-            $preguntarEmocion = false;
-        } else {
-            $_SESSION['ianbot_data']['emociones_detectadas'][] = $emocionDetectada;
-        }
-
-        // --- BLOQUE 5: Detectar si el usuario ya tomó una decisión positiva ---
-        $decisionesPositivas = [
-            'ya me atendieron',
-            'ya fui',
-            'ya hablé con un especialista',
-            'gracias ya me ayudaron',
-            'ya fui al centro',
-            'ya me siento mejor',
-            'ya lo hice',
-            'ya busqué ayuda',
-            'ya estoy bien'
-        ];
-
-        $decisionTomada = false;
-        foreach ($decisionesPositivas as $frase) {
-            if (stripos($mensajeOriginal, $frase) !== false) {
-                $decisionTomada = true;
-                break;
-            }
-        }
-
-        if ($decisionTomada) {
-            // Reiniciar estado emocional y de riesgo
-            $_SESSION['ianbot_data']['riesgo_actual'] = 'BAJO';
-            $_SESSION['ianbot_data']['acepta_recomendaciones'] = false;
-            $_SESSION['ianbot_data']['emociones_detectadas'] = [];
-            $_SESSION['ianbot_data']['ultima_lista'] = '';
-            $_SESSION['ianbot_data']['ultimo_riesgo_alto'] = null;
-
-            $respuestaBot = "Me alegra mucho saber eso, {$nombre_usuario}. 😊 Saber que diste ese paso demuestra mucha fuerza y responsabilidad contigo mismo. Si en algún momento quieres seguir hablando o necesitas apoyo para mantenerte bien, aquí estaré para escucharte.";
-            $this->guardarRespuestaBD($con, $id_usuario, $respuestaBot);
-            echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
-            $con->close();
-            return;
-        }
-
-        // --- BLOQUE 6: Control de riesgo y envejecimiento de riesgo alto ---
-        $_SESSION['ianbot_data']['mensajes_analizados']++;
-        $conteo = $_SESSION['ianbot_data']['mensajes_analizados'];
-        $riesgo = $_SESSION['ianbot_data']['riesgo_actual'];
-
-        // Cada 5 mensajes, volver a analizar riesgo
-        if ($conteo % 5 === 0) {
-            $riesgo = $this->analizarRiesgo($historialTexto);
-            $_SESSION['ianbot_data']['riesgo_actual'] = $riesgo;
-
-            if ($riesgo === "ALTO") {
-                $_SESSION['ianbot_data']['ultimo_riesgo_alto'] = time();
-            }
-        }
-
-        // Si pasaron más de 15 minutos desde el último riesgo alto, normalizarlo
-        if (!empty($_SESSION['ianbot_data']['ultimo_riesgo_alto'])) {
-            $tiempoPasado = time() - $_SESSION['ianbot_data']['ultimo_riesgo_alto'];
-            if ($tiempoPasado > 900) { // 15 minutos
-                $_SESSION['ianbot_data']['riesgo_actual'] = 'BAJO';
-            }
-        }
-
-        // --- BLOQUE 3: Prompt base ---
+        // BLOQUE 3: Prompt base con reglas de recomendación condicional
         $promptBase = <<<EOT
-Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
-Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
-💡 Instrucción clave:
+    Eres IAn Bot, un asistente digital de acompañamiento emocional preventivo diseñado para hombres adultos entre 18 y 60 años.
 
-No inventes nombres, servicios ni centros.
+    Actualmente estás hablando con {$nombre_usuario}. Tu meta es escuchar, apoyar y orientar de manera empática.
+    💡 Instrucción clave:
+    No inventes nombres, servicios ni centros. Solo muestra lo que devuelvan las funciones internas `recomendarCentros()` y `recomendarEspecialistas()`.
+    
+    🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
+    - Expresar cómo se sienten sin juicios.
+    - Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
+    - Ofrecer recomendaciones prácticas y cotidianas (ejercicios de respiración, técnicas de relajación, consejos simples de autocuidado).
+    - Motivar con un tono amigable, empático y claro, solo cuando el contexto lo amerite.
 
-🎯 Tu función es escuchar, apoyar y orientar de manera empática, ayudando a los usuarios a:
-- Expresar cómo se sienten sin juicios.
-- Identificar emociones básicas (estrés, ansiedad, tristeza, enojo, etc.).
-- Ofrecer recomendaciones prácticas y cotidianas (respiración, descanso, escribir emociones, caminar, etc.).
-- Motivar con un tono humano, empático y claro, solo cuando el contexto lo amerite.
+    ⚠️ Limitaciones absolutas:
+    - No eres sustituto de atención psicológica profesional.
+    - No das diagnósticos médicos ni psicológicos.
+    - No das recetas médicas, tareas escolares, traducciones, explicaciones técnicas, ni información sobre programación, código, 
+      bases de datos, inglés, economía, finanzas, ciencia, tecnología ni ningún otro tema que no esté directamente relacionado con 
+      la salud emocional o el bienestar personal.
+    - Si el usuario pregunta o menciona algo técnico (por ejemplo: código, funciones, SQL, PHP, programación, IA, EOT, errores, tokens, etc.), 
+      **ignora completamente el tema**. No respondas, no expliques, no aclares, no digas que no puedes, simplemente **redirige la 
+      conversación con calidez hacia el estado emocional del usuario**, por ejemplo:
+      👉 “Parece que estás muy enfocado en eso. Pero antes de seguir, ¿cómo te has sentido últimamente?”
+    - No uses términos técnicos, ni menciones código, ni comentes sobre sistemas o bases de datos, incluso si el usuario los menciona.
+    
+    💬 Estilo de comunicación:
+    - Usa frases cálidas, comprensibles y breves.
+    - Valida la emoción del usuario sin exagerar.
+    - Haz preguntas suaves para conocer mejor su estado emocional o cotidiano, de manera natural según el flujo.
+    - Alterna entre validar emociones y preguntar con tacto.
+    - Usa las respuestas del usuario para personalizar consejos posteriores.
+    - Mantén un tono confidencial, empático y humano.
 
-⚠️ Limitaciones absolutas:
-- No eres sustituto de atención psicológica profesional.
-- No das diagnósticos ni recetas.
-- No das información sobre programación, código, tecnología, idiomas, tareas ni temas técnicos.
-- Si el usuario menciona temas técnicos (php, sql, código, token, api, etc.), ignora completamente el tema y redirige la conversación con calidez hacia su estado emocional.
+    📌 Reglas de continuidad y personalización:
+    - Recuerda la información emocional o personal que el usuario comparta y úsala de forma natural.
+    - Las sugerencias deben ser simples y accionables (respirar hondo, caminar, escribir lo que sientes).
+    - Usa un tono motivador cuando el usuario muestre cansancio, frustración o duda, sin exagerar.
 
-💬 Estilo de comunicación:
-- Usa frases cálidas, breves y humanas.
-- Valida la emoción del usuario sin dramatizar.
-- Haz preguntas suaves y naturales.
-- Mantén confidencialidad y cercanía emocional.
+    🧱 Regla de bloqueo total:
+    Si el mensaje del usuario contiene fragmentos de código, palabras como "function", "php", "sql", "SELECT", "database", "EOT", "token", 
+      "API", "server", o cualquier otra palabra técnica o símbolo de programación (por ejemplo { }, ;, $, <, >), 
+       NO DEBES RESPONDER NADA SOBRE EL CONTENIDO, 
+       ni siquiera de forma empática.
+       Ignora completamente el texto y redirige la conversación suavemente hacia el bienestar emocional del usuario, con una frase como:
+       👉 “Entiendo que estás ocupado con eso, pero antes de seguir, ¿cómo te has sentido tú últimamente?”
 
-📌 Continuidad:
-- Recuerda el estado emocional y haz referencia con empatía.
-- Usa las respuestas previas para dar coherencia.
-- Si el usuario muestra angustia o cansancio, valida y ofrece apoyo simple.
+    🚫 En resumen:
+    Solo responde mensajes relacionados con emociones, estados de ánimo o bienestar. 
+    Ignora por completo todo lo demás, incluso si el texto está mal escrito o confuso.
 
-🚫 En resumen:
-Solo responde sobre emociones o bienestar.
-Ignora todo lo demás, incluso si el mensaje es confuso o mezcla temas.
+    ✅ Meta: Que {$nombre_usuario} se sienta comprendido, acompañado y emocionalmente escuchado.
+    EOT;
 
-✅ Meta:
-Que {$nombre_usuario} se sienta comprendido y acompañado.
-EOT;
-
-        $promptFinal = $promptBase . "\n\n" . $historialTexto . "\nIAn Bot:";
-
+        $promptFinal = $promptBase . "\n\n" . $historialTexto . "IAn Bot:";
         $respuestaBot = $this->llamarOpenAI($promptFinal);
+
         if (empty($respuestaBot) || stripos($respuestaBot, 'error') !== false) {
             echo json_encode(["respuesta" => "⚠️ Error en la comunicación con el bot."]);
             $con->close();
             return;
         }
 
-        // --- BLOQUE 8: Evaluar si debe ofrecer ayuda profesional ---
-        $acepta = $_SESSION['ianbot_data']['acepta_recomendaciones'];
-        if ($acepta || $_SESSION['ianbot_data']['riesgo_actual'] === "ALTO") {
-            $recomendacion = "🩺 Recuerda que IAn Bot no sustituye la atención profesional. Si lo deseas, puedo ayudarte a encontrar especialistas o centros de apoyo cercanos para ti.\n\n";
-            $recomendacion .= $this->recomendarCentros($con, $historialTexto);
-            $recomendacion .= $this->recomendarEspecialistas($con, $historialTexto);
-            $respuestaBot .= "\n\n" . $recomendacion;
-            $_SESSION['ianbot_data']['ultima_lista'] = $recomendacion;
+        // BLOQUE 4: Analizar si se debe recomendar ayuda
+        $totalMensajes = count($historial);
+        $requiereAnalisis = false;
+
+        if ($totalMensajes % 10 === 0) {
+            $requiereAnalisis = true;
         }
 
-        // --- BLOQUE 9: Guardar respuesta ---
-        $_SESSION['respuestas_ianbot'][] = [
-            'pregunta' => $mensajeOriginal,
-            'respuesta' => $respuestaBot
-        ];
+        if (preg_match('/\b(ayuda|auxilio|ya no puedo|quiero morir|me siento mal|necesito hablar)\b/i', $mensajeOriginal)) {
+            $requiereAnalisis = true;
+        }
 
-        $this->guardarRespuestaBD($con, $id_usuario, $respuestaBot);
-        $con->close();
+        // Evaluar riesgo emocional
+        $riesgo = $this->analizarRiesgo($historialTexto);
+        if ($riesgo === "ALTO") {
+            $requiereAnalisis = true;
+        }
 
-        echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
-    }
-    // --- Función auxiliar para guardar en BD ---
-    private function guardarRespuestaBD($con, $id_usuario, $respuestaBot)
-    {
+        // Solo recomendar si el usuario pidió ayuda o el riesgo es alto
+        if ($requiereAnalisis && stripos($mensajeOriginal, 'si') !== false) {
+            $recomendacion = $this->recomendarCentros($con, $historialTexto);
+            $recomendacion .= $this->recomendarEspecialistas($con, $historialTexto);
+            $respuestaBot .= "\n\n" . $recomendacion;
+        }
+
+        // BLOQUE 5: Guardar respuesta del bot
         $respuestaCifrada = $this->cifrarAESIanBot($respuestaBot);
         $stmtBot = $con->prepare("INSERT INTO mensajes (id_emisor, id_receptor, mensaje, creado_en) VALUES (0, ?, ?, NOW())");
         $stmtBot->bind_param("is", $id_usuario, $respuestaCifrada);
         $stmtBot->execute();
         $stmtBot->close();
+        $con->close();
+
+        echo json_encode(["respuesta" => $this->formatearRespuestaHTML($respuestaBot)]);
     }
     private function analizarRiesgo($texto)
     {
@@ -688,31 +509,6 @@ EOT;
 
         return $respuesta;
     }
-    private function detectarEmocion($texto)
-    {
-        // Normalizar texto
-        $texto = mb_strtolower($texto, 'UTF-8');
-
-        // Lista básica de emociones
-        $emociones = [
-            'tristeza'  => ['triste', 'deprimido', 'melancolía', 'abrumado', 'desanimado'],
-            'ansiedad'  => ['ansioso', 'preocupado', 'inseguro', 'nervioso', 'estresado'],
-            'enojo'     => ['enojado', 'molesto', 'frustrado', 'irritado', 'rabia'],
-            'felicidad' => ['feliz', 'contento', 'alegre', 'entusiasmado', 'emocionado'],
-            'miedo'     => ['temor', 'asustado', 'inseguro', 'nervioso', 'preocupado']
-        ];
-
-        foreach ($emociones as $emocion => $palabras) {
-            foreach ($palabras as $palabra) {
-                if (mb_stripos($texto, $palabra) !== false) {
-                    return $emocion;
-                }
-            }
-        }
-
-        // Si no se detecta ninguna emoción explícita
-        return 'neutral';
-    }
     private function recomendarEspecialistas($con, $historialTexto)
     {
         $servicios = [
@@ -732,11 +528,11 @@ EOT;
 
         // Determinar servicio recomendado
         $prompt = <<<EOT
-        A continuación tienes una conversación de apoyo emocional entre un usuario y un asistente. 
-        Tu tarea es identificar cuál de los siguientes servicios profesionales sería más útil para el usuario, 
-        basándote en su situación emocional o contexto.
-        Solo puedes responder con una de estas opciones:
-        
+A continuación tienes una conversación de apoyo emocional entre un usuario y un asistente. 
+Tu tarea es identificar cuál de los siguientes servicios profesionales sería más útil para el usuario, 
+basándote en su situación emocional o contexto.
+
+Solo puedes responder con una de estas opciones:
 - Terapia
 - Consulta psicológica
 - Psicopedagogía
@@ -801,10 +597,10 @@ EOT;
             $idCifrado = $this->cifrarAESChatEspecialista($id);
 
             $respuesta .= <<<HTML
-<div class="mb-3 border rounded p-2">
+<div class="mb-3 p-2 border rounded">
     <p>{$nombreCompleto}</p>
-   <span>🧠 {$servicio}</span>
-    <a href="/shakti/Vista/chat?especialistas={$idCifrado}" class="btn btn-outline-primary">
+    🧠 {$servicio}
+    <a href="/shakti/Vista/chat?especialistas={$idCifrado}" class="btn btn-outline-primary mt-2">
         <i class="bi bi-envelope-paper-heart"></i> Mensaje
     </a>
 </div>
@@ -813,10 +609,50 @@ HTML;
 
         return $respuesta;
     }
+
+    /* ============================
+        FUNCIONES AUXILIARES PRIVADAS
+       =========================== */
+
+    private function formatearRespuestaHTML($texto)
+    {
+        // 1. Convertir negritas estilo Markdown (**texto** o *texto*) a HTML
+        $texto = preg_replace('/\*\*(.*?)\*\*/s', '<strong>$1</strong>', $texto);
+        $texto = preg_replace('/\*(.*?)\*/s', '<b>$1</b>', $texto);
+
+        // 2. Separar líneas para listas y párrafos
+        $lineas = preg_split('/\r\n|\r|\n/', trim($texto));
+        $html = "";
+        $enLista = false;
+
+        foreach ($lineas as $linea) {
+            $linea = trim($linea);
+            if ($linea === "") continue;
+
+            // Detectar líneas tipo lista: empiezan con -, *, • o números
+            if (preg_match('/^(?:[\-\*\•]|\d+[\.\)])\s*(.+)/u', $linea, $matches)) {
+                if (!$enLista) {
+                    $html .= "<ul>";
+                    $enLista = true;
+                }
+                $html .= "<li>" . $matches[1] . "</li>";
+            } else {
+                if ($enLista) {
+                    $html .= "</ul>";
+                    $enLista = false;
+                }
+                $html .= "<p>" . $linea . "</p>";
+            }
+        }
+
+        if ($enLista) $html .= "</ul>";
+
+        return $html;
+    }
     private function llamarOpenAI($prompt)
     {
         $apiKey = OPENAI_API_KEY;
-        $modelo = "gpt-4o-mini";
+        $modelo = "gpt-4.1-mini";
 
         $curl = curl_init("https://api.openai.com/v1/responses");
         curl_setopt_array($curl, [
@@ -828,77 +664,27 @@ HTML;
             ],
             CURLOPT_POSTFIELDS => json_encode([
                 "model" => $modelo,
-                "input" => [
-                    [
-                        "role" => "user",
-                        "content" => $prompt
-                    ]
-                ],
-                "max_output_tokens" =>200,
-                "temperature" => 0.6
-            ])
-        ]);
-
-        $respuesta = curl_exec($curl);
-
-        if (curl_errno($curl)) {
-            $error = curl_error($curl);
-            curl_close($curl);
-            return "⚠️ Error al conectar con OpenAI: $error";
-        }
-
-        curl_close($curl);
-        $data = json_decode($respuesta, true);
-
-        // Si el modelo no existe o no está permitido, intenta con otro
-        if (isset($data['error']['code']) && $data['error']['code'] === 'model_not_found') {
-            return $this->llamarOpenAI_Fallback($prompt);
-        }
-
-        if (isset($data['output'][0]['content'][0]['text'])) {
-            return trim($data['output'][0]['content'][0]['text']);
-        }
-
-        if (isset($data['error']['message'])) {
-            return "⚠️ Error API: " . $data['error']['message'];
-        }
-    }
-    private function llamarOpenAI_Fallback($prompt)
-    {
-        $apiKey = OPENAI_API_KEY;
-        $modelo = "gpt-4o-2024-11-20";
-
-        $curl = curl_init("https://api.openai.com/v1/responses");
-        curl_setopt_array($curl, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer $apiKey",
-                "Content-Type: application/json"
-            ],
-            CURLOPT_POSTFIELDS => json_encode([
-                "model" => $modelo,
-                "input" => [
-                    [
-                        "role" => "user",
-                        "content" => $prompt
-                    ]
-                ],
+                "input" => $prompt,
                 "max_output_tokens" => 200,
                 "temperature" => 0.6
             ])
         ]);
 
         $respuesta = curl_exec($curl);
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return "⚠️ Error al conectar con OpenAI: $error";
+        }
         curl_close($curl);
-        $data = json_decode($respuesta, true);
 
-        return $data['output'][0]['content'][0]['text'];
+        $data = json_decode($respuesta, true);
+        return $data['output'][0]['content'][0]['text'] ?? "";
     }
     private function OpenAICorto($prompt)
     {
         $apiKey = OPENAI_API_KEY;
-        $modelo = "gpt-4o-mini";
+        $modelo = "gpt-4.1-mini";
 
         $curl = curl_init("https://api.openai.com/v1/responses");
         curl_setopt_array($curl, [
@@ -910,41 +696,22 @@ HTML;
             ],
             CURLOPT_POSTFIELDS => json_encode([
                 "model" => $modelo,
-                "input" => [
-                    [
-                        "role" => "user",
-                        "content" => $prompt
-                    ]
-                ],
+                "input" => $prompt,
                 "max_output_tokens" => 5,
-                "temperature" => 0.5
+                "temperature" => 0.6
             ])
         ]);
 
         $respuesta = curl_exec($curl);
-
         if (curl_errno($curl)) {
             $error = curl_error($curl);
             curl_close($curl);
             return "⚠️ Error al conectar con OpenAI: $error";
         }
-
         curl_close($curl);
+
         $data = json_decode($respuesta, true);
-
-        if (isset($data['output'][0]['content'][0]['text'])) {
-            return trim($data['output'][0]['content'][0]['text']);
-        }
-
-        if (isset($data['error']['code']) && $data['error']['code'] === 'model_not_found') {
-            return $this->llamarOpenAI_Fallback($prompt);
-        }
-
-        if (isset($data['error']['message'])) {
-            return "⚠️ Error API: " . $data['error']['message'];
-        }
-
-        return "No se pudo obtener respuesta del modelo.";
+        return $data['output'][0]['content'][0]['text'] ?? "";
     }
     /** Cargar mensajes del usuario y la IA (historial) */
     public function cargarMensajesIanBot()
@@ -959,18 +726,10 @@ HTML;
 
         $con = $this->conectarBD();
 
-        //         $sql = "SELECT mensaje, id_emisor, id_receptor, creado_en, archivo
-        // FROM mensajes
-        // WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
-        //   AND id_emisor <> id_receptor
-        //   AND creado_en >= NOW() - INTERVAL 1 HOUR
-        // ORDER BY creado_en ASC";
-
         $sql = "SELECT mensaje, id_emisor, id_receptor, creado_en, archivo
         FROM mensajes
         WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
-        AND id_emisor <> id_receptor
-        AND creado_en >= NOW() - INTERVAL 30 MINUTE
+          AND id_emisor <> id_receptor
         ORDER BY creado_en ASC";
 
         $stmt = $con->prepare($sql);
@@ -1007,10 +766,8 @@ HTML;
     {
         $historial = [];
         $sql = "SELECT id_emisor, mensaje FROM mensajes
-        WHERE (id_emisor IN (?, 0) AND id_receptor IN (?, 0))
-          AND creado_en >= NOW() - INTERVAL 3 HOUR
-        ORDER BY creado_en ASC";
-
+            WHERE (id_emisor IN (?, 0) AND id_receptor IN (?, 0))
+            ORDER BY creado_en ASC";
 
         $stmt = $con->prepare($sql);
         $stmt->bind_param("ii", $id_usuario, $id_usuario);
@@ -1034,5 +791,61 @@ HTML;
 
         $stmt->close();
         return $historial;
+    }
+    // Cifrado y descifrado Aes
+    private function cifrarAESIanBot($texto)
+    {
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
+        return base64_encode($ci . $cifrado);
+    }
+    private function descifrarAESIanBot($textoCodificado)
+    {
+        if (empty($textoCodificado)) return '';
+        $datos = base64_decode($textoCodificado, true);
+        if ($datos === false) return $textoCodificado;
+
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $this->clave_secreta, 0, $ci);
+        return $descifrado !== false ? $descifrado : $textoCodificado;
+    }
+    private function cifrarAESChatEspecialista($id)
+    {
+        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($id, 'aes-256-cbc', $clave, 0, $ci);
+        return strtr(base64_encode($ci . $cifrado), '+/=', '-_,');
+    }
+
+    private function descifrarAESChatEspecialista($idCodificado)
+    {
+        $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
+        $datos = base64_decode(strtr($idCodificado, '-_,', '+/='), true);
+        if ($datos === false) return $idCodificado;
+
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+
+        $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $clave, 0, $ci);
+        return $descifrado !== false ? $descifrado : $idCodificado;
+    }
+
+    private function cifrarAES($texto)
+    {
+        $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $cifrado = openssl_encrypt($texto, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
+        return base64_encode($ci . $cifrado);
+    }
+    private function descifrarAES($textoCodificado)
+    {
+        $datos = base64_decode($textoCodificado);
+        $ci_length = openssl_cipher_iv_length('aes-256-cbc');
+        $ci = substr($datos, 0, $ci_length);
+        $cifrado = substr($datos, $ci_length);
+        return openssl_decrypt($cifrado, 'aes-256-cbc', CLAVE_SECRETA, 0, $ci);
     }
 }
