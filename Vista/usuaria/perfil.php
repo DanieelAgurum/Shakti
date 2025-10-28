@@ -193,7 +193,7 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
                             <hr>
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">Nombre de usuaria</h6>
+                                    <h6 class="mb-0">Nombre de usuario</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
                                     <?php echo isset($_SESSION['nickname']) ? $_SESSION['nickname'] : "" ?>
