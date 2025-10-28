@@ -899,6 +899,21 @@ small.error {
   .animacion {
     animation: none !important;
   }
+
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Para pantallas menores a 768px */
+@media (max-width: 768px) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 .input-error {
