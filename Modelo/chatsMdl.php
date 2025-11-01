@@ -765,9 +765,10 @@ HTML;
     private function obtenerHistorialIanBot($con, $id_usuario)
     {
         $historial = [];
-        $sql = "SELECT id_emisor, mensaje FROM mensajes
-            WHERE (id_emisor IN (?, 0) AND id_receptor IN (?, 0))
-            ORDER BY creado_en ASC";
+        $sql = "SELECT id_emisor, mensaje, creado_en 
+        FROM mensajes 
+        WHERE (id_emisor = ? OR id_receptor = ?) AND creado_en >= NOW() - INTERVAL 15 MINUTE 
+        ORDER BY creado_en ASC";
 
         $stmt = $con->prepare($sql);
         $stmt->bind_param("ii", $id_usuario, $id_usuario);

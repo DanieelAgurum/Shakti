@@ -15,7 +15,8 @@ $usuario = [
   'id' => $_SESSION['id_usuaria'] ?? $_SESSION['id'] ?? 0,
   'rol' => $_SESSION['id_rol'] ?? 0,
   'nickname' => $_SESSION['nickname'] ?? 'Invitado',
-  'correo' => $_SESSION['correo'] ?? null
+  'correo' => $_SESSION['correo'] ?? null,
+  'nombre' => $_SESSION['nombre'] ?? 'Invitado',
 ];
 
 
