@@ -72,9 +72,9 @@ document.addEventListener("DOMContentLoaded", function () {
           .map((td) => td.textContent.toLowerCase())
           .join(" ");
         if (textoFila.includes(valor)) {
-          fila.style.display = ""; // Mostrar fila
+          fila.style.display = ""; 
         } else {
-          fila.style.display = "none"; // Ocultar fila
+          fila.style.display = "none"; 
         }
       }
     });

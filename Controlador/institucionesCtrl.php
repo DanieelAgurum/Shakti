@@ -1,5 +1,7 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/organizacionesModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/institucionesModelo.php';
+header('Content-Type: application/json');
+
 
 $preg = new organizacionesModelo();
 $preg->conectarBD();
@@ -17,6 +19,11 @@ if (isset($_REQUEST['opcion'])) {
             break;
         case 3:
             $preg->eliminarOrganizacion($_REQUEST['id']);
+            break;
+        case 4:
+            $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 6;
+            $preg->mostrarTodos($offset, $limit);
             break;
         default:
             echo json_encode(['opcion' => 0, 'mensaje' => 'Opción no válida.']);
