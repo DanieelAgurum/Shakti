@@ -281,7 +281,7 @@ class organizacionesModelo
             $this->imagen = null;
         }
 
-        // 🔹 UPDATE dinámico
+        // UPDATE dinámico
         $sql = "UPDATE organizaciones 
             SET nombre = :nombre,
                 descripcion = :descripcion,
