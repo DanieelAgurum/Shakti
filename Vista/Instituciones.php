@@ -31,7 +31,7 @@ $urlBase = getBaseUrl();
     <div class="recurso-pagina-principal container">
         <h1 class="recurso-titulo-principal text-center mt-4 mb-4">Instituciones</h1>
 
-        <div class="recurso-tarjetas-fila row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="recurso-tarjetas-fila row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
         </div>
     </div>
     <?php

@@ -1,7 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
-define('CLAVE_SECRETA', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
 require 'pusher_config.php';
+define('CLAVE_SECRETA', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
 class chatsMdl
 {
     private $con;
@@ -146,10 +146,7 @@ class chatsMdl
                 return;
             }
 
-            // Escapar texto
             $mensaje = $this->cifrarAES(htmlspecialchars(trim($mensaje), ENT_QUOTES, 'UTF-8'));
-
-            // Antidoxing
 
             // Crear carpeta si no existe
             $carpetaUploads = $_SERVER['DOCUMENT_ROOT'] . '/shakti/uploads/mensajes/';
@@ -201,7 +198,7 @@ class chatsMdl
                 if ($original) {
                     $thumb = imagecreatetruecolor($newWidth, $newHeight);
 
-                    // Fondo transparente para PNG/WebP
+
                     if (in_array($ext, ['png', 'webp'])) {
                         imagealphablending($thumb, false);
                         imagesavealpha($thumb, true);
@@ -215,16 +212,15 @@ class chatsMdl
                     $nombreArchivo = "{$nickname_emisor}_{$fecha}_{$id_receptor}.{$ext}";
                     $rutaArchivo = $carpetaUploads . $nombreArchivo;
 
-                    // 🔹 Verificar tamaño original (si > 20 MB, aplicar compresión fuerte)
+                    // Verificar tamaño original (si > 20 MB, aplicar compresión fuerte)
                     $calidadAlta = 80;
-                    $calidadBaja = 40; // fuerza más compresión
+                    $calidadBaja = 40; 
 
-                    $pesoOriginal = $imagen['size']; // bytes
+                    $pesoOriginal = $imagen['size']; 
                     $calidadFinal = ($pesoOriginal > (20 * 1024 * 1024)) ? $calidadBaja : $calidadAlta;
 
                     switch ($ext) {
                         case 'png':
-                            // en PNG el "quality" es al revés: 0 = sin compresión, 9 = máxima compresión
                             $nivel = ($pesoOriginal > (20 * 1024 * 1024)) ? 9 : 4;
                             imagepng($thumb, $rutaArchivo, $nivel);
                             break;
@@ -234,7 +230,7 @@ class chatsMdl
                         case 'webp':
                             imagewebp($thumb, $rutaArchivo, $calidadFinal);
                             break;
-                        default: // jpg
+                        default: 
                             imagejpeg($thumb, $rutaArchivo, $calidadFinal);
                             break;
                     }
@@ -820,7 +816,6 @@ HTML;
         $cifrado = openssl_encrypt($id, 'aes-256-cbc', $clave, 0, $ci);
         return strtr(base64_encode($ci . $cifrado), '+/=', '-_,');
     }
-
     private function descifrarAESChatEspecialista($idCodificado)
     {
         $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
@@ -834,7 +829,6 @@ HTML;
         $descifrado = openssl_decrypt($cifrado, 'aes-256-cbc', $clave, 0, $ci);
         return $descifrado !== false ? $descifrado : $idCodificado;
     }
-
     private function cifrarAES($texto)
     {
         $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));

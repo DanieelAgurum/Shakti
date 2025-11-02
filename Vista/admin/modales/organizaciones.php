@@ -38,7 +38,11 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                         <label for="numero" class="form-label">Número de la organización</label>
                         <input type="text" class="form-control" id="numero" name="numero" placeholder="Ingresa el número de la organización" required>
                     </div>
-
+                    <div class="col-12 mb-2 position-relative">
+                        <label for="domicilio_agregar" class="form-label">Domicilio de la organización</label>
+                        <input type="text" class="form-control" id="domicilio_agregar" name="domicilio"
+                            placeholder="Buscar dirección..." required>
+                    </div>
                     <div class="col-12 mb-2">
                         <label for="imagen" class="form-label">Imagen de la organización</label>
                         <input type="file" name="imagen" id="imagen" class="form-control" accept="image/*" required>
@@ -55,7 +59,6 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     </div>
 </div>
 
-
 <div class="modal fade" id="modificarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -66,10 +69,9 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             <div class="modal-body">
                 <div id="mensajeModificados">
                 </div>
-                
-                <form class="row g-3" id="modificarOrganizacion">
+                <form class="row g-3" id="modificarOrganizacion" enctype="multipart/form-data">
                     <input type="hidden" name="opcion" value="2">
-                    <input type="hidden" id="id_modificar" name="id" value="">
+                    <input type="hidden" id="id_modificar" name="registro_modificar" value="">
                     <div class="col-12">
                         <label for="nombre_modificar" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="nombre_modificar" name="nombre" placeholder="Ingresa el nombre" required>
@@ -81,6 +83,15 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                     <div class="col-12">
                         <label for="numero_modificar" class="form-label">Numero</label>
                         <input type="text" class="form-control" id="numero_modificar" name="numero" placeholder="Ingresa numero" required>
+                    </div>
+                    <div class="col-12 mb-2 position-relative">
+                        <label for="domicilio_modificar" class="form-label">Domicilio</label>
+                        <input type="text" class="form-control" id="domicilio_modificar" name="domicilio"
+                            placeholder="Buscar dirección..." required>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <label for="imagen_modificar" class="form-label">Imagen de la organización</label>
+                        <input type="file" name="imagen" id="imagen_modificar" class="form-control" accept="image/*" required>
                     </div>
                 </form>
             </div>
@@ -96,7 +107,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">¿Deseas eliminar a <span id="nombreEliminar" class="text-danger fw-bold"></span>?</h5>
+                <h5 class="modal-title">¿Deseas eliminar a <span id="nombreEliminar" class="text-danger fw-bold"></span>
+                    <span id="idEliminar" class="text-danger fw-bold"></span>
+                    ?
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
@@ -104,7 +118,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a id="btnEliminarLink" href="#" class="btn btn-danger">Eliminar</a>
+                <button id="btnEliminarLink" class="btn btn-danger">Eliminar</button>
             </div>
         </div>
     </div>
