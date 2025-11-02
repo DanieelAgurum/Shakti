@@ -348,6 +348,9 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
+        <p class="text-white">Notificaciones recientes:</p>
+        <ul class="list-group" id="listaNotificaciones"></ul>
+        <p class="text-white">Historial de notificaciones:</p>
         <?php if ($notificaciones): ?>
           <ul class="list-group">
             <?php foreach ($notificaciones as $n): ?>
@@ -363,7 +366,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
                 data-id="<?= $n['id_publicacion'] ?>" data-bs-placement="top" title="Ver publicación">
                 <div class="ms-2 me-auto">
                   <?= htmlspecialchars($n['mensaje']) ?><br>
-                  <small class=""><?= date('d/m/Y H:i', strtotime($n['fecha_creacion'])) ?></small>
+                  <small class="text-dark noti"><?= date('d/m/Y H:i', strtotime($n['fecha_creacion'])) ?></small>
                 </div>
                 <?= $n['leida'] == 0 ? '<span class="badge bg-danger rounded-pill">Nuevo</span>' : '' ?>
               </li>

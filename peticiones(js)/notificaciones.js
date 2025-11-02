@@ -1,21 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const toastDuration = 6000; // ms
+    const baseUrl = window.location.origin + '/shakti'; // 👈 Ruta dinámica
+    const toastDuration = 6000;
     const contador = document.getElementById('contadorNotificaciones');
     const modal = document.getElementById('modalNotificaciones');
     let idsMostrados = new Set();
 
     async function cargarNotificaciones() {
         try {
-            const res = await fetch('/shakti/Controlador/notificacionesCtrl.php');
+            const res = await fetch(`${baseUrl}/Controlador/notificacionesCtrl.php`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
 
             const config = data.config || { notificar_publicaciones: 1, notificar_comentarios: 1 };
             const notificaciones = data.notificaciones || [];
+            const lista = document.getElementById('listaNotificaciones');
 
             if (Array.isArray(notificaciones) && notificaciones.length > 0) {
                 let nuevas = [];
                 let totalNuevas = 0;
+                let html = "";
 
                 notificaciones.forEach(noti => {
                     if (!idsMostrados.has(noti.id)) {
@@ -32,27 +35,38 @@ document.addEventListener('DOMContentLoaded', () => {
                             totalNuevas++;
                         }
                     }
+
+                    html += `
+                        <li class="list-group-item noti-item d-flex justify-content-between align-items-start ${noti.leida == 0 ? 'fw-bold bg-light' : ''}"
+                            data-id="${noti.id_publicacion}" data-bs-placement="top" title="Ver publicación">
+                            <div class="ms-2 me-auto">
+                                ${noti.mensaje}<br>
+                                <small class="text-dark noti">${new Date(noti.fecha_creacion).toLocaleString()}</small>
+                            </div>
+                            ${noti.leida == 0 ? '<span class="badge bg-danger rounded-pill">Nuevo</span>' : ''}
+                        </li>`;
                 });
+
+                if (lista) lista.innerHTML = html;
 
                 if (totalNuevas > 0) {
                     contador.style.display = "inline-block";
                     contador.textContent = notificaciones.length;
-
-                    if (totalNuevas === 1) {
+                    if (totalNuevas === 1)
                         mostrarToast(`🔔 ${nuevas[0]}`);
-                    } else {
+                    else
                         mostrarToast(`🔔 Tienes ${totalNuevas} nuevas notificaciones`);
-                    }
                 }
             } else {
                 contador.style.display = "none";
+                if (lista)
+                    lista.innerHTML = "<li class='list-group-item text-center noti'>No tienes notificaciones</li>";
             }
         } catch (error) {
             console.error("Error cargando notificaciones:", error);
         }
     }
 
-    // Mostrar Toast
     function mostrarToast(mensaje) {
         const fondo = mensaje.includes("Tienes")
             ? "linear-gradient(135deg, #27ae60, #5ee6b5)"
@@ -93,10 +107,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const res = await fetch('/shakti/Controlador/notificacionesCtrl.php?marcarLeidas=1');
+            const res = await fetch(`${baseUrl}/Controlador/notificacionesCtrl.php?marcarLeidas=1`);
             if (res.ok) {
                 contador.style.display = "none";
-                console.log("✅ Notificaciones marcadas como leídas");
+                console.log("Notificaciones marcadas como leídas");
             }
         } catch (error) {
             console.error("Error al marcar como leídas:", error);
@@ -104,5 +118,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     cargarNotificaciones();
-    setInterval(cargarNotificaciones, 10000);
+    setInterval(cargarNotificaciones, 5000);
 });

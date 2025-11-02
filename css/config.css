@@ -79,7 +79,7 @@ html.dark-mode .shakti-cm-msg-text {
     background-color: #1e1e1e !important;
 }
 
-html.dark-mode .dropdown-menu{
+html.dark-mode .dropdown-menu {
     background-color: var(--color-primario-medio) !important;
 }
 
@@ -99,6 +99,10 @@ html.dark-mode small,
 html.dark-mode .alzalaVoz-card,
 html.dark-mode .form-check-label {
     color: #fff !important;
+}
+
+html.dark-mode .noti {
+    color: #000 !important;
 }
 
 html.dark-mode .social-information i {
