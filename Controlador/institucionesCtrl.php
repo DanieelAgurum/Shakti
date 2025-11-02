@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/institucionesModelo.php';
 header('Content-Type: application/json');
 
@@ -9,16 +13,17 @@ $preg->conectarBD();
 if (isset($_REQUEST['opcion'])) {
     switch ($_REQUEST['opcion']) {
         case 1:
-            $preg->inicializar($_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero'], $_FILES['imagen']);
+            $preg->inicializar($_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero'], $_REQUEST['domicilio'], $_FILES['imagen']);
             $resultado = $preg->agregarOrganizacion();
             echo $resultado;
             break;
         case 2:
-            $resultado = $preg->modificarOrganizacion($_REQUEST['id'], $_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero']);
+            $resultado = $preg->modificarOrganizacion($_REQUEST['registro_modificar'], $_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero'], $_REQUEST['domicilio'], $_FILES['imagen']);
             echo $resultado;
             break;
         case 3:
-            $preg->eliminarOrganizacion($_REQUEST['id']);
+            $resultado = $preg->eliminarOrganizacion($_REQUEST['id']);
+            echo $resultado;
             break;
         case 4:
             $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;

@@ -1,10 +1,7 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
-$urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
 if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     header("Location: {$urlBase}");
     exit;
@@ -18,109 +15,79 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizaciones - Shakti</title>
-    <script src="js/organizaciones.js"></script>
     <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/organizaciones.js"></script>
 </head>
 
 <body class="sb-nav-fixed">
-    <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/navbar.php';
-    ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/navbar.php'; ?>
     <div id="layoutSidenav">
         <?php
-        include  $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/lateral.php';
+        include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/lateral.php';
         include $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/admin/modales/organizaciones.php';
         ?>
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4 mb-5">
-                    <h1 class="mt-4"></h1>
-                    <div class="container">
-                        <h1 class="page-header text-center"> <strong> Organizaciones </strong></h1>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button type="button" style="margin-bottom: 8px;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Nuevo <i class="fa-solid fa-circle-plus"></i>
-                                </button>
-                                <?php if (isset($_GET['estado'])): ?>
-                                    <?php
-                                    $mensajes = [
-                                        'agregado' => 'La organización fue agregada correctamente.',
-                                        'modificado' => 'La organización fue modificada correctamente.', // Nuevo mensaje
-                                        'eliminado' => 'La organización fue eliminada correctamente.',
-                                        'error' => 'Intentelo mas tarde.',
-                                    ];
+                    <h1 class="page-header text-center mt-4"><strong>Organizaciones</strong></h1>
 
-                                    $clases = [
-                                        'agregado' => 'success',
-                                        'modificado' => 'primary',
-                                        'eliminado' => 'danger',
-                                        'error' => 'warning',
-                                    ];
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                            Nuevo <i class="fa-solid fa-circle-plus"></i>
+                        </button>
 
-                                    $estado = $_GET['estado'];
-                                    ?>
-                                    <?php if (isset($mensajes[$estado]) && isset($clases[$estado])): ?>
-                                        <div class="alert alert-<?php echo htmlspecialchars($clases[$estado]); ?> alert-dismissible fade show" role="alert">
-                                            <?php echo htmlspecialchars($mensajes[$estado]); ?>
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                                        </div>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <table class="table table-bordered table-striped" id="MiAgenda" style="margin-top:20px;">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Descripción</th>
-                                            <th>Numero</th>
-                                            <th>Imagen</th>
-                                            <th>Opciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/organizacionesCtrl.php';
-                                        $tabla = new organizacionesModelo();
-                                        $tabla->conectarBD();
-                                        $tabla->mostrarTodos();
-                                        ?>
-                                    </tbody>
-                            </div>
-                        </div>
+                        <?php if (isset($_GET['estado'])):
+                            $mensajes = [
+                                'agregado' => 'La organización fue agregada correctamente.',
+                                'modificado' => 'La organización fue modificada correctamente.',
+                                'eliminado' => 'La organización fue eliminada correctamente.',
+                                'error' => 'Intentelo más tarde.'
+                            ];
+                            $clases = [
+                                'agregado' => 'success',
+                                'modificado' => 'primary',
+                                'eliminado' => 'danger',
+                                'error' => 'warning'
+                            ];
+                            $estado = $_GET['estado'];
+                            if (isset($mensajes[$estado])): ?>
+                                <div class="alert alert-<?php echo htmlspecialchars($clases[$estado]); ?> alert-dismissible fade show"
+                                    role="alert">
+                                    <?php echo htmlspecialchars($mensajes[$estado]); ?>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                                </div>
+                        <?php endif;
+                        endif; ?>
+
+                        <table id="MiAgenda" class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Teléfono</th>
+                                    <th>Domicilio</th>
+                                    <th>Imagen</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tablaOrganizaciones"></tbody>
+                        </table>
                     </div>
+                </div>
             </main>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $('#MiAgenda').DataTable();
-        });
-    </script>
-    <script>
-        var table = $('#MiAgenda').DataTable({
-            language: {
-                "decimal": "",
-                "emptyTable": "No hay información",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                "infoEmpty": "Mostrando 0 a 0 de 0 Entradas",
-                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                "infoPostFix": "",
-                "thousands": ",",
-                "lengthMenu": "Mostrar _MENU_ Entradas",
-                "loadingRecords": "Cargando...",
-                "processing": "Procesando...",
-                "search": "Buscar:",
-                "zeroRecords": "Sin resultados encontrados",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Ultimo",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                }
-            },
-        });
-    </script>
+
+    <div id="modalesContainer"></div>
+
 </body>
 
 </html>

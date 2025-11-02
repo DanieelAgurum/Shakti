@@ -42,7 +42,7 @@ async function cargarInstituciones() {
         <div class="col">
           <div class="recurso-card-base card h-100 shadow-sm">
             <div class="recurso-card-img-container">
-              <img src="${inst.imagen}" class="recurso-card-img-top card-img-top" alt="Imagen representativa de ${inst.nombre}">
+              <img src="${inst.imagen}" class="recurso-card-img-top card-img-top" alt="Imagen representativa de ${inst.nombre}" style="max-width: auto; height: 180px;">
             </div>
             <div class="recurso-card-body card-body d-flex flex-column">
               <h5 class="recurso-card-titulo card-title">${inst.nombre}</h5>
@@ -108,10 +108,7 @@ async function cargarInstituciones() {
     contenedorTarjetas.insertAdjacentHTML("beforeend", cardsHTML);
     contenedorModales.insertAdjacentHTML("beforeend", modalesHTML);
 
-    offset += limit;
-
-    // 🔁 carga progresiva (sin scroll obligatorio)
-    if (data.datos.length > 0) {
+    offset += limit;    if (data.datos.length > 0) {
       setTimeout(() => cargarInstituciones(), 300);
     } else {
       finDatos = true;

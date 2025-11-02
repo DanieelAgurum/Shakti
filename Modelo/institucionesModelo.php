@@ -6,6 +6,7 @@ class organizacionesModelo
     private $nombre;
     private $descripcion;
     private $numero;
+    private $domicilio;
     private $imagen;
     private $conexion;
     private $urlBase;
@@ -26,124 +27,304 @@ class organizacionesModelo
             exit;
         }
     }
-
-    public function inicializar($nombre, $descripcion, $numero, $imagen = null)
+    public function inicializar($nombre, $descripcion, $numero, $domicilio, $imagen = null)
     {
         $this->nombre = trim($nombre);
         $this->descripcion = trim($descripcion);
         $this->numero = trim($numero);
+        $this->domicilio = trim($domicilio);
 
+        // Guardamos directamente el array de $_FILES para procesarlo luego en agregarOrganizacion
         if ($imagen && isset($imagen['error']) && $imagen['error'] === 0) {
             $check = getimagesize($imagen['tmp_name']);
             $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
             if ($check !== false && in_array($check['mime'], $allowedMimeTypes)) {
-                $this->imagen = file_get_contents($imagen['tmp_name']);
+                $this->imagen = $imagen; 
             } else {
-                // Devuelve un error si el formato no es válido
                 return json_encode(['opcion' => 0, 'mensaje' => 'Formato de imagen no válido.']);
             }
+        } else {
+            $this->imagen = null;
         }
     }
-
     public function agregarOrganizacion()
     {
         if (empty($this->nombre) || empty($this->descripcion) || empty($this->numero)) {
             return json_encode(['opcion' => 0, 'mensaje' => 'Los campos no pueden estar vacíos.']);
         }
 
-        if ($this->imagen === null) {
-            return json_encode(['opcion' => 0, 'mensaje' => 'La imagen es requerida.']);
-        }
-
         $this->conectarBD();
 
-        $consulta = "SELECT COUNT(*) FROM organizaciones WHERE nombre = :nombre";
-        $verifica = $this->conexion->prepare($consulta);
-        $verifica->bindParam(':nombre', $this->nombre);
-        $verifica->execute();
+        $check = "SELECT nombre, numero FROM organizaciones WHERE nombre = :nombre OR numero = :numero";
+        $stmtCheck = $this->conexion->prepare($check);
+        $stmtCheck->bindParam(':nombre', $this->nombre);
+        $stmtCheck->bindParam(':numero', $this->numero);
+        $stmtCheck->execute();
+        $conflictos = $stmtCheck->fetchAll();
 
-        if ($verifica->fetchColumn() > 0) {
-            return json_encode(['opcion' => 0, 'mensaje' => 'La organización ya existe.']);
+        if (!empty($conflictos)) {
+            $mensaje = [];
+            foreach ($conflictos as $c) {
+                if ($c['nombre'] === $this->nombre) $mensaje[] = "ya existe esta institución con este nombre";
+                if ($c['numero'] === $this->numero) $mensaje[] = "ya existe esta institución con este número";
+            }
+            return json_encode(['opcion' => 0, 'mensaje' => implode(" y ", $mensaje)]);
         }
 
-        $registro = "INSERT INTO organizaciones (nombre, descripcion, numero, imagen)
-                     VALUES (:nombre, :descripcion, :numero, :imagen)";
+        // Procesar imagen si se envía
+        if ($this->imagen && isset($this->imagen['tmp_name']) && is_uploaded_file($this->imagen['tmp_name'])) {
+            $imgInfo = getimagesize($this->imagen['tmp_name']);
+            if ($imgInfo) {
+                $ext = strtolower(pathinfo($this->imagen['name'], PATHINFO_EXTENSION));
+                $maxWidth = 1500;
+                $maxHeight = 1500;
+                $width = $imgInfo[0];
+                $height = $imgInfo[1];
+                $ratio = min($maxWidth / $width, $maxHeight / $height, 1);
+                $newWidth = (int)($width * $ratio);
+                $newHeight = (int)($height * $ratio);
+
+                switch ($imgInfo['mime']) {
+                    case 'image/jpeg':
+                    case 'image/jpg':
+                        $original = imagecreatefromjpeg($this->imagen['tmp_name']);
+                        break;
+                    case 'image/png':
+                        $original = imagecreatefrompng($this->imagen['tmp_name']);
+                        break;
+                    case 'image/gif':
+                        $original = imagecreatefromgif($this->imagen['tmp_name']);
+                        break;
+                    case 'image/webp':
+                        $original = imagecreatefromwebp($this->imagen['tmp_name']);
+                        break;
+                    default:
+                        $original = null;
+                }
+
+                if ($original) {
+                    $thumb = imagecreatetruecolor($newWidth, $newHeight);
+                    if (in_array($ext, ['png', 'webp'])) {
+                        imagealphablending($thumb, false);
+                        imagesavealpha($thumb, true);
+                        $trans = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
+                        imagefill($thumb, 0, 0, $trans);
+                    }
+                    imagecopyresampled($thumb, $original, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+                    ob_start();
+                    switch ($ext) {
+                        case 'png':
+                            imagepng($thumb);
+                            break;
+                        case 'gif':
+                            imagegif($thumb);
+                            break;
+                        case 'webp':
+                            imagewebp($thumb, null, 80);
+                            break;
+                        default:
+                            imagejpeg($thumb, null, 80);
+                    }
+                    $this->imagen = ob_get_clean();
+                    imagedestroy($original);
+                    imagedestroy($thumb);
+                } else {
+                    $this->imagen = null;
+                }
+            } else {
+                $this->imagen = null;
+            }
+        } else {
+            $this->imagen = null;
+        }
+
+        // Insertar registro
+        $registro = "INSERT INTO organizaciones (nombre, descripcion, numero, domicilio, imagen)
+                 VALUES (:nombre, :descripcion, :numero, :domicilio, :imagen)";
         $agregar = $this->conexion->prepare($registro);
         $agregar->bindParam(':nombre', $this->nombre);
         $agregar->bindParam(':descripcion', $this->descripcion);
         $agregar->bindParam(':numero', $this->numero);
+        $agregar->bindParam(':domicilio', $this->domicilio);
         $agregar->bindParam(':imagen', $this->imagen, PDO::PARAM_LOB);
 
-        // CORRECCIÓN: Se eliminó la redirección con header() y se retorna una respuesta JSON.
-        // Esto es necesario para que la llamada AJAX funcione correctamente.
         if ($agregar->execute()) {
-            return json_encode(['opcion' => 1, 'mensaje' => 'Organización agregada con éxito']);
+            return json_encode(['opcion' => 1, 'mensaje' => 'Institución agregada con éxito.']);
         } else {
             return json_encode(['opcion' => 0, 'mensaje' => 'Error al guardar en la base de datos.']);
         }
     }
-
-    // La función modificarOrganizacion ya estaba bien para AJAX, no necesita cambios.
-    public function modificarOrganizacion($id, $nombre, $descripcion, $numero)
+    public function modificarOrganizacion($idHash, $nombre, $descripcion, $numero, $domicilio, $imagen = null)
     {
-        if (empty($nombre) || empty($descripcion) || empty($numero)) {
-            return json_encode([
-                'opcion' => 0,
-                'mensaje' => 'Los campos no pueden estar vacíos.'
-            ]);
-        }
+        $this->nombre = trim($nombre);
+        $this->descripcion = trim($descripcion);
+        $this->numero = trim($numero);
+        $this->domicilio = trim($domicilio);
 
         $this->conectarBD();
-        $consul = "SELECT COUNT(*) FROM organizaciones WHERE nombre = :nombre AND id != :id ";
-        $com = $this->conexion->prepare($consul);
-        $com->bindParam(':nombre', $nombre);
-        $com->bindParam(':id', $id, PDO::PARAM_INT);
-        $com->execute();
-        $resul = $com->fetchColumn();
 
-        if ($resul > 0) {
+        // Obtener ID real desde hash
+        $sqlId = "SELECT id FROM organizaciones WHERE SHA2(id, 256) = :idHash";
+        $stmtId = $this->conexion->prepare($sqlId);
+        $stmtId->bindParam(':idHash', $idHash);
+        $stmtId->execute();
+        $row = $stmtId->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return json_encode(['opcion' => 0, 'mensaje' => 'Institución no encontrada.']);
+        }
+
+        $id = $row['id'];
+
+        // Verificar duplicados
+        $check = $this->conexion->prepare("
+        SELECT id FROM organizaciones 
+        WHERE (nombre = :nombre OR domicilio = :domicilio) AND id != :id
+    ");
+        $check->bindParam(':nombre', $this->nombre);
+        $check->bindParam(':domicilio', $this->domicilio);
+        $check->bindParam(':id', $id, PDO::PARAM_INT);
+        $check->execute();
+
+        if ($check->rowCount() > 0) {
             return json_encode([
                 'opcion' => 0,
-                'mensaje' => 'Ya existe otra organización con ese nombre.'
+                'mensaje' => 'Ya existe otra organización con el mismo nombre o domicilio.'
             ]);
         }
 
-        $act = "UPDATE organizaciones SET nombre = :nombre, descripcion = :descripcion, numero = :numero WHERE id = :id";
-        $update = $this->conexion->prepare($act);
-        $update->bindParam(':nombre', $nombre);
-        $update->bindParam(':descripcion', $descripcion);
-        $update->bindParam(':numero', $numero);
-        $update->bindParam(':id', $id, PDO::PARAM_INT);
+        // Procesar imagen si se envía una nueva
+        if ($imagen && isset($imagen['tmp_name']) && is_uploaded_file($imagen['tmp_name']) && $imagen['error'] === UPLOAD_ERR_OK) {
+            $imgInfo = getimagesize($imagen['tmp_name']);
+            if (!$imgInfo) {
+                return json_encode(['opcion' => 0, 'mensaje' => 'El archivo no es una imagen válida.']);
+            }
 
-        if ($update->execute()) {
-            return json_encode([
-                'opcion' => 1,
-                'mensaje' => 'ok'
-            ]);
+            $ext = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
+            $extPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if (!in_array($ext, $extPermitidas)) {
+                $ext = 'jpg';
+            }
+
+            $width = $imgInfo[0];
+            $height = $imgInfo[1];
+            $maxWidth = 1500;
+            $maxHeight = 1500;
+            $ratio = min($maxWidth / $width, $maxHeight / $height, 1);
+            $newWidth = (int)($width * $ratio);
+            $newHeight = (int)($height * $ratio);
+
+            switch ($imgInfo['mime']) {
+                case 'image/jpeg':
+                case 'image/jpg':
+                    $original = imagecreatefromjpeg($imagen['tmp_name']);
+                    break;
+                case 'image/png':
+                    $original = imagecreatefrompng($imagen['tmp_name']);
+                    break;
+                case 'image/gif':
+                    $original = imagecreatefromgif($imagen['tmp_name']);
+                    break;
+                case 'image/webp':
+                    $original = imagecreatefromwebp($imagen['tmp_name']);
+                    break;
+                default:
+                    return json_encode(['opcion' => 0, 'mensaje' => 'Formato de imagen no soportado.']);
+            }
+
+            if ($original) {
+                $thumb = imagecreatetruecolor($newWidth, $newHeight);
+
+                // Preservar transparencia
+                if (in_array($ext, ['png', 'webp'])) {
+                    imagealphablending($thumb, false);
+                    imagesavealpha($thumb, true);
+                    $transparente = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
+                    imagefill($thumb, 0, 0, $transparente);
+                }
+
+                imagecopyresampled($thumb, $original, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+                // Comprimir según tamaño
+                $pesoOriginal = $imagen['size'];
+                $calidadAlta = 80;
+                $calidadBaja = 40;
+                $calidadFinal = ($pesoOriginal > (20 * 1024 * 1024)) ? $calidadBaja : $calidadAlta;
+
+                // Guardar temporalmente en buffer
+                ob_start();
+                switch ($ext) {
+                    case 'png':
+                        $nivel = ($pesoOriginal > (20 * 1024 * 1024)) ? 9 : 4;
+                        imagepng($thumb, null, $nivel);
+                        break;
+                    case 'gif':
+                        imagegif($thumb);
+                        break;
+                    case 'webp':
+                        imagewebp($thumb, null, $calidadFinal);
+                        break;
+                    default:
+                        imagejpeg($thumb, null, $calidadFinal);
+                        break;
+                }
+                $this->imagen = ob_get_clean();
+
+                imagedestroy($original);
+                imagedestroy($thumb);
+            } else {
+                $this->imagen = null;
+            }
         } else {
-            return json_encode([
-                'opcion' => 0,
-                'mensaje' => 'No se pudo actualizar. Inténtalo más tarde.'
-            ]);
+            $this->imagen = null;
+        }
+
+        // 🔹 UPDATE dinámico
+        $sql = "UPDATE organizaciones 
+            SET nombre = :nombre,
+                descripcion = :descripcion,
+                numero = :numero,
+                domicilio = :domicilio";
+
+        if ($this->imagen !== null) {
+            $sql .= ", imagen = :imagen";
+        }
+
+        $sql .= " WHERE id = :id";
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->bindParam(':nombre', $this->nombre);
+        $stmt->bindParam(':descripcion', $this->descripcion);
+        $stmt->bindParam(':numero', $this->numero);
+        $stmt->bindParam(':domicilio', $this->domicilio);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        if ($this->imagen !== null) {
+            $stmt->bindParam(':imagen', $this->imagen, PDO::PARAM_LOB);
+        }
+
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            return json_encode(['opcion' => "modifico", 'mensaje' => 'Institución modificada con éxito.']);
+        } else {
+            return json_encode(['opcion' => "sinCambios", 'mensaje' => 'No se detectaron cambios en la institución.']);
         }
     }
-
-    // La función eliminarOrganizacion usa una redirección simple, lo cual está bien para su implementación actual.
     public function eliminarOrganizacion($id)
     {
         $this->conectarBD();
 
-        $eliminar = "DELETE FROM organizaciones WHERE id = :id";
+        $eliminar = "DELETE FROM organizaciones WHERE SHA2(id, 256) = :idHash";
         $delete = $this->conexion->prepare($eliminar);
-        $delete->bindParam(':id', $id, PDO::PARAM_INT);
+        $delete->bindParam(':idHash', $id, PDO::PARAM_STR);
 
         if ($delete->execute()) {
-            header("Location: " . $this->urlBase . "/Vista/admin/organizaciones.php?estado=eliminado");
-            exit;
+            return json_encode(['opcion' => "eliminado", 'mensaje' => 'Se eliminó la organización.']);
         } else {
-            header("Location: " . $this->urlBase . "/Vista/admin/organizaciones.php?estado=error");
-            exit;
+            return json_encode(['opcion' => "error", 'mensaje' => 'Inténtelo más tarde.']);
         }
     }
     public function mostrarTodos($offset, $limit)
@@ -151,9 +332,9 @@ class organizacionesModelo
         $this->conectarBD();
 
         $sql = "SELECT id, nombre, descripcion, numero, imagen, domicilio 
-            FROM organizaciones 
-            ORDER BY id DESC 
-            LIMIT :offset, :limit";
+                FROM organizaciones 
+                ORDER BY id DESC 
+                LIMIT :offset, :limit";
         $stmt = $this->conexion->prepare($sql);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
@@ -167,7 +348,7 @@ class organizacionesModelo
         $instituciones = [];
         $claveSecreta = 'NexoH_Instituciones_2025';
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $stmt->fetch()) {
             $token = hash('sha256', $row['id'] . $claveSecreta . random_bytes(8));
 
             $imagen = !empty($row['imagen'])
@@ -176,14 +357,16 @@ class organizacionesModelo
 
             $instituciones[] = [
                 'token' => $token,
-                'nombre' => htmlspecialchars($row['nombre']) ?? "",
-                'descripcion' => htmlspecialchars($row['descripcion'] ?? ""),
-                'telefono' => htmlspecialchars($row['numero']) ?? "",
-                'domicilio' => htmlspecialchars($row['domicilio'] ?? ""),
+                'registro' => hash('sha256', $row['id']),
+                'nombre' => htmlspecialchars($row['nombre']),
+                'descripcion' => htmlspecialchars($row['descripcion']),
+                'telefono' => htmlspecialchars($row['numero']) ?? "Sin Numero de Télefono",
+                'domicilio' => htmlspecialchars($row['domicilio']) ?? "Sin Domicilio",
                 'imagen' => $imagen,
-                'link' => '' ?? '#'
+                'link' => '#'
             ];
         }
+
         echo json_encode(['sinDatos' => false, 'datos' => $instituciones]);
     }
 }
