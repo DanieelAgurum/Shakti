@@ -114,7 +114,7 @@ async function cargarInstituciones() {
       finDatos = true;
     }
   } catch (error) {
-    console.error("Error al cargar instituciones:", error);
+
   } finally {
     cargando = false;
   }

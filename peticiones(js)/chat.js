@@ -93,10 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
             suscribirCanal(idUsuario, primerChat.id);
           }
         }
-        // 🔹 Si NO hay especialista, no selecciona ningún chat
       })
       .catch((error) => {
-        console.error("Error al cargar los chats:", error);
       });
   }
 

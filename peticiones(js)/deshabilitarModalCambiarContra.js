@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       })
       .catch((error) => {
-        console.error(error);
         Swal.fire({
           icon: "error",
           title: "Error",
