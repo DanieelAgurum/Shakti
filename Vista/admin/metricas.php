@@ -39,7 +39,7 @@ $topComentarios = $modelo->obtenerTopComentarios();
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Métricas - Shakti</title>
+    <title>Métricas - NexoH</title>
     <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>◊
     <style>
         .chart-container {
@@ -69,7 +69,7 @@ $topComentarios = $modelo->obtenerTopComentarios();
         ?>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4 mb-5 mt-5">
+                <div class="container-fluid px-4 mb-5">
                     <h1 class="mt-4 text-center solid"><strong>Métricas</strong></h1>
                     <div class="chart-container mt-4 row">
                         <div id="pieChart" class="chart-box col-10"></div>

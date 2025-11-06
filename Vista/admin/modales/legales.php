@@ -98,7 +98,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title">Eliminar contenido legal</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
             <div class="modal-body">
@@ -106,7 +106,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
                 <form action="../../Controlador/libre_seguraCtrl.php" method="post">
                     <input type="hidden" name="opcion" value="3">
                     <input type="hidden" name="id_legal" value="<?php echo $row['id_legal']; ?>">

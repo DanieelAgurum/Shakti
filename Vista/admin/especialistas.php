@@ -18,7 +18,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Especialistas - Shakti</title>
+    <title>Especialistas - NexoH</title>
     <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
 </head>
 
@@ -103,11 +103,18 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                     <?php endfor; ?>
                                                 </td>
                                                 <td>
-                                                    <a href="#cambiarEstado_<?php echo $row['id']; ?>" class="btn btn-sm <?php echo $row['estatus'] == 1 ? 'btn-warning' : 'btn-success'; ?> d-block" data-toggle="modal">
+                                                    <a href="#cambiarEstado_<?php echo $row['id']; ?>"
+                                                        class="btn btn-sm <?php echo $row['estatus'] == 1 ? 'btn-warning' : 'btn-success'; ?> d-block"
+                                                        data-bs-toggle="modal">
                                                         <i class="fa-sharp fa-solid fa-pen-to-square"></i>
                                                         <?php echo $row['estatus'] == 1 ? 'Desactivar' : 'Activar'; ?>
-                                                    </a><br>
-                                                    <a href="#eliminarE_<?php echo $row['id']; ?>" class="btn btn-danger m-auto btn-sm d-block" data-toggle="modal"><i class="fa-solid fa-eraser"></i> Eliminar</a>
+                                                    </a>
+                                                    <br>
+                                                    <a href="#eliminarE_<?php echo $row['id']; ?>"
+                                                        class="btn btn-danger m-auto btn-sm d-block"
+                                                        data-bs-toggle="modal">
+                                                        <i class="fa-solid fa-eraser"></i> Eliminar
+                                                    </a>
                                                 </td>
                                                 <?php include '../modales/perfil.php'; ?>
                                             </tr>
