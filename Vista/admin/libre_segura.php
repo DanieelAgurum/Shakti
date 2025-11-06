@@ -18,7 +18,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentos legales - Shakti</title>
+    <title>Documentos legales - NexoH</title>
     <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/admin/icono.php' ?>
 </head>
 
@@ -89,8 +89,8 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                                                     <a class="btn btn-sm btn-outline-primary" target="_blank" href="../../Modelo/ver_contenido.php?id_legal=<?php echo $row['id_legal']; ?>"><i class="bi bi-file-earmark-check-fill"></i> Documento</a>
                                                 </td>
                                                 <td>
-                                                    <a href="#editarLegal_<?php echo $row['id_legal']; ?>" class="btn btn-success btn-sm d-block" data-toggle="modal"><i class="fa-solid fa-pen"></i> Editar</a><br>
-                                                    <a href="#eliminarL_<?php echo $row['id_legal']; ?>" class="btn btn-danger m-auto btn-sm d-block" data-toggle="modal"><i class="fa-solid fa-eraser"></i> Eliminar</a>
+                                                    <a href="#editarLegal_<?php echo $row['id_legal']; ?>" class="btn btn-success btn-sm d-block" data-bs-toggle="modal"><i class="fa-solid fa-pen"></i> Editar</a><br>
+                                                    <a href="#eliminarL_<?php echo $row['id_legal']; ?>" class="btn btn-danger m-auto btn-sm d-block" data-bs-toggle="modal"><i class="fa-solid fa-eraser"></i> Eliminar</a>
                                                 </td>
                                                 <?php include 'modales/legales.php'; ?>
                                             </tr>

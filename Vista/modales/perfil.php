@@ -152,7 +152,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title"><?php echo $row['estatus'] == 1 ? 'Desactivar' : 'Activar'; ?> cuenta de especialista</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
             <div class="modal-body">
@@ -161,7 +161,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
                 <form action="../../Controlador/especialistaCtrl.php" method="post">
                     <input type="hidden" name="opcion" value="1">
                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
@@ -182,7 +182,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title">Eliminar cuenta de especialista</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
             <div class="modal-body">
@@ -190,7 +190,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
                 <form action="../../Controlador/especialistaCtrl.php" method="post">
                     <input type="hidden" name="opcion" value="2">
                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">

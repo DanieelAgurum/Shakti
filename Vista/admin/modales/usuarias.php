@@ -13,8 +13,8 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <a id="btnEliminarLink" href="#" class="btn btn-danger">Eliminar</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
+        <a id="btnEliminarLink" href="#" class="btn btn-danger"><i class="fa-sharp fa-solid fa-eraser"></i> Eliminar</a>
       </div>
 
     </div>
