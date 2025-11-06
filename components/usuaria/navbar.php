@@ -183,8 +183,9 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
   </div>
 </nav>
 
-<?php if (isset($usuario['rol']) && $usuario['rol'] >= 1 && $usuario['rol'] <= 2): ?>
-  <a class="" href="<?= $urlBase ?>Vista/chat">
+<?php $archivo_actual = basename($_SERVER['PHP_SELF']); ?>
+<?php if ($archivo_actual !== 'chat.php' && isset($usuario['rol']) && $usuario['rol'] >= 1 && $usuario['rol'] <= 2): ?>
+  <a href="<?= $urlBase ?>Vista/chat">
     <div id="shakti-chatbot-circle" data-bs-placement="top" title="Chatbot" class="shakti-btn-chatbot">
       <i class="bi bi-robot"></i>
     </div>
