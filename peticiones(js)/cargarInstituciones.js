@@ -67,11 +67,9 @@ async function cargarInstituciones() {
                 <div class="row">
                   <div class="col-md-4 text-center mb-3">
                     <img src="${inst.imagen}" class="recurso-modal-img img-fluid rounded" alt="Imagen ampliada de ${inst.nombre}">
-                    <span class="badge bg-success recurso-badge-costo">${inst.costo || "Costo Accesible"}</span>
-                    <span class="badge bg-primary recurso-badge-servicio">${inst.servicio || "Atención General"}</span>
                   </div>
                   <div class="col-md-8 recurso-modal-texto-contenido">
-                    <p class="recurso-modal-subtitulo fw-bold">${inst.descripcion || inst.descripcion}</p>
+                    <p class="recurso-modal-subtitulo fw-bold">Descripción</p>
                     <p>${inst.descripcion || "Información detallada no disponible."}</p>
 
                     <h6 class="mt-4 recurso-modal-seccion-titulo">Domicilio:</h6>
