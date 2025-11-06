@@ -399,7 +399,7 @@ class chatsMdl
             $requiereAnalisis = true;
         }
 
-        if (preg_match('/\b(ayuda|auxilio|ya no puedo|quiero morir|me siento mal|necesito hablar)\b/i', $mensajeOriginal)) {
+        if (preg_match('/\b(ayuda|auxilio|ya no puedo|quiero morir| morrir | me siento mal|necesito hablar)\b/i', $mensajeOriginal)) {
             $requiereAnalisis = true;
         }
 
