@@ -245,7 +245,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
             <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
               <div class="mt-4">
                 <input type="password" class="form-control newContra" name="newPassword"
-                  id="newPassword" placeholder="Nueva contraseña">
+                  id="newPassword" autocomplete="off" placeholder="Nueva contraseña">
               </div>
               <small id="passwordMessage" class="text-danger"></small>
 
