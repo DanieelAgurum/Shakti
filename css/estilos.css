@@ -1733,3 +1733,38 @@ footer {
     max-height: 100px;
   }
 }
+
+/* modal pa docu */
+.custom-modal-content {
+  background: rgba(20, 20, 20, 0.95);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.custom-modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-modal-title {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+.custom-modal-body {
+  height: 80vh;
+  padding: 0;
+}
+
+.custom-iframe-documento {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.8rem;
+}
+
+.custom-modal-documento .modal-backdrop.show {
+  opacity: 0.7;
+  background-color: #000;
+}
