@@ -20,7 +20,7 @@ $resultados = $legales->buscar($busqueda);
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Libre y Segura</title>
+    <title>Libre y Seguro - NexoH</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -30,48 +30,12 @@ $resultados = $legales->buscar($busqueda);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarReporte.js"></script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
-    <style>
-        /* ====== MODAL PERSONALIZADO DE DOCUMENTOS ====== */
-        .custom-modal-content {
-            background: rgba(20, 20, 20, 0.95);
-            border-radius: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-        }
-
-        .custom-modal-header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .custom-modal-title {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            color: #fff;
-        }
-
-        .custom-modal-body {
-            height: 80vh;
-            padding: 0;
-        }
-
-        .custom-iframe-documento {
-            width: 100%;
-            height: 100%;
-            border-radius: 0.8rem;
-        }
-
-        .custom-modal-documento .modal-backdrop.show {
-            opacity: 0.7;
-            background-color: #000;
-        }
-    </style>
 </head>
 
 <body class="bg-white text-black">
 
     <div class="container mb-5">
-        <h2 class="text-center w-100 mt-3">Libre y Segura</h2>
+        <h2 class="text-center w-100 mt-3">Libre y Seguro</h2>
         <div class="search-wrapper w-100">
             <div class="search-box search-foro">
                 <form method="GET">
@@ -122,33 +86,8 @@ $resultados = $legales->buscar($busqueda);
     </div>
 
     <?php include '../modales/documentoLegal.php' ?>
+    <script src="<?= $urlBase ?>peticiones(js)/documento.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const botones = document.querySelectorAll(".ver-documento");
-            const modalEl = document.getElementById("modalDocumento");
-            const iframe = document.getElementById("iframeDocumento");
-            const modal = new bootstrap.Modal(modalEl);
-            const modalTitle = document.getElementById("modalDocumentoLabel");
-
-            botones.forEach(boton => {
-                boton.addEventListener("click", function() {
-                    const id = this.getAttribute("data-id");
-                    const title = this.getAttribute("data-title");
-
-                    iframe.src = "<?= $urlBase ?>Modelo/ver_contenido.php?id_legal=" + id;
-
-                    modalTitle.textContent = title;
-
-                    modal.show();
-                });
-            });
-
-            modalEl.addEventListener("hidden.bs.modal", () => {
-                iframe.src = "";
-            });
-        });
-    </script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php'; ?>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
