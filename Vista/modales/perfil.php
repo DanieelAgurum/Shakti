@@ -29,7 +29,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="nicknameN" class="form-label">Nombre de usuaria:</label>
+                                    <label for="nicknameN" class="form-label">Nombre de usuario:</label>
                                     <input type="text" id="nicknameN" class="form-control" name="nicknameN"
                                         value="<?= htmlspecialchars($_SESSION['nickname'] ?? '') ?>">
                                     <small class="error" id="errorNicknameN"></small>

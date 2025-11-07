@@ -55,7 +55,7 @@ if (!empty($serviciosRegistrados) && is_string($serviciosRegistrados[0])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Perfil - Shakti</title>
+  <title>Perfil - NexoH</title>
   <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/registro.css" />
   <link rel="stylesheet" href="<?= $urlBase ?>css/perfil.css" />
@@ -123,7 +123,7 @@ if (!empty($serviciosRegistrados) && is_string($serviciosRegistrados[0])) {
                 'Correo electrónico' => $_SESSION['correo'] ?? '',
                 'Teléfono' => $_SESSION['telefono'] ?? '',
                 'Dirección' => $_SESSION['direccion'] ?? '',
-                'Estado de cuenta' => (isset($_SESSION['estatus']) && $_SESSION['estatus'] == 1) ? 'Activa' : 'Desactivada'
+                'Estado de cuenta' => (isset($_SESSION['estatus']) && $_SESSION['estatus'] == 1) ? 'Activa' : 'En revisión'
               ];
               foreach ($fields as $label => $value): ?>
                 <div class="row">
