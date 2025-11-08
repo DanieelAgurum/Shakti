@@ -39,7 +39,7 @@ $consulta_reporte = $conn->query($sql_reportes);
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="enviarReporte(event)" class="btn btn-primary w-100">Reportar</button>
+                <button type="button" onclick="enviarReporte(event)" class="btn btn-banner w-100">Reportar</button>
             </div>
         </div>
     </div>
