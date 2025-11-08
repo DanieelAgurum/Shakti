@@ -142,7 +142,9 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
 
       <div class="row align-items-center">
         <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
-          <img src="img/NexoH.png" class="img-fluid rounded shadow" alt="NexoH">
+          <div class="container w-50">
+            <img src="img/NexoH.png" class="img-fluid rounded shadow" alt="NexoH">
+          </div>
         </div>
 
         <div class="col-md-6" data-aos="fade-left">

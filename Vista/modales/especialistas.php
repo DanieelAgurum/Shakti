@@ -7,7 +7,7 @@
                     <h5 class="modal-title mb-0" id="labelModal<?= htmlspecialchars($row['id'] ?? '') ?>">
                         <i class="bi bi-person-circle me-2"></i>
                         Perfil del Especialista:
-                        <?= htmlspecialchars($row['nickname'] ?? '') ?>
+                        <?= htmlspecialchars($row['nombre'] ?? '') ?> <?= htmlspecialchars($row['apellidos'] ?? '') ?>
                     </h5>
                 </div>
 
@@ -65,7 +65,7 @@
             </div>
 
             <div class="modal-footer justify-content-end">
-                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-banner btn-secondary" data-bs-dismiss="modal">
                     <i class="bi bi-x-lg"></i> Cerrar
                 </button>
             </div>

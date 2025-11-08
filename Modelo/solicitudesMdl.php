@@ -72,15 +72,15 @@ class SolicitudesMdl
             $descripcion = htmlspecialchars($row['descripcion'] ?? '', ENT_QUOTES, 'UTF-8');
 
             $cards .= '<div class="col-md-4 mb-4">
-            <div class="card testimonial-card ">
-                <div class="card-up"></div>
-                <div class="avatar mx-auto white">
-                    <img src="' . $src . '" class="rounded-circle" width="150" height="150" alt="Especialista">
+            <div class="card testimonial-card specialist-card shadow-custom rounded-4 border-0 overflow-hidden">
+                <div class="card-up gradient-header"></div>
+                <div class="avatar mx-auto position-relative specialist-avatar">
+                    <img src="' . $src . '" class="rounded-circle border border-white border-5 img-avatar" width="150" height="150" alt="Especialista">
                 </div>
-                <div class="card-body text-center">
-                    <h4 class="card-title font-weight-bold">' . ucwords($nombre . ' ' . $apellidos) . '</h4>
+                <div class="card-body text-center specialist-body">
+                    <h4 class="card-title specialist-name font-weight-bold">' . ucwords($nombre . ' ' . $apellidos) . '</h4>
                     <p style="max-height: 70px; overflow-y: auto;" class="descripcion-scroll">' . ucwords($descripcion) . '</p>
-                    <hr>
+                    <hr class="divider-line mx-auto">
                     <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $id . '">
                         <i class="bi bi-eye-fill"></i> Ver perfil
                     </button>
@@ -97,11 +97,11 @@ class SolicitudesMdl
     }
 
 
-   private function cifrarAES($id)
+    private function cifrarAES($id)
     {
         $clave = hash('sha256', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q', true);
         $ci = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
         $cifrado = openssl_encrypt($id, 'aes-256-cbc', $clave, 0, $ci);
         return strtr(base64_encode($ci . $cifrado), '+/=', '-_,');
-    } 
+    }
 }
