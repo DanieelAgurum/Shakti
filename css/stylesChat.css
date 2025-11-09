@@ -475,14 +475,9 @@ form#formulario button:hover {
     margin: 0;
 }
 
-/* Responsive: móvil */
-@media (max-width: 768px) {
-    .solicitud {
-        width: 100%;
-        max-height: 40vh;
-    }
+.btn-volver {
+    display: none !important;
 }
-
 
 /* === Sección principal === */
 .usuario-flex {
@@ -490,4 +485,32 @@ form#formulario button:hover {
     justify-content: center;
     align-items: center;
     height: 55vh;
+}
+
+
+/*  Vista móvil: solo mostrar la lista, ocultar el chat */
+@media (max-width: 768px) {
+    #chat-box.inactivo {
+        display: none;
+    }
+
+    .chat-list {
+        width: 100vh;
+    }
+
+    .btn-volver {
+        display: block !important;
+    }
+
+    #contenedor-chat {
+        display: flex;
+    }
+
+    #chat-box {
+        display: flex;
+    }
+
+    .chat-list {
+        width: 100%;
+    }
 }
