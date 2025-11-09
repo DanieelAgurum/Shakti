@@ -16,7 +16,6 @@
       <div class="col-12 col-md-4">
         <h6 class="text-uppercase text-white fw-bold mb-3">Explora</h6>
         <nav class="nav flex-column flex-md-row justify-content-center justify-content-md-start gap-2">
-          <a href="<?= $urlBase ?>Vista/planes.php" class="nav-link px-2 text-white-50 hover-link">Suscríbete</a>
           <a href="<?= $urlBase ?>Vista/contacto.php" class="nav-link px-2 text-white-50 hover-link">Contáctanos</a>
           <a href="<?= $urlBase ?>Vista/politicas.php" class="nav-link px-2 text-white-50 hover-link">Privacidad</a>
           <a href="<?= $urlBase ?>Vista/glosario.php" class="nav-link px-2 text-white-50 hover-link">Glosario</a>
