@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnEnviar = formulario?.querySelector("button[type=submit]");
   const chatIa = document.querySelector('[data-id-amigo="0"]');
 
+  const btnVolver = document.getElementById("btn-volver");
+
+  formulario.style.display = "none";
   let esperandoRespuesta = false;
   let enviando = false;
 
@@ -56,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       seleccionarChat(usuario.id);
       chatMensajes.innerHTML = "";
       cargarMensajes(idUsuario, usuario.id);
-      suscribirCanal(idUsuario, usuario.id); // 🔹 Suscripción solo al seleccionar chat
+      suscribirCanal(idUsuario, usuario.id);
     });
     chatList.appendChild(div);
   }
@@ -78,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         data.forEach((chat) => agregarChatNuevo(chat));
 
-        // 🔹 Solo selecciona automáticamente si hay especialista en la URL
+        // Solo selecciona automáticamente si hay especialista en la URL
         if (idEspecialista && data.length > 0) {
           const primerChat = data[0];
           const divChat = chatList.querySelector(
@@ -94,8 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   }
 
   function cargarMensajes(idEmisor, idReceptor) {
@@ -113,6 +115,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function seleccionarChat(idReceptor) {
     inputReceptor.value = idReceptor;
+    formulario.style.display = "flex";
+
+    if (window.innerWidth <= 768) {
+      document.querySelector(".chat-list").style.display = "none";
+      const chatBox = document.getElementById("chat-box");
+      chatBox.classList.remove("inactivo");
+      chatBox.style.display = "flex";
+      document.getElementById("btn-volver").style.display = "block";
+    }
+
     mensajeInput.value = "";
     archivoInput.value = "";
     btnImg.style.display = "";
@@ -171,8 +183,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function seleccionarChatIA() {
     try {
+      formulario.style.display = "flex";
       inputReceptor.value = 0;
       chatMensajes.innerHTML = "";
+
+      if (window.innerWidth <= 768) {
+        document.querySelector(".chat-list").style.display = "none";
+
+        const chatBox = document.getElementById("chat-box");
+        chatBox.classList.remove("inactivo"); // ✅ Mostrar chat
+        chatBox.style.display = "flex";
+
+        document.getElementById("btn-volver").style.display = "block"; // ✅ Mostrar botón volver
+      }
 
       const res = await fetch(
         "/shakti/Controlador/chatsCtrl.php?cargarMensajesIanBot",
@@ -184,35 +207,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await res.json();
 
-      // Si hay mensajes previos
-      if (data.data && Array.isArray(data.data) && data.data.length > 0) {
-        mostrarMensaje(
-          "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear. \n Solo brindo apoyo y acompañamiento emocional preventivo. No soy un sustituto profesional de salud mental, pero puedo ayudarte a encontrar un especialista adecuado si así lo deseas.",
-          "ia"
-        );
+      // Mensaje inicial
+      mostrarMensaje(
+        "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear. \n Solo brindo apoyo emocional preventivo. No sustituyo a un profesional.",
+        "ia"
+      );
 
+      if (Array.isArray(data.data) && data.data.length > 0) {
         data.data.forEach((msg) => {
           const tipo = msg.es_mensaje_yo ? "yo" : "ia";
           const esHTML = /<\/?[a-z][\s\S]*>/i.test(msg.mensaje);
           mostrarMensaje(msg.mensaje, tipo, null, esHTML);
         });
-
-        chatMensajes.scrollTop = chatMensajes.scrollHeight;
-      } else {
-        // Si no hay mensajes previos
-        mostrarMensaje(
-          "👋 Hola ¡Bienvenido!, soy Ian Bot. Empieza a chatear. \n Solo brindo apoyo y acompañamiento emocional preventivo. No soy un sustituto profesional de salud mental, pero puedo ayudarte a encontrar un especialista adecuado si así lo deseas.",
-          "ia"
-        );
       }
 
-      // Marcar el chat como activo
+      chatMensajes.scrollTop = chatMensajes.scrollHeight;
+
+      // Marcar como activo
       document
         .querySelectorAll(".chat-activo")
         .forEach((el) => el.classList.remove("activo"));
+
       chatIa.classList.add("activo");
 
-      // Ocultar botón de imagen
+      // Quitar botón imagen en chat IA
       btnImg.style.display = "none";
     } catch (error) {
       mostrarMensaje("⚠️ Error al conectar con Ian Bot.", "ia");
@@ -309,7 +327,6 @@ document.addEventListener("DOMContentLoaded", () => {
   formulario?.addEventListener("submit", enviarMensaje);
 
   mensajeInput.addEventListener("keydown", (e) => {
-    // Si presiona Enter
     if (e.key === "Enter") {
       if (e.shiftKey) {
         return;
@@ -325,4 +342,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   cargarChats();
+
+  btnVolver.addEventListener("click", () => {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.classList.add("inactivo");
+    chatBox.style.display = "none";
+    document.querySelector(".chat-list").style.display = "block";
+  });
 });
