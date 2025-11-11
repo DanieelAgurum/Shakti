@@ -1,138 +1,260 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+date_default_timezone_set('America/Mexico_City');
 
-class contenidoMdl
+class Contenido
 {
-    private $id;
+    private $con;
     private $titulo;
     private $descripcion;
-    private $imagen;
-    private $url;
-    private $fecha;
-    private $estatus;
-    private $urlBase;
+    private $cuerpo_html;
+    private $tipo;
+    private $url_contenido;
+    private $archivo;
+    private $imagen1;
+    private $imagen2;
+    private $imagen3;
+    private $nueva_url_contenido;
+    private $categoria;
+    private $tipo_autor;
+    private $id_usuario;
+    private $estado;
+    private $thumbnail;
 
-    // Conexión a la base de datos con mysqli.
     public function conectarBD()
     {
-        $con = mysqli_connect("localhost", "root", "", "shakti") or die("Problemas con la conexión a la base de datos");
-        return $con;
+        $this->con = mysqli_connect("localhost", "root", "", "shakti");
+        if (!$this->con) {
+            die("Problemas con la conexión a la base de datos: " . mysqli_connect_error());
+        }
     }
 
-    public function __construct()
+    private function leerArchivo($archivo)
     {
-        $this->urlBase = getBaseUrl();
+        if ($archivo && $archivo['error'] === UPLOAD_ERR_OK) {
+            return file_get_contents($archivo['tmp_name']);
+        }
+        return null;
     }
 
-    // He añadido el parámetro $id para que esta función pueda ser utilizada para editar.
-    public function inicializar($titulo, $descripcion, $url, $imagen, $id = null)
+    public function inicializar($titulo, $descripcion, $cuerpo_html, $tipo, $url_contenido, $archivo, $imagen1, $imagen2, $imagen3, $categoria, $tipo_autor, $id_usuario, $estado, $thumbnail)
     {
-        $this->id = $id;
-        $this->titulo = $titulo;
-        $this->descripcion = $descripcion;
-        $this->url = $url;
-        $this->imagen = $imagen;
+        $this->titulo        = htmlspecialchars(trim($titulo));
+        $this->descripcion   = htmlspecialchars(trim($descripcion));
+        $this->cuerpo_html   = $cuerpo_html ?? '';
+        $this->tipo          = $tipo;
+        $this->url_contenido = $url_contenido ?? '';
+        $this->archivo       = is_array($archivo) ? $this->leerArchivo($archivo) : $archivo;
+        $this->imagen1       = is_array($imagen1) ? $this->leerArchivo($imagen1) : $imagen1;
+        $this->imagen2       = is_array($imagen2) ? $this->leerArchivo($imagen2) : $imagen2;
+        $this->imagen3       = is_array($imagen3) ? $this->leerArchivo($imagen3) : $imagen3;
+        $this->categoria     = htmlspecialchars(trim($categoria));
+        $this->tipo_autor    = $tipo_autor;
+        $this->id_usuario    = intval($id_usuario);
+        $this->estado        = intval($estado);
+        $this->thumbnail     = $thumbnail;
     }
 
     public function agregarContenido()
     {
-        $conexion = $this->conectarBD();
+        $this->conectarBD();
 
-        $tituloEscapado = mysqli_real_escape_string($conexion, $this->titulo);
-        $verificar = mysqli_query($conexion, "SELECT * FROM contenido WHERE titulo = '$tituloEscapado'")
-            or die(mysqli_error($conexion));
+        $stmt = $this->con->prepare("INSERT INTO contenidos 
+        (titulo, descripcion, cuerpo_html, tipo, url_contenido, archivo, imagen1, imagen2, imagen3, categoria, tipo_autor, id_usuario, estado, thumbnail, fecha_publicacion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
 
-        if (mysqli_fetch_array($verificar)) {
-            echo "<script>alert('El contenido con ese título ya existe.'); window.location.href='../Vista/admin/contenido.php';</script>";
-            mysqli_close($conexion);
-            return;
+        if (!$stmt) {
+            die("Error en la preparación: " . $this->con->error);
         }
 
-        // Se utiliza una sentencia preparada para mayor seguridad.
-        $sql = "INSERT INTO contenido (titulo, descripcion, url, imagen, fecha_publicacion, estatus)
-                VALUES (?, ?, ?, ?, NOW(), 1)";
-        $stmt = mysqli_prepare($conexion, $sql);
-
-        // La imagen ya viene desde el controlador a través del método inicializar().
-        mysqli_stmt_bind_param(
-            $stmt,
-            "ssss",
+        $stmt->bind_param(
+            "sssssssssssiis",
             $this->titulo,
             $this->descripcion,
-            $this->url,
-            $this->imagen
+            $this->cuerpo_html,
+            $this->tipo,
+            $this->url_contenido,
+            $this->archivo,
+            $this->imagen1,
+            $this->imagen2,
+            $this->imagen3,
+            $this->categoria,
+            $this->tipo_autor,
+            $this->id_usuario,
+            $this->estado,
+            $this->thumbnail
         );
 
-        if (mysqli_stmt_execute($stmt)) {
-            echo "<script>alert('Contenido insertado correctamente'); window.location.href='../Vista/admin/contenido.php';</script>";
-        } else {
-            echo "Error al insertar: " . mysqli_error($conexion);
+        if ($this->archivo !== null) {
+            $stmt->send_long_data(5, $this->archivo);
         }
 
-        mysqli_stmt_close($stmt);
-        mysqli_close($conexion);
+        if ($this->archivo !== null) $stmt->send_long_data(5, $this->archivo);
+        if ($this->imagen1 !== null) $stmt->send_long_data(6, $this->imagen1);
+        if ($this->imagen2 !== null) $stmt->send_long_data(7, $this->imagen2);
+        if ($this->imagen3 !== null) $stmt->send_long_data(8, $this->imagen3);
+
+        $resultado = $stmt->execute();
+        $stmt->close();
+
+        if ($resultado) {
+            return true;
+        } else {
+            die("Error al insertar el contenido: " . $this->con->error);
+        }
     }
 
-    // Nuevo método para actualizar el contenido existente.
-    public function actualizarContenido()
+    public function editarContenido($id_contenido, $titulo, $descripcion, $cuerpo_html, $nueva_url_contenido, $categoria, $thumbnail, $imagen1, $imagen2, $imagen3, $estado, $archivo = null)
     {
-        $conexion = $this->conectarBD();
+        $this->conectarBD();
+        $nuevoArchivo = $this->leerArchivo($archivo);
+        $nuevaImagen1 = $this->leerArchivo($imagen1);
+        $nuevaImagen2 = $this->leerArchivo($imagen2);
+        $nuevaImagen3 = $this->leerArchivo($imagen3);
 
-        if ($this->imagen === null) {
-            // Si no se proporciona una nueva imagen, se actualizan solo los otros campos.
-            $sql = "UPDATE contenido SET titulo = ?, descripcion = ?, url = ? WHERE id = ?";
-            $stmt = mysqli_prepare($conexion, $sql);
-            mysqli_stmt_bind_param(
-                $stmt,
-                "sssi",
-                $this->titulo,
-                $this->descripcion,
-                $this->url,
-                $this->id
+
+        if ($nuevoArchivo !== null) {
+            $stmt = $this->con->prepare("UPDATE contenidos 
+                SET titulo = ?, descripcion = ?, categoria = ?, 
+                    thumbnail = ?, estado = ?, archivo = ?
+                WHERE id_contenido = ?");
+            $stmt->bind_param(
+                "ssssssi",
+                $titulo,
+                $descripcion,
+                $categoria,
+                $thumbnail,
+                $estado,
+                $nuevoArchivo,
+                $id_contenido
             );
-        } else {
-            // Si se proporciona una nueva imagen, se actualizan todos los campos, incluida la imagen.
-            $sql = "UPDATE contenido SET titulo = ?, descripcion = ?, url = ?, imagen = ? WHERE id = ?";
-            $stmt = mysqli_prepare($conexion, $sql);
-            mysqli_stmt_bind_param(
-                $stmt,
-                "ssssi",
-                $this->titulo,
-                $this->descripcion,
-                $this->url,
-                $this->imagen,
-                $this->id
+            $stmt->send_long_data(5, $nuevoArchivo);
+        } elseif ($nuevaImagen1 !== null || $nuevaImagen2 !== null || $nuevaImagen3 !== null) {
+            $stmt = $this->con->prepare("UPDATE contenidos 
+                SET titulo = ?, descripcion = ?, cuerpo_html = ?, categoria = ?, 
+                    thumbnail = ?, imagen1 = ?, imagen2 = ?, imagen3 = ?, estado = ?
+                WHERE id_contenido = ?");
+            $stmt->bind_param(
+                "sssssssssi",
+                $titulo,
+                $descripcion,
+                $cuerpo_html,
+                $categoria,
+                $thumbnail,
+                $nuevaImagen1,
+                $nuevaImagen2,
+                $nuevaImagen3,
+                $estado,
+                $id_contenido
+            );
+            
+            if ($nuevaImagen1 !== null) $stmt->send_long_data(5, $nuevaImagen1);
+            if ($nuevaImagen2 !== null) $stmt->send_long_data(6, $nuevaImagen2);
+            if ($nuevaImagen3 !== null) $stmt->send_long_data(7,    $nuevaImagen3);
+
+        } elseif ($nueva_url_contenido !== null) {
+            $stmt = $this->con->prepare("UPDATE contenidos 
+                SET titulo = ?, descripcion = ?, url_contenido = ?, categoria = ?, 
+                    thumbnail = ?, estado = ?
+                WHERE id_contenido = ?");
+            $stmt->bind_param(
+                "ssssssi",
+                $titulo,
+                $descripcion,
+                $nueva_url_contenido,
+                $categoria,
+                $thumbnail,
+                $estado,
+                $id_contenido
             );
         }
 
-        if (mysqli_stmt_execute($stmt)) {
-            echo "<script>alert('Contenido actualizado correctamente'); window.location.href='../Vista/admin/contenido.php';</script>";
-        } else {
-            echo "Error al actualizar: " . mysqli_error($conexion);
+        if (!$stmt) {
+            die("Error en la preparación: " . $this->con->error);
         }
 
-        mysqli_stmt_close($stmt);
-        mysqli_close($conexion);
+        $resultado = $stmt->execute();
+        $stmt->close();
+
+        if ($resultado) {
+            return true;
+        } else {
+            die("Error al actualizar el contenido: " . $this->con->error);
+        }
     }
 
-
-    // Método corregido para eliminar el contenido.
-    public function eliminarContenido($id)
+    public function eliminarContenido($id_contenido)
     {
-        $conexion = $this->conectarBD();
-
-        // Usar sentencia preparada para evitar inyección SQL.
-        $eliminar = "DELETE FROM contenido WHERE id = ?";
-        $stmt = mysqli_prepare($conexion, $eliminar);
-        mysqli_stmt_bind_param($stmt, "i", $id); // 'i' indica que el parámetro es un entero.
-
-        if (mysqli_stmt_execute($stmt)) {
-            echo "<script>alert('Contenido eliminado correctamente.'); window.location.href='../Vista/admin/contenido.php';</script>";
-        } else {
-            echo "Error al eliminar: " . mysqli_error($conexion);
+        $this->conectarBD();
+        $stmt = $this->con->prepare("DELETE FROM contenidos WHERE id_contenido = ?");
+        if (!$stmt) {
+            die("Error en la preparación: " . $this->con->error);
         }
 
-        mysqli_stmt_close($stmt);
-        mysqli_close($conexion);
+        $stmt->bind_param("i", $id_contenido);
+        $resultado = $stmt->execute();
+        $stmt->close();
+
+        if ($resultado) {
+            return true;
+        } else {
+            die("Error al eliminar el contenido: " . $this->con->error);
+        }
+    }
+
+    public function cambiarEstado($id_contenido, $nuevoEstado)
+    {
+        $this->conectarBD();
+        $stmt = $this->con->prepare("UPDATE contenidos SET estado = ? WHERE id_contenido = ?");
+        if (!$stmt) {
+            die("Error en la preparación: " . $this->con->error);
+        }
+
+        $stmt->bind_param("ii", $nuevoEstado, $id_contenido);
+        $resultado = $stmt->execute();
+        $stmt->close();
+
+        if ($resultado) {
+            return true;
+        } else {
+            die("Error al cambiar el estado del contenido: " . $this->con->error);
+        }
+    }
+
+    public function obtenerContenidos()
+    {
+        $this->conectarBD();
+        $sql = "SELECT id_contenido, titulo, descripcion, tipo, url_contenido, categoria, id_usuario, estado, thumbnail, fecha_publicacion 
+                FROM contenidos ORDER BY fecha_publicacion DESC";
+        $resultado = mysqli_query($this->con, $sql);
+
+        if (!$resultado) {
+            die("Error al obtener contenidos: " . $this->con->error);
+        }
+
+        $contenidos = [];
+        while ($row = mysqli_fetch_assoc($resultado)) {
+            $contenidos[] = $row;
+        }
+
+        return $contenidos;
+    }
+
+    public function obtenerPorId($id_contenido)
+    {
+        $this->conectarBD();
+        $stmt = $this->con->prepare("SELECT * FROM contenidos WHERE id_contenido = ?");
+        if (!$stmt) {
+            die("Error en la preparación: " . $this->con->error);
+        }
+
+        $stmt->bind_param("i", $id_contenido);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        if ($resultado->num_rows === 0) {
+            return null;
+        }
+
+        return $resultado->fetch_assoc();
     }
 }
