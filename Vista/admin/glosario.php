@@ -8,6 +8,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     header("Location: {$urlBase}");
     exit;
 }
+
 ?>
 
 <!DOCTYPE html>

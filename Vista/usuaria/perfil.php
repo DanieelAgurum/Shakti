@@ -8,14 +8,14 @@ if (session_status() === PHP_SESSION_NONE) {
 
 if (isset($_SESSION['correo']) || isset($_SESSION['id_rol'])) {
     if ($_SESSION['id_rol'] == 2) {
-        header("Location: {$urlBase}Vista/especialista/perfil.php");
+        header("Location: {$urlBase}Vista/especialista/perfil");
         exit;
     } else if ($_SESSION['id_rol'] == 3) {
         header("Location: {$urlBase}Vista/admin");
         exit;
     }
 } else {
-    header("Location: {$urlBase}index.php");
+    header("Location: {$urlBase}index");
     exit;
 }
 
