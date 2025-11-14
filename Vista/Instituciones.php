@@ -21,6 +21,7 @@ $urlBase = getBaseUrl();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= $urlBase ?>css/Instituciones.css">
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <!-- Scripts únicos -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
