@@ -17,7 +17,7 @@
 <script src="../../components/admin/js/datatables-simple-demo.js"></script>
 
 <nav class="sb-topnav navbar navbar-expand">
-    <a class="navbar-brand ps-3" href="<?php echo $urlBase ?>Vista/admin/index.php"></a>
+    <a class="navbar-brand ps-3" href="<?php echo $urlBase ?>Vista/admin/index"></a>
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         <div class="input-group"></div>
     </form>

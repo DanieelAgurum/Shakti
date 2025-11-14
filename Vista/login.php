@@ -10,10 +10,10 @@ $urlBase = getBaseUrl();
 if (isset($_SESSION['id_rol'])) {
   switch ($_SESSION['id_rol']) {
     case 1:
-      header("Location: " . $urlBase . "vista/usuaria/perfil.php");
+      header("Location: " . $urlBase . "vista/usuaria/perfil");
       exit;
     case 2:
-      header("Location: " . $urlBase . "vista/especialista/perfil.php");
+      header("Location: " . $urlBase . "vista/especialista/perfil");
       exit;
     case 3:
       header("Location: " . $urlBase . "vista/admin/");

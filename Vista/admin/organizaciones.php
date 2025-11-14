@@ -1,4 +1,7 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
+$urlBase = getBaseUrl();
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
