@@ -16,7 +16,7 @@ class contactMdl
 
     function validarMensajeConIA($comentario)
     {
-        $apiKey = OPENAI_API_KEY;  
+        $apiKey = OPENAI_API_KEY;
         $modeloTexto = "gpt-4.1-mini";
 
         $promptBase = <<<EOT
@@ -47,6 +47,10 @@ EOT;
         ]));
 
         $result = curl_exec($ch);
+        if (!$result) {
+            return "NO APTO"; // fallback si falla la API
+        }
+
         curl_close($ch);
 
         $data = json_decode($result, true);
@@ -57,13 +61,12 @@ EOT;
 
     function inicializar($correo, $comentario)
     {
-        $this->correo = $_SESSION['correo'];
-        $this->comentario = $comentario;
+        $this->correo = trim($correo); // ahora sí toma el correo enviado
+        $this->comentario = trim($comentario);
     }
 
     function mandarContact()
     {
-
         if (empty($this->correo) || empty($this->comentario)) {
             echo "Todos los campos son obligatorios.";
             return;
@@ -80,24 +83,24 @@ EOT;
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'cristo045millanperez@gmail.com';
-            $mail->Password = 'samn oqgn huyz ejkj';
-            $mail->SMTPSecure = 'tls';
+            $mail->Username = "gooddani04@gmail.com";
+            $mail->Password = "fxvlvxrxswzgunjk";
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('cristo045millanperez@gmail.com', 'Formulario de Contacto');
-            $mail->addAddress('cristo045millanperez@gmail.com');
+
+            $mail->setFrom($mail->Username, 'Formulario de Contacto');
+            $mail->addAddress('gooddani04@gmail.com');
 
             $nickname = $_SESSION['nickname'] ?? 'Usuario del formulario';
-
             $mail->addReplyTo($this->correo, $nickname);
 
             $mail->isHTML(true);
             $mail->Subject = 'Nuevo mensaje de contacto desde el formulario';
             $mail->Body = "
-        <p><strong>Correo del usuario ({$nickname}):</strong> {$this->correo}</p>
-        <p><strong>Comentario:</strong><br>{$this->comentario}</p>
-    ";
+                <p><strong>Correo del usuario ({$nickname}):</strong> {$this->correo}</p>
+                <p><strong>Comentario:</strong><br>{$this->comentario}</p>
+            ";
             $mail->AltBody = "Correo del usuario ({$nickname}): {$this->correo}\nComentario: {$this->comentario}";
 
             $mail->send();

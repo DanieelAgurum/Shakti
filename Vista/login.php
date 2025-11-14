@@ -6,7 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
 
-// 🔹 Redirigir si ya está logueado
 if (isset($_SESSION['id_rol'])) {
   switch ($_SESSION['id_rol']) {
     case 1:
@@ -97,7 +96,7 @@ $status = $_GET['status'] ?? '';
       </div>
     </div>
 
-    
+
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered custom-config-modal">
         <div class="modal-content">
@@ -108,11 +107,10 @@ $status = $_GET['status'] ?? '';
 
           <div class="modal-body">
             <form id="formRecuperar" class="d-grid gap-3">
-              <h5 class="mb-3" id="mostrarMensaje"></h5>
               <input type="email"
                 name="correo"
                 id="recuperarEmail"
-                class="form-control"
+                class="form-control modal-input-email"
                 placeholder="Ingresar correo electrónico"
                 required>
               <button type="submit"
@@ -234,6 +232,16 @@ $status = $_GET['status'] ?? '';
       font-size: 0.85rem;
       margin-top: 0.2rem;
       display: block;
+    }
+
+    .modal-input-email {
+      border-radius: 0.5rem !important;
+      box-shadow: none !important;
+      border: 1px solid #ccc !important;
+    }
+
+    .modal-input-email:focus {
+      box-shadow: 0 0 0 0.25rem rgba(70, 130, 180, 0.25) !important;
     }
   </style>
 </body>
