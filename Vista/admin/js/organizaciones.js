@@ -32,35 +32,26 @@ async function cargarInstituciones(reset = false) {
         inst.telefono || "No disponible",
         `<a href="https://www.google.com/maps?q=${encodeURIComponent(
           inst.domicilio || ""
-        )}" 
-        target="_blank" class="text-decoration-none text-primary">
-        ${inst.domicilio || "No especificado"}
-    </a>`,
-
-        // NUEVO: Link visible y clickeable
-        `<a href="${inst.link || "#"}" target="_blank">
-        ${inst.link ? "Visitar página" : "Sin link"}
-     </a>`,
-
+        )}" target="_blank" class="text-decoration-none text-primary">
+          ${inst.domicilio || "No especificado"}
+        </a>`,
         `<img src="${inst.imagen}" alt="${inst.nombre}" class="img-fluid rounded shadow-sm" style="max-width: 90px; height: auto;">`,
-
         `<div class="text-center">
-      <button class="btn btn-primary btn-sm btnEditar" 
-        data-nombre="${inst.nombre}" 
-        data-descripcion="${inst.descripcion}" 
-        data-telefono="${inst.telefono || ""}" 
-        data-domicilio="${inst.domicilio || ""}"
-        data-link="${inst.link || ""}"
-        data-registro_modificar="${inst.registro || ""}"
-        >
-        <i class="fa-solid fa-pen"></i> Editar
-      </button>
-      <button class="btn btn-danger btn-sm btnEliminar" 
-        data-registro_modificar="${inst.registro || ""}"
-        data-nombre="${inst.nombre}">
-        <i class="fa-solid fa-trash"></i> Eliminar
-      </button>
-    </div>`,
+          <button class="btn btn-primary btn-sm btnEditar" 
+            data-id="${inst.registro}"
+            data-nombre="${inst.nombre}" 
+            data-descripcion="${inst.descripcion}" 
+            data-telefono="${inst.telefono || ""}" 
+            data-domicilio="${inst.domicilio || ""}"
+            data-link="${inst.link || ""}">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+          <button class="btn btn-danger btn-sm btnEliminar" 
+            data-registro_modificar="${inst.registro || ""}"
+            data-nombre="${inst.nombre}">
+            <i class="fa-solid fa-trash"></i> Eliminar
+          </button>
+        </div>`,
       ];
     });
 
@@ -239,14 +230,11 @@ document.addEventListener("click", (e) => {
     const btn = e.target.closest(".btnEditar");
 
     document.getElementById("nombre_modificar").value = btn.dataset.nombre;
-    document.getElementById("descripcion_modificar").value =
-      btn.dataset.descripcion;
-    document.getElementById("numero_modificar").value =
-      btn.dataset.telefono || "";
-    document.getElementById("domicilio_modificar").value =
-      btn.dataset.domicilio || "";
-    document.getElementById("id_modificar").value =
-      btn.dataset.registro_modificar;
+    document.getElementById("descripcion_modificar").value = btn.dataset.descripcion;
+    document.getElementById("numero_modificar").value = btn.dataset.telefono || "";
+    document.getElementById("domicilio_modificar").value = btn.dataset.domicilio || "";
+    document.getElementById("link_modificar").value = btn.dataset.link || "";
+    document.getElementById("id_modificar").value = btn.dataset.id;
 
     new bootstrap.Modal(document.getElementById("modificarModal")).show();
   }

@@ -379,7 +379,7 @@ VALUES (:nombre, :descripcion, :numero, :domicilio, :link, :imagen)";
                 $nombre = $row['nombre'] ? htmlspecialchars($row['nombre']) : "Sin nombre";
                 $descripcion = $row['descripcion'] ? htmlspecialchars($row['descripcion']) : "Sin descripción disponible";
                 $telefono = $row['numero'] ? htmlspecialchars($row['numero']) : "Sin número de teléfono";
-                $link = $row['link'] ? htmlspecialchars($row['link']) : "#";
+                $link = $row['link'] ? htmlspecialchars($row['link']) : "";
                 $domicilio = $row['domicilio'] ? htmlspecialchars($row['domicilio']) : "Sin domicilio";
                 $fecha = $row['fecha'] ? htmlspecialchars($row['fecha']) : "Sin fecha registrada";
 
