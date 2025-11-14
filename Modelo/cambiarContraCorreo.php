@@ -94,7 +94,7 @@ class cambiarContraCorreo
 
             if ($existeUsuario) {
                 $mail->addAddress($correo, $nickname);
-                $token = bin2hex(random_bytes(60) . hash("sha512", $correo));
+                $token = bin2hex(random_bytes(60) . hash("sha512", $this->correo));
                 $this->guardarTokenEnBD($id, $token);
 
                 $link = $this->urlBase . "/Vista/recuperarContra?token=" . $token;
