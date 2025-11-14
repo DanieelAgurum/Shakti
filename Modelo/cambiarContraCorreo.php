@@ -84,13 +84,13 @@ class cambiarContraCorreo
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'cristo045millanperez@gmail.com';
-            $mail->Password = 'samn oqgn huyz ejkj';
+            $mail->Username = "gooddani04@gmail.com";
+            $mail->Password = "fxvl vxrx swzg unjk";
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
             $mail->CharSet = 'UTF-8';
-            $mail->setFrom('cristo045millanperez@gmail.com', 'Shakti');
+            $mail->setFrom("gooddani04@gmail.com", 'NexoH');
 
             if ($existeUsuario) {
                 $mail->addAddress($correo, $nickname);
@@ -180,11 +180,11 @@ class cambiarContraCorreo
                 $mail->AltBody = "Parece que no hay una cuenta asociada a este correo. Puedes intentar registrarte en: {$linkSimple}";
                 $mail->send();
 
-                 echo json_encode(["success" => true]);
+                echo json_encode(["success" => true]);
                 exit;
             }
         } catch (Exception $e) {
-           echo json_encode(["success" => false, "error" => "No se pudo enviar el correo."]);
+            echo json_encode(["success" => false, "error" => "No se pudo enviar el correo."]);
             exit;
         }
     }
@@ -199,41 +199,46 @@ class cambiarContraCorreo
     {
         $con = $this->conectarBD();
 
-        $tokenEscaped = mysqli_real_escape_string($con, $token);
         $sql = "SELECT u.id 
             FROM usuarias u 
             JOIN tokens_contrasena t ON u.id = t.id_usuaria 
-            WHERE t.token = '$tokenEscaped'";
-        $result = mysqli_query($con, $sql);
+            WHERE t.token = ?";
+        $stmt = mysqli_prepare($con, $sql);
+        mysqli_stmt_bind_param($stmt, "s", $token);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $idUsuaria);
+        $existe = mysqli_stmt_fetch($stmt);
+        mysqli_stmt_close($stmt);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $fila = mysqli_fetch_assoc($result);
-            $idUsuaria = $fila['id'];
-
+        if ($existe) {
+            // Hasheamos la nueva contraseña
             $hash = password_hash($contraseña, PASSWORD_DEFAULT);
 
-            $update = "UPDATE usuarias SET contraseña = '$hash' WHERE id = $idUsuaria";
-            $resultadoUpdate = mysqli_query($con, $update);
+            // Actualizamos la contraseña
+            $update = "UPDATE usuarias SET contraseña = ? WHERE id = ?";
+            $stmtUpdate = mysqli_prepare($con, $update);
+            mysqli_stmt_bind_param($stmtUpdate, "si", $hash, $idUsuaria);
+            $success = mysqli_stmt_execute($stmtUpdate);
+            mysqli_stmt_close($stmtUpdate);
 
+            if ($success) {
+                $delete = "DELETE FROM tokens_contrasena WHERE id_usuaria = ?";
+                $stmtDelete = mysqli_prepare($con, $delete);
+                mysqli_stmt_bind_param($stmtDelete, "i", $idUsuaria);
+                mysqli_stmt_execute($stmtDelete);
+                mysqli_stmt_close($stmtDelete);
 
-            if ($resultadoUpdate) {
-                $sql = "DELETE FROM tokens_contrasena WHERE id_usuaria = $idUsuaria";
-                $result = mysqli_query($con, $sql);
-                if ($result) {
-                    mysqli_close($con);
-                    header("Location: " . $this->urlBase . "/Vista/login.php?status=success&message=" . urlencode("Se actualizó correctamente la contraseña"));
-                    exit;
-                } else {
-                    header("Location: " . $this->urlBase . "/Vista/login.php?status=error&message=" . urlencode("Ocurrió un error intentar más tarde"));
-                    exit;
-                }
+                mysqli_close($con);
+                header("Location: " . $this->urlBase . "/Vista/login?status=success&message=" . urlencode("Se actualizó correctamente la contraseña"));
+                exit;
             } else {
-                header("Location: " . $this->urlBase . "/Vista/login.php?status=error&message=" . urlencode("Ocurrió un problema al actualizar la contraseña"));
+                mysqli_close($con);
+                header("Location: " . $this->urlBase . "/Vista/login?status=error&message=" . urlencode("Ocurrió un problema al actualizar la contraseña"));
                 exit;
             }
         } else {
             mysqli_close($con);
-            header("Location: " . $this->urlBase . "/Vista/login.php?status=error&message=" . urlencode("Token inválido o expirado"));
+            header("Location: " . $this->urlBase . "/Vista/login?status=error&message=" . urlencode("Token inválido o expirado"));
             exit;
         }
     }

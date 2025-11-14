@@ -77,7 +77,7 @@ class ConfirmarCorreo
             $mail->Port = 587;
 
             $mail->CharSet = 'UTF-8';
-            $mail->setFrom('cristo045millanperez@gmail.com', 'Shakti');
+            $mail->setFrom("gooddani04@gmail.com", 'NexoH');
 
             // Generar token
             $token = bin2hex(random_bytes(60));
@@ -126,7 +126,6 @@ class ConfirmarCorreo
 
             $mail->send();
             return true;
-
         } catch (Exception $e) {
             return false;
         }

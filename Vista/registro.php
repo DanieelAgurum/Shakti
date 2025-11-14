@@ -146,7 +146,7 @@ $status = $_GET['status'] ?? '';
       </form>
 
       <div class="auth-footer text-center mt-3">
-        <a href="<?= $urlBase ?>Vista/login.php">¿Ya tienes una cuenta? Inicia sesión</a>
+        <a href="<?= $urlBase ?>Vista/login">¿Ya tienes una cuenta? Inicia sesión</a>
       </div>
     </div>
   </main>
