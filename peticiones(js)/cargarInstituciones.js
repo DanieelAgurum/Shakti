@@ -80,23 +80,16 @@ async function cargarInstituciones() {
                 <h5 class="modal-title recurso-modal-titulo" id="${token}Label">${
         inst.nombre
       }</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
               </div>
               <div class="modal-body recurso-modal-body">
                 <div class="row">
                   <div class="col-md-4 text-center mb-3">
-                    <img src="${
-                      inst.imagen
-                    }" class="recurso-modal-img img-fluid rounded" alt="Imagen ampliada de ${
-        inst.nombre
-      }">
+                    <img src="${inst.imagen}" class="recurso-modal-img img-fluid rounded" alt="Imagen ampliada de ${inst.nombre}">
                   </div>
                   <div class="col-md-8 recurso-modal-texto-contenido">
                     <p class="recurso-modal-subtitulo fw-bold">Descripción</p>
-                    <p>${
-                      inst.descripcion || "Información detallada no disponible."
-                    }</p>
-
+                    <p>${inst.descripcion || "Información detallada no disponible."}</p>
                     <h6 class="mt-4 recurso-modal-seccion-titulo">Domicilio:</h6>
                 <p>
                 <a href="https://www.google.com/maps?q=${encodeURIComponent(
@@ -106,21 +99,13 @@ async function cargarInstituciones() {
                 </a>                
                 </p>
                     <h6 class="mt-4 recurso-modal-seccion-titulo">Teléfonos:</h6>
-                      <a href="tel:${
-                        inst.telefono
-                      }" class="fw-bold text-success">${
-        inst.telefono || "No disponible"
-      }</a>
-
-                    ${
-                      inst.link
-                        ? `<p class="mt-3">
-                            <a href="${inst.link}" target="_blank" class="recurso-modal-boton-web btn btn-sm btn-outline-secondary">
-                              Visitar Sitio Web
-                            </a>
-                          </p>`
-                        : ""
-                    }
+                      <a href="tel:${inst.telefono}" class="fw-bold text-success">${inst.telefono || "No disponible"}</a>
+                    ${inst.link && inst.link.trim() !== ""? 
+                      `<p class="mt-3">
+                        <a href="${inst.link}" target="_blank" class="recurso-modal-boton-web btn btn-sm btn-outline-secondary">
+                          Visitar Sitio Web
+                        </a>
+                      </p>`: ""}
                   </div>
                 </div>
               </div>
