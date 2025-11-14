@@ -32,26 +32,35 @@ async function cargarInstituciones(reset = false) {
         inst.telefono || "No disponible",
         `<a href="https://www.google.com/maps?q=${encodeURIComponent(
           inst.domicilio || ""
-        )}" target="_blank" class="text-decoration-none text-primary">
-          ${inst.domicilio || "No especificado"}
-        </a>`,
+        )}" 
+        target="_blank" class="text-decoration-none text-primary">
+        ${inst.domicilio || "No especificado"}
+    </a>`,
+
+        // NUEVO: Link visible y clickeable
+        `<a href="${inst.link || "#"}" target="_blank">
+        ${inst.link ? "Visitar página" : "Sin link"}
+     </a>`,
+
         `<img src="${inst.imagen}" alt="${inst.nombre}" class="img-fluid rounded shadow-sm" style="max-width: 90px; height: auto;">`,
+
         `<div class="text-center">
-          <button class="btn btn-primary btn-sm btnEditar" 
-            data-nombre="${inst.nombre}" 
-            data-descripcion="${inst.descripcion}" 
-            data-telefono="${inst.telefono || ""}" 
-            data-domicilio="${inst.domicilio || ""}"
-            data-registro_modificar="${inst.registro || ""}"
-            >
-            <i class="fa-solid fa-pen"></i> Editar
-          </button>
-          <button class="btn btn-danger btn-sm btnEliminar" 
-            data-registro_modificar="${inst.registro || ""}"
-            data-nombre="${inst.nombre}">
-            <i class="fa-solid fa-trash"></i> Eliminar
-          </button>
-        </div>`,
+      <button class="btn btn-primary btn-sm btnEditar" 
+        data-nombre="${inst.nombre}" 
+        data-descripcion="${inst.descripcion}" 
+        data-telefono="${inst.telefono || ""}" 
+        data-domicilio="${inst.domicilio || ""}"
+        data-link="${inst.link || ""}"
+        data-registro_modificar="${inst.registro || ""}"
+        >
+        <i class="fa-solid fa-pen"></i> Editar
+      </button>
+      <button class="btn btn-danger btn-sm btnEliminar" 
+        data-registro_modificar="${inst.registro || ""}"
+        data-nombre="${inst.nombre}">
+        <i class="fa-solid fa-trash"></i> Eliminar
+      </button>
+    </div>`,
       ];
     });
 
@@ -355,7 +364,6 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarInstituciones();
 
   btnEliminar.addEventListener("click", () => {
-    console.log("Botón de eliminar clickeado");
     const id = btnEliminar.dataset.id;
     eliminarDatos(id);
   });

@@ -39,49 +39,78 @@ async function cargarInstituciones() {
       const token = inst.token;
 
       cardsHTML += `
-        <div class="col">
-          <div class="recurso-card-base card h-100 shadow-sm">
-            <div class="recurso-card-img-container">
-              <img src="${inst.imagen}" class="recurso-card-img-top card-img-top" alt="Imagen representativa de ${inst.nombre}" style="max-width: auto; height: 180px;">
-            </div>
-            <div class="recurso-card-body card-body d-flex flex-column">
-              <h5 class="recurso-card-titulo card-title">${inst.nombre}</h5>
-              <p class="recurso-card-texto-breve card-text text-muted">${inst.descripcion}</p>
-              <button type="button" class="recurso-card-boton btn btn-primary mt-auto" data-bs-toggle="modal" data-bs-target="#${token}">
-                Ver más...
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
+  <div class="col">
+    <div class="blog-card spring-fever">
+      
+      <div class="title-content">
+        <h3>${inst.nombre}</h3>
+        <hr />
+        <div class="intro">${inst.descripcion}</div>
+      </div>
+
+      <div class="card-info">
+        <img src="${inst.imagen}" alt="Imagen representativa de ${
+        inst.nombre
+      }" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+      </div>
+
+      <div class="utility-info">
+        <ul class="utility-list">
+          <li class="comments">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#${token}">
+              Ver más...
+            </button>
+          </li>
+          <li class="date">${new Date().toLocaleDateString()}</li>
+        </ul>
+      </div>
+
+      <div class="gradient-overlay"></div>
+      <div class="color-overlay"></div>
+
+    </div>
+  </div>
+`;
 
       modalesHTML += `
         <div class="modal fade custom-config-modal" id="${token}" tabindex="-1" aria-labelledby="${token}Label" aria-hidden="true">
           <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content recurso-modal-contenido">
               <div class="modal-header recurso-modal-header">
-                <h5 class="modal-title recurso-modal-titulo" id="${token}Label">${inst.nombre}</h5>
+                <h5 class="modal-title recurso-modal-titulo" id="${token}Label">${
+        inst.nombre
+      }</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
               </div>
               <div class="modal-body recurso-modal-body">
                 <div class="row">
                   <div class="col-md-4 text-center mb-3">
-                    <img src="${inst.imagen}" class="recurso-modal-img img-fluid rounded" alt="Imagen ampliada de ${inst.nombre}">
+                    <img src="${
+                      inst.imagen
+                    }" class="recurso-modal-img img-fluid rounded" alt="Imagen ampliada de ${
+        inst.nombre
+      }">
                   </div>
                   <div class="col-md-8 recurso-modal-texto-contenido">
                     <p class="recurso-modal-subtitulo fw-bold">Descripción</p>
-                    <p>${inst.descripcion || "Información detallada no disponible."}</p>
+                    <p>${
+                      inst.descripcion || "Información detallada no disponible."
+                    }</p>
 
                     <h6 class="mt-4 recurso-modal-seccion-titulo">Domicilio:</h6>
                 <p>
-                <a href="https://www.google.com/maps?q=${encodeURIComponent(inst.domicilio)}" target="_blank" class="text-decoration-none text-primary">
+                <a href="https://www.google.com/maps?q=${encodeURIComponent(
+                  inst.domicilio
+                )}" target="_blank" class="text-decoration-none text-primary">
                 ${inst.domicilio || "No especificado"}
                 </a>                
                 </p>
                     <h6 class="mt-4 recurso-modal-seccion-titulo">Teléfonos:</h6>
-                    <ul>
-                      <li><a href="tel:${inst.telefono}" class="fw-bold text-success">${inst.telefono || "No disponible"}</a></li>
-                    </ul>
+                      <a href="tel:${
+                        inst.telefono
+                      }" class="fw-bold text-success">${
+        inst.telefono || "No disponible"
+      }</a>
 
                     ${
                       inst.link
@@ -106,13 +135,13 @@ async function cargarInstituciones() {
     contenedorTarjetas.insertAdjacentHTML("beforeend", cardsHTML);
     contenedorModales.insertAdjacentHTML("beforeend", modalesHTML);
 
-    offset += limit;    if (data.datos.length > 0) {
+    offset += limit;
+    if (data.datos.length > 0) {
       setTimeout(() => cargarInstituciones(), 300);
     } else {
       finDatos = true;
     }
   } catch (error) {
-
   } finally {
     cargando = false;
   }
