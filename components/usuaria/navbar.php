@@ -90,7 +90,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
         <?php
         // Mapa de rutas
         $rutas = [
-          'libreYSegura' => [1 => 'usuaria/libreYSegura', 2 => 'usuaria/libreYSegura', 3 => 'admin/'],
+          'libreYSeguro' => [1 => 'usuaria/libreYSeguro', 2 => 'usuaria/libreYSeguro', 3 => 'admin/'],
           'alzalaVoz' => [1 => 'usuaria/alzalaVoz', 3 => 'admin/'],
           'publicaciones' => [1 => 'usuaria/publicaciones', 2 => 'usuaria/publicaciones', 3 => 'admin/']
         ];
@@ -99,15 +99,15 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
         <!-- Ordenados por longitud de texto: Test, Foro, Contáctanos, Libre y Segura, Publicaciones -->
         <?php if ($usuario['rol'] <= 1): ?>
           <li class="nav-item"><a class="nav-link"
-              href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['alzalaVoz'], $usuario['rol']) ?>">Test</a></li>
+              href="<?= $urlBase ?>vista/<?= rutaSegura($rutas['alzalaVoz'], $usuario['rol']) ?>">Test</a></li>
         <?php endif; ?>
 
-        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/usuaria/foro">Foro</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>Vista/contacto">Contáctanos</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>vista/usuaria/foro">Foro</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>vista/contacto">Contáctanos</a></li>
         <li class="nav-item"><a class="nav-link"
-            href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['libreYSegura'], $usuario['rol']) ?>">Libre y Segura</a></li>
+            href="<?= $urlBase ?>vista/<?= rutaSegura($rutas['libreYSeguro'], $usuario['rol']) ?>">Libre y Seguro</a></li>
         <li class="nav-item"><a class="nav-link"
-            href="<?= $urlBase ?>Vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a>
+            href="<?= $urlBase ?>vista/<?= rutaSegura($rutas['publicaciones'], $usuario['rol']) ?>">Publicaciones</a>
         </li>
 
         <li class="nav-item ms-3 d-flex align-items-center custom-search-wrapper">
@@ -124,7 +124,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
             <?php if ($usuario['correo']): ?>
               <li>
                 <a class="dropdown-item"
-                  href="<?= $urlBase ?>Vista/<?= rutaSegura([1 => 'usuaria/perfil', 2 => 'especialista/perfil'], $usuario['rol']) ?>">
+                  href="<?= $urlBase ?>vista/<?= rutaSegura([1 => 'usuaria/perfil', 2 => 'especialista/perfil'], $usuario['rol']) ?>">
                   Mi perfil <i class="bi bi-person-circle me-1"></i>
                 </a>
               </li>
@@ -133,7 +133,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
               </li>
               <?php if ($usuario['rol'] <= 1): ?>
                 <li>
-                  <a class="dropdown-item" href="<?= $urlBase ?>Vista/usuaria/especialistas">
+                  <a class="dropdown-item" href="<?= $urlBase ?>vista/usuaria/especialistas">
                     Especialistas <i class="bi bi-person-badge"></i>
                   </a>
                 </li>
@@ -171,7 +171,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
                 </li>
               <?php else: ?>
                 <li>
-                  <a class="dropdown-item" href="<?= $urlBase ?>Vista/login">
+                  <a class="dropdown-item" href="<?= $urlBase ?>vista/login">
                     Iniciar sesión <i class="bi bi-box-arrow-in-right"></i>
                   </a>
                 </li>
@@ -185,7 +185,7 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
 
 <?php $archivo_actual = basename($_SERVER['PHP_SELF']); ?>
 <?php if ($archivo_actual !== 'chat.php' && isset($usuario['rol']) && $usuario['rol'] >= 1 && $usuario['rol'] <= 2): ?>
-  <a href="<?= $urlBase ?>Vista/chat">
+  <a href="<?= $urlBase ?>vista/chat">
     <div id="shakti-chatbot-circle" data-bs-placement="top" title="Chatbot" class="shakti-btn-chatbot">
       <i class="bi bi-robot"></i>
     </div>

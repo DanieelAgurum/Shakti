@@ -33,7 +33,7 @@ RewriteRule ^Vista/especialista/perfil/?$ Vista/especialista/perfil.php [L,QSA,N
 RewriteRule ^Vista/usuaria/alzalaVoz/?$ Vista/usuaria/alzalaVoz.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/especialistas/?$ Vista/usuaria/especialistas.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/foro/?$ Vista/usuaria/foro.php [L,QSA,NC]
-RewriteRule ^Vista/usuaria/libreYSegura/?$ Vista/usuaria/libreYSegura.php [L,QSA,NC]
+RewriteRule ^Vista/usuaria/libreYSeguro/?$ Vista/usuaria/libreYSegura.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/perfil/?$ Vista/usuaria/perfil.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/publicaciones/?$ Vista/usuaria/publicaciones.php [L,QSA,NC]
 # = =========================================

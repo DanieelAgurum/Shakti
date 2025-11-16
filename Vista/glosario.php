@@ -1,5 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
+
 $urlBase = getBaseUrl();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -22,6 +27,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
+    <script src="<?= $urlBase ?>"></script>
 </head>
 
 <body>
@@ -38,7 +44,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </section>
     </main>
 
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
+    <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
 </body>
 
 </html>

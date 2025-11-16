@@ -92,16 +92,16 @@ switch ($_REQUEST['opcion']) {
         $message = urlencode($resultado['message']);
 
         if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 2) {
-            header("Location: ../Vista/especialista/perfil.php?status=$status&message=$message");
+            header("Location: ../Vista/especialista/perfil?status=$status&message=$message");
         } else {
-            header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
+            header("Location: ../Vista/usuaria/perfil.?status=$status&message=$message");
         }
         exit;
 
     case 5:
         session_start();
         if (!isset($_SESSION['id_usuaria'])) {
-            header("Location: ../Vista/login.php");
+            header("Location: ../Vista/login");
             exit;
         }
 
@@ -112,7 +112,7 @@ switch ($_REQUEST['opcion']) {
         if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 2) {
             header("Location: ../Vista/especialista/perfil.php?status=$status&message=$message");
         } else {
-            header("Location: ../Vista/usuaria/perfil.php?status=$status&message=$message");
+            header("Location: ../Vista/usuaria/perfil?status=$status&message=$message");
         }
         exit;
 }

@@ -38,12 +38,12 @@ async function cargarInstituciones(reset = false) {
         `<img src="${inst.imagen}" alt="${inst.nombre}" class="img-fluid rounded shadow-sm" style="max-width: 90px; height: auto;">`,
         `<div class="text-center">
           <button class="btn btn-primary btn-sm btnEditar" 
+            data-id="${inst.registro}"
             data-nombre="${inst.nombre}" 
             data-descripcion="${inst.descripcion}" 
             data-telefono="${inst.telefono || ""}" 
             data-domicilio="${inst.domicilio || ""}"
-            data-registro_modificar="${inst.registro || ""}"
-            >
+            data-link="${inst.link || ""}">
             <i class="fa-solid fa-pen"></i> Editar
           </button>
           <button class="btn btn-danger btn-sm btnEliminar" 
@@ -230,14 +230,11 @@ document.addEventListener("click", (e) => {
     const btn = e.target.closest(".btnEditar");
 
     document.getElementById("nombre_modificar").value = btn.dataset.nombre;
-    document.getElementById("descripcion_modificar").value =
-      btn.dataset.descripcion;
-    document.getElementById("numero_modificar").value =
-      btn.dataset.telefono || "";
-    document.getElementById("domicilio_modificar").value =
-      btn.dataset.domicilio || "";
-    document.getElementById("id_modificar").value =
-      btn.dataset.registro_modificar;
+    document.getElementById("descripcion_modificar").value = btn.dataset.descripcion;
+    document.getElementById("numero_modificar").value = btn.dataset.telefono || "";
+    document.getElementById("domicilio_modificar").value = btn.dataset.domicilio || "";
+    document.getElementById("link_modificar").value = btn.dataset.link || "";
+    document.getElementById("id_modificar").value = btn.dataset.id;
 
     new bootstrap.Modal(document.getElementById("modificarModal")).show();
   }
@@ -355,7 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarInstituciones();
 
   btnEliminar.addEventListener("click", () => {
-    console.log("Botón de eliminar clickeado");
     const id = btnEliminar.dataset.id;
     eliminarDatos(id);
   });

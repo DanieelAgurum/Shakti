@@ -3,7 +3,7 @@
          <div class="sb-sidenav-menu">
              <div class="nav">
                  <!-- Inicio -->
-                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/index.php">
+                 <a class="nav-link text-white" href="<?php echo $urlBase ?>index.php">
                      <div class="sb-nav-link-icon"><i class="fa-solid fa-house text-white"></i></div>
                      Inicio
                  </a>
