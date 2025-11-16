@@ -13,12 +13,21 @@ $preg->conectarBD();
 if (isset($_REQUEST['opcion'])) {
     switch ($_REQUEST['opcion']) {
         case 1:
-            $preg->inicializar($_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero'], $_REQUEST['domicilio'], $_FILES['imagen']);
+            $preg->inicializar($_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero'], $_REQUEST['domicilio'], $_FILES['imagen'], $_REQUEST['link']);
             $resultado = $preg->agregarOrganizacion();
             echo $resultado;
             break;
         case 2:
-            $resultado = $preg->modificarOrganizacion($_REQUEST['registro_modificar'], $_REQUEST['nombre'], $_REQUEST['descripcion'], $_REQUEST['numero'], $_REQUEST['domicilio'], $_FILES['imagen']);
+            $resultado = $preg->modificarOrganizacion(
+                $_REQUEST['registro_modificar'],
+                $_REQUEST['nombre'],
+                $_REQUEST['descripcion'],
+                $_REQUEST['numero'],
+                $_REQUEST['domicilio'],
+                $_FILES['imagen'],
+                $_REQUEST['link']
+            );
+
             echo $resultado;
             break;
         case 3:

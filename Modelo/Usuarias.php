@@ -146,11 +146,11 @@ class Usuarias
             $msg = "El nombre de usuaria ya está en uso, por favor elige otro.";
             if (isset($_SESSION['id_rol'])) {
                 if ($_SESSION['id_rol'] == 1) {
-                    header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode($msg));
+                    header("Location: ../Vista/usuaria/perfil?status=error&message=" . urlencode($msg));
                 } else if ($_SESSION['id_rol'] == 2) {
-                    header("Location: ../Vista/especialista/perfil.php?status=error&message=" . urlencode($msg));
+                    header("Location: ../Vista/especialista/perfil?status=error&message=" . urlencode($msg));
                 } else {
-                    header("Location: ../Vista/login.php?status=error&message=" . urlencode("Rol no reconocido"));
+                    header("Location: ../Vista/login?status=error&message=" . urlencode("Rol no reconocido"));
                 }
             } else {
                 header("Location: ../Vista/login.php?status=error&message=" . urlencode("Sesión no iniciada"));
@@ -185,14 +185,14 @@ class Usuarias
         if (empty($campos)) {
             if (isset($_SESSION['id_rol'])) {
                 if ($_SESSION['id_rol'] == 1) {
-                    header("Location: ../Vista/usuaria/perfil.php");
+                    header("Location: ../Vista/usuaria/perfil");
                 } else if ($_SESSION['id_rol'] == 2) {
-                    header("Location: ../Vista/especialista/perfil.php");
+                    header("Location: ../Vista/especialista/perfil");
                 } else {
-                    header("Location: ../Vista/login.php?status=error&message=Rol+no+reconocido");
+                    header("Location: ../Vista/login?status=error&message=Rol+no+reconocido");
                 }
             } else {
-                header("Location: ../Vista/login.php?status=error&message=Sesión+no+iniciada");
+                header("Location: ../Vista/login?status=error&message=Sesión+no+iniciada");
             }
             exit;
         }
@@ -219,11 +219,11 @@ class Usuarias
         // Redirigir según rol
         if (isset($_SESSION['id_rol'])) {
             if ($_SESSION['id_rol'] == 1) {
-                header("Location: ../Vista/usuaria/perfil.php?status=success&message=" . urlencode("Datos actualizados correctamente"));
+                header("Location: ../Vista/usuaria/perfil?status=success&message=" . urlencode("Datos actualizados correctamente"));
             } else if ($_SESSION['id_rol'] == 2) {
-                header("Location: ../Vista/especialista/perfil.php?status=success&message=" . urlencode("Datos actualizados correctamente"));
+                header("Location: ../Vista/especialista/perfil?status=success&message=" . urlencode("Datos actualizados correctamente"));
             } else {
-                header("Location: ../Vista/login.php?status=error&message=" . urlencode("Rol no reconocido"));
+                header("Location: ../Vista/login?status=error&message=" . urlencode("Rol no reconocido"));
             }
         } else {
             header("Location: ../Vista/login.php?status=error&message=" . urlencode("Sesión no iniciada"));

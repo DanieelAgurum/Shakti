@@ -10,10 +10,10 @@ $urlBase = getBaseUrl();
 if (isset($_SESSION['id_rol'])) {
   switch ($_SESSION['id_rol']) {
     case 1:
-      header("Location: " . $urlBase . "Vista/usuaria/perfil.php");
+      header("Location: " . $urlBase . "Vista/usuaria/perfil");
       exit;
     case 2:
-      header("Location: " . $urlBase . "Vista/especialista/perfil.php");
+      header("Location: " . $urlBase . "Vista/especialista/perfil");
       exit;
     case 3:
       header("Location: " . $urlBase . "Vista/admin/");
@@ -146,7 +146,7 @@ $status = $_GET['status'] ?? '';
       </form>
 
       <div class="auth-footer text-center mt-3">
-        <a href="<?= $urlBase ?>Vista/login.php">¿Ya tienes una cuenta? Inicia sesión</a>
+        <a href="<?= $urlBase ?>Vista/login">¿Ya tienes una cuenta? Inicia sesión</a>
       </div>
     </div>
   </main>

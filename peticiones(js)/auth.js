@@ -13,13 +13,13 @@ document.addEventListener("DOMContentLoaded", function() {
                         // Redirigir según rol
                         switch (data.id_rol) {
                             case "1":
-                                window.location.href = urlBase + "Vista/usuaria/perfil.php";
+                                window.location.href = urlBase + "Vista/usuaria/perfil";
                                 break;
                             case "2":
-                                window.location.href = urlBase + "Vista/especialista/perfil.php";
+                                window.location.href = urlBase + "Vista/especialista/perfil";
                                 break;
                             case "3":
-                                window.location.href = urlBase + "Vista/admin/index.php";
+                                window.location.href = urlBase + "Vista/admin/";
                                 break;
                         }
                     } else {

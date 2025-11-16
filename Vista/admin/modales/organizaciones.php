@@ -44,6 +44,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             placeholder="Buscar dirección..." required>
                     </div>
                     <div class="col-12 mb-2">
+                        <label for="link" class="form-label">Link de la pagina</label>
+                        <input type="text" class="form-control" id="link" name="link" placeholder="Ingresa el número de la organización" required>
+                    </div>
+                    <div class="col-12 mb-2">
                         <label for="imagen" class="form-label">Imagen de la organización</label>
                         <input type="file" name="imagen" id="imagen" class="form-control" accept="image/*" required>
                     </div>
@@ -88,6 +92,10 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                         <label for="domicilio_modificar" class="form-label">Domicilio</label>
                         <input type="text" class="form-control" id="domicilio_modificar" name="domicilio"
                             placeholder="Buscar dirección..." required>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <label for="link_modificar" class="form-label">Link de la página</label>
+                        <input type="text" class="form-control" id="link_modificar" name="link" placeholder="Ingresa el link" required>
                     </div>
                     <div class="col-12 mb-2">
                         <label for="imagen_modificar" class="form-label">Imagen de la organización</label>
