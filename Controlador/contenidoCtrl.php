@@ -26,14 +26,10 @@ switch ($_REQUEST['opcion']) {
             }
         }
 
-        // VARIABLES GENERALES
         $titulo = $_REQUEST['titulo'] ?? '';
         $descripcion = $_REQUEST['descripcion'] ?? '';
         $tipo = $_REQUEST['tipo'] ?? '';
-        $categoria = $_REQUEST['categoria'] ?? '';
         $estado = $_REQUEST['estado'] ?? 1;
-        $tipo_autor = 'admin';
-        $id_usuario = $_SESSION['id'] ?? 1;
 
         // CAMPOS OPCIONALES
         $cuerpo_html = $_REQUEST['cuerpo_html'] ?? '';
@@ -52,7 +48,6 @@ switch ($_REQUEST['opcion']) {
 
             case 'articulo':
                 $cuerpo_html = $_REQUEST['cuerpo_html'] ?? '';
-                // 🔹 Procesar galería múltiple
                 if ($tipo === 'articulo') {
                     if (!empty($_FILES['imagen1']['tmp_name'])) $imagen1 = $_FILES['imagen1'];
                     if (!empty($_FILES['imagen2']['tmp_name'])) $imagen2 = $_FILES['imagen2'];
@@ -75,9 +70,6 @@ switch ($_REQUEST['opcion']) {
             $imagen1,
             $imagen2,
             $imagen3,
-            $categoria,
-            $tipo_autor,
-            $id_usuario,
             $estado,
             $thumbnail
         );
@@ -103,16 +95,11 @@ switch ($_REQUEST['opcion']) {
             }
         }
 
-        // VARIABLES GENERALES
         $titulo = $_REQUEST['titulo'] ?? '';
         $descripcion = $_REQUEST['descripcion'] ?? '';
         $tipo = $_REQUEST['tipo'] ?? '';
-        $categoria = $_REQUEST['categoria'] ?? '';
         $estado = $_REQUEST['estado'] ?? 1;
-        $tipo_autor = 'admin';
-        $id_usuario = $_SESSION['id'] ?? 1;
 
-        // CAMPOS OPCIONALES
         $cuerpo_html = $_REQUEST['cuerpo_html'] ?? '';
         $url_contenido = $_REQUEST['nueva_url_contenido'] ?? '';
         $archivo = null;
@@ -123,17 +110,17 @@ switch ($_REQUEST['opcion']) {
         switch ($tipo) {
             case 'infografia':
                 if (!empty($_FILES['nuevo_archivo']['tmp_name'])) {
-                    $archivo = file_get_contents($_FILES['nuevo_archivo']['tmp_name']);
+                    // $archivo = file_get_contents($_FILES['nuevo_archivo']['tmp_name']);
+                    $archivo = $_FILES['nuevo_archivo'];
                 }
                 break;
 
             case 'articulo':
                 $cuerpo_html = $_REQUEST['cuerpo_html'] ?? '';
-                // 🔹 Procesar galería múltiple
                 if ($tipo === 'articulo') {
-                    if (!empty($_FILES['nueva_imagen1']['tmp_name'])) $imagen1 = $_FILES['nueva_imagen1'];
-                    if (!empty($_FILES['nueva_imagen2']['tmp_name'])) $imagen2 = $_FILES['nueva_imagen2'];
-                    if (!empty($_FILES['nueva_imagen3']['tmp_name'])) $imagen3 = $_FILES['nueva_imagen3'];
+                    $imagen1 = !empty($_FILES['nueva_imagen1']['tmp_name']) ? $_FILES['nueva_imagen1'] : null;
+                    $imagen2 = !empty($_FILES['nueva_imagen2']['tmp_name']) ? $_FILES['nueva_imagen2'] : null;
+                    $imagen3 = !empty($_FILES['nueva_imagen3']['tmp_name']) ? $_FILES['nueva_imagen3'] : null;
                 }
                 break;
 
@@ -142,20 +129,18 @@ switch ($_REQUEST['opcion']) {
                 break;
         }
 
-
         $exito = $c->editarContenido(
             $_REQUEST['id_contenido'],
             $_REQUEST['titulo'],
             $_REQUEST['descripcion'],
             $_REQUEST['cuerpo_html'] ?? '',
             $_REQUEST['url_contenido'] ?? '',
-            $_REQUEST['categoria'] ?? '',
             $thumbnail,
-            $_FILES['nueva_imagen1'] ?? '',
-            $_FILES['nueva_imagen1'] ?? '',
-            $_FILES['nueva_imagen3'] ?? '',
-            $_FILES['nuevo_archivo'] ?? null,
-            $_REQUEST['estado'] ?? 1
+            $imagen1,
+            $imagen2,
+            $imagen3,
+            $_REQUEST['estado'] ?? 1,
+            $_FILES['nuevo_archivo'] ?? null
         );
 
         header("Location: ../Vista/admin/contenido.php?status=" . ($exito ? "exito_actualizar" : "error_actualizar"));
