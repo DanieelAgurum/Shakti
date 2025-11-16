@@ -78,7 +78,6 @@ $contenidos = $modelo->obtenerContenidos();
                         <th>ID</th>
                         <th>Título</th>
                         <th>Tipo</th>
-                        <th>Categoría</th>
                         <th>Miniatura</th>
                         <th>URL / Archivo</th>
                         <th>Fecha</th>
@@ -100,7 +99,6 @@ $contenidos = $modelo->obtenerContenidos();
                             <td class="text-center"><?= htmlspecialchars($row['id_contenido']); ?></td>
                             <td><?= htmlspecialchars($row['titulo']); ?></td>
                             <td class="text-center"><span class="badge bg-info text-dark"><?= htmlspecialchars($row['tipo']); ?></span></td>
-                            <td><?= htmlspecialchars($row['categoria']); ?></td>
                             <td class="text-center">
                               <?php if (!empty($row['thumbnail'])): ?>
                                 <img src="<?= $urlBase . 'uploads/thumbnails/' . basename($row['thumbnail']); ?>"
@@ -111,7 +109,6 @@ $contenidos = $modelo->obtenerContenidos();
                             </td>
                             <td class="text-center">
                               <?php if (!empty($row['url_contenido'])): ?>
-                                <!-- 🔗 Contenido con URL -->
                                 <a href="<?= htmlspecialchars($row['url_contenido']); ?>"
                                   target="_blank"
                                   class="btn btn-outline-primary btn-sm">
@@ -135,13 +132,11 @@ $contenidos = $modelo->obtenerContenidos();
                             </td>
 
                             <td class="text-center">
-                              <!-- Botón Editar -->
                               <button class="btn btn-outline-info m-auto btn-sm d-block" data-bs-toggle="modal"
                                 data-bs-target="#editarContenido_<?= $row['id_contenido']; ?>">
                                 <i class="bi bi-pencil-square"></i> Editar
                               </button><br>
 
-                              <!-- Botón Eliminar -->
                               <button class="btn btn-outline-danger m-auto btn-sm d-block" data-bs-toggle="modal"
                                 data-bs-target="#eliminarContenido_<?= $row['id_contenido']; ?>">
                                 <i class="bi bi-trash3"></i> Eliminar

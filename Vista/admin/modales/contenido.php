@@ -8,7 +8,7 @@
             </div>
 
             <div class="modal-body">
-                <form method="post" action="../../Controlador/contenidoCtrl.php" enctype="multipart/form-data" novalidate>
+                <form method="post" action="../../Controlador/contenidoCtrl.php" enctype="multipart/form-data">
 
                     <!-- MINIATURA -->
                     <div class="mb-3">
@@ -34,16 +34,11 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Tipo de contenido:</label>
                         <select class="form-select tipo-select" name="tipo" id="tipoAgregar" data-id="agregar" required>
+                            <option value="" disabled selected>Selecciona un tipo</option>
                             <option value="infografia">Infografía</option>
                             <option value="articulo">Artículo</option>
                             <option value="video">Video</option>
                         </select>
-                    </div>
-
-                    <!-- CATEGORÍA -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Categoría:</label>
-                        <input type="text" class="form-control" name="categoria" maxlength="100" placeholder="Ejemplo: educación, salud...">
                     </div>
 
                     <!-- Estado -->
@@ -62,7 +57,7 @@
                     <div class="tipo-seccion" id="seccion-articulo" style="display:none;">
                         <hr>
                         <h5 class="fw-bold text-primary">Artículo</h5>
-                        <textarea class="form-control" name="cuerpo_html" rows="6" placeholder="Escribe el contenido del artículo..."></textarea>
+                        <textarea id="cuerpo_agregar" class="form-control" name="cuerpo_html" rows="6" placeholder="Escribe el contenido del artículo..."></textarea>
 
                         <div class="mt-3">
                             <label class="form-label fw-bold">Imágenes del artículo (opcional):</label>
@@ -117,7 +112,7 @@
             </div>
 
             <div class="modal-body">
-                <form method="post" action="../../Controlador/contenidoCtrl.php" enctype="multipart/form-data" novalidate>
+                <form method="post" action="../../Controlador/contenidoCtrl.php" enctype="multipart/form-data">
 
                     <!-- MINIATURA -->
                     <div class="mb-3">
@@ -142,7 +137,7 @@
                     <!-- DESCRIPCIÓN -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">Descripción breve:</label>
-                        <textarea class="form-control" name="descripcion" rows="3" maxlength="500"><?= htmlspecialchars($row['descripcion']); ?></textarea>
+                        <textarea class="form-control" name="descripcion" rows="3" maxlength="500" required><?= htmlspecialchars($row['descripcion']); ?></textarea>
                     </div>
 
                     <!-- TIPO -->
@@ -152,12 +147,6 @@
                             <option value="<?= $row['tipo']; ?>" selected><?= ucfirst($row['tipo']); ?></option>
                         </select>
                         <input type="hidden" name="tipo" value="<?= $row['tipo']; ?>" class="tipo-real">
-                    </div>
-
-                    <!-- CATEGORÍA -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Categoría:</label>
-                        <input type="text" class="form-control" name="categoria" value="<?= htmlspecialchars($row['categoria']); ?>" maxlength="100">
                     </div>
 
                     <!-- INFOGRAFÍA -->
@@ -171,7 +160,8 @@
                     <div class="tipo-seccion" id="editar-articulo-<?= $row['id_contenido']; ?>" style="display:none;">
                         <hr>
                         <h5 class="fw-bold text-primary">Artículo</h5>
-                        <textarea class="form-control" name="cuerpo_html" rows="6"><?= htmlspecialchars($row['cuerpo_html'] ?? ''); ?></textarea>
+                        <textarea id="cuerpo_editar_<?= $row['id_contenido']; ?>" class="form-control" name="cuerpo_html" rows="6"><?= htmlspecialchars($row['cuerpo_html'] ?? ''); ?></textarea>
+
                         <div class="mt-3">
                             <label class="form-label fw-bold">Imágenes del artículo:</label>
 
@@ -252,7 +242,6 @@
     </div>
 </div>
 
-
 <!-- Modal para activar/desactivar contenido-->
 <div class="modal fade" id="cambiarEstado_<?php echo $row['id_contenido']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -290,7 +279,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- ELIMINAR CONTENIDO -->
 <div class="modal fade" id="eliminarContenido_<?php echo $row['id_contenido']; ?>" tabindex="-1" aria-labelledby="eliminarContenidoLabel" aria-hidden="true">
@@ -330,13 +318,26 @@
             language: 'es',
             height: 350,
             menubar: false,
-            plugins: 'lists link image table code autoresize',
-            toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image table | removeformat | code',
+            plugins: 'lists code autoresize',
+            toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | removeformat',
             statusbar: false,
             branding: false,
-            paste_data_images: true,
+            setup: function(editor) {
+                editor.on('init', function() {
+                    const container = editor.getContainer();
+                    if (container.closest('.modal')) {
+                        container.closest('.modal').addEventListener('focusin', function(e) {
+                            if (
+                                e.target.closest('.tox-tinymce-aux') ||
+                                e.target.closest('.tox-tinymce')
+                            ) {
+                                e.stopImmediatePropagation();
+                            }
+                        });
+                    }
+                });
+            },
         });
-
 
         document.querySelectorAll(".tipo-select").forEach(select => {
             const id = select.dataset.id || "agregar";
@@ -389,64 +390,6 @@
                     };
                     reader.readAsDataURL(file);
                 });
-            });
-        });
-
-        /* Validaciones antes de enviar */
-        document.querySelectorAll("form[action*='contenidoCtrl.php']").forEach(form => {
-            form.addEventListener("submit", e => {
-                const tipo = form.querySelector('[name="tipo"]').value;
-                const titulo = form.querySelector('[name="titulo"]')?.value.trim();
-                const descripcion = form.querySelector('[name="descripcion"]')?.value.trim();
-
-                // Validaciones generales
-                if (!titulo || titulo.length < 3) {
-                    e.preventDefault();
-                    Swal.fire("Atención", "El título debe tener al menos 3 caracteres.", "warning");
-                    return;
-                }
-                if (!descripcion || descripcion.length < 10) {
-                    e.preventDefault();
-                    Swal.fire("Atención", "La descripción debe tener al menos 10 caracteres.", "warning");
-                    return;
-                }
-
-                // Validaciones específicas por tipo
-                if (tipo === "infografia") {
-                    const archivo = form.querySelector('[name="archivo"]')?.files[0];
-                    if (archivo) {
-                        const ext = archivo.name.split('.').pop().toLowerCase();
-                        if (!["jpg", "jpeg", "png", "gif", "pdf"].includes(ext)) {
-                            e.preventDefault();
-                            Swal.fire("Formato inválido", "La infografía debe ser una imagen o un PDF.", "error");
-                            return;
-                        }
-                        if (archivo && archivo.size > 5 * 1024 * 1024) {
-                            e.preventDefault();
-                            Swal.fire("Archivo demasiado grande", "El archivo no debe superar los 5 MB.", "error");
-                            return;
-                        }
-                    }
-                }
-
-                if (tipo === "articulo") {
-                    const cuerpo = form.querySelector('[name="cuerpo_html"]')?.value.trim();
-                    if (!cuerpo) {
-                        e.preventDefault();
-                        Swal.fire("Atención", "Debes redactar el contenido del artículo.", "warning");
-                        return;
-                    }
-                }
-
-                if (tipo === "video") {
-                    const url = form.querySelector('[name="url_contenido"]')?.value.trim();
-                    const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\/.+$/;
-                    if (!url.match(regex)) {
-                        e.preventDefault();
-                        Swal.fire("URL inválida", "Por favor ingresa un enlace válido de YouTube o Vimeo.", "error");
-                        return;
-                    }
-                }
             });
         });
 
