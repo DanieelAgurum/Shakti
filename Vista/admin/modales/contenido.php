@@ -41,6 +41,17 @@
                         </select>
                     </div>
 
+                    <!-- CATEGORIA -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Categoria:</label>
+                        <select class="form-select categoria-select" name="categoria" id="categoriaAgregar" data-id="agregar" required>
+                            <option value="" disabled selected>Selecciona una categoría</option>
+                            <option value="Ansiedad">Ansiedad</option>
+                            <option value="Depresión">Depresión</option>
+                            <option value="Estrés">Estrés</option>
+                        </select>
+                    </div>
+
                     <!-- Estado -->
                     <input type="hidden" name="estado" value="1">
 
@@ -147,6 +158,26 @@
                             <option value="<?= $row['tipo']; ?>" selected><?= ucfirst($row['tipo']); ?></option>
                         </select>
                         <input type="hidden" name="tipo" value="<?= $row['tipo']; ?>" class="tipo-real">
+                    </div>
+
+                    <!-- CATEGORIA -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Categoria:</label>
+                        <select class="form-select categoria-select" name="categoria">
+                            <option value="" disabled>Selecciona una categoría</option>
+
+                            <option value="Ansiedad" <?= ($row['categoria'] == 'Ansiedad') ? 'selected' : '' ?>>
+                                Ansiedad
+                            </option>
+
+                            <option value="Depresión" <?= ($row['categoria'] == 'Depresión') ? 'selected' : '' ?>>
+                                Depresión
+                            </option>
+
+                            <option value="Estrés" <?= ($row['categoria'] == 'Estrés') ? 'selected' : '' ?>>
+                                Estrés
+                            </option>
+                        </select>
                     </div>
 
                     <!-- INFOGRAFÍA -->
