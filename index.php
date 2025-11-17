@@ -1,5 +1,6 @@
 <?php
 require_once 'Modelo/testimoniosMdl.php';
+require_once 'Modelo/contenidoMdl.php';
 date_default_timezone_set('America/Mexico_City');
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
@@ -12,6 +13,22 @@ $temp = new Testimonios(null);
 $db = $temp->conectarBD();
 $testimonio = new Testimonios($db);
 $testimonios = $testimonio->obtenerTestimonios();
+
+$cont = new Contenido();
+$cont->conectarBD();
+$contenidoReciente = $cont->obtenerContenidoReciente();
+
+function blobToBase64($blob)
+{
+  if (!$blob) return "";
+  return "data:image/jpeg;base64," . base64_encode($blob);
+}
+function pdfBlobToBase64($blob)
+{
+  if (!$blob) return "";
+  return "data:application/pdf;base64," . base64_encode($blob);
+}
+
 
 if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   header("Location: " . $urlBase . "vista/admin/");
@@ -41,7 +58,6 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
 </head>
 
 <body>
-
   <!-- Banner principal -->
   <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner">
@@ -177,7 +193,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       </div>
 
       <div class="hero-buttons d-flex flex-wrap justify-content-center" data-aos="fade-up" data-aos-delay="400">
-        <a href="<?= $urlBase ?>Vista/Contenido"
+        <a href="#contenido"
           class="btn btn-primary me-2 mt-2 mb-2 px-4 py-2 rounded-pill shadow-sm hover-scale">
           Más contenido...
         </a>
@@ -254,6 +270,79 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- Contenido para ti -->
+  <section id="contenido" class="contenido-personalizado-section container w-75 mt-5 mb-5 m-auto">
+    <h1 class="contenido-title fw-bold mb-4 text-center display-5">
+      Contenido <span class="contenido-title-accent">para ti</span>
+    </h1>
+    <div class="contenido-grid row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <?php while ($row = $contenidoReciente->fetch_assoc()): ?>
+        <div class="col">
+          <div class="contenido-card card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="contenido-img-wrapper position-relative">
+              <img src="<?= $urlBase . 'uploads/thumbnails/' . basename($row['thumbnail']); ?>"
+                class="contenido-img card-img-top"
+                alt="thumbnail">
+              <span class="contenido-badge">Nuevo</span>
+            </div>
+            <div class="contenido-body card-body p-4">
+
+              <div class="mb-2 d-flex gap-2">
+                <span class="contenido-category
+                <?php
+                if ($row['categoria'] == 'Ansiedad') echo 'bg-success text-white';
+                elseif ($row['categoria'] == 'Depresión') echo 'bg-info text-white';
+                elseif ($row['categoria'] == 'Estrés') echo 'bg-warning text-dark'; ?>">
+                  <?= ucfirst($row['categoria']) ?>
+                </span>
+                <span class="contenido-category
+                <?php
+                if ($row['tipo'] == 'infografia') echo 'bg-primary text-white';
+                elseif ($row['tipo'] == 'video') echo 'bg-danger text-white';
+                else echo 'bg-warning text-dark';
+                ?>">
+                  <?= ucfirst($row['tipo']) ?>
+                </span>
+              </div>
+
+
+              <h4 class="contenido-card-title mt-3 fw-bold">
+                <?= $row['titulo'] ?>
+              </h4>
+
+              <p class="contenido-text contenido-descripcion-scroll text-muted">
+                <?= $row['descripcion'] ?>
+              </p>
+
+              <small class="text-muted d-block mb-3">
+                <i class="far fa-calendar-alt"></i>
+                <?= date("d M Y", strtotime($row['fecha_publicacion'])) ?>
+              </small>
+
+              <div class="contenido-author d-flex align-items-center mt-2">
+                <img src="img/NexoH.png" class="rounded-circle me-3" width="40" height="40" alt="Author">
+                <a href="#"  data-bs-placement="top" title="Ver contenido" class="contenido-link fs-5 ms-auto"
+                  data-tipo="<?= $row['tipo'] ?>"
+                  data-titulo="<?= htmlspecialchars($row['titulo']) ?>"
+                  data-cuerpo="<?= htmlspecialchars($row['cuerpo_html'], ENT_QUOTES) ?>"
+                  data-url="<?= htmlspecialchars($row['url_contenido'] ?? '') ?>"
+                  data-archivo="<?= pdfBlobToBase64($row['archivo']) ?>"
+                  data-img1="<?= blobToBase64($row['imagen1']) ?>"
+                  data-img2="<?= blobToBase64($row['imagen2']) ?>"
+                  data-img3="<?= blobToBase64($row['imagen3']) ?>">
+                  <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php endwhile; ?>
+    </div>
+    <div class="contenido-more text-center mt-4">
+      <a class="contenido-more-link fw-bold text-primary" href="Vista/contenido.php">Más contenido</a>
     </div>
   </section>
 
@@ -344,20 +433,23 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
     </div>
   </section>
 
+  <?php include 'Vista/modales/contenido.php'; ?>
+
   <?php
   include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/footer.php';
   ?>
 
   <!-- Scripts -->
+  <script src="peticiones(js)/contenido.js"></script>
   <script src="peticiones(js)/carruselTestimonios.js"></script>
   <script src="peticiones(js)/testimonios.js"></script>
   <script src="peticiones(js)/return.js"></script>
 
   <script>
     AOS.init({
-      duration: 1000, // Duración de la animación
-      once: true, // Solo se anima una vez
-      offset: 120, // Distancia antes de activarse
+      duration: 1000,
+      once: true,
+      offset: 120,
     });
   </script>
 

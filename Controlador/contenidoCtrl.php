@@ -30,6 +30,7 @@ switch ($_REQUEST['opcion']) {
         $descripcion = $_REQUEST['descripcion'] ?? '';
         $tipo = $_REQUEST['tipo'] ?? '';
         $estado = $_REQUEST['estado'] ?? 1;
+        $categoria = $_REQUEST['categoria'] ?? '';
 
         // CAMPOS OPCIONALES
         $cuerpo_html = $_REQUEST['cuerpo_html'] ?? '';
@@ -71,7 +72,8 @@ switch ($_REQUEST['opcion']) {
             $imagen2,
             $imagen3,
             $estado,
-            $thumbnail
+            $thumbnail,
+            $categoria
         );
 
         $exito = $c->agregarContenido();
@@ -99,6 +101,7 @@ switch ($_REQUEST['opcion']) {
         $descripcion = $_REQUEST['descripcion'] ?? '';
         $tipo = $_REQUEST['tipo'] ?? '';
         $estado = $_REQUEST['estado'] ?? 1;
+        $categoria = $_REQUEST['categoria'] ?? '';
 
         $cuerpo_html = $_REQUEST['cuerpo_html'] ?? '';
         $url_contenido = $_REQUEST['nueva_url_contenido'] ?? '';
@@ -140,6 +143,7 @@ switch ($_REQUEST['opcion']) {
             $imagen2,
             $imagen3,
             $_REQUEST['estado'] ?? 1,
+            $categoria,
             $_FILES['nuevo_archivo'] ?? null
         );
 
