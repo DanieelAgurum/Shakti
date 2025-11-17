@@ -29,7 +29,6 @@ function pdfBlobToBase64($blob)
   return "data:application/pdf;base64," . base64_encode($blob);
 }
 
-
 if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   header("Location: " . $urlBase . "vista/admin/");
   exit;
@@ -274,7 +273,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   </section>
 
   <!-- Contenido para ti -->
-  <section id="contenido" class="contenido-personalizado-section container w-75 mt-5 mb-5 m-auto">
+  <section id="contenido" class="contenido-personalizado-section container w-75 mt-5 mb-5 m-auto" data-aos="fade-up" data-aos-duration="1200">
     <h1 class="contenido-title fw-bold mb-4 text-center display-5">
       Contenido <span class="contenido-title-accent">para ti</span>
     </h1>
@@ -347,7 +346,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   </section>
 
   <!-- Testimonios -->
-  <section id="testimonios" class="py-5 bg-white" data-aos="fade-up" data-aos-duration="1000">
+  <section id="testimonios" class="py-5" data-aos="fade-up" data-aos-duration="1000">
     <div class="container">
       <div class="row align-items-center" style="min-height: 500px;">
 

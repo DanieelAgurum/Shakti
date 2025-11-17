@@ -41,31 +41,45 @@ function pdfBlobToBase64($blob)
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
     <style>
-        .bloque-contenido {
-            display: flex;
-            align-items: start;
-            min-height: 250px;
-            /* controla la alineación */
+        .contenedor-buscador {
+            z-index: 1030;
+            position: fixed;
+            top: 3.5rem;
+            left: 0;
+            width: 100%;
+            background-color: var(--color-fondo-claro);
         }
 
-        .bloque-contenido img {
-            max-height: 230px;
-            object-fit: cover;
+        .search-box {
+            position: relative;
         }
     </style>
 </head>
 
 <body>
-    <section class="contenido-personalizado-section container w-75 mt-4 mb-5 m-auto">
-        <h1 class="contenido-title fw-bold mb-4 text-center display-5">
-            Todo el <span class="contenido-title-accent">contenido</span>
-        </h1>
+    <div class="contenedor-buscador mt-3">
+        <div class="search-foro buscador-fijo mx-auto">
+            <div class="search-box w-100">
+                <i class="bi bi-search search-icon"></i>
+                <input id="buscadorContenido"
+                    type="text"
+                    class="form-control search-input"
+                    placeholder="Buscar por título, tipo o categoría...">
+                </form>
+            </div>
+        </div>
+    </div>
 
-        <div class="contenido-grid row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <section class="contenido-personalizado-section container w-75 mt-5 mb-5 m-auto">
+        <div class="contenido-grid row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-5">
             <?php while ($row = $contenidoTodo->fetch_assoc()): ?>
 
                 <div class="col">
-                    <div class="contenido-card card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="contenido-card card h-100 border-0 shadow-lg rounded-4 overflow-hidden"
+                        data-titulo="<?= htmlspecialchars(mb_strtolower($row['titulo']), ENT_QUOTES) ?>"
+                        data-descripcion="<?= htmlspecialchars(mb_strtolower($row['descripcion']), ENT_QUOTES) ?>"
+                        data-categoria="<?= htmlspecialchars(mb_strtolower($row['categoria']), ENT_QUOTES) ?>"
+                        data-tipo="<?= htmlspecialchars(mb_strtolower($row['tipo']), ENT_QUOTES) ?>">
 
                         <div class="contenido-img-wrapper position-relative">
                             <img src="<?= $urlBase . 'uploads/thumbnails/' . basename($row['thumbnail']) ?>"
@@ -111,7 +125,7 @@ function pdfBlobToBase64($blob)
                                 <a href="#" data-bs-placement="top" title="Ver contenido"
                                     class="contenido-link fs-5 ms-auto"
                                     data-tipo="<?= $row['tipo'] ?>"
-                                    data-titulo="<?= htmlspecialchars($row['titulo']) ?>"
+                                    data-titulo="<?= htmlspecialchars(mb_strtolower($row['titulo']), ENT_QUOTES) ?>"
                                     data-cuerpo="<?= htmlspecialchars($row['cuerpo_html'], ENT_QUOTES) ?>"
                                     data-url="<?= htmlspecialchars($row['url_contenido'] ?? '') ?>"
                                     data-archivo="<?= pdfBlobToBase64($row['archivo']) ?>"
@@ -127,12 +141,17 @@ function pdfBlobToBase64($blob)
                 </div>
             <?php endwhile; ?>
         </div>
+        <div id="noResultados" style="display:none; text-align:center; margin-top:20px;">
+            No se encontraron resultados
+        </div>
     </section>
 
     <?php include 'modales/contenido.php'; ?>
     <script src="../peticiones(js)/contenido.js"></script>
+    <script src="../peticiones(js)/buscadorContenido.js"></script>
     <script src="../peticiones(js)/return.js"></script>
     <?php include '../components/usuaria/footer.php'; ?>
+
 </body>
 
 </html>

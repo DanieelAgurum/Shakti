@@ -220,7 +220,8 @@ html.dark-mode .star+label {
     color: #ffd700 !important;
 }
 
-html.dark-mode .text-center {
+html.dark-mode .text-center,
+html.dark-mode .contenido-personalizado-section h4 {
     color: #ffff !important;
 }
 
