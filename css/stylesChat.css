@@ -1,13 +1,18 @@
 /* Contenedor principal */
 #contenedor-chat {
     display: flex;
-    height: 90vh;
+    height: 92vh;
     border: 1px solid #ddd;
     background: #f0f2f5;
     overflow: hidden;
     font-family: Arial, sans-serif;
     margin-top: 20px;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: 0 !important;
+    position: relative;
 }
+
 
 /* Panel lista de chats */
 .chat-list {
@@ -69,7 +74,6 @@
     flex-direction: column;
     position: relative;
     padding: 16px 16px 72px;
-    /* espacio para el form */
 }
 
 /* Contenedor de mensajes con scroll */
@@ -475,8 +479,9 @@ form#formulario button:hover {
     margin: 0;
 }
 
-.btn-volver {
-    display: none !important;
+.fa-arrow-left {
+    color: #333;
+    cursor: pointer;
 }
 
 /* === Sección principal === */
@@ -500,6 +505,12 @@ form#formulario button:hover {
 
     .btn-volver {
         display: block !important;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .chat-mensajes {
+        width: 100%;
     }
 
     #contenedor-chat {
@@ -512,5 +523,74 @@ form#formulario button:hover {
 
     .chat-list {
         width: 100%;
+    }
+}
+
+
+/* --- Encabezado móvil del chat --- */
+.chat-header-movil {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.chat-header {
+    margin-top: 0;
+    padding-top: 10px;
+    /* opcional */
+}
+
+.titulo-chat-movil {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* --- Botón volver mejorado --- */
+#btn-volver {
+    background: #ffffff;
+    border: 1px solid #d9d9d9;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+#btn-volver i {
+    font-size: 1.2rem;
+    color: #4a90e2;
+}
+
+/* Hover */
+#btn-volver:hover {
+    background: #f3f8ff;
+    border-color: #4a90e2;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Cuando se presiona */
+#btn-volver:active {
+    transform: scale(0.92);
+}
+
+/* --- Mostrar en móvil --- */
+@media (max-width: 768px) {
+    .chat-header-movil {
+        display: flex;
+    }
+
+    .btn-volver {
+        display: flex !important;
     }
 }

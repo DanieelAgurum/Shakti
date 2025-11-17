@@ -75,7 +75,8 @@ html.dark-mode .solicitud-card,
 html.dark-mode .solicitud-info,
 html.dark-mode .usuario-card,
 html.dark-mode .shakti-chatbot-input,
-html.dark-mode .shakti-cm-msg-text {
+html.dark-mode .shakti-cm-msg-text,
+html.dark-mode .chat-header-movil {
     background-color: #1e1e1e !important;
 }
 
@@ -209,7 +210,8 @@ html.dark-mode i {
 /* Botones */
 html.dark-mode .btn,
 html.dark-mode .btn-dark,
-html.dark-mode .submit-rating {
+html.dark-mode .submit-rating,
+html.dark-mode .btn-volver {
     background-color: #333 !important;
     color: #f1f1f1 !important;
     border-color: #555 !important;
