@@ -1,4 +1,3 @@
-// JS no necesita cambios para el hover, solo asegura que las cards con link tengan overlay y clic
 let offset = 0;
 const limit = 6;
 let cargando = false;

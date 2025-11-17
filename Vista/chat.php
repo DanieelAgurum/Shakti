@@ -48,10 +48,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
     </aside>
 
     <!-- Caja de mensajes -->
+
     <section id="chat-box" class="chat-box inactivo">
-      <button id="btn-volver" class="btn-volver">
-        <i class="fa-solid fa-arrow-left"></i>
-      </button>
+      <div class="chat-header-movil">
+        <button id="btn-volver" class="btn btn-volver">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <span class="titulo-chat-movil">Chats</span>
+      </div>
       <div class="chat-mensajes"></div>
       <form id="formulario" enctype="multipart/form-data" autocomplete="off" class="mensaje_ia">
         <input type="hidden" id="id_usuaria" name="id_usuaria"
