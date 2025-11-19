@@ -15,6 +15,7 @@ $idUsuario = $_SESSION['id_usuaria'];
 $puedeHacerTest = $model->puedeHacerTest($idUsuario);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
