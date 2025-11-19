@@ -5,6 +5,16 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
 class TestIanMdl {
     private $apiKey;
     private $db;
+public function obtenerUltimoResultado(int $idUsuario) {
+    $sql = "SELECT resultado_test FROM test 
+            WHERE id_usuaria = :id 
+            ORDER BY fecha_realizacion DESC 
+            LIMIT 1";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([":id" => $idUsuario]);
+
+    return $stmt->fetchColumn(); // Devuelve texto directamente
+}
 
     public function __construct() {
         if (session_status() === PHP_SESSION_NONE) session_start();

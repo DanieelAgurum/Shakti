@@ -13,6 +13,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/TestModelo.php';
 $model = new TestIanMdl();
 $idUsuario = $_SESSION['id_usuaria'];
 $puedeHacerTest = $model->puedeHacerTest($idUsuario);
+$ultimoResultado = $model->obtenerUltimoResultado($idUsuario);
 ?>
 
 
@@ -45,7 +46,7 @@ $puedeHacerTest = $model->puedeHacerTest($idUsuario);
         <?php if($puedeHacerTest): ?>
         <button type="button" id="startTest" class="btn btn-primary" data-bs-dismiss="modal">Empezar Test</button>
         <?php else: ?>
-        <a href="<?= $urlBase ?>index.php" class="btn btn-secondary">Volver</a>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ver resultado</button>
         <?php endif; ?>
       </div>
     </div>
@@ -54,16 +55,32 @@ $puedeHacerTest = $model->puedeHacerTest($idUsuario);
 
 <!-- Contenedor del test -->
 <div class="container mt-3 mb-3 d-flex justify-content-center align-items-center min-vh-100">
-    <div id="testContainerTest" class="card shadow p-4 w-100" style="max-width: 650px; display:none;">
+    <div id="testContainerTest" class="card shadow p-4 w-100"
+         style="max-width: 650px; <?= $puedeHacerTest ? 'display:none;' : 'display:block;' ?>">
+
         <h1 id="tituloTest" class="text-center mb-4 fw-bold">Test IAn – Salud Mental</h1>
+
+        <?php if($puedeHacerTest): ?>
+        <!-- FORMULARIO DEL TEST -->
         <form id="testIanTest">
             <div id="preguntaActualTest"></div>
+
             <div class="d-flex justify-content-between mt-3">
                 <button type="button" id="prevPreguntaTest" class="btn btn-secondary">Anterior</button>
                 <button type="submit" id="nextPreguntaTest" class="btn btn-primary">Siguiente</button>
             </div>
         </form>
-        <div id="respuestaIATest"  class="mt-4"></div>
+        <?php endif; ?>
+
+        <!-- RESULTADO MOSTRADO -->
+        <div id="respuestaIATest" class="mt-4">
+            <?php if(!$puedeHacerTest && $ultimoResultado): ?>
+                <div class="alert alert-info">
+                    <strong>Tu último resultado del test:</strong><br><br>
+                    <?= nl2br($ultimoResultado) ?>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
@@ -99,12 +116,11 @@ document.getElementById('startTest')?.addEventListener('click', function() {
     mostrarPregunta();
 });
 
-document.getElementById('nextPreguntaTest').addEventListener('click', async function(e) {
+document.getElementById('nextPreguntaTest')?.addEventListener('click', async function(e) {
     e.preventDefault();
     
     const valor = document.getElementById('respuestaSelectTest').value;
 
-    // Reemplazo de alert() por mensaje en pantalla
     if (!valor) {
         document.getElementById('respuestaIATest').innerHTML =
             `<div class="alert alert-warning mt-3">Selecciona una opción antes de continuar.</div>`;
@@ -125,12 +141,9 @@ document.getElementById('nextPreguntaTest').addEventListener('click', async func
     }
 });
 
-document.getElementById('prevPreguntaTest').addEventListener('click', function(e) {
+document.getElementById('prevPreguntaTest')?.addEventListener('click', function(e) {
     e.preventDefault();
-    if(i > 0) { 
-        i--; 
-        mostrarPregunta(); 
-    }
+    if(i > 0) { i--; mostrarPregunta(); }
 });
 
 async function enviarTest() {
@@ -140,9 +153,12 @@ async function enviarTest() {
     try {
         const resp = await fetch('<?= $urlBase ?>Controlador/testControl.php', { method:'POST', body: formData });
         const data = await resp.json();
+
         document.getElementById('respuestaIATest').innerHTML =
             `<div class="alert alert-info mt-3">${data.mensaje}</div>`;
+
         document.getElementById('testIanTest').style.display = 'none';
+
     } catch(err) {
         document.getElementById('respuestaIATest').innerHTML =
             `<div class="alert alert-danger mt-3">Ocurrió un error al enviar el test. Intenta nuevamente.</div>`;
@@ -155,6 +171,13 @@ async function enviarTest() {
 
 var myModal = new bootstrap.Modal(document.getElementById('modalBienvenidaTest'));
 myModal.show();
+
+<?php if(!$puedeHacerTest): ?>
+// Cuando el modal se cierre, mostrar el resultado
+myModal._element.addEventListener('hidden.bs.modal', function () {
+    document.getElementById('testContainerTest').style.display = 'block';
+});
+<?php endif; ?>
 </script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
