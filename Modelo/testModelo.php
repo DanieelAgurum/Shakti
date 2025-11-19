@@ -41,7 +41,7 @@ private function crearPrompt(array $respuestas): string {
     }
 
     $mensaje .= "\nInstrucciones:\n";
-    $mensaje .= "- Comenta brevemente lo que percibes de cada respuesta, indicando emociones o posibles signos de ansiedad, estrés o depresión.\n";
+    $mensaje .= "- Comenta brevemente lo que percibes de cada respuesta mencionando las preguntas , indicando emociones o posibles signos de ansiedad, estrés o depresión.\n";
     $mensaje .= "- Ofrece consejos prácticos y personalizados para mejorar el bienestar emocional.\n";
     $mensaje .= "- Mantén un tono cálido y motivador, como si hablaras con un amigo.\n";
     $mensaje .= "- Concluye con un resumen en **una frase corta** indicando posibles señales: 'ansiedad', 'depresión', 'estrés', o 'sin alerta'.\n";

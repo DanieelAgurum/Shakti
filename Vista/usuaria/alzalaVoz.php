@@ -100,16 +100,23 @@ document.getElementById('startTest')?.addEventListener('click', function() {
 
 document.getElementById('nextPreguntaTest').addEventListener('click', async function(e) {
     e.preventDefault();
-    const valor = document.getElementById('respuestaSelectTest').value;
-    if(!valor) return alert("Selecciona una opción");
     
+    const valor = document.getElementById('respuestaSelectTest').value;
+
+    // Reemplazo de alert() por mensaje en pantalla
+    if (!valor) {
+        document.getElementById('respuestaIATest').innerHTML =
+            `<div class="alert alert-warning mt-3">Selecciona una opción antes de continuar.</div>`;
+        return;
+    }
+
     respuestas[`p${i+1}`] = valor;
     i++;
 
-    if(i < preguntas.length) {
+    if (i < preguntas.length) {
+        document.getElementById('respuestaIATest').innerHTML = "";
         mostrarPregunta();
     } else {
-        // BLOQUEAR botón para evitar múltiples envíos
         const btnNext = document.getElementById('nextPreguntaTest');
         btnNext.disabled = true;
         btnNext.textContent = 'Enviando...';
@@ -119,7 +126,10 @@ document.getElementById('nextPreguntaTest').addEventListener('click', async func
 
 document.getElementById('prevPreguntaTest').addEventListener('click', function(e) {
     e.preventDefault();
-    if(i>0){ i--; mostrarPregunta(); }
+    if(i > 0) { 
+        i--; 
+        mostrarPregunta(); 
+    }
 });
 
 async function enviarTest() {
@@ -129,10 +139,13 @@ async function enviarTest() {
     try {
         const resp = await fetch('<?= $urlBase ?>Controlador/testControl.php', { method:'POST', body: formData });
         const data = await resp.json();
-        document.getElementById('respuestaIATest').innerHTML = `<div class="alert alert-info mt-3">${data.mensaje}</div>`;
+        document.getElementById('respuestaIATest').innerHTML =
+            `<div class="alert alert-info mt-3">${data.mensaje}</div>`;
         document.getElementById('testIanTest').style.display = 'none';
     } catch(err) {
-        alert("Ocurrió un error al enviar el test. Intenta nuevamente.");
+        document.getElementById('respuestaIATest').innerHTML =
+            `<div class="alert alert-danger mt-3">Ocurrió un error al enviar el test. Intenta nuevamente.</div>`;
+        
         const btnNext = document.getElementById('nextPreguntaTest');
         btnNext.disabled = false;
         btnNext.textContent = 'Siguiente';
