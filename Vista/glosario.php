@@ -35,15 +35,11 @@ if (session_status() === PHP_SESSION_NONE) {
         <section class="container my-5">
             <h2 class="text-center mb-4 fw-bold">Glosario de Términos</h2>
             <div class="row row-cols-1 row-cols-md-2 g-4">
-                <?php
-                require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/glosarioMdl.php';
-                $glo = new GlosarioMdl();
-                $glo->mostrarGlosario();
-                ?>
+
             </div>
         </section>
     </main>
-
+    <script src="<?= $urlBase ?>peticiones(js)/cargarGlosario.js"></script>
     <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/footer.php'; ?>
 </body>
 

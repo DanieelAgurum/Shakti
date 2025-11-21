@@ -34,6 +34,9 @@ if (isset($_REQUEST['opcion'])) {
         case 3:
             $glo->eliminarGlosario($_REQUEST['id_glosario']);
             break;
+        case 4:
+            $glo->mostrarGlosario();
+            break;
         default:
             echo json_encode(['opcion' => 0, 'mensaje' => 'Opción no válida']);
             break;
