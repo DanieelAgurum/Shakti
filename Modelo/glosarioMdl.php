@@ -148,7 +148,6 @@ class GlosarioMdl extends ConectarDB
         }
     }
 
-
     public function eliminarGlosario($id)
     {
         try {
@@ -221,19 +220,13 @@ class GlosarioMdl extends ConectarDB
             $consulta->execute();
 
             while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                echo '<div class="col">
-                        <div class="card border-0 shadow-sm h-100 animate__animated animate__fadeInLeft">
-                            <div class="card-body">
-                                <h5 class="card-title">';
-                echo $fila['icono'] . "  ";
-                echo htmlspecialchars($fila['titulo']);
-                echo '</h5>';
-                echo $fila['concepto'];
-                echo '</div>
-                        </div>
-                    </div>';
+                $glosario[] = [
+                    'icono' => $fila['icono'],
+                    'registro' => htmlspecialchars($fila['titulo']),
+                    'nombre' => $fila['concepto']
+                ];
             }
-
+            echo json_encode($glosario);
             $this->close();
         } catch (PDOException $e) {
             echo '<p>Error al mostrar el glosario: ' . htmlspecialchars($e->getMessage()) . '</p>';
