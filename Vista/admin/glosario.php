@@ -17,7 +17,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Glosario - Shakti</title>
+    <title>Glosario - NexoH</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pbciWgAl4KuOkZ5vGQZzELtiQ+3I6Mxn9c8E9p8ywRrbKwHmeEpeL6PH20FqSb70vPjJOeTEJjFZ32Vb9I55Xg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://kit.fontawesome.com/eacdd605ec.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tiny.cloud/1/bnw4wazqztadr4il1bfgdflo063pyw0wvki8x1q8d9xx0akz/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>

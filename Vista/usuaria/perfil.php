@@ -48,7 +48,7 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Perfil - Shakti</title>
+    <title>Perfil - NexoH</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
 </head>

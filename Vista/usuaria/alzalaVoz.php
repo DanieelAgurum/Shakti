@@ -19,7 +19,7 @@ $puedeHacerTest = $model->puedeHacerTest($idUsuario);
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Test IAn – Salud Mental</title>
+<title>Test - NexoH</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<?= $urlBase ?>css/test.css">
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Shakti/components/usuaria/navbar.php'; ?>

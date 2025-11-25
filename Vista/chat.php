@@ -35,7 +35,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
         <div class="chat-activo" data-id-amigo="0">
           <img src="<?= $urlBase ?>img/Ian.png" alt="Ian Bot">
           <div class="info-chat">
-            <strong>Ian Bot</strong>
+            <strong>Ian Bot - NexoH</strong>
             <small></small>
           </div>
         </div>

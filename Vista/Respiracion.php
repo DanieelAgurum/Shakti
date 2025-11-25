@@ -40,7 +40,7 @@ $videos = [
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="Css/style.css"  href="Css/styleActividades.css" >
-  <title>Ejercicios de respiración</title>
+  <title>Ejercicios de respiración - NexoH</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Librerías adicionales en el head del navbar -->
