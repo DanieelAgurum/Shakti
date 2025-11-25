@@ -27,7 +27,7 @@
                 <i class="fas fa-user fa-fw text-white"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <form action="<?= $urlBase ?>Controlador/loginCtrl" method="post" class="m-0 p-0">
+                <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
                     <input type="hidden" name="opcion" value="2" />
                     <button type="submit" class="dropdown-item text-danger cerrar">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
                 </form>
