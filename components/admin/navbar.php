@@ -17,7 +17,7 @@
 <script src="../../components/admin/js/datatables-simple-demo.js"></script>
 
 <nav class="sb-topnav navbar navbar-expand">
-    <a class="navbar-brand ps-3" href="<?php echo $urlBase ?>Vista/admin/index"></a>
+    <a class="navbar-brand ps-3" href="<?php echo $urlBase ?>Vista/admin/"></a>
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         <div class="input-group"></div>
     </form>
@@ -27,7 +27,7 @@
                 <i class="fas fa-user fa-fw text-white"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <form action="<?= $urlBase ?>Controlador/loginCtrl.php" method="post" class="m-0 p-0">
+                <form action="<?= $urlBase ?>Controlador/loginCtrl" method="post" class="m-0 p-0">
                     <input type="hidden" name="opcion" value="2" />
                     <button type="submit" class="dropdown-item text-danger cerrar">Cerrar sesión <i class="bi bi-door-open-fill"></i></button>
                 </form>

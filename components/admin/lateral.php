@@ -3,7 +3,7 @@
          <div class="sb-sidenav-menu">
              <div class="nav">
                  <!-- Inicio -->
-                 <a class="nav-link text-white" href="<?php echo $urlBase ?>index.php">
+                 <a class="nav-link text-white" href="<?php echo $urlBase ?>index">
                      <div class="sb-nav-link-icon"><i class="fa-solid fa-house text-white"></i></div>
                      Inicio
                  </a>
@@ -27,12 +27,12 @@
                          </a>
                          <div class="collapse" id="submenuTablas" data-bs-parent="#sidenavAccordionOpciones">
                              <nav class="sb-sidenav-menu-nested nav">
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/usuarias.php">Usuarias</a>
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/especialistas.php">Especialistas</a>
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/contenido.php">Contenido</a>
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/libre_segura.php">Documentos Legales</a>
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/organizaciones.php">Organizaciones</a>
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/preguntas_frecuentes.php">Preguntas Frecuentes</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/usuarias">Usuarias</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/especialistas">Especialistas</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/contenido">Contenido</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/libre_segura">Documentos Legales</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/organizaciones">Organizaciones</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/preguntas_frecuentes">Preguntas Frecuentes</a>
                              </nav>
                          </div>
 
@@ -44,10 +44,10 @@
                          </a>
                          <div class="collapse" id="submenuAdministrar" data-bs-parent="#sidenavAccordionOpciones">
                              <nav class="sb-sidenav-menu-nested nav">
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/reportes.php">Reportes</a>
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/tipos_reportes.php">Tipo de Reportes</a>
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/metricas.php">Métricas</a>
-                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/glosario.php">Glosario</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/reportes">Reportes</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/tipos_reportes">Tipo de Reportes</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/metricas">Métricas</a>
+                                 <a class="nav-link text-white" href="<?php echo $urlBase ?>Vista/admin/glosario">Glosario</a>
                              </nav>
                          </div>
 

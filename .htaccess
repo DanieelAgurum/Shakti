@@ -1,27 +1,32 @@
-# = =========================================
+# =========================================================
 # 🔧 ACTIVAR REESCRITURA DE URLS
-# = =========================================
+# =========================================================
 RewriteEngine On
 RewriteBase /shakti/
-# = =========================================
+
+# =========================================================
 # ⚙️ EVITAR AFECTAR ARCHIVOS O CARPETAS REALES
-# = =========================================
+# =========================================================
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-# = =========================================
-# 🌐 RUTAS AMIGABLES (home, about, contact, etc.)
-# Ejemplo: /shakti/home -> index.php?page = home
-# = =========================================
-RewriteRule ^(index)/?$ index.php [L,QSA,NC]
-# = =========================================
-# 🚫 BLOQUEAR ACCESO DIRECTO A VISTAS SENSIBLES
-# = =========================================
+
+# =========================================================
+# 🌐 RUTAS AMIGABLES GENERALES
+# =========================================================
+RewriteRule ^index/?$ index.php [L,QSA,NC]
+
+# =========================================================
+# 🚫 BLOQUEAR ACCESO DIRECTO A CARPETAS SENSIBLES
+# =========================================================
 RewriteRule ^Vista/?$ Vista/404.php [L,QSA,NC]
-RewriteRule ^Vista/usuaria/?$ Vista/404.php [L,QSA,NC]
 RewriteRule ^Controlador/?$ Vista/404.php [L,QSA,NC]
-# = =========================================
-# ✅ EXCEPCIONES PERMITIDAS
-# = =========================================
+RewriteRule ^Modelo/?$ Vista/404.php [L,QSA,NC]
+
+# =========================================================
+# ✅ EXCEPCIONES PERMITIDAS (Rutas válidas que sí deben cargar)
+# =========================================================
+
+# ---- VISTAS GENERALES ----
 RewriteRule ^Vista/chat/?$ Vista/chat.php [L,QSA,NC]
 RewriteRule ^Vista/Instituciones/?$ Vista/Instituciones.php [L,QSA,NC]
 RewriteRule ^Vista/registro/?$ Vista/registro.php [L,QSA,NC]
@@ -29,14 +34,31 @@ RewriteRule ^Vista/login/?$ Vista/login.php [L,QSA,NC]
 RewriteRule ^Vista/recuperarContra/?$ Vista/recuperarContra.php [L,QSA,NC]
 RewriteRule ^Vista/contenido/?$ Vista/contenido.php [L,QSA,NC]
 RewriteRule ^Vista/contacto/?$ Vista/contacto.php [L,QSA,NC]
+
+# ---- VISTA ESPECIALISTAS ----
 RewriteRule ^Vista/especialista/perfil/?$ Vista/especialista/perfil.php [L,QSA,NC]
+
+# ---- VISTAS USUARIA ----
 RewriteRule ^Vista/usuaria/alzalaVoz/?$ Vista/usuaria/alzalaVoz.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/especialistas/?$ Vista/usuaria/especialistas.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/foro/?$ Vista/usuaria/foro.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/libreYSeguro/?$ Vista/usuaria/libreYSegura.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/perfil/?$ Vista/usuaria/perfil.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/publicaciones/?$ Vista/usuaria/publicaciones.php [L,QSA,NC]
-# = =========================================
+
+# ---- VISTAS ADMIN ----
+RewriteRule ^Vista/admin/?$ Vista/admin/index.php [L,QSA,NC]
+RewriteRule ^Vista/admin/usuarias/?$ Vista/admin/usuarias.php [L,QSA,NC]
+RewriteRule ^Vista/admin/especialistas/?$ Vista/admin/especialistas.php [L,QSA,NC]
+RewriteRule ^Vista/admin/contenido/?$ Vista/admin/contenido.php [L,QSA,NC]
+RewriteRule ^Vista/admin/libre_segura/?$ Vista/admin/libre_segura.php [L,QSA,NC]
+RewriteRule ^Vista/admin/organizaciones/?$ Vista/admin/organizaciones.php [L,QSA,NC]
+RewriteRule ^Vista/admin/reportes/?$ Vista/admin/reportes.php [L,QSA,NC]
+RewriteRule ^Vista/admin/preguntas_frecuentes/?$ Vista/admin/preguntas_frecuentes.php [L,QSA,NC]
+RewriteRule ^Vista/admin/metricas/?$ Vista/admin/metricas.php [L,QSA,NC]
+RewriteRule ^Vista/admin/glosario/?$ Vista/admin/glosario.php [L,QSA,NC]
+
+# =========================================================
 # ⚠️ PÁGINA 404 PERSONALIZADA
-# = =========================================
+# =========================================================
 ErrorDocument 404 /shakti/Vista/404.php

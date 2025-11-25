@@ -42,7 +42,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Usuarios</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="usuarias.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="usuarias">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Especialistas</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="especialistas.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="especialistas">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Contenido</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="contenido.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="contenido">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Documentos legales</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="libre_segura.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="libre_segura">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Organizaciones</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="organizaciones.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="organizaciones">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -87,7 +87,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Reportes</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="<?php echo $urlBase ?>Vista/admin/reportes.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="<?php echo $urlBase ?>Vista/admin/reportes">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Preguntas Frecuentes</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="preguntas_frecuentes.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="preguntas_frecuentes">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Métricas</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="metricas.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="metricas">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
                             <div class="card text-dark mb-4">
                                 <div class="card-body">Glosario</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-dark stretched-link" href="glosario.php">Ver detalles</a>
+                                    <a class="small text-dark stretched-link" href="glosario">Ver detalles</a>
                                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
