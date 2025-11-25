@@ -25,7 +25,7 @@ if (empty($_SESSION['correo']) || $_SESSION['id_rol'] != 3) {
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/organizaciones.js"></script>
+    <script src="<?=  $urlBase ?>Vista/admin/js/organizaciones.js"></script>
 </head>
 
 <body class="sb-nav-fixed">

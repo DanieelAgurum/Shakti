@@ -168,7 +168,11 @@ VALUES (:nombre, :descripcion, :numero, :domicilio, :link, :imagen)";
         // ===============================
         // 🔍 1. Obtener ID real por HASH
         // ===============================
-        $sqlId = "SELECT id FROM organizaciones WHERE SHA2(id, 256) = :idHash";
+        $sqlId = "SELECT id 
+          FROM organizaciones 
+          WHERE CONVERT(SHA2(id, 256) USING utf8mb4) 
+          COLLATE utf8mb4_unicode_ci = :idHash 
+          COLLATE utf8mb4_unicode_ci";
         $stmtId = $this->conexion->prepare($sqlId);
         $stmtId->bindParam(':idHash', $idHash);
         $stmtId->execute();
@@ -330,7 +334,10 @@ VALUES (:nombre, :descripcion, :numero, :domicilio, :link, :imagen)";
     {
         $this->conectarBD();
 
-        $eliminar = "DELETE FROM organizaciones WHERE SHA2(id, 256) = :idHash";
+        $eliminar = "DELETE FROM organizaciones 
+             WHERE CONVERT(SHA2(id,256) USING utf8mb4) 
+             COLLATE utf8mb4_unicode_ci = :idHash 
+             COLLATE utf8mb4_unicode_ci";
         $delete = $this->conexion->prepare($eliminar);
         $delete->bindParam(':idHash', $id, PDO::PARAM_STR);
 
