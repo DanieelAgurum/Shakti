@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Controlador/api_key.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/api_key.php';
 require 'pusher_config.php';
 define('CLAVE_SECRETA', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
 class chatsMdl
@@ -13,16 +13,12 @@ class chatsMdl
         }
         $this->clave_secreta = hash('sha256', ($_SESSION['id'] ?? '') . 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
     }
+
+
     public function conectarBD()
     {
         if (!$this->con) {
-            $this->con = new mysqli(
-                "localhost",
-                "u872964864_shakt",
-                "Shakti098.",
-                "u872964864_shakt"
-            );
-
+            $this->con = new mysqli("localhost", "root", "", "shakti");
             if ($this->con->connect_error) {
                 echo json_encode([
                     'success' => false,
@@ -33,6 +29,27 @@ class chatsMdl
         }
         return $this->con;
     }
+
+    // public function conectarBD()
+    // {
+    //     if (!$this->con) {
+    //         $this->con = new mysqli(
+    //             "localhost",
+    //             "u872964864_shakt",
+    //             "Shakti098.",
+    //             "u872964864_shakt"
+    //         );
+
+    //         if ($this->con->connect_error) {
+    //             echo json_encode([
+    //                 'success' => false,
+    //                 'message' => 'Error en la conexión a la base de datos: ' . $this->con->connect_error
+    //             ], JSON_UNESCAPED_UNICODE);
+    //             exit;
+    //         }
+    //     }
+    //     return $this->con;
+    // }
     public function cargarChats($especialista = null)
     {
         $id_usuaria = $_SESSION['id'] ?? null;
@@ -111,10 +128,10 @@ class chatsMdl
         $con = $this->conectarBD();
 
         $sql = "SELECT *
-            FROM mensajes
-            WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
-              AND id_emisor <> id_receptor
-            ORDER BY creado_en ASC";
+        FROM mensajes
+        WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
+          AND id_emisor <> id_receptor
+        ORDER BY creado_en ASC";
 
         $stmt = $con->prepare($sql);
         $stmt->bind_param("iiii", $idEmisor, $idReceptor, $idEmisor, $idReceptor);
@@ -124,14 +141,23 @@ class chatsMdl
         $mensajes = [];
 
         while ($row = $result->fetch_assoc()) {
+
+            // ✨ FIX PARA EVITAR base64_decode(null)
+            $archivoDescifrado = null;
+            if (!empty($row['archivo'])) {
+                $archivoDescifrado = $this->descifrarAES($row['archivo']);
+            }
+
+            $esImagen = !empty($archivoDescifrado);
+
             $mensajes[] = [
                 'mensaje'       => $this->descifrarAES($row['mensaje']),
                 'id_emisor'     => $row['id_emisor'],
                 'id_receptor'   => $row['id_receptor'],
                 'creado_en'     => $row['creado_en'],
                 'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
-                'tipo'          => $this->descifrarAES($row['archivo']) ? "imagen" : "texto",
-                'contenido'     => $this->descifrarAES($row['archivo']) ?: null
+                'tipo'          => $esImagen ? "imagen" : "texto",
+                'contenido'     => $esImagen ? $archivoDescifrado : null
             ];
         }
 
@@ -272,7 +298,7 @@ class chatsMdl
             }
 
             $contenidoImagen = $imagenURL ? $this->descifrarAES($imagenURL) : null;
-            
+
             $respuesta = [
                 'id_emisor'   => $id_emisor,
                 'id_receptor' => $id_receptor,
@@ -280,7 +306,7 @@ class chatsMdl
                 'tipo'        => $contenidoImagen ? "imagen" : "texto",
                 'contenido'   => $contenidoImagen,
                 'creado_en'   => date("Y-m-d H:i:s")
-                ];
+            ];
 
 
             // Notificar con Pusher
