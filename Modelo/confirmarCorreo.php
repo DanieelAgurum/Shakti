@@ -1,6 +1,6 @@
 <?php
-require_once '../vendor/autoload.php';
-require_once '../Modelo/conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -23,10 +23,8 @@ class ConfirmarCorreo
 
     private function conectarBD()
     {
-        $this->con = mysqli_connect("localhost", "root", "", "shakti");
-        if (!$this->con) {
-            die("Error al conectar a la base de datos: " . mysqli_connect_error());
-        }
+        $db = new ConectarDB();
+        $this->con = $db->open();
         return $this->con;
     }
 
@@ -36,30 +34,23 @@ class ConfirmarCorreo
         date_default_timezone_set('America/Mexico_City');
         $fecha = date('Y-m-d H:i:s');
 
-        // Si ya existe token previo, actualiza
-        $sql = "SELECT COUNT(*) FROM tokens_contrasena WHERE id_usuaria = ?";
-        $stmt = mysqli_prepare($con, $sql);
-        mysqli_stmt_bind_param($stmt, "i", $this->id_usuaria);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_bind_result($stmt, $count);
-        mysqli_stmt_fetch($stmt);
-        mysqli_stmt_close($stmt);
+        // Verificar si existe token previo
+        $sql = "SELECT COUNT(*) AS total FROM tokens_contrasena WHERE id_usuaria = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->execute([$this->id_usuaria]);
+        $count = $stmt->fetch()['total'];
 
         if ($count > 0) {
             $update = "UPDATE tokens_contrasena SET token = ?, fecha = ? WHERE id_usuaria = ?";
-            $stmt = mysqli_prepare($con, $update);
-            mysqli_stmt_bind_param($stmt, "ssi", $token, $fecha, $this->id_usuaria);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
+            $stmt = $con->prepare($update);
+            $stmt->execute([$token, $fecha, $this->id_usuaria]);
         } else {
             $insert = "INSERT INTO tokens_contrasena (id_usuaria, token, fecha) VALUES (?, ?, ?)";
-            $stmt = mysqli_prepare($con, $insert);
-            mysqli_stmt_bind_param($stmt, "iss", $this->id_usuaria, $token, $fecha);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
+            $stmt = $con->prepare($insert);
+            $stmt->execute([$this->id_usuaria, $token, $fecha]);
         }
 
-        mysqli_close($con);
+        $con = null;
     }
 
     public function enviarCorreoVerificacion()
@@ -67,7 +58,6 @@ class ConfirmarCorreo
         $mail = new PHPMailer(true);
 
         try {
-            // Configuración SMTP
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
@@ -79,50 +69,26 @@ class ConfirmarCorreo
             $mail->CharSet = 'UTF-8';
             $mail->setFrom("gooddani04@gmail.com", 'NexoH');
 
-            // Generar token
+            // Token
             $token = bin2hex(random_bytes(60));
             $this->guardarToken($token);
 
-            // Crear enlace
             $link = $this->urlBase . "/Vista/confirmar.php?token=" . $token;
 
-            // Contenido del correo
             $bodyHTML = "
             <html>
-            <head>
-            <style>
-                body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
-                .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-                h2 { color: #333; }
-                a.button {
-                    display: inline-block;
-                    padding: 10px 20px;
-                    margin-top: 20px;
-                    background-color: #007bff;
-                    color: white;
-                    text-decoration: none;
-                    border-radius: 5px;
-                }
-                a.button:hover { background-color: #0056b3; }
-            </style>
-            </head>
             <body>
-                <div class='container'>
-                    <h2>Confirma tu cuenta en Shakti</h2>
-                    <p>Hola <b>{$this->nombre}</b>,</p>
-                    <p>Gracias por registrarte en Shakti. Haz clic en el siguiente botón para verificar tu cuenta:</p>
-                    <a href='{$link}' class='button'>Confirmar mi cuenta</a>
-                    <p>Si no realizaste este registro, puedes ignorar este mensaje.</p>
-                </div>
+                <h2>Confirma tu cuenta en Shakti</h2>
+                <p>Hola <b>{$this->nombre}</b>, haz clic en el siguiente botón para verificar tu cuenta:</p>
+                <a href='{$link}'>Confirmar mi cuenta</a>
             </body>
-            </html>
-            ";
+            </html>";
 
             $mail->addAddress($this->correo, $this->nombre);
             $mail->isHTML(true);
             $mail->Subject = 'Confirma tu cuenta en Shakti';
             $mail->Body = $bodyHTML;
-            $mail->AltBody = "Hola {$this->nombre}, confirma tu cuenta en: {$link}";
+            $mail->AltBody = "Confirma tu cuenta en este enlace: {$link}";
 
             $mail->send();
             return true;
@@ -134,26 +100,28 @@ class ConfirmarCorreo
     public function verificarCuenta($token)
     {
         $con = $this->conectarBD();
-        $tokenEscaped = mysqli_real_escape_string($con, $token);
 
-        $sql = "SELECT id_usuaria FROM tokens_contrasena WHERE token = '$tokenEscaped'";
-        $result = mysqli_query($con, $sql);
+        $sql = "SELECT id_usuaria FROM tokens_contrasena WHERE token = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->execute([$token]);
+        $data = $stmt->fetch();
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $data = mysqli_fetch_assoc($result);
+        if ($data) {
             $id = $data['id_usuaria'];
 
-            $update = "UPDATE usuarias SET verificado = 1 WHERE id = $id";
-            mysqli_query($con, $update);
+            $update = "UPDATE usuarias SET verificado = 1 WHERE id = ?";
+            $stmt = $con->prepare($update);
+            $stmt->execute([$id]);
 
-            $delete = "DELETE FROM tokens_contrasena WHERE id_usuaria = $id";
-            mysqli_query($con, $delete);
+            $delete = "DELETE FROM tokens_contrasena WHERE id_usuaria = ?";
+            $stmt = $con->prepare($delete);
+            $stmt->execute([$id]);
 
-            mysqli_close($con);
+            $con = null;
             header("Location: " . $this->urlBase . "/Vista/login.php?status=success&message=" . urlencode("Cuenta verificada correctamente"));
             exit;
         } else {
-            mysqli_close($con);
+            $con = null;
             header("Location: " . $this->urlBase . "/Vista/login.php?status=error&message=" . urlencode("Token inválido o ya utilizado"));
             exit;
         }
