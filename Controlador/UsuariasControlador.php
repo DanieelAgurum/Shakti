@@ -23,7 +23,7 @@ switch ($_REQUEST['opcion']) {
 
         // Agregar usuaria a la BD y obtener el ID recién insertado
         $id_usuaria = $u->agregarUsuaria(); 
-         header("Location: ../Vista/login.php?status=success&message=" . urlencode("Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta."));
+         header("Location: ../Vista/login?status=success&message=" . urlencode("Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta."));
         exit;
 
         if ($id_usuaria) {
@@ -40,7 +40,7 @@ switch ($_REQUEST['opcion']) {
                         text: 'Por favor revisa tu correo para verificar tu cuenta.',
                         confirmButtonColor: '#5a2a83'
                     }).then(() => {
-                        window.location.href = '{$urlBase}/Vista/login.php';
+                        window.location.href = '{$urlBase}/Vista/login';
                     });
                 </script>";
             } else {
@@ -51,7 +51,7 @@ switch ($_REQUEST['opcion']) {
                         text: 'No se pudo enviar el correo, intenta más tarde.',
                         confirmButtonColor: '#5a2a83'
                     }).then(() => {
-                        window.location.href = '{$urlBase}/Vista/login.php';
+                        window.location.href = '{$urlBase}/Vista/login';
                     });
                 </script>";
             }
@@ -61,7 +61,7 @@ switch ($_REQUEST['opcion']) {
     case 2:
         session_start();
         if (!isset($_SESSION['id'])) {
-            header("Location: ../Vista/login.php");
+            header("Location: ../Vista/login");
             exit;
         }
         $u->actualizarDatos(
@@ -85,7 +85,7 @@ switch ($_REQUEST['opcion']) {
     case 4:
         session_start();
         if (!isset($_SESSION['id_usuaria'])) {
-            header("Location: ../Vista/login.php");
+            header("Location: ../Vista/login");
             exit;
         }
 
