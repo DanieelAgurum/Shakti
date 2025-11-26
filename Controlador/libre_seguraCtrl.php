@@ -24,10 +24,10 @@ switch ($_REQUEST['opcion']) {
 
             );
             $exito = $l->agregar();
-            header("Location: ../Vista/admin/libre_segura.php?status=" . ($exito ? "agregado" : "error_agregar"));
+            header("Location: ../Vista/admin/libre_segura?status=" . ($exito ? "agregado" : "error_agregar"));
             exit;
         } else {
-            header("Location: ../Vista/admin/libre_segura.php?status=error_agregar");
+            header("Location: ../Vista/admin/libre_segura?status=error_agregar");
             exit;
         }
 
@@ -45,10 +45,10 @@ switch ($_REQUEST['opcion']) {
                 $_REQUEST['descripcion']
 
             );
-            header("Location: ../Vista/admin/libre_segura.php?status=" . ($exito ? "legal_actualizado" : "error_legal"));
+            header("Location: ../Vista/admin/libre_segura?status=" . ($exito ? "legal_actualizado" : "error_legal"));
             exit;
         } else {
-            header("Location: ../Vista/admin/libre_segura.php?status=error_legal");
+            header("Location: ../Vista/admin/libre_segura?status=error_legal");
             exit;
         }
 
@@ -56,10 +56,10 @@ switch ($_REQUEST['opcion']) {
     case 3:
         if (isset($_REQUEST['id_legal'])) {
             $exito = $l->eliminar($_REQUEST['id_legal']);
-            header("Location: ../Vista/admin/libre_segura.php?status=" . ($exito ? "eliminada" : "error_eliminar"));
+            header("Location: ../Vista/admin/libre_segura?status=" . ($exito ? "eliminada" : "error_eliminar"));
             exit;
         } else {
-            header("Location: ../Vista/admin/libre_segura.php?status=error_eliminar");
+            header("Location: ../Vista/admin/libre_segura?status=error_eliminar");
             exit;
         }
 
