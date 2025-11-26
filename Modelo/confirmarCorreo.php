@@ -61,8 +61,8 @@ class ConfirmarCorreo
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'cristo045millanperez@gmail.com';
-            $mail->Password = 'samn oqgn huyz ejkj';
+            $mail->Username = "gooddani04@gmail.com"; 
+            $mail->Password = "fxvl vxrx swzg unjk";
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
