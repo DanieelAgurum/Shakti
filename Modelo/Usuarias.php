@@ -123,10 +123,8 @@ class Usuarias
             error_log("No se pudo enviar el correo de verificación a: " . $this->correo);
         }
         // ---------------------------------------------------------------------------
-
-        // **No iniciar sesión todavía, solo redirigir al login con mensaje**
-        header("Location: ../Vista/login.php?status=success&message=" . urlencode("Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta."));
-        exit;
+       return $id_nueva;
+        
     }
 
 

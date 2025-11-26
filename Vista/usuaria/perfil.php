@@ -225,7 +225,6 @@ $totalPaginas = ceil($totalNotas / $notasPorPagina);
         </script>
     <?php endif; ?>
 
-    <script src="<?= $urlBase ?>peticiones(js)/tooltip.js"></script>
 
     <script src="../../validacionRegistro/notas.js"></script>
     <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>

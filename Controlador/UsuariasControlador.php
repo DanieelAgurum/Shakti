@@ -22,7 +22,9 @@ switch ($_REQUEST['opcion']) {
         );
 
         // Agregar usuaria a la BD y obtener el ID recién insertado
-        $id_usuaria = $u->agregarUsuaria(); // 🔹 tu método agregarUsuaria debe devolver el ID
+        $id_usuaria = $u->agregarUsuaria(); 
+         header("Location: ../Vista/login.php?status=success&message=" . urlencode("Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta."));
+        exit;
 
         if ($id_usuaria) {
             // Enviar correo de confirmación
