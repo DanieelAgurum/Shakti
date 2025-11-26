@@ -26,6 +26,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
   <script src="<?= $urlBase ?>peticiones(js)/chat.js"></script>
+  <script src="<?= $urlBase ?>peticiones(js)/mandarMetricas.js.php?vista=<?= urlencode(basename($_SERVER['PHP_SELF'])) ?>"></script>
 </head>
 
 <body>
