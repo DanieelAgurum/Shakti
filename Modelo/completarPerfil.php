@@ -55,7 +55,7 @@ class Completar
 
         // Si no tiene en la base y no subió una nueva, se redirige con error
         if (!$yaTieneIdOficial && (!isset($_FILES['id_oficial']) || $_FILES['id_oficial']['error'] !== 0)) {
-            header("Location: ../Vista/especialista/perfil.php?status=error&message=Debe+subir+una+identificaci%C3%B3n+oficial");
+            header("Location: ../Vista/especialista/perfil?status=error&message=Debe+subir+una+identificaci%C3%B3n+oficial");
             exit;
         }
 

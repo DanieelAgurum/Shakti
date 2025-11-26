@@ -8,7 +8,6 @@ $vista = $_POST['vista'] ?? 'desconocida';
 $duracion = floatval($_POST['tiempo_estancia'] ?? 0);
 $nombreFinal = ucfirst(str_replace('.php', '', $vista));
 
-// Verificar conexión
 if (!$conexion) {
     http_response_code(500);
     exit("Error: No se pudo conectar a la base de datos.");

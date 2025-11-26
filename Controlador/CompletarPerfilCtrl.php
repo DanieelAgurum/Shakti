@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['opcion'] == 1) {
     }
 
     if (!$alMenosUno) {
-        header("Location: ../Vista/especialista/perfil.php?status=error&message=Debes+subir+al+menos+un+documento+adicional");
+        header("Location: ../Vista/especialista/perfil?status=error&message=Debes+subir+al+menos+un+documento+adicional");
         exit;
     }
 
@@ -37,6 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['opcion'] == 1) {
 
     $cp->completarPerfil($idUsuaria);
 
-    header("Location: ../Vista/especialista/perfil.php?status=success&message=Perfil+completado+correctamente,+espera+la+validaci%C3%B3n+de+tus+documentos.");
+    header("Location: ../Vista/especialista/perfil?status=success&message=Perfil+completado+correctamente,+espera+la+validaci%C3%B3n+de+tus+documentos.");
     exit;
 }
