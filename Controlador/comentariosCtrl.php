@@ -100,7 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['opcion'])) {
         ob_start();
         foreach ($comentarios as $c) {
           $id_comentario = (int)$c['id_comentario'];
-          $nombre = htmlspecialchars($c['nombre']);
+          $nombre = ($c['anonimo'] == 1)
+            ? "Anónimo"
+            : htmlspecialchars($c['nombre']);
           $contenido = nl2br(htmlspecialchars($c['comentario']));
           $fecha = !empty($c['fecha_comentario']) ? date('d M Y H:i', strtotime($c['fecha_comentario'])) : 'Sin fecha';
           $tiempoComentario = strtotime($c['fecha_comentario']);
@@ -168,7 +170,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['opcion'])) {
         ob_start();
         foreach ($respuestas as $r) {
           $id_comentario = (int)$r['id_comentario'];
-          $nombre = htmlspecialchars($r['nombre']);
+          $nombre = ($r['anonimo'] == 1)
+            ? "Anónimo"
+            : htmlspecialchars($r['nombre']);
           $contenido = nl2br(htmlspecialchars($r['comentario']));
           $fecha = !empty($r['fecha_comentario']) ? date('d M Y H:i', strtotime($r['fecha_comentario'])) : 'Sin fecha';
           $tiempoComentario = strtotime($r['fecha_comentario']);

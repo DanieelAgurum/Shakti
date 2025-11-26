@@ -489,10 +489,9 @@ EOT;
         $respuesta = $data['output'][0]['content'][0]['text'] ?? "false";
 
         return strtolower(trim($respuesta));
-    }    
+    }
     public function agregarComentario($contenido, $idPublicacion, $idUsuaria, $idPadre = null)
     {
-
         // Validar doxxing con IA antes de insertar
         $resultadoDoxxing = $this->detectarDoxxingIA($contenido);
         if ($resultadoDoxxing === 'doxxing') {
@@ -507,16 +506,37 @@ EOT;
 
         $conn = $this->conectarBD();
 
-        if ($idPadre === null) {
-            $query = "INSERT INTO comentarios (id_publicacion, id_usuaria, comentario, fecha_comentario) VALUES (?, ?, ?, NOW())";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("iis", $idPublicacion, $idUsuaria, $contenido);
-        } else {
-            $query = "INSERT INTO comentarios (id_publicacion, id_usuaria, comentario, id_padre, fecha_comentario) VALUES (?, ?, ?, ?, NOW())";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("iisi", $idPublicacion, $idUsuaria, $contenido, $idPadre);
+        // 🔥 1. OBTENER EL ANONIMATO GLOBAL DESDE CONFIGURACIONES
+        $anonimo = 0; // Valor por defecto
+
+        $queryAnon = "SELECT anonimo FROM configuraciones WHERE id_usuaria = ?";
+        $stmtAnon = $conn->prepare($queryAnon);
+        $stmtAnon->bind_param("i", $idUsuaria);
+        $stmtAnon->execute();
+        $resultAnon = $stmtAnon->get_result();
+
+        if ($filaAnon = $resultAnon->fetch_assoc()) {
+            $anonimo = (int)$filaAnon['anonimo']; // 0 o 1
         }
 
+        $stmtAnon->close();
+
+        // 🔥 2. INSERTAR EL COMENTARIO INCLUYENDO EL CAMPO anonimo
+        if ($idPadre === null) {
+
+            $query = "INSERT INTO comentarios (id_publicacion, id_usuaria, comentario, fecha_comentario, anonimo)
+                  VALUES (?, ?, ?, NOW(), ?)";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("iisi", $idPublicacion, $idUsuaria, $contenido, $anonimo);
+        } else {
+
+            $query = "INSERT INTO comentarios (id_publicacion, id_usuaria, comentario, id_padre, fecha_comentario, anonimo)
+                  VALUES (?, ?, ?, ?, NOW(), ?)";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("iisii", $idPublicacion, $idUsuaria, $contenido, $idPadre, $anonimo);
+        }
+
+        // Ejecutar e identificar resultado
         if ($stmt->execute()) {
             $idInsertado = $stmt->insert_id;
             $stmt->close();
@@ -528,6 +548,7 @@ EOT;
             return false;
         }
     }
+
 
     // public function obtenerComentariosPorPublicacion($idPublicacion)
     // {
@@ -560,6 +581,7 @@ EOT;
     //     return $comentarios;
     // }
 
+    
     public function contarComentariosPorPublicacion($idPublicacion)
     {
         $conn = $this->conectarBD();
@@ -576,7 +598,7 @@ EOT;
     public function obtenerComentariosPorPublicacion($id_publicacion)
     {
         $conn = $this->conectarBD();
-        $sql = "SELECT c.id_comentario, c.comentario, c.fecha_comentario, c.id_usuaria, c.id_padre, u.nombre
+        $sql = "SELECT c.id_comentario, c.comentario, c.fecha_comentario, c.id_usuaria, c.id_padre, c.anonimo, u.nombre
         FROM comentarios c
         LEFT JOIN usuarias u ON c.id_usuaria = u.id
         WHERE c.id_publicacion = ? AND c.id_padre IS NULL
@@ -595,7 +617,7 @@ EOT;
     {
         $conn = $this->conectarBD();
 
-        $sql = "SELECT c.id_comentario, c.comentario, c.fecha_comentario, c.id_usuaria, c.id_padre, u.nombre
+        $sql = "SELECT c.id_comentario, c.comentario, c.fecha_comentario, c.id_usuaria, c.id_padre, c.anonimo, u.nombre
             FROM comentarios c
             LEFT JOIN usuarias u ON c.id_usuaria = u.id
             WHERE c.id_padre = ?

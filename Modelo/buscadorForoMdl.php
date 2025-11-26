@@ -227,7 +227,9 @@ class buscadorForoMdl
         if ($comRaiz) {
             foreach ($comRaiz as $comentario) {
                 $id_comentario = $comentario['id_comentario'];
-                $nombre = htmlspecialchars($comentario['nombre'] ?? 'Anónimo');
+                $nombre = ($comentario['anonimo'] == 1)
+                    ? 'Anónimo'
+                    : htmlspecialchars($comentario['nombre'] ?? 'Anónimo');
                 $contenido = nl2br(htmlspecialchars($comentario['comentario']));
                 $fecha = !empty($comentario['fecha_comentario']) ? date('d M Y H:i', strtotime($comentario['fecha_comentario'])) : 'Sin fecha';
                 $tiempoComentario = strtotime($comentario['fecha_comentario']);
