@@ -38,7 +38,7 @@ switch ($_REQUEST['opcion']) {
                         icon: 'success',
                         title: 'Cuenta creada correctamente',
                         text: 'Por favor revisa tu correo para verificar tu cuenta.',
-                        confirmButtonColor: '#5a2a83'
+                        confirmButtonColor: '#1b3a57'
                     }).then(() => {
                         window.location.href = '{$urlBase}/Vista/login';
                     });
@@ -49,7 +49,7 @@ switch ($_REQUEST['opcion']) {
                         icon: 'warning',
                         title: 'Cuenta creada pero sin verificación',
                         text: 'No se pudo enviar el correo, intenta más tarde.',
-                        confirmButtonColor: '#5a2a83'
+                        confirmButtonColor: '#1b3a57'
                     }).then(() => {
                         window.location.href = '{$urlBase}/Vista/login';
                     });
