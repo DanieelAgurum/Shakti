@@ -29,27 +29,6 @@ class chatsMdl
         }
         return $this->con;
     }
-
-    // public function conectarBD()
-    // {
-    //     if (!$this->con) {
-    //         $this->con = new mysqli(
-    //             "localhost",
-    //             "u872964864_shakt",
-    //             "Shakti098.",
-    //             "u872964864_shakt"
-    //         );
-
-    //         if ($this->con->connect_error) {
-    //             echo json_encode([
-    //                 'success' => false,
-    //                 'message' => 'Error en la conexión a la base de datos: ' . $this->con->connect_error
-    //             ], JSON_UNESCAPED_UNICODE);
-    //             exit;
-    //         }
-    //     }
-    //     return $this->con;
-    // }
     public function cargarChats($especialista = null)
     {
         $id_usuaria = $_SESSION['id'] ?? null;
@@ -123,49 +102,49 @@ class chatsMdl
         $stmt->close();
         $con->close();
     }
-    public function cargarMensajes($idEmisor, $idReceptor)
-    {
-        $con = $this->conectarBD();
+public function cargarMensajes($idEmisor, $idReceptor)
+{
+    $con = $this->conectarBD();
 
-        $sql = "SELECT *
+    $sql = "SELECT *
         FROM mensajes
         WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
           AND id_emisor <> id_receptor
         ORDER BY creado_en ASC";
 
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("iiii", $idEmisor, $idReceptor, $idEmisor, $idReceptor);
-        $stmt->execute();
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("iiii", $idEmisor, $idReceptor, $idEmisor, $idReceptor);
+    $stmt->execute();
 
-        $result = $stmt->get_result();
-        $mensajes = [];
+    $result = $stmt->get_result();
+    $mensajes = [];
 
-        while ($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch_assoc()) {
 
-            // ✨ FIX PARA EVITAR base64_decode(null)
-            $archivoDescifrado = null;
-            if (!empty($row['archivo'])) {
-                $archivoDescifrado = $this->descifrarAES($row['archivo']);
-            }
-
-            $esImagen = !empty($archivoDescifrado);
-
-            $mensajes[] = [
-                'mensaje'       => $this->descifrarAES($row['mensaje']),
-                'id_emisor'     => $row['id_emisor'],
-                'id_receptor'   => $row['id_receptor'],
-                'creado_en'     => $row['creado_en'],
-                'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
-                'tipo'          => $esImagen ? "imagen" : "texto",
-                'contenido'     => $esImagen ? $archivoDescifrado : null
-            ];
+        // ✨ FIX PARA EVITAR base64_decode(null)
+        $archivoDescifrado = null;
+        if (!empty($row['archivo'])) {
+            $archivoDescifrado = $this->descifrarAES($row['archivo']);
         }
 
-        echo json_encode(['data' => $mensajes], JSON_UNESCAPED_UNICODE);
+        $esImagen = !empty($archivoDescifrado);
 
-        $stmt->close();
-        $con->close();
+        $mensajes[] = [
+            'mensaje'       => $this->descifrarAES($row['mensaje']),
+            'id_emisor'     => $row['id_emisor'],
+            'id_receptor'   => $row['id_receptor'],
+            'creado_en'     => $row['creado_en'],
+            'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
+            'tipo'          => $esImagen ? "imagen" : "texto",
+            'contenido'     => $esImagen ? $archivoDescifrado : null
+        ];
     }
+
+    echo json_encode(['data' => $mensajes], JSON_UNESCAPED_UNICODE);
+
+    $stmt->close();
+    $con->close();
+}
     public function enviarMensaje($id_receptor, $mensaje, $imagen = null)
     {
         try {
@@ -298,7 +277,7 @@ class chatsMdl
             }
 
             $contenidoImagen = $imagenURL ? $this->descifrarAES($imagenURL) : null;
-
+            
             $respuesta = [
                 'id_emisor'   => $id_emisor,
                 'id_receptor' => $id_receptor,
@@ -306,7 +285,7 @@ class chatsMdl
                 'tipo'        => $contenidoImagen ? "imagen" : "texto",
                 'contenido'   => $contenidoImagen,
                 'creado_en'   => date("Y-m-d H:i:s")
-            ];
+                ];
 
 
             // Notificar con Pusher
