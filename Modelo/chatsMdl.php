@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Controlador/api_key.php';
 require 'pusher_config.php';
 define('CLAVE_SECRETA', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
 class chatsMdl
@@ -16,7 +16,13 @@ class chatsMdl
     public function conectarBD()
     {
         if (!$this->con) {
-            $this->con = new mysqli("localhost", "root", "", "shakti");
+            $this->con = new mysqli(
+                "localhost",
+                "u872964864_shakt",
+                "Shakti098.",
+                "u872964864_shakt"
+            );
+
             if ($this->con->connect_error) {
                 echo json_encode([
                     'success' => false,
@@ -214,9 +220,9 @@ class chatsMdl
 
                     // Verificar tamaño original (si > 20 MB, aplicar compresión fuerte)
                     $calidadAlta = 80;
-                    $calidadBaja = 40; 
+                    $calidadBaja = 40;
 
-                    $pesoOriginal = $imagen['size']; 
+                    $pesoOriginal = $imagen['size'];
                     $calidadFinal = ($pesoOriginal > (20 * 1024 * 1024)) ? $calidadBaja : $calidadAlta;
 
                     switch ($ext) {
@@ -230,7 +236,7 @@ class chatsMdl
                         case 'webp':
                             imagewebp($thumb, $rutaArchivo, $calidadFinal);
                             break;
-                        default: 
+                        default:
                             imagejpeg($thumb, $rutaArchivo, $calidadFinal);
                             break;
                     }
@@ -265,14 +271,17 @@ class chatsMdl
                 throw new Exception("Error al guardar mensaje: " . $stmtInsert->error);
             }
 
+            $contenidoImagen = $imagenURL ? $this->descifrarAES($imagenURL) : null;
+            
             $respuesta = [
                 'id_emisor'   => $id_emisor,
                 'id_receptor' => $id_receptor,
                 'mensaje'     => $this->descifrarAES($mensaje),
-                'tipo'        => $this->descifrarAES($imagenURL) ? "imagen" : "texto",
-                'contenido'   => $this->descifrarAES($imagenURL),
+                'tipo'        => $contenidoImagen ? "imagen" : "texto",
+                'contenido'   => $contenidoImagen,
                 'creado_en'   => date("Y-m-d H:i:s")
-            ];
+                ];
+
 
             // Notificar con Pusher
             global $pusher;
