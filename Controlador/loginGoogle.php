@@ -1,72 +1,81 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/vendor/autoload.php';
-require_once __DIR__ . '/../Modelo/configuracionG.php';
-require_once __DIR__ . '/../Modelo/Usuarias.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
+date_default_timezone_set('America/Mexico_City');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/configuracionG.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/conexion.php';
 session_start();
 
-// Crear objeto Usuarias y conectar BD
-$u = new Usuarias();
-$con = $u->conectarBD();
-
-if (!$con) {
-    die("Error al conectar a la base de datos.");
-}
+// Conectar BD
+$db = new ConectarDB();
+$con = $db->open();
+if (!$con) die("Error al conectar a la base de datos.");
 
 // Inicializar Google Client
 $client = new Google\Client();
 $client->setClientId($clientID);
 $client->setClientSecret($clientSecret);
+// $client->setRedirectUri("https://shaktiapp.site/Controlador/loginGoogle.php");
 $client->setRedirectUri("http://localhost/Shakti/Controlador/loginGoogle.php");
 $client->addScope('email');
 $client->addScope('profile');
 
-// Redirigir a Google si no hay código
+// Si no hay código → redirigir a Google
 if (!isset($_GET['code'])) {
     header("Location: " . $client->createAuthUrl());
     exit;
 }
 
-// Intercambiar code por token
+// Intercambiar CODE por TOKEN
 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-if (isset($token['error'])) {
-    die("Error al obtener token: " . $token['error']);
-}
+if (isset($token['error'])) die("Error token: " . $token['error']);
+
 $client->setAccessToken($token);
 
-// Obtener datos del usuario
-$google_oauth = new Google\Service\Oauth2($client);
-$userInfo = $google_oauth->userinfo->get();
+// Servicio OAuth2 correcto
+$googleService = new Google\Service\Oauth2($client);
+$userInfo = $googleService->userinfo->get();
 
 $email = $userInfo->email;
 $nombre = $userInfo->givenName;
 $apellidos = $userInfo->familyName ?? "";
 $nickname = explode("@", $email)[0];
 
-// Obtener o generar la foto
-if (!empty($userInfo->picture)) {
-    $fotoGoogleBin = @file_get_contents($userInfo->picture);
-    if ($fotoGoogleBin === false) {
-        $fotoGoogleBin = file_get_contents(__DIR__ . '/../img/undraw_chill-guy-avatar_tqsm.svg');
+// Descargar foto
+function obtenerFoto($url, $fallback) {
+    if (!empty($url)) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        if ($result) return $result;
     }
-} else {
-    $fotoGoogleBin = file_get_contents(__DIR__ . '/../img/undraw_chill-guy-avatar_tqsm.svg');
+    return $fallback;
 }
 
-// -------------------- VALIDACIÓN DE USUARIA EXISTENTE --------------------
-$stmt = $con->prepare("SELECT * FROM usuarias WHERE correo=? LIMIT 1");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$usuario = $stmt->get_result()->fetch_assoc();
+$fotoGoogleBin = obtenerFoto(
+    $userInfo->picture ?? '',
+    file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/img/undraw_chill-guy-avatar_tqsm.svg')
+);
+
+// -------------------- VALIDAR SI YA EXISTE --------------------
+$stmt = $con->prepare("SELECT * FROM usuarias WHERE correo = :correo LIMIT 1");
+$stmt->execute([':correo' => $email]);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($usuario) {
-    // Bloquear inicio de sesión con Google si la cuenta fue registrada manualmente
+
+    // Cuenta registrada manual → bloquear acceso
     if (!empty($usuario['contraseña'])) {
-        header("Location: ../Vista/login.php?status=error&message=" . urlencode("Este correo ya está en uso. Usa otro correo o inicia sesión con tu cuenta."));
+        header("Location: ../Vista/login?status=error&message=" . urlencode("Este correo ya está en uso. Usa otro o inicia sesión con contraseña."));
         exit;
     }
 
-    // Iniciar sesión normalmente si la cuenta es vía Google
+    // Iniciar sesión
     $_SESSION['id'] = $usuario['id'];
     $_SESSION['id_usuaria'] = $usuario['id'];
     $_SESSION['id_rol'] = $usuario['id_rol'];
@@ -75,40 +84,47 @@ if ($usuario) {
     $_SESSION['apellidos'] = $usuario['apellidos'] ?? $apellidos;
     $_SESSION['nickname'] = $usuario['nickname'] ?: explode("@", $usuario['correo'])[0];
 
-    if (!empty($usuario['foto'])) {
-        $_SESSION['foto'] = $usuario['foto'];
-    } else {
-        $fotoEscaped = mysqli_real_escape_string($con, $fotoGoogleBin);
-        $update = $con->prepare("UPDATE usuarias SET foto=? WHERE id=?");
-        $update->bind_param("si", $fotoEscaped, $usuario['id']);
+    // Si no tiene foto guardada → actualizamos
+    if (empty($usuario['foto'])) {
+        $update = $con->prepare("UPDATE usuarias SET foto = :foto WHERE id = :id");
+        $update->bindValue(':foto', $fotoGoogleBin, PDO::PARAM_LOB);
+        $update->bindValue(':id', $usuario['id'], PDO::PARAM_INT);
         $update->execute();
-        $_SESSION['foto'] = $fotoGoogleBin;
     }
+
+    $_SESSION['foto'] = $usuario['foto'] ?: $fotoGoogleBin;
 
 } else {
-    // No existe, crear cuenta vía Google
+
+    // Registrar nueva usuaria vía Google
     $rol = 1;
     $fecha = date("Y-m-d");
-    $fotoEscaped = mysqli_real_escape_string($con, $fotoGoogleBin);
 
-    $insert = $con->prepare("INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, foto)
-        VALUES (?, ?, ?, ?, '', ?, ?, ?)");
-    $insert->bind_param("sssssis", $nombre, $apellidos, $nickname, $email, $fecha, $rol, $fotoEscaped);
+    $insert = $con->prepare("
+        INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, foto)
+        VALUES (:nombre, :apellidos, :nickname, :correo, '', :fecha, :rol, :foto)
+    ");
 
-    if ($insert->execute()) {
-        $id_nueva = $insert->insert_id;
+    $insert->bindValue(':nombre', $nombre);
+    $insert->bindValue(':apellidos', $apellidos);
+    $insert->bindValue(':nickname', $nickname);
+    $insert->bindValue(':correo', $email);
+    $insert->bindValue(':fecha', $fecha);
+    $insert->bindValue(':rol', $rol);
+    $insert->bindValue(':foto', $fotoGoogleBin, PDO::PARAM_LOB);
 
-        $_SESSION['id'] = $id_nueva;            
-        $_SESSION['id_usuaria'] = $id_nueva;    
-        $_SESSION['id_rol'] = $rol;
-        $_SESSION['correo'] = $email;
-        $_SESSION['nombre'] = $nombre;
-        $_SESSION['apellidos'] = $apellidos;
-        $_SESSION['nickname'] = $nickname;
-        $_SESSION['foto'] = $fotoGoogleBin;
-    } else {
-        die("Error al registrar la usuaria: " . $con->error);
-    }
+    $insert->execute();
+
+    $id_nueva = $con->lastInsertId();
+
+    $_SESSION['id'] = $id_nueva;
+    $_SESSION['id_usuaria'] = $id_nueva;
+    $_SESSION['id_rol'] = $rol;
+    $_SESSION['correo'] = $email;
+    $_SESSION['nombre'] = $nombre;
+    $_SESSION['apellidos'] = $apellidos;
+    $_SESSION['nickname'] = $nickname;
+    $_SESSION['foto'] = $fotoGoogleBin;
 }
 
 header("Location: ../Vista/usuaria/perfil");
