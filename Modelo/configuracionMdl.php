@@ -64,8 +64,7 @@ class ConfiguracionMdl extends ConectarDB
 
         if ($stmtCheck->rowCount() > 0) {
             $sql = "UPDATE configuraciones SET 
-        permitir_amigos = :amigos,
-        perfil_privado = :privado,
+        anonimo = :anonimo,
         notificar_publicaciones = :notifMsg,
         notificar_comentarios = :notifCom,
         tamano_fuente = :fuente,
@@ -74,15 +73,14 @@ class ConfiguracionMdl extends ConectarDB
         WHERE id_usuaria = :id_usuaria";
         } else {
             $sql = "INSERT INTO configuraciones 
-        (id_usuaria, permitir_amigos, perfil_privado, notificar_publicaciones, notificar_comentarios, tamano_fuente, modo_oscuro, alto_contraste)
-        VALUES (:id_usuaria, :amigos, :privado, :notifMsg, :notifCom, :fuente, :oscuro, :contraste)";
+        (id_usuaria, anonimo, notificar_publicaciones, notificar_comentarios, tamano_fuente, modo_oscuro, alto_contraste)
+        VALUES (:id_usuaria, :anonimo, :privado, :notifMsg, :notifCom, :fuente, :oscuro, :contraste)";
         }
 
         $stmt = $con->prepare($sql);
         $stmt->execute([
             ":id_usuaria" => $idUsuaria,
-            ":amigos" => $datos['permitir_amigos'],
-            ":privado" => $datos['perfil_privado'],
+            ":anonimo" => $datos['anonimo'],
             ":notifMsg" => $datos['notificar_publicaciones'],
             ":notifCom" => $datos['notificar_comentarios'],
             ":fuente" => $datos['tamano_fuente'],

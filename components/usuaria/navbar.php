@@ -264,17 +264,10 @@ function rutaSegura(array $mapa, int $rol, string $default = 'login')
             <!-- Privacidad -->
             <div class="tab-pane fade" id="privacidad" role="tabpanel">
               <div class="form-check form-switch mt-2">
-                <input class="form-check-input" type="checkbox" name="permitir_amigos"
+                <input class="form-check-input" type="checkbox" name="anonimo"
                   id="addFriendOption"
-                  <?= !empty($configActual['permitir_amigos']) && $configActual['permitir_amigos'] == 1 ? 'checked' : '' ?>>
-                <label class="form-check-label" for="addFriendOption">Permitir que me agreguen como
-                  amigo</label>
-              </div>
-              <div class="form-check form-switch mt-2">
-                <input class="form-check-input" type="checkbox" name="perfil_privado"
-                  id="privateProfile"
-                  <?= !empty($configActual['perfil_privado']) && $configActual['perfil_privado'] == 1 ? 'checked' : '' ?>>
-                <label class="form-check-label" for="privateProfile">Perfil privado</label>
+                  <?= !empty($configActual['anonimo']) && $configActual['anonimo'] == 1 ? 'checked' : '' ?>>
+                <label class="form-check-label" for="addFriendOption">Publicar y comentar de forma anónima</label>
               </div>
             </div>
 
