@@ -118,16 +118,30 @@ EOT;
         return strtolower(trim($respuesta));
     }
 
-
-    public function guardar(string $titulo, string $contenido, int $anonima, int $id_usuaria): bool
+    public function guardar(string $titulo, string $contenido, int $id_usuaria): bool
     {
         $this->conectar();
 
+        // 1. Obtener anonimato global desde configuraciones
+        try {
+            $sqlAnon = "SELECT anonimo FROM configuraciones WHERE id_usuaria = :id";
+            $stmtAnon = $this->conn->prepare($sqlAnon);
+            $stmtAnon->bindParam(':id', $id_usuaria);
+            $stmtAnon->execute();
+            $config = $stmtAnon->fetch(PDO::FETCH_ASSOC);
+
+            // Si no existe config, por defecto no anónimo
+            $anonima = ($config && isset($config['anonimo'])) ? (int)$config['anonimo'] : 0;
+        } catch (PDOException $e) {
+            error_log("Error obteniendo configuración de anonimato: " . $e->getMessage());
+            $anonima = 0;
+        }
+
+        // 2. Moderación automática (IA)
         $validarTitulo = $this->moderarContenidoIA($titulo);
         $validarContenido = $this->moderarContenidoIA($contenido);
 
         if ($validarTitulo === "true" || $validarContenido === "true") {
-            // Detenemos el guardado y mostramos alerta
             $_SESSION['sweet_alert'] = [
                 'icon' => 'warning',
                 'title' => 'Lenguaje inapropiado',
@@ -136,8 +150,10 @@ EOT;
             return false;
         }
 
+        // 3. Detección de doxxing (IA)
         $detectarDoxxingTitulo = $this->detectarDoxxingIA($titulo);
         $detectarDoxxingContenido = $this->detectarDoxxingIA($contenido);
+
         if ($detectarDoxxingTitulo === "doxxing" || $detectarDoxxingContenido === "doxxing") {
             $_SESSION['sweet_alert'] = [
                 'icon' => 'warning',
@@ -147,7 +163,7 @@ EOT;
             return false;
         }
 
-        // Guardar publicación
+        // 4. Guardar publicación
         try {
             $sql = "INSERT INTO publicacion (titulo, contenido, fecha_publicacion, anonima, id_usuarias)
                 VALUES (:titulo, :contenido, NOW(), :anonima, :id_usuaria)";
@@ -178,6 +194,7 @@ EOT;
             return false;
         }
     }
+
     public function ultimoInsertId(): ?int
     {
         return $this->conn ? (int)$this->conn->lastInsertId() : null;
@@ -290,35 +307,7 @@ EOT;
     </div>
 </article>';
     }
-    public function obtenerPorUsuaria(int $id_usuaria): array
-    {
-        $this->conectar();
-        try {
-            $sql = "SELECT * FROM publicacion WHERE id_usuarias = :id_usuaria ORDER BY fecha_publicacion DESC";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':id_usuaria', $id_usuaria);
-            $stmt->execute();
-            return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            error_log("Error al obtener publicaciones por usuaria: " . $e->getMessage());
-            return [];
-        }
-    }
-    public function obtenerPorId(int $id_publicacion): ?array
-    {
-        $this->conectar();
-        try {
-            $sql = "SELECT * FROM publicacion WHERE id_publicacion = :id";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':id', $id_publicacion);
-            $stmt->execute();
-            $resultado = $stmt->fetch();
-            return $resultado ?: null;
-        } catch (PDOException $e) {
-            error_log("Error al obtener publicación por ID: " . $e->getMessage());
-            return null;
-        }
-    }
+
     public function actualizar(int $id, string $titulo, string $contenido): bool
     {
         $this->conectar();
@@ -377,6 +366,37 @@ EOT;
             return false;
         }
     }
+
+    public function obtenerPorUsuaria(int $id_usuaria): array
+    {
+        $this->conectar();
+        try {
+            $sql = "SELECT * FROM publicacion WHERE id_usuarias = :id_usuaria ORDER BY fecha_publicacion DESC";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':id_usuaria', $id_usuaria);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("Error al obtener publicaciones por usuaria: " . $e->getMessage());
+            return [];
+        }
+    }
+    public function obtenerPorId(int $id_publicacion): ?array
+    {
+        $this->conectar();
+        try {
+            $sql = "SELECT * FROM publicacion WHERE id_publicacion = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':id', $id_publicacion);
+            $stmt->execute();
+            $resultado = $stmt->fetch();
+            return $resultado ?: null;
+        } catch (PDOException $e) {
+            error_log("Error al obtener publicación por ID: " . $e->getMessage());
+            return null;
+        }
+    }
+
     public function borrar(int $id, int $id_usuaria): bool
     {
         $this->conectar();

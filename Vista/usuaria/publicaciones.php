@@ -70,10 +70,6 @@ $publicaciones = $publicacionModelo->obtenerPorUsuaria($id_usuaria);
             <input type="text" class="form-control mb-2" name="titulo" placeholder="Título de tu publicación" minlength="3" required>
             <textarea class="form-control" name="contenido" rows="3" placeholder="¿Qué estás pensando?" minlength="5" required></textarea>
           </div>
-          <div class="form-check form-switch form-check-reverse">
-            <input class="form-check-input" name="anonima" value="1" type="checkbox" id="switchCheckReverse">
-            <label class="form-check-label" for="switchCheckReverse">Publicar de forma anónima</label>
-          </div>
           <input type="hidden" name="guardar_publicacion" value="1" />
           <button type="submit" id="btnPublicar" class="btn btn-outline-primary">
             <i class="bi bi-check2-circle"></i> Publicar
