@@ -128,7 +128,7 @@ switch ($_REQUEST['opcion']) {
                 break;
 
             case 'video':
-                $url_contenido = $_REQUEST['url_contenido'] ?? '';
+                $url_contenido = $_REQUEST['nueva_url_contenido'] ?? '';
                 break;
         }
 
@@ -137,7 +137,7 @@ switch ($_REQUEST['opcion']) {
             $_REQUEST['titulo'],
             $_REQUEST['descripcion'],
             $_REQUEST['cuerpo_html'] ?? '',
-            $_REQUEST['url_contenido'] ?? '',
+            $_REQUEST['nueva_url_contenido'] ?? '',
             $thumbnail,
             $imagen1,
             $imagen2,
