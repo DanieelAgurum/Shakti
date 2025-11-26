@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Controlador/api_key.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/api_key.php';
 require 'pusher_config.php';
 define('CLAVE_SECRETA', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
 class chatsMdl
@@ -13,16 +13,12 @@ class chatsMdl
         }
         $this->clave_secreta = hash('sha256', ($_SESSION['id'] ?? '') . 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
     }
+
+
     public function conectarBD()
     {
         if (!$this->con) {
-            $this->con = new mysqli(
-                "localhost",
-                "u872964864_shakt",
-                "Shakti098.",
-                "u872964864_shakt"
-            );
-
+            $this->con = new mysqli("localhost", "root", "", "shakti");
             if ($this->con->connect_error) {
                 echo json_encode([
                     'success' => false,
@@ -106,40 +102,49 @@ class chatsMdl
         $stmt->close();
         $con->close();
     }
-    public function cargarMensajes($idEmisor, $idReceptor)
-    {
-        $con = $this->conectarBD();
+public function cargarMensajes($idEmisor, $idReceptor)
+{
+    $con = $this->conectarBD();
 
-        $sql = "SELECT *
-            FROM mensajes
-            WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
-              AND id_emisor <> id_receptor
-            ORDER BY creado_en ASC";
+    $sql = "SELECT *
+        FROM mensajes
+        WHERE (id_emisor IN (?, ?) AND id_receptor IN (?, ?))
+          AND id_emisor <> id_receptor
+        ORDER BY creado_en ASC";
 
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("iiii", $idEmisor, $idReceptor, $idEmisor, $idReceptor);
-        $stmt->execute();
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("iiii", $idEmisor, $idReceptor, $idEmisor, $idReceptor);
+    $stmt->execute();
 
-        $result = $stmt->get_result();
-        $mensajes = [];
+    $result = $stmt->get_result();
+    $mensajes = [];
 
-        while ($row = $result->fetch_assoc()) {
-            $mensajes[] = [
-                'mensaje'       => $this->descifrarAES($row['mensaje']),
-                'id_emisor'     => $row['id_emisor'],
-                'id_receptor'   => $row['id_receptor'],
-                'creado_en'     => $row['creado_en'],
-                'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
-                'tipo'          => $this->descifrarAES($row['archivo']) ? "imagen" : "texto",
-                'contenido'     => $this->descifrarAES($row['archivo']) ?: null
-            ];
+    while ($row = $result->fetch_assoc()) {
+
+        // ✨ FIX PARA EVITAR base64_decode(null)
+        $archivoDescifrado = null;
+        if (!empty($row['archivo'])) {
+            $archivoDescifrado = $this->descifrarAES($row['archivo']);
         }
 
-        echo json_encode(['data' => $mensajes], JSON_UNESCAPED_UNICODE);
+        $esImagen = !empty($archivoDescifrado);
 
-        $stmt->close();
-        $con->close();
+        $mensajes[] = [
+            'mensaje'       => $this->descifrarAES($row['mensaje']),
+            'id_emisor'     => $row['id_emisor'],
+            'id_receptor'   => $row['id_receptor'],
+            'creado_en'     => $row['creado_en'],
+            'es_mensaje_yo' => ($row['id_emisor'] == $idEmisor),
+            'tipo'          => $esImagen ? "imagen" : "texto",
+            'contenido'     => $esImagen ? $archivoDescifrado : null
+        ];
     }
+
+    echo json_encode(['data' => $mensajes], JSON_UNESCAPED_UNICODE);
+
+    $stmt->close();
+    $con->close();
+}
     public function enviarMensaje($id_receptor, $mensaje, $imagen = null)
     {
         try {

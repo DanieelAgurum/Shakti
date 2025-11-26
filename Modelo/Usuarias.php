@@ -61,41 +61,41 @@ class Usuarias
             empty(trim($this->conContraseña)) ||
             empty(trim($this->fecha_nac))
         ) {
-            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Todos los campos obligatorios deben estar llenos"));
+            header("Location: ../Vista/registro?status=error&message=" . urlencode("Todos los campos obligatorios deben estar llenos"));
             exit;
         }
 
         // Validación de correo
         if (!filter_var($this->correo, FILTER_VALIDATE_EMAIL)) {
-            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Correo electrónico inválido"));
+            header("Location: ../Vista/registro?status=error&message=" . urlencode("Correo electrónico inválido"));
             exit;
         }
 
         // Validación de contraseñas
         if ($this->contraseña !== $this->conContraseña) {
-            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Las contraseñas no coinciden"));
+            header("Location: ../Vista/registro?status=error&message=" . urlencode("Las contraseñas no coinciden"));
             exit;
         }
 
- // Validación de duplicados
-     $correo = mysqli_real_escape_string($con, $this->correo);
+        // Validación de duplicados
+        $correo = mysqli_real_escape_string($con, $this->correo);
 
-// Buscar cualquier usuaria con el mismo correo
-     $stmt = $con->prepare("SELECT id FROM usuarias WHERE correo = ? LIMIT 1");
-     $stmt->bind_param("s", $correo);
-     $stmt->execute();
-    $result = $stmt->get_result();
+        // Buscar cualquier usuaria con el mismo correo
+        $stmt = $con->prepare("SELECT id FROM usuarias WHERE correo = ? LIMIT 1");
+        $stmt->bind_param("s", $correo);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-    header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Este correo ya está en uso. Inicia sesión o utiliza otro correo."));
-    exit;
-}
+        if ($result->num_rows > 0) {
+            header("Location: ../Vista/registro?status=error&message=" . urlencode("Este correo ya está en uso. Inicia sesión o utiliza otro correo."));
+            exit;
+        }
 
 
         $nickname = mysqli_real_escape_string($con, $this->nickname);
         $nickDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE nickname = '$nickname'");
         if (mysqli_fetch_array($nickDuplicado)) {
-            header("Location: ../Vista/registro.php?status=error&message=" . urlencode("Este nombre de usuario ya está en uso"));
+            header("Location: ../Vista/registro?status=error&message=" . urlencode("Este nombre de usuario ya está en uso"));
             exit;
         }
 
@@ -114,7 +114,7 @@ class Usuarias
         $id_nueva = mysqli_insert_id($con);
 
         // ---------------------- Enviar correo de verificación ----------------------
-        require_once '../Modelo/ConfirmarCorreo.php';
+        require_once '../Modelo/confirmarCorreo.php';
         $correoConfirmacion = new ConfirmarCorreo();
         $correoConfirmacion->inicializar($this->correo, $this->nombre, $this->urlBase, $id_nueva);
         $enviado = $correoConfirmacion->enviarCorreoVerificacion();
@@ -123,10 +123,7 @@ class Usuarias
             error_log("No se pudo enviar el correo de verificación a: " . $this->correo);
         }
         // ---------------------------------------------------------------------------
-
-        // **No iniciar sesión todavía, solo redirigir al login con mensaje**
-        header("Location: ../Vista/login.php?status=success&message=" . urlencode("Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta."));
-        exit;
+        return $id_nueva;
     }
 
 
@@ -153,7 +150,7 @@ class Usuarias
                     header("Location: ../Vista/login?status=error&message=" . urlencode("Rol no reconocido"));
                 }
             } else {
-                header("Location: ../Vista/login.php?status=error&message=" . urlencode("Sesión no iniciada"));
+                header("Location: ../Vista/login?status=error&message=" . urlencode("Sesión no iniciada"));
             }
             exit;
         }
@@ -226,7 +223,7 @@ class Usuarias
                 header("Location: ../Vista/login?status=error&message=" . urlencode("Rol no reconocido"));
             }
         } else {
-            header("Location: ../Vista/login.php?status=error&message=" . urlencode("Sesión no iniciada"));
+            header("Location: ../Vista/login?status=error&message=" . urlencode("Sesión no iniciada"));
         }
         exit;
     }
@@ -306,10 +303,10 @@ class Usuarias
             mysqli_stmt_bind_param($stmt, "i", $id);
             mysqli_stmt_bind_param($stmtDoc, 'i', $id);
             if (mysqli_stmt_execute($stmt) && mysqli_stmt_execute($stmtDoc)) {
-                header("Location: " . $this->urlBase . "/Vista/admin/usuarias.php?eliminado=" . urlencode("Se eliminó la usuaria correctamente"));
+                header("Location: " . $this->urlBase . "/Vista/admin/usuarias?eliminado=" . urlencode("Se eliminó la usuaria correctamente"));
                 exit;
             } else {
-                header("Location: " . $this->urlBase . "/Vista/admin/usuarias.php?eliminado=" . urlencode("No se pudo eliminar o ya fue eliminada"));
+                header("Location: " . $this->urlBase . "/Vista/admin/usuarias?eliminado=" . urlencode("No se pudo eliminar o ya fue eliminada"));
                 exit;
             }
             mysqli_stmt_close($stmt);
