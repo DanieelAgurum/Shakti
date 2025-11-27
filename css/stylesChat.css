@@ -493,40 +493,6 @@ form#formulario button:hover {
 }
 
 
-/*  Vista móvil: solo mostrar la lista, ocultar el chat */
-@media (max-width: 768px) {
-    #chat-box.inactivo {
-        display: none;
-    }
-
-    .chat-list {
-        width: 100vh;
-    }
-
-    .btn-volver {
-        display: block !important;
-        width: 100%;
-        margin-bottom: 5px;
-    }
-
-    .chat-mensajes {
-        width: 100%;
-    }
-
-    #contenedor-chat {
-        display: flex;
-    }
-
-    #chat-box {
-        display: flex;
-    }
-
-    .chat-list {
-        width: 100%;
-    }
-}
-
-
 /* --- Encabezado móvil del chat --- */
 .chat-header-movil {
     display: none;
@@ -584,13 +550,142 @@ form#formulario button:hover {
     transform: scale(0.92);
 }
 
-/* --- Mostrar en móvil --- */
+/* ================================
+   ESTILO ESCRITORIO
+================================= */
+
+/* Contenedor principal */
+#contenedor-chat {
+    display: flex;
+    height: 92vh;
+    background: #f0f2f5;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Lista de chats */
+.chat-list {
+    width: 30%;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    background: white;
+}
+
+/* Chat box */
+#chat-box {
+    width: 100%;
+    background: #e5ddd5;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 80px; /* espacio para el form */
+}
+
+.chat-mensajes {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+/* Formulario fijo en escritorio */
+form#formulario {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 8px 14px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+}
+
+
+/* ================================
+   ESTILO MÓVIL
+================================= */
+
 @media (max-width: 768px) {
+
+    /* ---- HEADER MÓVIL ---- */
     .chat-header-movil {
-        display: flex;
+        display: flex !important;
+        align-items: center;
+        padding: 12px 16px;
+        background: white;
+        border-bottom: 1px solid #ddd;
+        position: sticky;
+        top: 0;
+        z-index: 2000;
     }
 
     .btn-volver {
         display: flex !important;
+    }
+
+    /* Contenedor general */
+    #contenedor-chat {
+        display: block;
+        width: 100%;
+        height: 100vh !important;
+        overflow: hidden;
+    }
+
+    /* --- LISTA DE CHATS --- */
+    .chat-list {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100% !important;
+        background: white;
+        overflow-y: auto;
+        z-index: 900;
+    }
+
+    /* --- CHAT BOX --- */
+    #chat-box {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100% !important;
+        background: #e5ddd5;
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+    }
+
+    /* Ocultar chat cuando selecciones en lista */
+    #chat-box.inactivo {
+        display: none !important;
+    }
+
+    /* Área de mensajes */
+    .chat-mensajes {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+    }
+
+    /* --- FORMULARIO --- */
+    form#formulario {
+        position: fixed;
+        bottom: env(safe-area-inset-bottom);
+        left: 0;
+        right: 0;
+        width: 100% !important;
+        background: white;
+        border-top: 1px solid #ddd;
+        padding: 8px;
+        gap: 10px;
+        z-index: 3000;
+    }
+
+    input[type="text"] {
+        padding: 12px;
     }
 }
