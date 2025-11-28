@@ -46,7 +46,6 @@ class Usuarias
         $this->fecha_nac = $fec;
         $this->rol = $rol;
     }
-
     public function agregarUsuaria()
     {
         $con = $this->conectarBD();
@@ -91,7 +90,6 @@ class Usuarias
             exit;
         }
 
-
         $nickname = mysqli_real_escape_string($con, $this->nickname);
         $nickDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE nickname = '$nickname'");
         if (mysqli_fetch_array($nickDuplicado)) {
@@ -105,7 +103,6 @@ class Usuarias
         $fecha = mysqli_real_escape_string($con, $this->fecha_nac);
         $rol = (int)$this->rol;
 
-        // Insertar usuaria con verificado = 0
         $insertar = mysqli_query($con, "
         INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, verificado)
         VALUES ('$nombre', '$apellidos', '$nickname', '$correo', '$hash', '$fecha', $rol, 0)
@@ -113,7 +110,6 @@ class Usuarias
 
         $id_nueva = mysqli_insert_id($con);
 
-        // ---------------------- Enviar correo de verificación ----------------------
         require_once '../Modelo/confirmarCorreo.php';
         $correoConfirmacion = new ConfirmarCorreo();
         $correoConfirmacion->inicializar($this->correo, $this->nombre, $this->urlBase, $id_nueva);
@@ -122,12 +118,8 @@ class Usuarias
         if (!$enviado) {
             error_log("No se pudo enviar el correo de verificación a: " . $this->correo);
         }
-        // ---------------------------------------------------------------------------
         return $id_nueva;
     }
-
-
-    // actualizar datos -------------------------------------------
 
     public function actualizarDatos($nomN, $apeN, $nickN, $corN, $contN, $fec, $tel, $dir, $desc, $idUsuaria)
     {
@@ -309,12 +301,9 @@ class Usuarias
                 header("Location: " . $this->urlBase . "/Vista/admin/usuarias?eliminado=" . urlencode("No se pudo eliminar o ya fue eliminada"));
                 exit;
             }
-            mysqli_stmt_close($stmt);
         } else {
 
             die("Error en prepare: " . mysqli_error($con));
         }
-
-        mysqli_close($con);
     }
 }
