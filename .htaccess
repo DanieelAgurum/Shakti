@@ -13,14 +13,14 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # =========================================================
 # 🌐 RUTAS AMIGABLES GENERALES
 # =========================================================
-RewriteRule ^index/?$ index.php [L,QSA,NC]
+RewriteRule ^(index)/?$ index.php [L,QSA,NC]
 
 # =========================================================
 # 🚫 BLOQUEAR ACCESO DIRECTO A CARPETAS SENSIBLES
 # =========================================================
 RewriteRule ^Vista/?$ Vista/404.php [L,QSA,NC]
+RewriteRule ^Vista/usuaria/?$ Vista/404.php [L,QSA,NC]
 RewriteRule ^Controlador/?$ Vista/404.php [L,QSA,NC]
-RewriteRule ^Modelo/?$ Vista/404.php [L,QSA,NC]
 
 # =========================================================
 # ✅ EXCEPCIONES PERMITIDAS (Rutas válidas que sí deben cargar)
@@ -47,18 +47,19 @@ RewriteRule ^Vista/usuaria/perfil/?$ Vista/usuaria/perfil.php [L,QSA,NC]
 RewriteRule ^Vista/usuaria/publicaciones/?$ Vista/usuaria/publicaciones.php [L,QSA,NC]
 
 # ---- VISTAS ADMIN ----
-RewriteRule ^Vista/admin/?$ Vista/admin/index.php [L,QSA,NC]
-RewriteRule ^Vista/admin/usuarias/?$ Vista/admin/usuarias.php [L,QSA,NC]
-RewriteRule ^Vista/admin/especialistas/?$ Vista/admin/especialistas.php [L,QSA,NC]
-RewriteRule ^Vista/admin/contenido/?$ Vista/admin/contenido.php [L,QSA,NC]
-RewriteRule ^Vista/admin/libre_segura/?$ Vista/admin/libre_segura.php [L,QSA,NC]
-RewriteRule ^Vista/admin/organizaciones/?$ Vista/admin/organizaciones.php [L,QSA,NC]
-RewriteRule ^Vista/admin/reportes/?$ Vista/admin/reportes.php [L,QSA,NC]
-RewriteRule ^Vista/admin/preguntas_frecuentes/?$ Vista/admin/preguntas_frecuentes.php [L,QSA,NC]
-RewriteRule ^Vista/admin/metricas/?$ Vista/admin/metricas.php [L,QSA,NC]
-RewriteRule ^Vista/admin/glosario/?$ Vista/admin/glosario.php [L,QSA,NC]
+RewriteRule ^Vista/admin/$ Vista/admin/index.php [L,QSA,NC]
+RewriteRule ^Vista/admin/usuarias?$ Vista/admin/usuarias.php [L,QSA,NC]
+RewriteRule ^Vista/admin/especialistas?$ Vista/admin/especialistas.php [L,QSA,NC]
+RewriteRule ^Vista/admin/contenido?$ Vista/admin/contenido.php [L,QSA,NC]
+RewriteRule ^Vista/admin/libre_segura?$ Vista/admin/libre_segura.php [L,QSA,NC]
+RewriteRule ^Vista/admin/organizaciones?$ Vista/admin/organizaciones.php [L,QSA,NC]
+RewriteRule ^Vista/admin/reportes?$ Vista/admin/reportes.php [L,QSA,NC]
+RewriteRule ^Vista/admin/preguntas_frecuentes?$ Vista/admin/preguntas_frecuentes.php [L,QSA,NC]
+RewriteRule ^Vista/admin/metricas?$ Vista/admin/metricas.php [L,QSA,NC]
+RewriteRule ^Vista/admin/glosario?$ Vista/admin/glosario.php [L,QSA,NC]
+RewriteRule ^Vista/admin/tipos_reportes?$ Vista/admin/tipos_reportes.php [L,QSA,NC]
 
 # =========================================================
 # ⚠️ PÁGINA 404 PERSONALIZADA
 # =========================================================
-ErrorDocument 404 /shakti/Vista/404.php
+ErrorDocument 404 /Vista/404.php
