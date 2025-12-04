@@ -40,28 +40,28 @@ const validators = {
         return true;
     },
     fecha_nac: value => {
-        if (!value) return 'La fecha es obligatoria';
+    if (!value) return 'La fecha es obligatoria';
 
-        const fecha = new Date(value);
-        const hoy = new Date();
+    const fecha = new Date(value);
+    const hoy = new Date();
 
-        // Evitar fechas inválidas o no parseables
-        if (isNaN(fecha.getTime())) return "Fecha no válida";
+    // Evitar fechas inválidas o no parseables
+    if (isNaN(fecha.getTime())) return "Fecha no válida";
 
-        // Evitar futuras
-        if (fecha > hoy) return "No puede ser futura";
+    // Evitar futuras
+    if (fecha > hoy) return "No puede ser futura";
 
-        // Calcular edad EXACTA
-        let edad = hoy.getFullYear() - fecha.getFullYear();
-        const m = hoy.getMonth() - fecha.getMonth();
-        if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) {
-            edad--;
-        }
+    // Calcular edad EXACTA
+    let edad = hoy.getFullYear() - fecha.getFullYear();
+    const m = hoy.getMonth() - fecha.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) {
+        edad--;
+    }
 
-        if (edad < 18) return "Debes tener al menos 18 años";
-        if (edad > 65) return "La edad máxima permitida es 65 años";
+    if (edad < 18) return "Debes tener al menos 18 años";
+    if (edad > 65) return "La edad máxima permitida es 65 años";
 
-        return true;
+    return true;
     }
 };
 

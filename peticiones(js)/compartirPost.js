@@ -7,7 +7,7 @@ function setIdCompartir(id) {
 async function generarLinkSeguro(idPublicacion) {
   const datos = `${idPublicacion}`;
   const hash = await sha256(datos);
-  return `${window.location.origin}/shakti/Vista/usuaria/foro.php?publicacion=${hash}`;
+  return `${window.location.origin}/Vista/usuaria/foro?publicacion=${hash}`;
 }
 
 async function sha256(mensaje) {

@@ -18,7 +18,12 @@ class reportesMdl
 
     public function conectarBD()
     {
-        $this->con = new mysqli("localhost", "root", "", "shakti");
+        $this->con = new mysqli(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        );
 
         if ($this->con->connect_error) {
             echo json_encode([
@@ -28,6 +33,7 @@ class reportesMdl
             exit;
         }
     }
+    
     public function inicializar($nickname, $publicacion, $tipo, $id_reporto, $tipoRep)
     {
         $this->nickname = $nickname;

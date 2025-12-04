@@ -13,7 +13,13 @@ class buscadorForoMdl
     public function conectarBD()
     {
         if (!$this->con) {
-            $this->con = mysqli_connect("localhost", "root", "", "shakti");
+            $this->con = mysqli_connect(
+                "localhost",
+                "root",
+                "",
+                "shakti"
+            );
+
             if (!$this->con) {
                 die("Problemas con la conexión a la base de datos: " . mysqli_connect_error());
             }
@@ -160,7 +166,7 @@ class buscadorForoMdl
         $btnClass = $yaDioLike ? 'btn-danger' : 'btn-outline-danger';
         $iconClass = $yaDioLike ? 'bi-suit-heart-fill' : 'bi-suit-heart';
 
-        require_once __DIR__ . '/../modelo/comentariosModelo.php';
+        require_once __DIR__ . '/../Modelo/comentariosModelo.php';
         $comentarioModelo = new Comentario();
         $allCom = $comentarioModelo->obtenerComentariosPorPublicacion($idPublicacion);
         $comRaiz = [];
@@ -208,6 +214,7 @@ class buscadorForoMdl
     <div class="post-content">
         <p class="ps-3 pt-2">' . nl2br(htmlspecialchars($publicacion['contenido'])) . '</p>
     </div>
+
 
     <div class="post-actions">
         <div class="d-flex gap-2">

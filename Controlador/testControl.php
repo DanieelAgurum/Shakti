@@ -1,5 +1,6 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/TestModelo.php';
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/testModelo.php';
 header('Content-Type: application/json; charset=utf-8');
 
 session_start();

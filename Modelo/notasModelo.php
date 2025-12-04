@@ -13,7 +13,13 @@ class Notas
 
     public function conectarBD()
     {
-        $con = mysqli_connect("localhost", "root", "", "shakti") or die("Problemas con la conexión a la base de datos");
+        $con = mysqli_connect(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        ) or die("Problemas con la conexión a la base de datos");
+
         return $con;
     }
 
@@ -49,9 +55,9 @@ class Notas
         $stmt->bind_param("sssi", $this->titulo, $this->nota, $this->fecha, $this->idUsuaria);
 
         if ($stmt->execute()) {
-            header("Location: ../Vista/usuaria/perfil?status=success&message=" . urlencode("Nota creada correctamente"));
+            header("Location: ../Vista/usuaria/perfil.php?status=success&message=" . urlencode("Nota creada correctamente"));
         } else {
-            header("Location: ../Vista/usuaria/perfil?status=error&message=" . urlencode("Error al guardar la nota"));
+            header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode("Error al guardar la nota"));
         }
 
         $stmt->close();
@@ -109,9 +115,9 @@ class Notas
         $stmt->bind_param("ssi", $tit, $not, $id);
 
         if ($stmt->execute()) {
-            header("Location: ../Vista/usuaria/perfil?status=success&message=" . urlencode("Nota actualizada correctamente"));
+            header("Location: ../Vista/usuaria/perfil.php?status=success&message=" . urlencode("Nota actualizada correctamente"));
         } else {
-            header("Location: ../Vista/usuaria/perfil?status=error&message=" . urlencode("Error al actualizar"));
+            header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode("Error al actualizar"));
         }
 
         $stmt->close();
@@ -126,9 +132,9 @@ class Notas
         $stmt->bind_param("i", $id);
 
         if ($stmt->execute()) {
-            header("Location: ../Vista/usuaria/perfil?status=success&message=" . urlencode("Nota eliminada correctamente"));
+            header("Location: ../Vista/usuaria/perfil.php?status=success&message=" . urlencode("Nota eliminada correctamente"));
         } else {
-            header("Location: ../Vista/usuaria/perfil?status=error&message=" . urlencode("Error al eliminar"));
+            header("Location: ../Vista/usuaria/perfil.php?status=error&message=" . urlencode("Error al eliminar"));
         }
 
         $stmt->close();

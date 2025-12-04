@@ -153,7 +153,7 @@ class GlosarioMdl extends ConectarDB
         try {
             $conexion = $this->open();
             if (!$conexion) {
-                header("Location: " . $this->urlBase . "/Vista/admin/glosario.php?estado=error");
+                header("Location: " . $this->urlBase . "/Vista/admin/glosario?estado=error");
                 exit;
             }
 
@@ -165,10 +165,10 @@ class GlosarioMdl extends ConectarDB
             $this->close();
 
             $estado = $resultado ? "eliminado" : "error";
-            header("Location: " . $this->urlBase . "/Vista/admin/glosario.php?estado={$estado}");
+            header("Location: " . $this->urlBase . "/Vista/admin/glosario?estado={$estado}");
             exit;
         } catch (PDOException $e) {
-            header("Location: " . $this->urlBase . "/Vista/admin/glosario.php?estado=error");
+            header("Location: " . $this->urlBase . "/Vista/admin/glosario?estado=error");
             exit;
         }
     }

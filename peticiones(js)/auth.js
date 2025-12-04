@@ -7,11 +7,15 @@ document.addEventListener("DOMContentLoaded", function() {
             const formData = new FormData(this);
 
             fetch(this.action, { method: this.method, body: formData })
-                .then(res => res.json())
+                .then(res => {
+                    // Manejo de errores HTTP
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return res.json(); // Convertir respuesta a JSON
+                })
                 .then(data => {
                     if (data.success) {
                         // Redirigir según rol
-                        switch (data.id_rol) {
+                        switch (data.id_rol.toString()) { // asegurar que sea string
                             case "1":
                                 window.location.href = urlBase + "Vista/usuaria/perfil";
                                 break;
@@ -23,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 break;
                         }
                     } else {
-                        // Alerta tipo modal
+                        // Mostrar mensaje de error con SweetAlert
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -36,18 +40,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 .catch(err => console.error("Error login normal:", err));
         });
     }
-});
-   // Login con Google
+
+    // Login con Google
     const btnGoogle = document.getElementById("btnGoogleLogin");
     if (btnGoogle) {
         btnGoogle.addEventListener("click", function(e) {
             e.preventDefault();
-            window.location.href = urlBase + "Controlador/loginGoogle.php"; 
+            window.location.href = urlBase + "Controlador/loginGoogle.php";
         });
     }
 
-// Mostrar / Ocultar contraseña
-document.addEventListener("DOMContentLoaded", function() {
+    // Mostrar / Ocultar contraseña
     const togglePassword = document.querySelector('#togglePassword');
     const passwordField = document.querySelector('#contraseña');
 
@@ -55,7 +58,9 @@ document.addEventListener("DOMContentLoaded", function() {
         togglePassword.addEventListener('click', () => {
             const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordField.setAttribute('type', type);
-            togglePassword.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+            togglePassword.innerHTML = type === 'password' 
+                ? '<i class="bi bi-eye-fill"></i>' 
+                : '<i class="bi bi-eye-slash-fill"></i>';
         });
     }
 });

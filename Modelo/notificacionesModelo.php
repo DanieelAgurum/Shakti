@@ -3,10 +3,16 @@ class Notificacion
 {
     private static function conectar()
     {
-        return new PDO("mysql:host=localhost;dbname=shakti;charset=utf8mb4", "root", "", [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]);
+        return new PDO(
+            "mysql:host=localhost;dbname=shakti;charset=utf8mb4",
+            "root",
+            "",
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ]
+        );
     }
 
     public static function crearDesdePublicacion($id_usuaria_origen, $id_publicacion = null)

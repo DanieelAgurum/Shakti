@@ -10,14 +10,23 @@ class SolicitudesMdl
     private function conectarBD()
     {
         if (!$this->con) {
-            $this->con = new mysqli("localhost", "root", "", "shakti");
+            $this->con = new mysqli(
+                "localhost",
+                "root",
+                "",
+                "shakti"
+            );
+
             if ($this->con->connect_error) {
                 die("Error de conexión: " . $this->con->connect_error);
             }
+
             $this->con->set_charset("utf8mb4");
         }
+
         return $this->con;
     }
+    
     // Especialistas 
     public function obtenerEspecialistas($buscador = null, $limit = 10, $offset = 0)
     {
@@ -84,7 +93,7 @@ class SolicitudesMdl
                     <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalEspecialista' . $id . '">
                         <i class="bi bi-eye-fill"></i> Ver perfil
                     </button>
-                    <a href="/shakti/Vista/chat?especialistas=' . $this->cifrarAES($id) . '" class="btn btn-outline-primary mt-2">
+                    <a href="/Vista/chat?especialistas=' . $this->cifrarAES($id) . '" class="btn btn-outline-primary mt-2">
                         <i class="bi bi-envelope-paper-heart"></i> Mensaje</a>
                 </div>
             </div>

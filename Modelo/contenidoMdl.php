@@ -20,7 +20,13 @@ class Contenido
 
     public function conectarBD()
     {
-        $this->con = mysqli_connect("localhost", "root", "", "shakti");
+        $this->con = mysqli_connect(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        );
+
         if (!$this->con) {
             die("Problemas con la conexión a la base de datos: " . mysqli_connect_error());
         }
@@ -231,7 +237,7 @@ class Contenido
     {
         $sql = "SELECT titulo, descripcion, cuerpo_html, url_contenido, archivo, imagen1, imagen2, imagen3, tipo, thumbnail, categoria, fecha_publicacion 
             FROM contenidos 
-            ORDER BY fecha_publicacion DESC";
+            ORDER BY categoria ASC, fecha_publicacion DESC";
         $stmt = $this->con->prepare($sql);
         $stmt->execute();
         $resultado = $stmt->get_result();

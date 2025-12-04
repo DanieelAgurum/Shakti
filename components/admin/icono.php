@@ -1,1 +1,1 @@
-  <link rel="icon" href="<?= $urlBase ?>img/NexoH.ico">
+<link rel="icon" href="<?= $urlBase ?>img/NexoH.ico">

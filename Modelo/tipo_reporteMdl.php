@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 
 class TipoReporteMdl
 {
@@ -15,10 +15,17 @@ class TipoReporteMdl
 
     public function conectarBD()
     {
-        $this->con = new mysqli("localhost", "root", "", "shakti");
+        $this->con = new mysqli(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        );
+
         if ($this->con->connect_error) {
             die("Error de conexión: " . $this->con->connect_error);
         }
+
         $this->con->set_charset("utf8mb4");
         return $this->con;
     }
@@ -46,7 +53,7 @@ class TipoReporteMdl
                 "mensaje" => "Faltan parámetros: nombre o tipo"
             ]);
         }
-        
+
         // Validar existencia nombre y tipo_objetivo específico
         $query = "SELECT 1 FROM tipo_reporte WHERE nombre_reporte = ? AND tipo_objetivo = ?";
         $stmt = $this->con->prepare($query);

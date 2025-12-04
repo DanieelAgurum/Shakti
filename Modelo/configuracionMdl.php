@@ -55,27 +55,26 @@ class ConfiguracionMdl extends ConectarDB
     }
 
     public function guardarConfiguracion($idUsuaria, $datos)
-    {
-        $con = $this->open();
-        $sqlCheck = "SELECT id_config FROM configuraciones WHERE id_usuaria = :id LIMIT 1";
-        $stmtCheck = $con->prepare($sqlCheck);
-        $stmtCheck->bindParam(":id", $idUsuaria, PDO::PARAM_INT);
-        $stmtCheck->execute();
+{
+    $con = $this->open();
 
-        if ($stmtCheck->rowCount() > 0) {
-            $sql = "UPDATE configuraciones SET 
-        anonimo = :anonimo,
-        notificar_publicaciones = :notifMsg,
-        notificar_comentarios = :notifCom,
-        tamano_fuente = :fuente,
-        modo_oscuro = :oscuro,
-        alto_contraste = :contraste
-        WHERE id_usuaria = :id_usuaria";
-        } else {
-            $sql = "INSERT INTO configuraciones 
-        (id_usuaria, anonimo, notificar_publicaciones, notificar_comentarios, tamano_fuente, modo_oscuro, alto_contraste)
-        VALUES (:id_usuaria, :anonimo, :privado, :notifMsg, :notifCom, :fuente, :oscuro, :contraste)";
-        }
+    // Revisar si ya existe configuración
+    $sqlCheck = "SELECT id_config FROM configuraciones WHERE id_usuaria = :id LIMIT 1";
+    $stmtCheck = $con->prepare($sqlCheck);
+    $stmtCheck->bindParam(":id", $idUsuaria, PDO::PARAM_INT);
+    $stmtCheck->execute();
+
+    if ($stmtCheck->rowCount() > 0) {
+
+        // ----------- UPDATE -----------
+        $sql = "UPDATE configuraciones SET 
+                    anonimo = :anonimo,
+                    notificar_publicaciones = :notifMsg,
+                    notificar_comentarios = :notifCom,
+                    tamano_fuente = :fuente,
+                    modo_oscuro = :oscuro,
+                    alto_contraste = :contraste
+                WHERE id_usuaria = :id_usuaria";
 
         $stmt = $con->prepare($sql);
         $stmt->execute([
@@ -88,8 +87,27 @@ class ConfiguracionMdl extends ConectarDB
             ":contraste" => $datos['alto_contraste']
         ]);
 
-        $this->close();
+    } else {
+
+        // ----------- INSERT -----------
+        $sql = "INSERT INTO configuraciones 
+                (id_usuaria, anonimo, notificar_publicaciones, notificar_comentarios, tamano_fuente, modo_oscuro, alto_contraste)
+                VALUES (:id_usuaria, :anonimo, :notifMsg, :notifCom, :fuente, :oscuro, :contraste)";
+        
+        $stmt = $con->prepare($sql);
+        $stmt->execute([
+            ":id_usuaria" => $idUsuaria,
+            ":anonimo" => $datos['anonimo'],
+            ":notifMsg" => $datos['notificar_publicaciones'],
+            ":notifCom" => $datos['notificar_comentarios'],
+            ":fuente" => $datos['tamano_fuente'],
+            ":oscuro" => $datos['modo_oscuro'],
+            ":contraste" => $datos['alto_contraste']
+        ]);
     }
+
+    $this->close();
+}
 
     public function obtenerConfiguracion($idUsuaria)
     {

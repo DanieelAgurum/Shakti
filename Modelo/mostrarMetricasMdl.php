@@ -11,8 +11,12 @@ class mostrarMetricasMdl
 
     private function conectarBD()
     {
-        $this->con = mysqli_connect("localhost", "root", "", "shakti")
-            or die("Problemas con la conexión a la base de datos");
+        $this->con = mysqli_connect(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        ) or die("Problemas con la conexión a la base de datos");
     }
 
     public function mostrar()

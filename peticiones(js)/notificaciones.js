@@ -1,19 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const baseUrl = window.location.origin + '/shakti'; // 👈 Ruta dinámica
+    
+    let baseUrl = window.location.origin;
+    if (window.location.hostname === "localhost") baseUrl += "/shakti";
+
     const toastDuration = 6000;
     const contador = document.getElementById('contadorNotificaciones');
     const modal = document.getElementById('modalNotificaciones');
+    const lista = document.getElementById('listaNotificaciones');
     let idsMostrados = new Set();
+
+    let notiIntervalId = null;
+    const POLL_INTERVAL_MS = 5000;
+
+    function estaLogeado() {
+        if (typeof window.sesionIniciada !== 'undefined') {
+            return Boolean(window.sesionIniciada);
+        }
+
+        const bodyLogged = document.body?.dataset?.loggedIn;
+        if (bodyLogged === "1" || bodyLogged === "true") return true;
+
+        const usuarioEl = document.getElementById('usuarioLogged');
+        if (usuarioEl && usuarioEl.dataset && (usuarioEl.dataset.id || usuarioEl.dataset.loggedIn)) {
+            return true;
+        }
+
+        return false;
+    }
 
     async function cargarNotificaciones() {
         try {
-            const res = await fetch(`${baseUrl}/Controlador/notificacionesCtrl.php`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const res = await fetch(`${baseUrl}/Controlador/notificacionesCtrl.php`, {
+                credentials: 'include'
+            });
+
+            if (!res.ok) {
+                if (res.status === 403 && notiIntervalId) {
+                    clearInterval(notiIntervalId);
+                    notiIntervalId = null;
+                }
+                return; 
+            }
+
             const data = await res.json();
 
             const config = data.config || { notificar_publicaciones: 1, notificar_comentarios: 1 };
             const notificaciones = data.notificaciones || [];
-            const lista = document.getElementById('listaNotificaciones');
 
             if (Array.isArray(notificaciones) && notificaciones.length > 0) {
                 let nuevas = [];
@@ -49,25 +81,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (lista) lista.innerHTML = html;
 
-                if (totalNuevas > 0) {
-                    contador.style.display = "inline-block";
-                    contador.textContent = notificaciones.length;
-                    if (totalNuevas === 1)
-                        mostrarToast(`🔔 ${nuevas[0]}`);
-                    else
-                        mostrarToast(`🔔 Tienes ${totalNuevas} nuevas notificaciones`);
+                if (contador) {
+                    if (totalNuevas > 0) {
+                        contador.style.display = "inline-block";
+                        contador.textContent = totalNuevas;
+                        if (totalNuevas === 1) mostrarToast(`🔔 ${nuevas[0]}`);
+                        else mostrarToast(`🔔 Tienes ${totalNuevas} nuevas notificaciones`);
+                    } else {
+                        contador.style.display = "none";
+                    }
                 }
             } else {
-                contador.style.display = "none";
-                if (lista)
-                    lista.innerHTML = "<li class='list-group-item text-center noti'>No tienes notificaciones</li>";
+                if (contador) contador.style.display = "none";
+                if (lista) lista.innerHTML = "<li class='list-group-item text-center noti'>No tienes notificaciones</li>";
             }
         } catch (error) {
-            console.error("Error cargando notificaciones:", error);
         }
     }
 
     function mostrarToast(mensaje) {
+        if (!modal) return;
+
         const fondo = mensaje.includes("Tienes")
             ? "linear-gradient(135deg, #27ae60, #5ee6b5)"
             : "linear-gradient(135deg, #f39c12, #f5c542)";
@@ -99,24 +133,33 @@ document.addEventListener('DOMContentLoaded', () => {
         window.toastActivo = toast;
     }
 
-    modal.addEventListener('show.bs.modal', async () => {
-        if (window.toastActivo) {
-            const toastEl = document.querySelector('.toastify.on');
-            if (toastEl) toastEl.remove();
-            window.toastActivo = null;
-        }
+    function configurarModal() {
+        if (!modal) return;
 
-        try {
-            const res = await fetch(`${baseUrl}/Controlador/notificacionesCtrl.php?marcarLeidas=1`);
-            if (res.ok) {
-                contador.style.display = "none";
-                console.log("Notificaciones marcadas como leídas");
+        modal.addEventListener('show.bs.modal', async () => {
+            if (window.toastActivo) {
+                const toastEl = document.querySelector('.toastify.on');
+                if (toastEl) toastEl.remove();
+                window.toastActivo = null;
             }
-        } catch (error) {
-            console.error("Error al marcar como leídas:", error);
-        }
-    });
 
-    cargarNotificaciones();
-    setInterval(cargarNotificaciones, 5000);
+            try {
+                const res = await fetch(`${baseUrl}/Controlador/notificacionesCtrl.php?marcarLeidas=1`, {
+                    credentials: 'include'
+                });
+
+                if (!res.ok) return;
+
+                if (contador) contador.style.display = "none";
+
+            } catch (error) {
+            }
+        });
+    }
+
+    if (estaLogeado()) {
+        configurarModal();
+        cargarNotificaciones();
+        notiIntervalId = setInterval(cargarNotificaciones, POLL_INTERVAL_MS);
+    }
 });

@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         const res = await fetch(
-          "/shakti/Controlador/chatsCtrl.php?enviarMensajeIanBot",
+          "/Controlador/chatsCtrl.php?enviarMensajeIanBot",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

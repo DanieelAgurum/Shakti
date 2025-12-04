@@ -12,7 +12,13 @@ class Legales
 
     public function conectarBD()
     {
-        $this->con = mysqli_connect("localhost", "root", "", "shakti");
+        $this->con = mysqli_connect(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        );
+
         if (!$this->con) {
             die("Problemas con la conexión a la base de datos: " . mysqli_connect_error());
         }
@@ -107,8 +113,8 @@ class Legales
             return false;
         }
     }
-    
-     // NUEVA FUNCIÓN para búsqueda con filtro LIKE
+
+    // NUEVA FUNCIÓN para búsqueda con filtro LIKE
     public function buscar($termino)
     {
         $this->conectarBD();

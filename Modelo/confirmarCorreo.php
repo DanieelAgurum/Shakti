@@ -61,7 +61,7 @@ class ConfirmarCorreo
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = "gooddani04@gmail.com"; 
+            $mail->Username = 'gooddani04@gmail.com';
             $mail->Password = "fxvl vxrx swzg unjk";
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
@@ -118,11 +118,11 @@ class ConfirmarCorreo
             $stmt->execute([$id]);
 
             $con = null;
-            header("Location: " . $this->urlBase . "/Vista/login.php?status=success&message=" . urlencode("Cuenta verificada correctamente"));
+            header("Location: " . $this->urlBase . "/Vista/login?status=success&message=" . urlencode("Cuenta verificada correctamente"));
             exit;
         } else {
             $con = null;
-            header("Location: " . $this->urlBase . "/Vista/login.php?status=error&message=" . urlencode("Token inválido o ya utilizado"));
+            header("Location: " . $this->urlBase . "/Vista/login?status=error&message=" . urlencode("Token inválido o ya utilizado"));
             exit;
         }
     }

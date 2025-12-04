@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const idEspecialista = params.get("especialistas");
 
     fetch(
-      "/shakti/Controlador/chatsCtrl.php?cargarChats&especialista=" +
+      "/Controlador/chatsCtrl.php?cargarChats&especialista=" +
         (idEspecialista || "")
     )
       .then((res) => res.json())
@@ -132,6 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function agregarMensajeAlChat(msg) {
     if (!msg) return;
+    msg.id_emisor = Number(msg.id_emisor);
+    msg.id_receptor = Number(msg.id_receptor);
     const div = document.createElement("div");
 
     const esMio = msg.id_emisor == idUsuario;
@@ -142,12 +144,14 @@ document.addEventListener("DOMContentLoaded", () => {
       p.innerText = msg.mensaje;
       div.appendChild(p);
     }
-    if (msg.contenido && msg.tipo === "imagen") {
-      const img = document.createElement("img");
-      img.src = msg.contenido || msg.tipo;
-      img.className = "imagen-mensaje";
-      div.appendChild(img);
-    }
+    
+if (msg.tipo === "imagen" && msg.contenido) {
+    const img = document.createElement("img");
+    img.src = msg.contenido;
+    img.className = "imagen-mensaje";
+    div.appendChild(img);
+}
+
 
     // 🔹 Evitar duplicados
     const idUnico = `${msg.id_emisor}-${msg.id_receptor}-${
@@ -198,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const res = await fetch(
-        "/shakti/Controlador/chatsCtrl.php?cargarMensajesIanBot",
+        "/Controlador/chatsCtrl.php?cargarMensajesIanBot",
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -264,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mostrarAnimacion();
 
         const res = await fetch(
-          "/shakti/Controlador/chatsCtrl.php?enviarMensajeIanBot",
+          "/Controlador/chatsCtrl.php?enviarMensajeIanBot",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -301,7 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const formData = new FormData(formulario);
         const res = await fetch(
-          "/shakti/Controlador/chatsCtrl.php?enviarMensaje",
+          "/Controlador/chatsCtrl.php?enviarMensaje",
           {
             method: "POST",
             body: formData,

@@ -4,7 +4,7 @@ function enviarReporte(event) {
 
   $.ajax({
     type: "POST",
-    url: "/shakti/Controlador/reportesCtrl.php?opcion=2",
+    url: "/Controlador/reportesCtrl.php?opcion=2",
     data: datos,
     dataType: "json",
     success: function (respuesta) {

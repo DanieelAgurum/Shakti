@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Controlador/api_key.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
 require 'pusher_config.php';
 define('CLAVE_SECRETA', 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
 class chatsMdl
@@ -13,12 +13,16 @@ class chatsMdl
         }
         $this->clave_secreta = hash('sha256', ($_SESSION['id'] ?? '') . 'xN7$wA9!tP3@zLq6VbE2#mF8jR1&yC5Q');
     }
-
-
     public function conectarBD()
     {
         if (!$this->con) {
-            $this->con = new mysqli("localhost", "root", "", "shakti");
+            $this->con = new mysqli(
+                "localhost",
+                "root",
+                "",
+                "shakti"
+            );
+
             if ($this->con->connect_error) {
                 echo json_encode([
                     'success' => false,
@@ -55,8 +59,7 @@ class chatsMdl
                 FROM usuarias u
                 WHERE u.id = ?
                   AND u.id_rol = 2
-                  AND u.estatus = 1
-                LIMIT 1";
+                  AND u.estatus = 1";
             $stmt = $con->prepare($sql);
             $stmt->bind_param("i", $idEspecialista);
         } else {
@@ -72,8 +75,7 @@ class chatsMdl
                 WHERE (m.id_emisor = ? OR m.id_receptor = ?)
                   AND u.id != ?
                 GROUP BY u.id, u.nickname, u.foto
-                ORDER BY MAX(m.creado_en) DESC
-                LIMIT 1";
+                ORDER BY MAX(m.creado_en) DESC";
 
             $stmt = $con->prepare($sql);
             $stmt->bind_param("iii", $id_usuaria, $id_usuaria, $id_usuaria);
@@ -160,7 +162,7 @@ public function cargarMensajes($idEmisor, $idReceptor)
             $mensaje = $this->cifrarAES(htmlspecialchars(trim($mensaje), ENT_QUOTES, 'UTF-8'));
 
             // Crear carpeta si no existe
-            $carpetaUploads = $_SERVER['DOCUMENT_ROOT'] . '/shakti/uploads/mensajes/';
+            $carpetaUploads = $_SERVER['DOCUMENT_ROOT'] . '/shakti/shakti/uploads/mensajes/';
             if (!is_dir($carpetaUploads)) {
                 mkdir($carpetaUploads, 0777, true);
             }
@@ -610,7 +612,7 @@ EOT;
 <div class="mb-3 p-2 border rounded">
     <p>{$nombreCompleto}</p>
     🧠 {$servicio}
-    <a href="/shakti/Vista/chat?especialistas={$idCifrado}" class="btn btn-outline-primary mt-2">
+    <a href="/Vista/chat?especialistas={$idCifrado}" class="btn btn-outline-primary mt-2">
         <i class="bi bi-envelope-paper-heart"></i> Mensaje
     </a>
 </div>

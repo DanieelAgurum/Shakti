@@ -6,8 +6,14 @@ class ServiciosMdl
     private function conectarBD()
     {
         try {
-            $this->con = new PDO("mysql:host=localhost;dbname=shakti;charset=utf8mb4", "root", "");
+            $this->con = new PDO(
+                "mysql:host=localhost;dbname=shakti;charset=utf8mb4",
+                "root",
+                ""
+            );
             $this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->con->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->con->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         } catch (PDOException $e) {
             die("Error en la conexión: " . $e->getMessage());
         }

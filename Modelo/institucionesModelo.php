@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 
 class organizacionesModelo
 {
@@ -11,14 +11,23 @@ class organizacionesModelo
     private $conexion;
     private $link;
 
-    public function conectarBD()
+   public function conectarBD()
     {
         try {
-            $this->conexion = new PDO('mysql:host=localhost;dbname=shakti;charset=utf8', 'root', '');
+            $this->conexion = new PDO(
+                'mysql:host=localhost;dbname=shakti;charset=utf8mb4',
+                'root',
+                ''
+            );
+
             $this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conexion->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         } catch (PDOException $e) {
-            echo json_encode(['opcion' => 0, 'mensaje' => 'Error de conexión: ' . $e->getMessage()]);
+            echo json_encode([
+                'opcion' => 0,
+                'mensaje' => 'Error de conexión: ' . $e->getMessage()
+            ]);
             exit;
         }
     }
@@ -150,13 +159,30 @@ VALUES (:nombre, :descripcion, :numero, :domicilio, :link, :imagen)";
         $agregar->bindParam(':imagen', $this->imagen, PDO::PARAM_LOB);
 
         if ($agregar->execute()) {
-            return json_encode(['opcion' => 1, 'mensaje' => 'Institución agregada con éxito.']);
-        } else {
-            return json_encode(['opcion' => 0, 'mensaje' => 'Error al guardar en la base de datos.']);
-        }
+    // Obtener último ID insertado
+    $id = $this->conexion->lastInsertId();
+
+    // Preparar imagen para mostrar en frontend
+    $dataUri = $this->imagen ? 'data:image/jpeg;base64,' . base64_encode($this->imagen) : null;
+
+    return json_encode([
+        'opcion' => 1,
+        'mensaje' => 'Institución agregada con éxito.',
+        'id' => $id,
+        'registro' => hash('sha256', $id),
+        'nombre' => $this->nombre,
+        'descripcion' => $this->descripcion,
+        'numero' => $this->numero,
+        'domicilio' => $this->domicilio,
+        'link' => $this->link,
+        'imagen' => $dataUri
+    ]);
+}
     }
-    public function modificarOrganizacion($idHash, $nombre, $descripcion, $numero, $domicilio, $imagen = null, $link = null)
-    {
+    
+public function modificarOrganizacion($idHash, $nombre, $descripcion, $numero, $domicilio, $imagen = null, $link = null)
+{
+    try {
         $this->nombre = trim($nombre);
         $this->descripcion = trim($descripcion);
         $this->numero = trim($numero);
@@ -165,32 +191,22 @@ VALUES (:nombre, :descripcion, :numero, :domicilio, :link, :imagen)";
 
         $this->conectarBD();
 
-        // ===============================
-        // 🔍 1. Obtener ID real por HASH
-        // ===============================
-        $sqlId = "SELECT id 
-          FROM organizaciones 
-          WHERE CONVERT(SHA2(id, 256) USING utf8mb4) 
-          COLLATE utf8mb4_unicode_ci = :idHash 
-          COLLATE utf8mb4_unicode_ci";
+        // 1) Buscar ID real por hash
+        $sqlId = "SELECT id FROM organizaciones WHERE BINARY SHA2(id, 256) = BINARY :idHash";
         $stmtId = $this->conexion->prepare($sqlId);
-        $stmtId->bindParam(':idHash', $idHash);
+        $stmtId->bindParam(':idHash', $idHash, PDO::PARAM_STR);
         $stmtId->execute();
-        $row = $stmtId->fetch(PDO::FETCH_ASSOC);
+        $id = $stmtId->fetchColumn();
 
-        if (!$row) {
-            return json_encode(['opcion' => 0, 'mensaje' => 'Institución no encontrada.']);
+        if (!$id) {
+            return json_encode(['opcion' => 'error', 'mensaje' => 'Institución no encontrada.']);
         }
 
-        $id = $row['id'];
-
-        // ======================================
-        // 🔎 2. Validar duplicados (nombre/domicilio)
-        // ======================================
+        // 2) Validar duplicados (nombre o domicilio)
         $check = $this->conexion->prepare("
-        SELECT id FROM organizaciones 
-        WHERE (nombre = :nombre OR domicilio = :domicilio) AND id != :id
-    ");
+            SELECT id FROM organizaciones 
+            WHERE (nombre = :nombre OR domicilio = :domicilio) AND id != :id
+        ");
         $check->bindParam(':nombre', $this->nombre);
         $check->bindParam(':domicilio', $this->domicilio);
         $check->bindParam(':id', $id, PDO::PARAM_INT);
@@ -198,118 +214,101 @@ VALUES (:nombre, :descripcion, :numero, :domicilio, :link, :imagen)";
 
         if ($check->rowCount() > 0) {
             return json_encode([
-                'opcion' => 0,
+                'opcion' => 'error',
                 'mensaje' => 'Ya existe otra organización con el mismo nombre o domicilio.'
             ]);
         }
 
-        // ======================================
-        // 📸 3. Procesamiento de imagen (opcional)
-        // ======================================
-        $this->imagen = null;
+        // 3) Procesar imagen SÓLO SI VIENE UNA NUEVA
+        $nuevaImagen = null;
+        $mimeImagen = null;
 
-        if ($imagen && isset($imagen['tmp_name']) && is_uploaded_file($imagen['tmp_name']) && $imagen['error'] === UPLOAD_ERR_OK) {
+        if ($imagen && isset($imagen["tmp_name"]) && is_uploaded_file($imagen["tmp_name"])) {
 
-            $imgInfo = getimagesize($imagen['tmp_name']);
-            if (!$imgInfo) {
-                return json_encode(['opcion' => 0, 'mensaje' => 'El archivo no es una imagen válida.']);
+            $info = @getimagesize($imagen["tmp_name"]);
+            if (!$info) {
+                return json_encode(['opcion' => 'error', 'mensaje' => 'Imagen no válida.']);
             }
 
-            $ext = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
-            $extPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            $mimeImagen = $info["mime"];
+            $width = $info[0];
+            $height = $info[1];
 
-            if (!in_array($ext, $extPermitidas)) {
-                $ext = 'jpg';
-            }
-
-            $width = $imgInfo[0];
-            $height = $imgInfo[1];
+            // límites
             $maxWidth = 1500;
             $maxHeight = 1500;
-
             $ratio = min($maxWidth / $width, $maxHeight / $height, 1);
-            $newWidth = (int)($width * $ratio);
-            $newHeight = (int)($height * $ratio);
 
-            // Crear imagen según formato
-            switch ($imgInfo['mime']) {
+            $newW = (int)($width * $ratio);
+            $newH = (int)($height * $ratio);
+
+            // Crear imagen original
+            switch ($mimeImagen) {
                 case 'image/jpeg':
                 case 'image/jpg':
-                    $original = imagecreatefromjpeg($imagen['tmp_name']);
+                    $src = imagecreatefromjpeg($imagen["tmp_name"]);
                     break;
                 case 'image/png':
-                    $original = imagecreatefrompng($imagen['tmp_name']);
-                    break;
-                case 'image/gif':
-                    $original = imagecreatefromgif($imagen['tmp_name']);
+                    $src = imagecreatefrompng($imagen["tmp_name"]);
                     break;
                 case 'image/webp':
-                    $original = imagecreatefromwebp($imagen['tmp_name']);
+                    $src = imagecreatefromwebp($imagen["tmp_name"]);
+                    break;
+                case 'image/gif':
+                    $src = imagecreatefromgif($imagen["tmp_name"]);
                     break;
                 default:
-                    return json_encode(['opcion' => 0, 'mensaje' => 'Formato de imagen no soportado.']);
+                    return json_encode(['opcion' => 'error', 'mensaje' => 'Formato no compatible.']);
             }
 
-            if ($original) {
-                $thumb = imagecreatetruecolor($newWidth, $newHeight);
+            $thumb = imagecreatetruecolor($newW, $newH);
 
-                // Preservar transparencia
-                if (in_array($ext, ['png', 'webp'])) {
-                    imagealphablending($thumb, false);
-                    imagesavealpha($thumb, true);
-                    $transparente = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
-                    imagefill($thumb, 0, 0, $transparente);
-                }
-
-                imagecopyresampled($thumb, $original, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-                // Compresión
-                $pesoOriginal = $imagen['size'];
-                $calidadFinal = ($pesoOriginal > (20 * 1024 * 1024)) ? 40 : 80;
-
-                ob_start();
-                if ($ext === 'png') {
-                    $nivel = ($pesoOriginal > (20 * 1024 * 1024)) ? 9 : 4;
-                    imagepng($thumb, null, $nivel);
-                } elseif ($ext === 'gif') {
-                    imagegif($thumb);
-                } elseif ($ext === 'webp') {
-                    imagewebp($thumb, null, $calidadFinal);
-                } else {
-                    imagejpeg($thumb, null, $calidadFinal);
-                }
-
-                $this->imagen = ob_get_clean();
-                imagedestroy($original);
-                imagedestroy($thumb);
+            if (in_array($mimeImagen, ['image/png', 'image/webp'])) {
+                imagealphablending($thumb, false);
+                imagesavealpha($thumb, true);
+                $trans = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
+                imagefill($thumb, 0, 0, $trans);
             }
+
+            imagecopyresampled($thumb, $src, 0, 0, 0, 0, $newW, $newH, $width, $height);
+
+            ob_start();
+            if ($mimeImagen === 'image/png') {
+                imagepng($thumb);
+            } elseif ($mimeImagen === 'image/webp') {
+                imagewebp($thumb, null, 80);
+            } elseif ($mimeImagen === 'image/gif') {
+                imagegif($thumb);
+            } else {
+                imagejpeg($thumb, null, 80);
+            }
+            $nuevaImagen = ob_get_clean();
+
+            imagedestroy($src);
+            imagedestroy($thumb);
         }
 
-        // ===============================
-        // 📝 4. Construcción del UPDATE
-        // ===============================
-
-        if ($this->imagen !== null) {
+        // 4) UPDATE dinámico (si trae imagen, se actualiza. Si no, NO)
+        if ($nuevaImagen !== null) {
             $sql = "UPDATE organizaciones SET 
-            nombre = :nombre,
-            descripcion = :descripcion,
-            numero = :numero,
-            domicilio = :domicilio,
-            link = :link,
-            imagen = :imagen
-            WHERE id = :id";
+                        nombre = :nombre,
+                        descripcion = :descripcion,
+                        numero = :numero,
+                        domicilio = :domicilio,
+                        link = :link,
+                        imagen = :imagen
+                    WHERE id = :id";
         } else {
             $sql = "UPDATE organizaciones SET 
-            nombre = :nombre,
-            descripcion = :descripcion,
-            numero = :numero,
-            domicilio = :domicilio,
-            link = :link
-            WHERE id = :id";
+                        nombre = :nombre,
+                        descripcion = :descripcion,
+                        numero = :numero,
+                        domicilio = :domicilio,
+                        link = :link
+                    WHERE id = :id";
         }
 
         $stmt = $this->conexion->prepare($sql);
-
         $stmt->bindParam(':nombre', $this->nombre);
         $stmt->bindParam(':descripcion', $this->descripcion);
         $stmt->bindParam(':numero', $this->numero);
@@ -317,19 +316,53 @@ VALUES (:nombre, :descripcion, :numero, :domicilio, :link, :imagen)";
         $stmt->bindParam(':link', $this->link);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-        if ($this->imagen !== null) {
-            $stmt->bindParam(':imagen', $this->imagen, PDO::PARAM_LOB);
+        if ($nuevaImagen !== null) {
+            $stmt->bindParam(':imagen', $nuevaImagen, PDO::PARAM_LOB);
         }
 
         $stmt->execute();
 
-
-        if ($stmt->rowCount() > 0) {
-            return json_encode(['opcion' => "modifico", 'mensaje' => 'Institución modificada con éxito.']);
+        // 5) Obtener imagen actualizada para mostrarla INMEDIATAMENTE en la vista
+        if ($nuevaImagen !== null) {
+            $blob = $nuevaImagen;
+            $mime = $mimeImagen;
         } else {
-            return json_encode(['opcion' => "sinCambios", 'mensaje' => 'No se detectaron cambios en la institución.']);
+            $q = $this->conexion->prepare("SELECT imagen FROM organizaciones WHERE id = ?");
+            $q->execute([$id]);
+
+            $blob = $q->fetchColumn();
+            $mime = 'image/jpeg';
+
+            if ($blob) {
+                $info = @getimagesizefromstring($blob);
+                if ($info) $mime = $info['mime'];
+            }
         }
+
+        $dataUri = $blob ? 'data:' . $mime . ';base64,' . base64_encode($blob) : null;
+
+        // 6) Respuesta final — LO QUE EL FRONT NECESITA
+        return json_encode([
+            'opcion' => 'modifico',
+            'mensaje' => 'Institución modificada con éxito.',
+            'registro' => hash('sha256', $id),
+            'nombre' => $this->nombre,
+            'descripcion' => $this->descripcion,
+            'numero' => $this->numero,
+            'domicilio' => $this->domicilio,
+            'link' => $this->link,
+            'imagen' => $dataUri
+        ]);
+
+    } catch (Exception $e) {
+        return json_encode([
+            'opcion' => 'error',
+            'mensaje' => 'Error interno: ' . $e->getMessage()
+        ]);
     }
+}
+
+    
     public function eliminarOrganizacion($id)
     {
         $this->conectarBD();

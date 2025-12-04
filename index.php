@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once 'Modelo/testimoniosMdl.php';
 require_once 'Modelo/contenidoMdl.php';
 date_default_timezone_set('America/Mexico_City');
@@ -42,18 +46,21 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NexoH</title>
-  <!-- Librerías adicionales en el head del navbar -->
+  <!-- ================== CSS ================== -->
+  <!-- Tipografías / Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Animaciones -->
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+  <!-- Owl Carousel -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-
-  <!-- Scripts únicos -->
+  <!-- ================== JS ================== -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php'; ?>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <!-- ================== NAVBAR ================== -->
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/shakti/components/usuaria/navbar.php';?>
 </head>
 
 <body>
@@ -65,12 +72,12 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
           <div class="container">
             <div class="row align-items-center">
               <div class="col-md-7 col-12 order-md-1 order-2">
-                <h4>Nuestro objetivo</h4>
-                <p>Promover la apertura emocional en hombres a través de un chatbot inteligente que brinde
+                <h4 class="carousel-text">Nuestro objetivo</h4>
+                <p class="carousel-text">Promover la apertura emocional en hombres a través de un chatbot inteligente que brinde
                   apoyo inicial y motive la búsqueda de ayuda profesional.</p>
               </div>
               <div class="col-md-5 col-12 order-md-2 order-1">
-                <img src="img/Chat bot-amico.svg" class="d-block mx-auto img-fluid" alt="slide">
+                <img src="img/unnamed-removebg-preview.png" class="d-block mx-auto img-fluid" alt="slide">
               </div>
             </div>
           </div>
@@ -82,13 +89,13 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
           <div class="container">
             <div class="row align-items-center">
               <div class="col-md-7 col-12 order-md-1 order-2">
-                <h4>Misión</h4>
-                <p>Empoderar a los hombres para que fortalezcan su bienestar emocional y mental mediante herramientas educativas,
+                <h4 class="carousel-text">Misión</h4>
+                <p class="carousel-text">Empoderar a los hombres para que fortalezcan su bienestar emocional y mental mediante herramientas educativas,
                   interactivas y seguras, fomentando el aprendizaje, la reflexión y la conexión con una comunidad de apoyo confiable.
                   Buscamos brindar acompañamiento accesible que transforme hábitos, promueva la resiliencia y favorezca la salud integral.</p>
               </div>
               <div class="col-md-5 col-12 order-md-2 order-1">
-                <img src="img/undraw_online-community_3o0l.svg" class="d-block mx-auto img-fluid" alt="slide">
+                <img src="img/Gemini_Generated_Image_bzxazfbzxazfbzxa-removebg-preview.png" class="d-block mx-auto img-fluid" alt="slide">
               </div>
             </div>
           </div>
@@ -100,13 +107,13 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
           <div class="container">
             <div class="row align-items-center">
               <div class="col-md-7 col-12 order-md-1 order-2">
-                <h4>Visión</h4>
-                <p>Ser la plataforma líder en apoyo emocional y educativo para hombres, reconocida por su enfoque inclusivo,
+                <h4 class="carousel-text">Visión</h4>
+                <p class="carousel-text">Ser la plataforma líder en apoyo emocional y educativo para hombres, reconocida por su enfoque inclusivo,
                   tecnología innovadora y compromiso con el bienestar integral.
                   Queremos crear una comunidad activa donde cada usuario se sienta acompañado, escuchado y motivado a crecer personal y emocionalmente.</p>
               </div>
               <div class="col-md-5 col-12 order-md-2 order-1">
-                <img src="img/undraw_text-messages_978a.svg" class="d-block mx-auto img-fluid" alt="slide">
+                <img src="img/Gemini_Generated_Image_ong2lvong2lvong2-removebg-preview.png" class="d-block mx-auto img-fluid" alt="slide">
               </div>
             </div>
           </div>
@@ -118,15 +125,15 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
           <div class="container">
             <div class="row align-items-center">
               <div class="col-md-7 col-12 order-md-1 order-2">
-                <h4>Nuestros valores</h4>
-                <p>Empatía: Te escuchamos y te acompañamos.<br>
+                <h4 class="carousel-text">Nuestros valores</h4>
+                <p class="carousel-text">Empatía: Te escuchamos y te acompañamos.<br>
 
                   Confianza: Espacio seguro y privado.<br>
 
                   Comunidad: Conecta y apoya a otros como tú.</p>
               </div>
               <div class="col-md-5 col-12 order-md-2 order-1">
-                <img src="img/Mind map-bro.svg" class="d-block mx-auto img-fluid" alt="slide">
+                <img src="img/Gemini_Generated_Image_7vskkq7vskkq7vsk-removebg-preview.png" class="d-block mx-auto img-fluid" alt="slide">
               </div>
             </div>
           </div>
@@ -156,13 +163,13 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       </div>
 
       <div class="row align-items-center">
-        <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
+        <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-up">
           <div class="container w-50">
             <img src="img/NexoH.png" class="img-fluid rounded shadow" alt="NexoH">
           </div>
         </div>
 
-        <div class="col-md-6" data-aos="fade-left">
+        <div class="col-md-6" data-aos="fade-up">
           <p>
             Bienvenido a <strong>NexoH</strong>, tu espacio seguro para fortalecer tu bienestar emocional y mental.
             Aquí encontrarás herramientas interactivas, recursos prácticos y contenidos que te ayudarán a crecer
@@ -184,10 +191,10 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   <!-- Bienvenida -->
   <main class="hero p-5 text-center bg-light" data-aos="fade-up" data-aos-duration="1200">
     <?php if (!empty($_SESSION['correo'])): ?>
-      <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/usuaria/inicioUser.php'; ?>
+      <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Vista/usuaria/inicioUser.php'; ?>
     <?php else: ?>
       <div data-aos="zoom-in" data-aos-delay="200">
-        <h1 class="fw-bold mb-3">Bienvenido a Nuestro Sitio <span class="text-primary">Shakti</span></h1>
+        <h1 class="fw-bold mb-3">Bienvenido a Nuestro Sitio <span class="text-primary">NexoH</span></h1>
         <p class="lead text-muted mb-4">Tu bienestar es primero</p>
       </div>
 
@@ -211,7 +218,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       <div class="row gy-5 gy-lg-0 align-items-lg-center">
 
         <!-- Imagen con animación desde la izquierda -->
-        <div class="col-12 col-lg-6 text-center" data-aos="fade-right" data-aos-duration="1200">
+        <div class="col-12 col-lg-6 text-center" data-aos="fade-up" data-aos-duration="1200">
           <img
             class="img-fluid rounded shadow-sm"
             loading="lazy"
@@ -221,7 +228,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
         </div>
 
         <!-- Contenido del FAQ -->
-        <div class="col-12 col-lg-6" data-aos="fade-left" data-aos-duration="1200">
+        <div class="col-12 col-lg-6" data-aos="fade-up" data-aos-duration="1200">
           <div class="row justify-content-xl-end">
             <div class="col-12 col-xl-11">
 
@@ -240,7 +247,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
               <div id="carouselAcordeon" class="carousel slide" data-aos="zoom-in" data-aos-delay="600">
                 <div class="carousel-inner">
                   <?php
-                  require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/preguntasFrecuentesCtrl.php';
+                  include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/preguntasFrecuentesCtrl.php';
                   $preg = new preguntasFrecuentesMdl();
                   $preg->conectarBD();
                   $preg->mostrarTodas();
@@ -273,11 +280,11 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
   </section>
 
   <!-- Contenido para ti -->
-  <section id="contenido" class="contenido-personalizado-section container w-75 mt-5 mb-5 m-auto" data-aos="fade-up" data-aos-duration="1200">
-    <h1 class="contenido-title fw-bold mb-4 text-center display-5">
+  <section id="contenido" class="contenido-personalizado-section container w-75 mt-5 mb-5 m-auto">
+    <h1 class="contenido-title fw-bold mb-4 text-center display-5" data-aos="fade-up" data-aos-duration="500">
       Contenido <span class="contenido-title-accent">para ti</span>
     </h1>
-    <div class="contenido-grid row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="contenido-grid row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" data-aos="fade-up" data-aos-duration="1200">
       <?php while ($row = $contenidoReciente->fetch_assoc()): ?>
         <div class="col">
           <div class="contenido-card card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
@@ -323,7 +330,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
 
               <div class="contenido-author d-flex align-items-center mt-2">
                 <img src="img/NexoH.png" class="rounded-circle me-3" width="40" height="40" alt="Author">
-                <a href="#"  data-bs-placement="top" title="Ver contenido" class="contenido-link fs-5 ms-auto"
+                <a href="#" data-bs-placement="top" title="Ver contenido" class="contenido-link fs-5 ms-auto"
                   data-tipo="<?= $row['tipo'] ?>"
                   data-titulo="<?= htmlspecialchars($row['titulo']) ?>"
                   data-cuerpo="<?= htmlspecialchars($row['cuerpo_html'], ENT_QUOTES) ?>"
@@ -340,7 +347,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
         </div>
       <?php endwhile; ?>
     </div>
-    <div class="contenido-more text-center mt-4">
+    <div class="contenido-more text-center mt-4" data-aos="fade-up" data-aos-duration="1200">
       <a class="contenido-more-link fw-bold text-primary" href="Vista/contenido.php">Más contenido</a>
     </div>
   </section>
@@ -351,7 +358,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
       <div class="row align-items-center" style="min-height: 500px;">
 
         <!-- Carrusel vertical personalizado -->
-        <div class="col-md-6 d-flex justify-content-center mt-4" data-aos="fade-right" data-aos-delay="200">
+        <div class="col-md-6 d-flex justify-content-center mt-4" data-aos="fade-up" data-aos-delay="200">
           <div class="my-vertical-carousel" id="myVerticalCarousel">
             <div class="my-carousel-wrapper">
               <?php foreach ($testimonios as $item): ?>
@@ -389,7 +396,7 @@ if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 3) {
         </div>
 
         <!-- Formulario -->
-        <div class="col-md-6 d-flex justify-content-center" data-aos="fade-left" data-aos-delay="300">
+        <div class="col-md-6 d-flex justify-content-center" data-aos="fade-up" data-aos-delay="300">
           <div class="rating-container text-center bg-light">
             <div class="rating-emoji" data-aos="zoom-in" data-aos-delay="400">
               <img src="img/emoji-emoticon-happy-svgrepo-com.svg" class="w-25" alt="">

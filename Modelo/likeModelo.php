@@ -5,7 +5,13 @@ class likeModelo
 
     public function __construct()
     {
-        $this->conn = new mysqli('localhost', 'root', '', 'shakti');
+        $this->conn = new mysqli(
+            'localhost',
+            'root',
+            '',
+            'shakti'
+        );
+
         if ($this->conn->connect_error) {
             die("Error de conexión: " . $this->conn->connect_error);
         }

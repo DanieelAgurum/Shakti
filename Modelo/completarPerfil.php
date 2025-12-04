@@ -10,15 +10,19 @@ class Completar
 
     public function conectarBD()
     {
-        $this->con = mysqli_connect("localhost", "root", "", "shakti");
+        $this->con = mysqli_connect(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        );
 
         if (!$this->con) {
             die("❌ Problemas con la conexión a la base de datos: " . mysqli_connect_error());
         }
-        
+
         mysqli_set_charset($this->con, "utf8mb4");
     }
-
 
     public function inicializar($id_oficial, $d1 = null, $d2 = null, $d3 = null, $d4 = null)
     {
@@ -55,7 +59,7 @@ class Completar
 
         // Si no tiene en la base y no subió una nueva, se redirige con error
         if (!$yaTieneIdOficial && (!isset($_FILES['id_oficial']) || $_FILES['id_oficial']['error'] !== 0)) {
-            header("Location: ../Vista/especialista/perfil?status=error&message=Debe+subir+una+identificaci%C3%B3n+oficial");
+            header("Location: ../Vista/especialista/perfil.php?status=error&message=Debe+subir+una+identificaci%C3%B3n+oficial");
             exit;
         }
 

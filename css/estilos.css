@@ -895,27 +895,6 @@ small.error {
   font-size: 0.875rem;
 }
 
-@media (max-width: 576px) {
-  .animacion {
-    animation: none !important;
-  }
-
-  [data-aos] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
-/* Para pantallas menores a 768px */
-@media (max-width: 768px) {
-  [data-aos] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
 .input-error {
   border: 2px solid #dc3545 !important;
   background-color: #f8d7da;
@@ -950,12 +929,6 @@ small.error {
 .square-button:hover {
   background-color: #b0b0b0ff;
   ;
-}
-
-@media (max-width: 576px) {
-  .animacion {
-    animation: none !important;
-  }
 }
 
 .opiniones {
@@ -1521,7 +1494,7 @@ footer {
 
 /* --- Fondo del carrusel --- */
 #myCarousel .carousel-item {
-  background-image: url('../img/toa-heftiba-xAQZ8plN8cM-unsplash.jpg');
+  background-image: url('../img/Purple and White Futuristic Artificial Intelligence Technology Banner.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1604,6 +1577,28 @@ footer {
   #myCarousel .carousel-item img {
     height: 350px;
   }
+}
+
+.carousel-text {
+    padding-left: 50px;  
+    padding-right: 50px;  
+}
+
+@media (max-width: 768px) {
+    .carousel-text {
+        text-align: center;   
+        padding-left: 20px;     
+        padding-right: 20px;
+        margin-top: 20px;
+    }
+
+    .carousel-text h4 {
+        font-size: 1.6rem;
+    }
+
+    .carousel-text p {
+        font-size: 1rem;
+    }
 }
 
 /* Carrusel testimonios */

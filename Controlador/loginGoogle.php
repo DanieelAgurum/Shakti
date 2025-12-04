@@ -1,9 +1,8 @@
 <?php
 date_default_timezone_set('America/Mexico_City');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/vendor/autoload.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/configuracionG.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/Modelo/conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/configuracionG.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
 session_start();
 
 // Conectar BD
@@ -15,8 +14,8 @@ if (!$con) die("Error al conectar a la base de datos.");
 $client = new Google\Client();
 $client->setClientId($clientID);
 $client->setClientSecret($clientSecret);
-// $client->setRedirectUri("https://shaktiapp.site/Controlador/loginGoogle.php");
-$client->setRedirectUri("http://localhost/Shakti/Controlador/loginGoogle.php");
+$client->setRedirectUri("https://shaktiapp.site/Controlador/loginGoogle.php");
+//$client->setRedirectUri("http://localhost/Shakti/Controlador/loginGoogle.php");
 $client->addScope('email');
 $client->addScope('profile');
 
@@ -43,11 +42,10 @@ $apellidos = $userInfo->familyName ?? "";
 $nickname = explode("@", $email)[0];
 
 // Foto predeterminada del sistema
-$fotoPredeterminada = file_get_contents($$urlBase . 'img/undraw_chill-guy-avatar_tqsm.svg');
+$fotoPredeterminada = file_get_contents($ $urlBase . 'img/undraw_chill-guy-avatar_tqsm.svg');
 
 // Función para descargar foto de Google
-function obtenerFoto($url)
-{
+function obtenerFoto($url) {
     if (!empty($url)) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -94,6 +92,7 @@ if ($usuario) {
     } else {
         $_SESSION['foto'] = $usuario['foto'];
     }
+
 } else {
 
     // Registrar nueva usuaria

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/modelo/PublicacionModelo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/PublicacionModelo.php';
 
 $urlBase = '/Shakti/';
 $publicacionModelo = new PublicacionModelo();

@@ -39,3 +39,20 @@
 .foro_main {
   padding-top: 160px;
 }
+
+.post-content {
+    max-height: 150px;   /* Ajusta la altura según lo que necesites */
+    overflow-y: auto;    /* Activa el scroll vertical */
+    padding-right: 10px; /* Para que no tape el texto el scrollbar */
+}
+
+.post-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.post-content::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+

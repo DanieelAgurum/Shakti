@@ -2,21 +2,18 @@
 $clientID     = "149987150313-s4k1pr3ggbi12phgsfspsbf6mnukocc8.apps.googleusercontent.com";
 $clientSecret = "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";
 
-
-$dominio = $_SERVER['HTTP_HOST'];
-
-if ($dominio === "localhost") {
-    $redirectUri = "http://localhost/Shakti/Vista/loginGoogle.php";
+$host = $_SERVER['HTTP_HOST'];
+if (strpos($host, 'localhost') !== false) {
+    $redirectUri = "http://localhost/Shakti/Vista/loginGoogle.php"; 
 } else {
-    // PRODUCCIÓN
-    $redirectUri = "https://shaktiapp.site/Vista/loginGoogle.php";
+    $redirectUri = "https://shaktiapp.site/Vista/loginGoogle.php"; 
 }
 
-$client = new Google_Client();
-$client->setClientId($clientID);        
-$client->setClientSecret($clientSecret);
-$client->setRedirectUri($redirectUri);
-$client->addScope("email");
-$client->addScope("profile");
+$googleClient = new Google_Client();
+$googleClient->setClientId($clientID);
+$googleClient->setClientSecret($clientSecret);
+$googleClient->setRedirectUri($redirectUri);
+$googleClient->addScope("email");
+$googleClient->addScope("profile");
 
-$loginUrl = $client->createAuthUrl();
+$loginUrl = $googleClient->createAuthUrl();

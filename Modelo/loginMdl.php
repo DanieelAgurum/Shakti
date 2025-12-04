@@ -9,7 +9,13 @@ class loginMdln
     // Conectar a la base de datos
     public function conectarBD()
     {
-        $con = mysqli_connect("localhost", "root", "", "shakti");
+        $con = mysqli_connect(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        );
+
         if (!$con) {
             echo json_encode([
                 'success' => false,
@@ -17,6 +23,7 @@ class loginMdln
             ]);
             exit;
         }
+
         return $con;
     }
 
@@ -118,4 +125,3 @@ class loginMdln
         exit;
     }
 }
-?>

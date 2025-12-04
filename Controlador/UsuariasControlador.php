@@ -1,8 +1,8 @@
 <?php
-
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/Usuarias.php';
-include_once '../Modelo/ConfirmarCorreo.php';
+include_once '../Modelo/confirmarCorreo.php';
 include_once '../obtenerLink/obtenerLink.php';
+
 
 $u = new Usuarias();
 $urlBase = getBaseUrl();
@@ -38,7 +38,7 @@ switch ($_REQUEST['opcion']) {
                         icon: 'success',
                         title: 'Cuenta creada correctamente',
                         text: 'Por favor revisa tu correo para verificar tu cuenta.',
-                        confirmButtonColor: '#1b3a57'
+                        confirmButtonColor: '#5a2a83'
                     }).then(() => {
                         window.location.href = '{$urlBase}/Vista/login';
                     });
@@ -49,7 +49,7 @@ switch ($_REQUEST['opcion']) {
                         icon: 'warning',
                         title: 'Cuenta creada pero sin verificación',
                         text: 'No se pudo enviar el correo, intenta más tarde.',
-                        confirmButtonColor: '#1b3a57'
+                        confirmButtonColor: '#5a2a83'
                     }).then(() => {
                         window.location.href = '{$urlBase}/Vista/login';
                     });

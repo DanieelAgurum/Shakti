@@ -59,7 +59,7 @@ $(document).ready(function () {
                         confirmButtonText: "Iniciar sesión",
                         confirmButtonColor: "#3085d6",
                     }).then((result) => {
-                        if (result.isConfirmed) window.location.href = "/Shakti/Vista/login.php";
+                        if (result.isConfirmed) window.location.href = "/Vista/login.php";
                     });
                 } else {
                     Swal.fire("Error", data.message || "Error al enviar comentario.", "error");

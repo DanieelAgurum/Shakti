@@ -5,7 +5,12 @@ class Comentario
 {
     private function conectarBD()
     {
-        $con = mysqli_connect("localhost", "root", "", "shakti");
+        $con = mysqli_connect(
+            "localhost",
+            "root",
+            "",
+            "shakti"
+        );
 
         if (!$con) {
             header('Content-Type: application/json');
@@ -490,7 +495,8 @@ EOT;
 
         return strtolower(trim($respuesta));
     }
-    public function agregarComentario($contenido, $idPublicacion, $idUsuaria, $idPadre = null)
+    
+       public function agregarComentario($contenido, $idPublicacion, $idUsuaria, $idPadre = null)
     {
         // Validar doxxing con IA antes de insertar
         $resultadoDoxxing = $this->detectarDoxxingIA($contenido);
@@ -506,8 +512,7 @@ EOT;
 
         $conn = $this->conectarBD();
 
-        // 🔥 1. OBTENER EL ANONIMATO GLOBAL DESDE CONFIGURACIONES
-        $anonimo = 0; // Valor por defecto
+        $anonimo = 0;
 
         $queryAnon = "SELECT anonimo FROM configuraciones WHERE id_usuaria = ?";
         $stmtAnon = $conn->prepare($queryAnon);
@@ -516,12 +521,11 @@ EOT;
         $resultAnon = $stmtAnon->get_result();
 
         if ($filaAnon = $resultAnon->fetch_assoc()) {
-            $anonimo = (int)$filaAnon['anonimo']; // 0 o 1
+            $anonimo = (int)$filaAnon['anonimo']; 
         }
 
         $stmtAnon->close();
 
-        // 🔥 2. INSERTAR EL COMENTARIO INCLUYENDO EL CAMPO anonimo
         if ($idPadre === null) {
 
             $query = "INSERT INTO comentarios (id_publicacion, id_usuaria, comentario, fecha_comentario, anonimo)
@@ -548,7 +552,6 @@ EOT;
             return false;
         }
     }
-
 
     // public function obtenerComentariosPorPublicacion($idPublicacion)
     // {
@@ -581,7 +584,6 @@ EOT;
     //     return $comentarios;
     // }
 
-    
     public function contarComentariosPorPublicacion($idPublicacion)
     {
         $conn = $this->conectarBD();

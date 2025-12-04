@@ -10,6 +10,6 @@ document.querySelectorAll(".noti-item").forEach(item => {
         const hash = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
 
         // Redirige al foro con el hash
-        window.location.href = `/shakti/Vista/usuaria/foro.php?publicacion=${hash}`;
+        window.location.href = `/Vista/usuaria/foro?publicacion=${hash}`;
     });
 });

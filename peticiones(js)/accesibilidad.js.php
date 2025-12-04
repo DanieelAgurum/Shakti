@@ -129,7 +129,7 @@ const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*?()_+\-=\[\]{};:'",.<>\/\\|~])[
       const formData = new FormData(formConfig);
       formData.append("accion", "guardar_configuracion");
 
-      fetch("/shakti/Controlador/configuracionCtrl.php", {
+      fetch("/Controlador/configuracionCtrl.php", {
       method: "POST",
       body: formData
       })

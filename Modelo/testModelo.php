@@ -1,10 +1,24 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Controlador/api_key.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/conexion.php';
 
 class TestIanMdl {
     private $apiKey;
     private $db;
+public function obtenerUltimoResultado(int $idUsuario) {
+    $sql = "SELECT resultado_test FROM test 
+            WHERE id_usuaria = :id 
+            ORDER BY fecha_realizacion DESC 
+            LIMIT 1";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([":id" => $idUsuario]);
+
+    return $stmt->fetchColumn(); // Devuelve texto directamente
+}
 
     public function __construct() {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -41,7 +55,7 @@ private function crearPrompt(array $respuestas): string {
     }
 
     $mensaje .= "\nInstrucciones:\n";
-    $mensaje .= "- Comenta brevemente lo que percibes de cada respuesta, indicando emociones o posibles signos de ansiedad, estrés o depresión.\n";
+    $mensaje .= "- Comenta brevemente lo que percibes de cada respuesta mencionando las preguntas , indicando emociones o posibles signos de ansiedad, estrés o depresión.\n";
     $mensaje .= "- Ofrece consejos prácticos y personalizados para mejorar el bienestar emocional.\n";
     $mensaje .= "- Mantén un tono cálido y motivador, como si hablaras con un amigo.\n";
     $mensaje .= "- Concluye con un resumen en **una frase corta** indicando posibles señales: 'ansiedad', 'depresión', 'estrés', o 'sin alerta'.\n";

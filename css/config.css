@@ -76,7 +76,8 @@ html.dark-mode .solicitud-info,
 html.dark-mode .usuario-card,
 html.dark-mode .shakti-chatbot-input,
 html.dark-mode .shakti-cm-msg-text,
-html.dark-mode .chat-header-movil {
+html.dark-mode .chat-header-movil,
+html.dark-mode #preguntaActualTest {
     background-color: #1e1e1e !important;
 }
 
@@ -173,7 +174,8 @@ html.dark-mode h6,
 html.dark-mode strong,
 html.dark-mode .contenido-text,
 html.dark-mode .text-secondary,
-html.dark-mode ::placeholder {
+html.dark-mode ::placeholder,
+html.dark-mode .form-label {
     color: #fff !important;
 }
 
@@ -211,7 +213,8 @@ html.dark-mode i {
 html.dark-mode .btn,
 html.dark-mode .btn-dark,
 html.dark-mode .submit-rating,
-html.dark-mode .btn-volver {
+html.dark-mode .btn-volver,
+html.dark-mode .form-select {
     background-color: #333 !important;
     color: #f1f1f1 !important;
     border-color: #555 !important;

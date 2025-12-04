@@ -1,6 +1,7 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Shakti/obtenerLink/obtenerLink.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
 $urlBase = getBaseUrl();
+
 class Usuarias
 {
     private $urlBase;
@@ -26,8 +27,23 @@ class Usuarias
 
     public function conectarBD()
     {
-        $con = mysqli_connect("localhost", "root", "", "shakti") or die("Problemas con la conexión a la base de datos");
-        return $con;
+        if (!$this->con) {
+            $this->con = new mysqli(
+                "localhost",
+                "root",
+                "",
+                "shakti"
+            );
+
+            if ($this->con->connect_error) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Error en la conexión a la base de datos: ' . $this->con->connect_error
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+        }
+        return $this->con;
     }
 
     public function __construct()
@@ -46,6 +62,7 @@ class Usuarias
         $this->fecha_nac = $fec;
         $this->rol = $rol;
     }
+
     public function agregarUsuaria()
     {
         $con = $this->conectarBD();
@@ -76,19 +93,20 @@ class Usuarias
             exit;
         }
 
-        // Validación de duplicados
-        $correo = mysqli_real_escape_string($con, $this->correo);
+ // Validación de duplicados
+     $correo = mysqli_real_escape_string($con, $this->correo);
 
-        // Buscar cualquier usuaria con el mismo correo
-        $stmt = $con->prepare("SELECT id FROM usuarias WHERE correo = ? LIMIT 1");
-        $stmt->bind_param("s", $correo);
-        $stmt->execute();
-        $result = $stmt->get_result();
+// Buscar cualquier usuaria con el mismo correo
+     $stmt = $con->prepare("SELECT id FROM usuarias WHERE correo = ? LIMIT 1");
+     $stmt->bind_param("s", $correo);
+     $stmt->execute();
+    $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            header("Location: ../Vista/registro?status=error&message=" . urlencode("Este correo ya está en uso. Inicia sesión o utiliza otro correo."));
-            exit;
-        }
+    if ($result->num_rows > 0) {
+    header("Location: ../Vista/registro?status=error&message=" . urlencode("Este correo ya está en uso. Inicia sesión o utiliza otro correo."));
+    exit;
+}
+
 
         $nickname = mysqli_real_escape_string($con, $this->nickname);
         $nickDuplicado = mysqli_query($con, "SELECT 1 FROM usuarias WHERE nickname = '$nickname'");
@@ -103,6 +121,7 @@ class Usuarias
         $fecha = mysqli_real_escape_string($con, $this->fecha_nac);
         $rol = (int)$this->rol;
 
+        // Insertar usuaria con verificado = 0
         $insertar = mysqli_query($con, "
         INSERT INTO usuarias (nombre, apellidos, nickname, correo, contraseña, fecha_nac, id_rol, verificado)
         VALUES ('$nombre', '$apellidos', '$nickname', '$correo', '$hash', '$fecha', $rol, 0)
@@ -110,6 +129,7 @@ class Usuarias
 
         $id_nueva = mysqli_insert_id($con);
 
+        // ---------------------- Enviar correo de verificación ----------------------
         require_once '../Modelo/confirmarCorreo.php';
         $correoConfirmacion = new ConfirmarCorreo();
         $correoConfirmacion->inicializar($this->correo, $this->nombre, $this->urlBase, $id_nueva);
@@ -118,8 +138,13 @@ class Usuarias
         if (!$enviado) {
             error_log("No se pudo enviar el correo de verificación a: " . $this->correo);
         }
-        return $id_nueva;
+        // ---------------------------------------------------------------------------
+       return $id_nueva;
+        
     }
+
+
+    // actualizar datos -------------------------------------------
 
     public function actualizarDatos($nomN, $apeN, $nickN, $corN, $contN, $fec, $tel, $dir, $desc, $idUsuaria)
     {
@@ -301,9 +326,12 @@ class Usuarias
                 header("Location: " . $this->urlBase . "/Vista/admin/usuarias?eliminado=" . urlencode("No se pudo eliminar o ya fue eliminada"));
                 exit;
             }
+            mysqli_stmt_close($stmt);
         } else {
 
             die("Error en prepare: " . mysqli_error($con));
         }
+
+        mysqli_close($con);
     }
 }

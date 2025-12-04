@@ -17,13 +17,18 @@ class preguntasFrecuentesMdl
     {
         $this->urlBase = function_exists('getBaseUrl') ? getBaseUrl() : '';
     }
-
     public function conectarBD()
     {
         try {
-            $this->conexion = new PDO('mysql:host=localhost;dbname=shakti;charset=utf8mb4', 'root', '');
+            $this->conexion = new PDO(
+                'mysql:host=localhost;dbname=shakti;charset=utf8mb4',
+                'root',
+                ''
+            );
+
             $this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conexion->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         } catch (PDOException $e) {
             echo json_encode([
                 'opcion' => 0,
@@ -138,10 +143,10 @@ class preguntasFrecuentesMdl
         $stmtEliminar->bindParam(':id', $id, PDO::PARAM_INT);
 
         if ($stmtEliminar->execute()) {
-            header("Location: " . $this->urlBase . "/Vista/admin/preguntas_frecuentes.php?estado=eliminado");
+            header("Location: " . $this->urlBase . "/Vista/admin/preguntas_frecuentes?estado=eliminado");
             exit;
         } else {
-            header("Location: " . $this->urlBase . "/Vista/admin/preguntas_frecuentes.php?estado=error");
+            header("Location: " . $this->urlBase . "/Vista/admin/preguntas_frecuentes?estado=error");
             exit;
         }
     }

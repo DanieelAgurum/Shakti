@@ -49,7 +49,7 @@ document.getElementById("formCalificacion").addEventListener("submit", function 
                     confirmButtonColor: '#3085d6'
                 }).then(result => {
                     if (result.isConfirmed) {
-                        window.location.href = '/Shakti/Vista/login.php';
+                        window.location.href = '/Vista/login.php';
                     }
                 });
                 return;

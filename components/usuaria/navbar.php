@@ -1,42 +1,52 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notificacionesModelo.php';
+$__TEST__ = defined('TEST_ENV') && TEST_ENV === true;
+
+if (!$__TEST__) {
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/notificacionesModelo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/configuracionMdl.php';
+}
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/obtenerLink/obtenerLink.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/shakti/Modelo/configuracionMdl.php';
 $urlBase = getBaseUrl();
 
 $usuario = [
-    'id' => $_SESSION['id_usuaria'] ?? $_SESSION['id'] ?? 0,
-    'rol' => $_SESSION['id_rol'] ?? 0,
+    'id'       => $_SESSION['id_usuaria'] ?? $_SESSION['id'] ?? 0,
+    'rol'      => $_SESSION['id_rol'] ?? 0,
     'nickname' => $_SESSION['nickname'] ?? 'Invitado',
-    'correo' => $_SESSION['correo'] ?? null,
-    'nombre' => $_SESSION['nombre'] ?? 'Invitado'
+    'correo'   => $_SESSION['correo'] ?? null,
+    'nombre'   => $_SESSION['nombre'] ?? 'Invitado'
 ];
+
+if ($__TEST__) {
+    if (!isset($_SESSION['id_rol'])) {
+        $_SESSION['id_rol'] = 1;
+        $usuario['rol'] = 1;
+    }
+}
 
 $config = null;
 $configActual = null;
-if (isset($_SESSION['id_usuaria'])) {
-    $idUsuaria = $_SESSION['id_usuaria'];
+
+if (!$__TEST__ && !empty($_SESSION['id_usuaria'])) {
     $config = new ConfiguracionMdl();
-    $configActual = $config->obtenerConfiguracion($idUsuaria);
+    $configActual = $config->obtenerConfiguracion($_SESSION['id_usuaria']);
 }
 
 $notificaciones = [];
 $notificacionesNoLeidas = 0;
 
-if (!empty($usuario['id'])) {
+if (!$__TEST__ && !empty($usuario['id'])) {
     $notificaciones = Notificacion::obtenerParaUsuaria($usuario['id']);
     $notificacionesNoLeidas = count(array_filter($notificaciones, function ($n) {
         return $n['leida'] == 0;
     }));
 }
 
-// Función de rutas seguras
 function rutaSegura(array $mapa, int $rol, string $default = 'login')
 {
     return $mapa[$rol] ?? $default;
 }
 
-// Mapa de rutas
 $rutas = [
     'libreYSeguro' => [
         1 => 'usuaria/libreYSeguro',
@@ -55,7 +65,6 @@ $rutas = [
 ];
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es" class="<?php
                         echo ($configActual['modo_oscuro'] ?? 0) == 1 ? 'dark-mode ' : '';
@@ -64,25 +73,36 @@ $rutas = [
                         ?>">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Estilos y librerías -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css" />
-    <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css" />
+
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="<?= $urlBase ?>css/navbar.css">
+    <link rel="stylesheet" href="<?= $urlBase ?>css/estilos.css">
     <link rel="stylesheet" href="<?= $urlBase ?>css/config.css">
+
+    <!-- Ícono -->
     <link rel="icon" href="<?= $urlBase ?>img/NexoH.ico">
+
+    <!-- Variables globales JS -->
     <script>
-        window.usuarioActual = <?= json_encode($usuario) ?>;
+        window.usuarioActual = <?= json_encode($usuario ?? []) ?>;
         window.configActual = <?= json_encode($configActual ?? []) ?>;
         window.urlBase = "<?= $urlBase ?>";
+        window.sesionIniciada = <?= (!empty($_SESSION['id_usuaria'])) ? 'true' : 'false' ?>;
     </script>
+
+    <!-- Archivo accesibilidad (ruta corregida) -->
     <script src="<?= $urlBase ?>peticiones(js)/accesibilidad.js"></script>
+
     <!-- Toastify -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top shadow-sm"
@@ -97,7 +117,7 @@ $rutas = [
         <div class="collapse navbar-collapse" id="navbarEspecialista">
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item"><a class="nav-link" href="<?= $urlBase ?>">Inicio</a></li>
-                <?php if ($usuario['rol'] <= 1): ?>
+                <?php if ($usuario['rol'] == 1): ?>
                     <li class="nav-item"><a class="nav-link"
                             href="<?= $urlBase ?>vista/<?= rutaSegura($rutas['alzalaVoz'], $usuario['rol']) ?>">Test</a></li>
                 <?php endif; ?>
@@ -388,6 +408,5 @@ $rutas = [
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="<?= $urlBase ?>peticiones(js)/clickNotificacion.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="<?= $urlBase ?>peticiones(js)/navbar.js"></script>
 <script src="<?= $urlBase ?>peticiones(js)/tooltip.js"></script>
 <script type="module" src="<?= $urlBase ?>peticiones(js)/notificaciones.js"></script>
